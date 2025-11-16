@@ -142,58 +142,78 @@ namespace SDOM
          * Extends `IconButton::InitStruct` with a direction property.
          * Used by the Factory or Lua table construction.
          */
-        struct InitStruct : IconButton::InitStruct
+        struct InitStruct : public IconButton::InitStruct
         {
-            InitStruct() : IconButton::InitStruct()
+            InitStruct()
+                : IconButton::InitStruct()
             {
-                x = 0;
-                y = 0;
-                width = 8;
+                //
+                // Override / extend IconButton defaults
+                //
+                x      = 0;
+                y      = 0;
+                width  = 8;
                 height = 8;
+
                 name = TypeName;
                 type = TypeName;
+
                 color = {96, 0, 96, 255};
-                tabEnabled = false;
-                isClickable = true;
+
+                tabEnabled  = false;
+                isClickable = true;      // ArrowButtons are interactive
+
                 icon_resource = "internal_icon_8x8";
-                icon_width = 8;
-                icon_height = 8;
+                icon_width    = 8;
+                icon_height   = 8;
+
+                //
+                // ArrowButton-specific
+                //
+                direction = ArrowDirection::Up;
             }
 
             /** @brief The direction of the arrow (defaults to Up). */
             ArrowDirection direction = ArrowDirection::Up;
+
+            // ---------------------------------------------------------------------
+            // 📜 JSON Loader (Inheritance-Safe)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                // 1. Load all IconButton (and IDisplayObject) fields first
+                IconButton::InitStruct::from_json(j, out);
+
+                // 2. Load ArrowButton-specific fields
+                if (j.contains("direction"))
+                {
+                    out.direction = static_cast<ArrowDirection>( j["direction"].get<int>() );
+                }
+            }
         };
+
 
     protected:
         // --- Protected Constructors --- //
         ArrowButton(const InitStruct& init);
-        ArrowButton(const sol::table& config);
 
     public:
         // -----------------------------------------------------------------
         // 🏭 Static Factory Methods
         // -----------------------------------------------------------------
-
-        /**
-         * @brief Creates an ArrowButton instance from a Lua table.
-         * @param config Lua configuration table.
-         * @return Unique pointer to a new ArrowButton instance.
-         */
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config)
-        {
-            return std::unique_ptr<IDisplayObject>(new ArrowButton(config));
-        }
-
-        /**
-         * @brief Creates an ArrowButton instance from an InitStruct.
-         * @param baseInit Base initialization data.
-         * @return Unique pointer to a new ArrowButton instance.
-         */
         static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
         {
-            const auto& arrowInit = static_cast<const ArrowButton::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new ArrowButton(arrowInit));
+            const auto& init = static_cast<const ArrowButton::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new ArrowButton(init));
         }
+
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const nlohmann::json& j)
+        {
+            ArrowButton::InitStruct init;
+            ArrowButton::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new ArrowButton(init));
+        }
+
 
         // -----------------------------------------------------------------
         // 🌱 Lifecycle Methods
@@ -241,12 +261,6 @@ namespace SDOM
 
     protected:
         ArrowDirection direction_ = ArrowDirection::Up; ///< Current arrow direction.
-
-        // -----------------------------------------------------------------
-        // 📜 Legacy Lua Integration
-        // -----------------------------------------------------------------
-        /** @brief Registers ArrowButton with Lua runtime. */
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

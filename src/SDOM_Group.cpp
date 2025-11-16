@@ -36,92 +36,6 @@ namespace SDOM
     }
 
 
-    Group::Group(const sol::table& config) : IPanelObject(config, Group::InitStruct())
-    {
-        // std::cout << "Box constructed with Lua config: " << getName() 
-        //         << " at address: " << this << std::endl;            
-
-        std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
-
-        // INFO("Group::Group(const sol::table& config) -- name: " << getName() 
-        //         << " type: " << type << " typeName: " << TypeName << std::endl 
-        // ); // END INFO()
-
-        if (type != TypeName) {
-            ERROR("Error: Group constructed with incorrect type: " + type);
-        }
-        
-        InitStruct init;
-
-        // Apply Lua-provided text property to the Group
-        if (config["text"].valid()) {
-            try {
-                text_ = config["text"].get<std::string>();
-            } catch (...) {
-                // defensive: ignore non-string values
-            }
-        }       
-        // Apply Lua-provided font properties to the Group (accept multiple key variants).
-        // If a property is NOT present in the config, leave it as -1 to indicate
-        // "unspecified" so the BitmapFont defaults helper can populate it.
-        font_size_ = config["font_size"].valid() ? config["font_size"].get<int>() : -1;
-        font_width_ = config["font_width"].valid() ? config["font_width"].get<int>() : -1;
-        font_height_ = config["font_height"].valid() ? config["font_height"].get<int>() : -1;
-
-        // font resource name - accept either 'font_resource' or 'font_resource_name'
-        if (config["font_resource"].valid()) {
-            try { font_resource_ = config["font_resource"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        } else if (config["font_resource_name"].valid()) {
-            try { font_resource_ = config["font_resource_name"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        }     
-        // icon resource name - accept either 'icon_resource' or 'icon_resource_name'
-        if (config["icon_resource"].valid()) {
-            try { icon_resource_ = config["icon_resource"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        } else if (config["icon_resource_name"].valid()) {
-            try { icon_resource_ = config["icon_resource_name"].get<std::string>(); }
-            catch (...) { /* ignore */ }
-        }     
-
-        // label color - accept snake_case/table { r=.., g=.., b=.., a=.. } or camelCase 'labelColor'
-        try {
-            if (config["label_color"].valid() && config["label_color"].get_type() == sol::type::table) {
-                sol::table lc = config["label_color"];
-                label_color_.r = lc["r"].get_or((int)label_color_.r);
-                label_color_.g = lc["g"].get_or((int)label_color_.g);
-                label_color_.b = lc["b"].get_or((int)label_color_.b);
-                label_color_.a = lc["a"].get_or((int)label_color_.a);
-            } else if (config["labelColor"].valid() && config["labelColor"].get_type() == sol::type::table) {
-                sol::table lc = config["labelColor"];
-                label_color_.r = lc["r"].get_or((int)label_color_.r);
-                label_color_.g = lc["g"].get_or((int)label_color_.g);
-                label_color_.b = lc["b"].get_or((int)label_color_.b);
-                label_color_.a = lc["a"].get_or((int)label_color_.a);
-            } else if (config["foreground_color"].valid() && config["foreground_color"].get_type() == sol::type::table) {
-                sol::table lc = config["foreground_color"];
-                label_color_.r = lc["r"].get_or((int)label_color_.r);
-                label_color_.g = lc["g"].get_or((int)label_color_.g);
-                label_color_.b = lc["b"].get_or((int)label_color_.b);
-                label_color_.a = lc["a"].get_or((int)label_color_.a);
-            } else if (config["foregroundColor"].valid() && config["foregroundColor"].get_type() == sol::type::table) {
-                sol::table lc = config["foregroundColor"];
-                label_color_.r = lc["r"].get_or((int)label_color_.r);
-                label_color_.g = lc["g"].get_or((int)label_color_.g);
-                label_color_.b = lc["b"].get_or((int)label_color_.b);
-                label_color_.a = lc["a"].get_or((int)label_color_.a);
-            }
-        } catch (...) { /* ignore malformed color tables */ }
-
-        // non-lua configurable essential init values
-        base_index_ = init.base_index; // default to GroupUp
-        
-        setTabEnabled(false); // Groups are not tab-enabled by default
-        setClickable(false); // Groups are not clickable by default
-    }
-
-
     // --- Virtual Methods --- //
     bool Group::onInit()
     {
@@ -344,30 +258,6 @@ namespace SDOM
 
     Label* Group::getLabelPtr() const               { return labelObject_ ? labelObject_.as<Label>() : nullptr; }
     SpriteSheet* Group::getSpriteSheetPtr() const   { auto handle = getSpriteSheet(); return handle ? handle.as<SpriteSheet>() : nullptr; }
-
-
-
-    // --- Lua Registration --- //
-
-    void Group::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "Group";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings on DisplayHandle:
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-
-
-    } // END: void Group::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-
 
 
 

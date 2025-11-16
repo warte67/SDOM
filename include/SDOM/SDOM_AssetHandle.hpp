@@ -80,14 +80,14 @@ namespace SDOM
         using SUPER = IDataObject;
 
     public:
-        static constexpr const char* LuaHandleName = "AssetHandle";
+        static constexpr const char* AssetHandleName = "AssetHandle";
 
         // ---------------------------------------------------------------------
         // 🏗️ Construction / Destruction
         // ---------------------------------------------------------------------
         AssetHandle()
-            : name_(LuaHandleName), type_(LuaHandleName), filename_(LuaHandleName)
-        {}
+            : name_(AssetHandleName), type_(AssetHandleName), filename_(AssetHandleName)
+        {}        
         AssetHandle(const std::string& name, const std::string& type, const std::string& filename)
             : name_(name), type_(type), filename_(filename)
         {}
@@ -138,20 +138,6 @@ namespace SDOM
         const std::string& getType() const { return type_; }
         const std::string& getFilename() const { return filename_; }
 
-        // ---------------------------------------------------------------------
-        // 📜 Lua-Friendly Accessors
-        // ---------------------------------------------------------------------
-        std::string getName_lua() const { return getName(); }
-        std::string getType_lua() const { return getType(); }
-        std::string getFilename_lua() const { return getFilename(); }
-
-        // ---------------------------------------------------------------------
-        // 📜 Lua Binding Helpers
-        // ---------------------------------------------------------------------
-        static sol::table ensure_handle_table(sol::state_view lua);
-        static void bind_minimal(sol::state_view lua);
-        static AssetHandle resolveSpec(const sol::object& spec);
-
     public:
         inline static Factory* factory_ = nullptr;
 
@@ -165,12 +151,6 @@ namespace SDOM
         std::string name_;
         std::string type_;
         std::string filename_;
-
-        // ---------------------------------------------------------------------
-        // 📜 Legacy Lua Extension Hook
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

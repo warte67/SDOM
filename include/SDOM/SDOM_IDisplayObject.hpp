@@ -155,6 +155,23 @@ namespace SDOM
     class EventTypeHash;
     class Stage;
 
+    // Helper: convert a JSON array to a SDL_Color  (Move to SDL related helpers?)
+    static inline SDL_Color json_to_color(const nlohmann::json& j)
+    {
+        SDL_Color c{0,0,0,255};
+
+        if (!j.is_array())
+            return c;
+
+        if (j.size() > 0 && j[0].is_number()) c.r = j[0].get<int>();
+        if (j.size() > 1 && j[1].is_number()) c.g = j[1].get<int>();
+        if (j.size() > 2 && j[2].is_number()) c.b = j[2].get<int>();
+        if (j.size() > 3 && j[3].is_number()) c.a = j[3].get<int>();
+
+        return c;
+    }
+
+
     class IDisplayObject : public IDataObject
     {
         using SUPER = IDataObject;
@@ -200,30 +217,76 @@ namespace SDOM
             std::string type = TypeName;
             float x = 0.0f;
             float y = 0.0f;
-            float width = 0.0f;
+            float width  = 0.0f;
             float height = 0.0f;
-            SDL_Color color = {255, 0, 255, 255};
 
-            SDL_Color foregroundColor = {255, 255, 255, 255};   // white
-            SDL_Color backgroundColor = {255, 255, 255, 128};   // transparent white
-            SDL_Color borderColor = {0, 0, 0, 128};             // transparent black
-            SDL_Color outlineColor = {0, 0, 0, 255};            // black
-            SDL_Color dropshadowColor = {0, 0, 0, 128};         // semi-transparent black
+            SDL_Color color            = {255, 0, 255, 255};
 
-            AnchorPoint anchorTop = AnchorPoint::TOP_LEFT;
-            AnchorPoint anchorLeft = AnchorPoint::TOP_LEFT;
+            SDL_Color foregroundColor  = {255, 255, 255, 255};
+            SDL_Color backgroundColor  = {255, 255, 255, 128};
+            SDL_Color borderColor      = {0, 0, 0, 128};
+            SDL_Color outlineColor     = {0, 0, 0, 255};
+            SDL_Color dropshadowColor  = {0, 0, 0, 128};
+
+            AnchorPoint anchorTop    = AnchorPoint::TOP_LEFT;
+            AnchorPoint anchorLeft   = AnchorPoint::TOP_LEFT;
             AnchorPoint anchorBottom = AnchorPoint::TOP_LEFT;
-            AnchorPoint anchorRight = AnchorPoint::TOP_LEFT;
-            int z_order = 0;
-            int priority = 0;
-            bool isClickable = true;
-            bool isEnabled = true;
-            bool isHidden = false;
-            int tabPriority = 0;
-            bool tabEnabled = false;
-            bool hasBorder = true;
+            AnchorPoint anchorRight  = AnchorPoint::TOP_LEFT;
+
+            int  z_order      = 0;
+            int  priority     = 0;
+            bool isClickable  = true;
+            bool isEnabled    = true;
+            bool isHidden     = false;
+            int  tabPriority  = 0;
+            bool tabEnabled   = false;
+            bool hasBorder    = true;
             bool hasBackground = true;
-        };
+
+            // 🔽 Correct signature
+            static void from_json(const nlohmann::json& j, InitStruct& init)
+            {
+                using nlohmann::json;
+                using SDOM::json_to_color;     // you already defined this helper
+                using SDOM::parseAnchorPoint;  // from SDOM_Utils.hpp/.cpp
+
+                // ========== Scalars ==========
+                if (j.contains("name"))            init.name        = j["name"].get<std::string>();
+                if (j.contains("type"))            init.type        = j["type"].get<std::string>();
+                if (j.contains("x"))               init.x           = j["x"].get<float>();
+                if (j.contains("y"))               init.y           = j["y"].get<float>();
+                if (j.contains("width"))           init.width       = j["width"].get<float>();
+                if (j.contains("height"))          init.height      = j["height"].get<float>();
+
+                if (j.contains("z_order"))         init.z_order     = j["z_order"].get<int>();
+                if (j.contains("priority"))        init.priority    = j["priority"].get<int>();
+
+                if (j.contains("is_clickable"))    init.isClickable = j["is_clickable"].get<bool>();
+                if (j.contains("is_enabled"))      init.isEnabled   = j["is_enabled"].get<bool>();
+                if (j.contains("is_hidden"))       init.isHidden    = j["is_hidden"].get<bool>();
+
+                if (j.contains("tab_priority"))    init.tabPriority = j["tab_priority"].get<int>();
+                if (j.contains("tab_enabled"))     init.tabEnabled  = j["tab_enabled"].get<bool>();
+
+                if (j.contains("has_border"))      init.hasBorder     = j["has_border"].get<bool>();
+                if (j.contains("has_background"))  init.hasBackground = j["has_background"].get<bool>();
+
+                // ========== Colors ==========
+                if (j.contains("color"))             init.color           = json_to_color(j["color"]);
+                if (j.contains("foreground_color"))  init.foregroundColor = json_to_color(j["foreground_color"]);
+                if (j.contains("background_color"))  init.backgroundColor = json_to_color(j["background_color"]);
+                if (j.contains("border_color"))      init.borderColor     = json_to_color(j["border_color"]);
+                if (j.contains("outline_color"))     init.outlineColor    = json_to_color(j["outline_color"]);
+                if (j.contains("dropshadow_color"))  init.dropshadowColor = json_to_color(j["dropshadow_color"]);
+
+                // ========== Anchors (string or int) ==========
+                if (j.contains("anchor_top"))    init.anchorTop    = parseAnchorPoint(j["anchor_top"]);
+                if (j.contains("anchor_left"))   init.anchorLeft   = parseAnchorPoint(j["anchor_left"]);
+                if (j.contains("anchor_bottom")) init.anchorBottom = parseAnchorPoint(j["anchor_bottom"]);
+                if (j.contains("anchor_right"))  init.anchorRight  = parseAnchorPoint(j["anchor_right"]);
+            }
+        }; // END: struct InitStruct
+
 
         friend class Factory;
 
@@ -508,13 +571,6 @@ namespace SDOM
     
         // --- Lua Registration --- //
         sol::usertype<IDisplayObject> objHandleType_;  
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

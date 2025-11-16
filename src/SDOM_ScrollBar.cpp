@@ -12,36 +12,6 @@ namespace SDOM
     {
     } // END: ScrollBar::ScrollBar(const InitStruct& init)
 
-    ScrollBar::ScrollBar(const sol::table& config) : IRangeControl(config, ScrollBar::InitStruct())
-    {
-        // Initialize members from derived InitStruct defaults so Lua can omit keys
-        InitStruct init_defaults;
-        step_ = init_defaults.step;
-        page_size_ = init_defaults.page_size;
-        content_size_ = init_defaults.content_size;
-        min_thumb_length_ = init_defaults.min_thumb_length;
-
-        // Read step from Lua if present
-        if (config["step"].valid()) {
-            try { step_ = static_cast<float>(config.get_or("step", static_cast<double>(step_))); }
-            catch(...) { /* ignore */ }
-        }
-        // Read page_size from Lua if present
-        if (config["page_size"].valid()) {
-            try { page_size_ = static_cast<float>(config.get_or("page_size", static_cast<double>(page_size_))); }
-            catch(...) { /* ignore */ }
-        }
-        // Read content_size from Lua if present
-        if (config["content_size"].valid()) {
-            try { content_size_ = static_cast<float>(config.get_or("content_size", static_cast<double>(content_size_))); }
-            catch(...) { /* ignore */ }
-        }        
-        // Read min_thumb_length from Lua if present
-        if (config["min_thumb_length"].valid()) {
-            try { min_thumb_length_ = static_cast<float>(config.get_or("min_thumb_length", static_cast<double>(min_thumb_length_))); }
-            catch(...) { /* ignore */ }
-        }
-    } // END: ScrollBar::ScrollBar(const sol::table& config)
 
     // --- Virtual Methods --- //
 
@@ -133,11 +103,11 @@ namespace SDOM
             auto doChange = [this](float newValue, float oldValue) {
                 if (newValue == oldValue) return;
                 setValue(newValue);
-                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
-                    e.setPayloadValue("name", getName());
-                    e.setPayloadValue("old_value", oldValue);
-                    e.setPayloadValue("new_value", newValue);
-                });
+                // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
+                //     e.setPayloadValue("name", getName());
+                //     e.setPayloadValue("old_value", oldValue);
+                //     e.setPayloadValue("new_value", newValue);
+                // });
             };
 
             // decrease handler (left or top)
@@ -245,11 +215,11 @@ namespace SDOM
                     float oldValue = getValue();
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                        ev.setPayloadValue("name", getName());
-                        ev.setPayloadValue("old_value", oldValue);
-                        ev.setPayloadValue("new_value", newValue);
-                    });
+                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    //     ev.setPayloadValue("name", getName());
+                    //     ev.setPayloadValue("old_value", oldValue);
+                    //     ev.setPayloadValue("new_value", newValue);
+                    // });
                 }
             }
             else // vertical
@@ -293,11 +263,11 @@ namespace SDOM
                     float oldValue = getValue();
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                        ev.setPayloadValue("name", getName());
-                        ev.setPayloadValue("old_value", oldValue);
-                        ev.setPayloadValue("new_value", newValue);
-                    });
+                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    //     ev.setPayloadValue("name", getName());
+                    //     ev.setPayloadValue("old_value", oldValue);
+                    //     ev.setPayloadValue("new_value", newValue);
+                    // });
                 }
             }
         } // END: Mouse click or drag
@@ -314,11 +284,11 @@ namespace SDOM
             float newValue = snapToStep(std::clamp(getValue() + wheel_delta, getMin(), getMax()));
             if (newValue == oldValue) return;
             setValue(newValue);
-            queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                ev.setPayloadValue("name", getName());
-                ev.setPayloadValue("old_value", oldValue);
-                ev.setPayloadValue("new_value", newValue);
-            });
+            // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+            //     ev.setPayloadValue("name", getName());
+            //     ev.setPayloadValue("old_value", oldValue);
+            //     ev.setPayloadValue("new_value", newValue);
+            // });
         } // END: MouseWheel event
 
         // Key Events to adjust the scrollbar value (if key focused)
@@ -368,11 +338,11 @@ namespace SDOM
             if (newValue != oldValue)
             {
                 setValue(newValue);
-                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                    ev.setPayloadValue("name", getName());
-                    ev.setPayloadValue("old_value", oldValue);
-                    ev.setPayloadValue("new_value", newValue);
-                });
+                // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                //     ev.setPayloadValue("name", getName());
+                //     ev.setPayloadValue("old_value", oldValue);
+                //     ev.setPayloadValue("new_value", newValue);
+                // });
             }
         } // END: Key Events to adjust the scrollbar value
     } // END: void ScrollBar::onEvent(const Event& event)
@@ -667,30 +637,6 @@ namespace SDOM
         // });
     } // END: void ScrollBar::_onValueChanged(float oldValue, float newValue)
 
-
-
-
-    // --- Lua Registration --- //
-
-    void ScrollBar::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = typeName;
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings on DisplayHandle:
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-
-
-    } // END: void ScrollBar::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    
 
     
     void ScrollBar::registerBindingsImpl(const std::string& typeName)

@@ -95,61 +95,98 @@ namespace SDOM
          *
          * Extends `IPanelObject::InitStruct` with label and font properties.
          */
-        struct InitStruct : IPanelObject::InitStruct
+        struct InitStruct : public IPanelObject::InitStruct
         {
-            InitStruct() : IPanelObject::InitStruct()
+            InitStruct()
+                : IPanelObject::InitStruct()
             {
+                //
                 // From IDisplayObject
-                name = TypeName;
-                type = TypeName;
-                color = {96, 0, 96, 255}; // Default panel color (purple hue)
-                tabEnabled = true;        // Buttons participate in tab navigation
+                //
+                name        = TypeName;
+                type        = TypeName;
+                color       = {96, 0, 96, 255};    // purple UI button color
+                isClickable = true;                // buttons always clickable
+                tabEnabled  = true;                // tab focus allowed
+
+                //
                 // From IPanelObject
-                base_index = PanelBaseIndex::ButtonUp;
+                //
+                base_index    = PanelBaseIndex::ButtonUp;
                 icon_resource = "internal_icon_8x8";
-                icon_width = 8;
-                icon_height = 8;
+                icon_width    = 8;
+                icon_height   = 8;
+
                 font_resource = "internal_font_8x8";
-                font_width = 8;
-                font_height = 8;
+                font_width    = 8;
+                font_height   = 8;
+
+                //
+                // Button-specific defaults
+                //
+                text        = "Button";
+                font_size   = 8;
+                label_color = {255, 255, 255, 255}; // white text
             }
 
-            std::string text = "Button";                     ///< Default button label text
-            int font_size = 8;                               ///< Default font size
-            SDL_Color label_color = {255, 255, 255, 255};    ///< Default text color (white)
-        };
+            // --- Button-specific members ---
+            std::string text = "Button";                  ///< Default button caption
+            int font_size = 8;                            ///< Actual font size for Text rendering
+            SDL_Color label_color = {255, 255, 255, 255}; ///< Color of the label (white)
+
+            // ---------------------------------------------------------------------
+            // JSON loader (inheritance-safe pattern)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                // 1) Load IDisplayObject + IPanelObject fields
+                IPanelObject::InitStruct::from_json(j, out);
+
+                // 2) Load Button-specific fields
+                if (j.contains("text"))
+                    out.text = j["text"].get<std::string>();
+
+                if (j.contains("font_size"))
+                    out.font_size = j["font_size"].get<int>();
+
+                if (j.contains("label_color") && j["label_color"].is_array() && j["label_color"].size() == 4)
+                {
+                    auto& c = j["label_color"];
+                    out.label_color = {
+                        c[0].get<uint8_t>(),
+                        c[1].get<uint8_t>(),
+                        c[2].get<uint8_t>(),
+                        c[3].get<uint8_t>()
+                    };
+                }
+            }
+        }; // END: struct InitStruct
+
 
     protected:
         // -----------------------------------------------------------------
         // 🌱 Constructors
         // -----------------------------------------------------------------
         Button(const InitStruct& init);
-        Button(const sol::table& config);
 
     public:
         // -----------------------------------------------------------------
         // 🏭 Static Factory Methods
         // -----------------------------------------------------------------
-        /**
-         * @brief Creates a Button instance from a Lua configuration table.
-         * @param config Lua configuration table.
-         * @return A unique pointer to a new Button.
-         */
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config)
-        {
-            return std::unique_ptr<IDisplayObject>(new Button(config));
-        }
-
-        /**
-         * @brief Creates a Button instance from an InitStruct.
-         * @param baseInit Base initialization data.
-         * @return A unique pointer to a new Button.
-         */
         static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
         {
-            const auto& buttonInit = static_cast<const Button::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new Button(buttonInit));
+            const auto& init = static_cast<const Button::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new Button(init));
         }
+
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const nlohmann::json& j)
+        {
+            Button::InitStruct init;
+            Button::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new Button(init));
+        }
+
+
 
         // -----------------------------------------------------------------
         // 🌱 Lifecycle Methods
@@ -204,13 +241,6 @@ namespace SDOM
         int font_width_ = 8;
         int font_height_ = 8;
         SDL_Color label_color_ = {255, 255, 255, 255};
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

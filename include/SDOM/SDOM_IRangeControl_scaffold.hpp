@@ -45,48 +45,85 @@ namespace SDOM
         static constexpr const char* TypeName = "IRangeControl_scaffold";
 
         // --- Initialization Struct --- //
-        struct InitStruct : IRangeControl::InitStruct
+        struct InitStruct : public IRangeControl::InitStruct
         {
-            InitStruct() : IRangeControl::InitStruct()
-            { 
-                // from IDisplayObject
-                name = TypeName;
-                type = TypeName;
-                color = {96, 0, 96, 255};   // Icon Color
-                tabEnabled = false;
+            InitStruct()
+                : IRangeControl::InitStruct()
+            {
+                //
+                // From IDisplayObject
+                //
+                name       = TypeName;
+                type       = TypeName;
+
                 isClickable = true;
-                // from IRangeControl
-                min = 0.0f;      // Minimum value (0.0% - 100.0%)
-                max = 100.0f;    // Maximum value (0.0% - 100.0%)
-                value = 0.0f;    // Current value (0.0% - 100.0%)
+                tabEnabled  = false;
+
+                //
+                // Range defaults
+                //
+                min         = 0.0f;
+                max         = 100.0f;
+                value       = 0.0f;
                 orientation = Orientation::Horizontal;
-                std::string icon_resource = "internal_icon_8x8"; 
+                
+                // assign to member, not a local variable
+                icon_resource = "internal_icon_8x8";
             }
-            // Additional IRangeControl_scaffold Parameters as needed:
-            // e.g., float step = 1.0f; // Step size for each increment/decrement
-        }; // END: InitStruct
+
+            //
+            // Range control members
+            //
+            float min         = 0.0f;
+            float max         = 100.0f;
+            float value       = 0.0f;
+            Orientation orientation = Orientation::Horizontal;
+            std::string icon_resource = "internal_icon_8x8";
+
+            // ---------------------------------------------------------------------
+            // JSON loader (inheritance-safe)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                IDisplayObject::InitStruct::from_json(j, out);
+
+                if (j.contains("min"))
+                    out.min = j["min"].get<float>();
+
+                if (j.contains("max"))
+                    out.max = j["max"].get<float>();
+
+                if (j.contains("value"))
+                    out.value = j["value"].get<float>();
+
+                if (j.contains("orientation"))
+                    out.orientation = static_cast<Orientation>( j["orientation"].get<int>() );
+
+                if (j.contains("icon_resource"))
+                    out.icon_resource = j["icon_resource"].get<std::string>();
+            }
+        };
+
         
     protected:
         // --- Protected Constructors --- //
-            // NOTE: when implementing a Lua constructor for a derived class you should
-            // forward the derived class InitStruct() into the base-class Lua parser
-            // so that derived defaults are applied when the Lua table omits keys.
-            // Example:
-            //   DerivedControl::DerivedControl(const sol::table& config)
-            //     : IRangeControl(config, DerivedControl::InitStruct()) { }
-            // This ensures color/anchor/font defaults from DerivedControl::InitStruct
-            // are used by the IDisplayObject/IRangeControl parsing code.
-            IRangeControl_scaffold(const InitStruct& init);  
-            IRangeControl_scaffold(const sol::table& config);
+        IRangeControl_scaffold(const InitStruct& init);  
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new IRangeControl_scaffold(config));
+        static std::unique_ptr<IDisplayObject>
+        CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const IRangeControl_scaffold::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new IRangeControl_scaffold(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& IRangeControl_scaffoldInit = static_cast<const IRangeControl_scaffold::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new IRangeControl_scaffold(IRangeControl_scaffoldInit));
+
+        static std::unique_ptr<IDisplayObject>
+        CreateFromJson(const nlohmann::json& j)
+        {
+            IRangeControl_scaffold::InitStruct init;
+            IRangeControl_scaffold::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new IRangeControl_scaffold(init));
         }
 
         // --- Default Constructor and Destructor --- //
@@ -148,13 +185,6 @@ namespace SDOM
         
         // --- Protected Virtual Methods --- //
         void _onValueChanged(float oldValue, float newValue) override;
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

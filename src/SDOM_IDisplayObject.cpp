@@ -44,7 +44,6 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
-#include <SDOM/SDOM_IDisplayObject_Lua.hpp>
 
 #include <chrono>
 
@@ -436,16 +435,6 @@ namespace SDOM
                 }
             }
 
-            // Diagnostic logging to trace duplicate insertions seen by unit tests
-            {
-                std::ostringstream dbg;
-                dbg << "attachChild_: parent='" << parent->getName()
-                    << "' child='" << p_child.getName()
-                    << "' children_before=" << parentChildren.size()
-                    << " nameExists=" << (nameExists ? "1" : "0");
-                LUA_INFO(dbg.str());
-            }
-
             if (it == parentChildren.end() && !nameExists) 
             {
                 // Record world edges BEFORE changing parent
@@ -462,12 +451,6 @@ namespace SDOM
                 if (it_after == parentChildren.end()) 
                 {
                     parentChildren.push_back(p_child);
-                } else {
-                    std::ostringstream dbg;
-                    dbg << "attachChild_: setParent already added child='"
-                        << p_child.getName()
-                        << "' to parent='" << parent->getName() << "'";
-                    LUA_INFO(dbg.str());
                 }
 
                 if (useWorld)
@@ -1421,11 +1404,6 @@ namespace SDOM
         float delta = p_x - leftWorld;
         setLeft(leftWorld + delta);
         setRight(rightWorld + delta);
-        if (getName() == "blueishBox") 
-        {
-            std::ostringstream oss; oss << "[DBG] setX: name=blueishBox leftWorld=" << leftWorld << " rightWorld=" << rightWorld << " delta=" << delta << " -> left_=" << left_ << " right_=" << right_;
-            LUA_INFO(oss.str());
-        }
         setDirty();
         return *this;
     }
@@ -1437,11 +1415,6 @@ namespace SDOM
         float delta = p_y - topWorld;
         setTop(topWorld + delta);
         setBottom(bottomWorld + delta);
-        if (getName() == "blueishBox") 
-        {
-            std::ostringstream oss; oss << "[DBG] setY: name=blueishBox topWorld=" << topWorld << " bottomWorld=" << bottomWorld << " delta=" << delta << " -> top_=" << top_ << " bottom_=" << bottom_;
-            LUA_INFO(oss.str());
-        }
         setDirty();
         return *this;
     }
@@ -1620,7 +1593,6 @@ namespace SDOM
             }
         }
         left_ = p_left - parentAnchor;
-        // try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setLeft: name=blueishBox p_left=" << p_left << " parentAnchor=" << parentAnchor << " -> left_=" << left_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1652,7 +1624,6 @@ namespace SDOM
             }
         }
         right_ = p_right - parentAnchor;
-        // try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setRight: name=blueishBox p_right=" << p_right << " parentAnchor=" << parentAnchor << " -> right_=" << right_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1686,7 +1657,6 @@ namespace SDOM
             }
         }
         top_ = p_top - parentAnchor;
-        try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setTop: name=blueishBox p_top=" << p_top << " parentAnchor=" << parentAnchor << " -> top_=" << top_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
@@ -1721,57 +1691,10 @@ namespace SDOM
             }
         }
         bottom_ = p_bottom - parentAnchor;
-        // try { if (getName() == "blueishBox") { std::ostringstream oss; oss << "[DBG] setBottom: name=blueishBox p_bottom=" << p_bottom << " parentAnchor=" << parentAnchor << " -> bottom_=" << bottom_; LUA_INFO(oss.str()); } } catch(...) {}
         setDirty();
         return *this;
     }
 
-    // --- Lua Registration --- //
-
-    void IDisplayObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "IDisplayObject";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // // Augment the shared DisplayHandle usertype with generic display-object
-        // // helpers that operate on the underlying object (parent/child ops, etc.).
-        // auto set_if_absent = [](sol::table& handle, const char* name, auto&& fn) {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     if (!cur.valid() || cur == sol::lua_nil) {
-        //         handle.set_function(name, std::forward<decltype(fn)>(fn));
-        //     }
-        // };
-
-        // // Fetch the DisplayHandle usertype table without clobbering; also try
-        // // to obtain the usertype handle so we can bind on both surfaces.
-        // sol::table handleTbl;
-        // try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-        // if (!handleTbl.valid()) {
-        //     // As a fallback, ensure the table exists (no replace if already a usertype)
-        //     handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-        // }
-        // sol::optional<sol::usertype<SDOM::DisplayHandle>> maybeUT;
-        // try { maybeUT = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-
-        // Hierarchy bindings are centralized in SDOM_IDisplayObject_Lua.cpp binder.
-        // Intentionally not binding addChild/removeChild/hasChild/getChild here.
-
-        // Also delegate to centralized binder in SDOM_IDisplayObject_Lua.cpp so
-        // Lua registration can be maintained centrally. Binding helpers there
-        // are idempotent (set_if_absent), so duplicate invocation is safe.
-        try {
-            bind_IDisplayObject_lua(typeName, lua);
-        } catch(...) { /* swallow binder errors to avoid breaking registration */ }
-
-    } // END: IDisplayObject::_registerDisplayObject()
 
     void IDisplayObject::registerBindingsImpl(const std::string& typeName)
     {

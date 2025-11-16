@@ -4,6 +4,7 @@
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
+#include <external/nlohmann/json.hpp>
 
 /*
 
@@ -35,6 +36,8 @@ When the dirty flag is not set:
 
 namespace SDOM
 {
+    using json = nlohmann::json;
+
     class Label : public IDisplayObject
     {
         using SUPER = IDisplayObject;
@@ -46,62 +49,126 @@ namespace SDOM
         // --- Initialization Struct --- //
         struct InitStruct : public IDisplayObject::InitStruct
         {
-            InitStruct() : IDisplayObject::InitStruct() 
-            { 
-                // --- Default InitStruct values from IDisplayObject: --- //
-                name = TypeName; 
+            InitStruct()
+                : IDisplayObject::InitStruct()   // ensure base defaults populate first
+            {
+                name = TypeName;
                 type = TypeName;
-                x = 0.0f;
-                y = 0.0f;
-                width = 100.0f;   // default width
-                height = 30.0f;   // default height
-                color = {255, 0, 255, 255}; // magenta text
-                anchorTop = AnchorPoint::TOP_LEFT;
-                anchorLeft = AnchorPoint::TOP_LEFT;
-                anchorBottom = AnchorPoint::TOP_LEFT;
-                anchorRight = AnchorPoint::TOP_LEFT;
-                z_order = 0;
-                priority = 0;
-                isClickable = false; // Labels are not clickable by default
-                isEnabled = true;
-                isHidden = false;
-                tabPriority = 0;
-                tabEnabled = false; // Labels are not tabbable by default
 
-                foregroundColor = {255, 255, 255, 255};   // white
-                backgroundColor = {255, 255, 255, 128};   // transparent
-                borderColor = {0, 0, 0, 128};             // transparent
-                outlineColor = {0, 0, 0, 255};            // black
-                dropshadowColor = {0, 0, 0, 128};         // semi-transparent black
+                // Override base defaults where needed
+                color = {255, 0, 255, 255};   // label tint (used as highlight/mask)
+                isClickable = false;          // labels are not buttons
+                tabEnabled = false;
+                tabPriority = 0;
+
+                // --- Label defaults ---
+                text = "Label";
+                resourceName = "internal_font_8x8";
+                fontType = IFontObject::FontType::Bitmap;
+                fontSize = 8;
+                fontWidth = 8;
+                fontHeight = 8;
+                alignment = LabelAlign::TOP_LEFT;
+
+                bold = false;
+                italic = false;
+                underline = false;
+                strikethrough = false;
+                border = false;
+                background = false;
+                outline = false;
+                dropshadow = false;
+
+                wordwrap = false;
+                auto_resize = true;
+
+                maxWidth = 0;
+                maxHeight = 0;
+
+                borderThickness = 1;
+                outlineThickness = 1;
+                padding_horiz = 0;
+                padding_vert = 0;
+                dropshadowOffsetX = 1;
+                dropshadowOffsetY = 1;
             }
-            // --- Label-specific properties --- //
-            std::string text = "Label";
-            std::string resourceName = "internal_font_8x8"; // default font
-            IFontObject::FontType fontType = IFontObject::FontType::Bitmap;
-            int fontSize = 8;           // for TrueType fonts, or BitmapFont scaling
-            int fontWidth = 8;          // for BitmapFont only (-1 to use fontSize)
-            int fontHeight = 8;         // for BitmapFont only (-1 to use fontSize)
-            LabelAlign alignment = LabelAlign::TOP_LEFT;        // Text alignment (default: top-left)
-            
-            bool bold = false;          // enable bold text
-            bool italic = false;        // enable italic text
-            bool underline = false;     // enable underline text
-            bool strikethrough = false; // enable strikethrough text
-            bool border = false;        // enable border
-            bool background = false;    // enable background
-            bool outline = false;       // enable outline
-            bool dropshadow = false;    // enable drop shadow
-            bool wordwrap = false;      // enable word wrap
-            bool auto_resize = true;    // enable auto resizing to fit text
-            int maxWidth = 0;           // maximum allowable width for auto resizing (0 disables auto width)
-            int maxHeight = 0;          // maximum allowable height for auto resizing (0 disables auto height)
-            int borderThickness = 1;    // Border thickness (default: 0)
-            int outlineThickness = 1;   // Outline thickness (default: 0)
-            int padding_horiz = 0;      // Horizontal padding (left/right)
-            int padding_vert = 0;       // Vertical padding (top/bottom)
-            int dropshadowOffsetX = 1;  // Drop shadow offset (horizontal)
-            int dropshadowOffsetY = 1;  // Drop shadow offset (vertical)
-        };
+
+            // --- Label fields only (no base fields here!) ---
+            std::string text;
+            std::string resourceName;
+
+            IFontObject::FontType fontType;
+            int fontSize;
+            int fontWidth;
+            int fontHeight;
+            LabelAlign alignment;
+
+            bool bold;
+            bool italic;
+            bool underline;
+            bool strikethrough;
+            bool border;
+            bool background;
+            bool outline;
+            bool dropshadow;
+            bool wordwrap;
+            bool auto_resize;
+
+            int maxWidth;
+            int maxHeight;
+            int borderThickness;
+            int outlineThickness;
+            int padding_horiz;
+            int padding_vert;
+            int dropshadowOffsetX;
+            int dropshadowOffsetY;
+
+            static void from_json(const json& j, InitStruct& init)
+            {
+                IDisplayObject::InitStruct::from_json(j, init);
+
+                // --- Label fields only ---
+                if (j.contains("text")) init.text = j["text"];
+                if (j.contains("resource_name")) init.resourceName = j["resource_name"];
+
+                if (j.contains("font_type")) {
+                    std::string s = j["font_type"];
+                    auto it = IFontObject::StringToFontType.find(s);
+                    if (it != IFontObject::StringToFontType.end())
+                        init.fontType = it->second;
+                }
+
+                j.value("font_size", init.fontSize);
+                j.value("font_width", init.fontWidth);
+                j.value("font_height", init.fontHeight);
+
+                if (j.contains("alignment")) {
+                    auto it = stringToLabelAlign_.find(j["alignment"].get<std::string>());
+                    if (it != stringToLabelAlign_.end())
+                        init.alignment = it->second;
+                }
+
+                j.value("bold", init.bold);
+                j.value("italic", init.italic);
+                j.value("underline", init.underline);
+                j.value("strikethrough", init.strikethrough);
+                j.value("border", init.border);
+                j.value("background", init.background);
+                j.value("outline", init.outline);
+                j.value("dropshadow", init.dropshadow);
+                j.value("wordwrap", init.wordwrap);
+                j.value("auto_resize", init.auto_resize);
+
+                j.value("max_width", init.maxWidth);
+                j.value("max_height", init.maxHeight);
+                j.value("border_thickness", init.borderThickness);
+                j.value("outline_thickness", init.outlineThickness);
+                j.value("padding_horiz", init.padding_horiz);
+                j.value("padding_vert", init.padding_vert);
+                j.value("dropshadow_offset_x", init.dropshadowOffsetX);
+                j.value("dropshadow_offset_y", init.dropshadowOffsetY);
+            }
+        }; // END: struct InitStruct
 
         // -- NOTE:  Be sure to utilize the utility functions in SDOM_Utils.hpp for color parsing/handling -- //           
         // std::string normalizeAnchorString(const std::string& s);         // helper function to normalize anchor point strings
@@ -170,17 +237,29 @@ namespace SDOM
     protected:
         // --- Constructors --- //
         Label(const InitStruct& init);
-        Label(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new Label(config));
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const Label::InitStruct& init)
+        {
+            return std::unique_ptr<IDisplayObject>(new Label(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const Label::InitStruct& baseInit) {
-            const auto& labelInit = static_cast<const Label::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new Label(labelInit));
+
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct_Base(const IDisplayObject::InitStruct& base)
+        {
+            const auto& init = static_cast<const Label::InitStruct&>(base);
+            return CreateFromInitStruct(init);
         }
+
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const nlohmann::json& j)
+        {
+            Label::InitStruct init;
+            Label::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new Label(init));
+        }
+
+
+
 
         Label() = default;
         ~Label() override;
@@ -385,14 +464,7 @@ namespace SDOM
         int parent_height_ = 0;
         bool needsTextureRebuild_(int width, int height, SDL_PixelFormat fmt) const;
         bool rebuildTexture_(int width, int height, SDL_PixelFormat fmt = SDL_PIXELFORMAT_RGBA8888 ); 
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
-
+ 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------

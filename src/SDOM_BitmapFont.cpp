@@ -70,34 +70,6 @@ namespace SDOM
         if (init.font_height < 0) bitmapFontHeight_ = init.fontSize;
     }
 
-    BitmapFont::BitmapFont(const sol::table& config) : IFontObject(config)
-    {
-        InitStruct init;
-        // Prefer Lua keys: "size", "width", "height".
-        // Also accept legacy keys: "fontSize", "fontWidth", "fontHeight".
-        if (config["size"].valid())        fontSize_ = config["size"].get<int>(); else fontSize_ = init.fontSize;
-        if (config["width"].valid())       bitmapFontWidth_ = config["width"].get<int>(); else bitmapFontWidth_ = init.font_width;
-        if (config["height"].valid())      bitmapFontHeight_ = config["height"].get<int>(); else bitmapFontHeight_ = init.font_height;
-
-    // legacy overrides (only apply when present; do not clobber previously
-    // parsed values by assigning defaults here)
-    if (config["font_size"].valid())    fontSize_ = config["font_size"].get<int>();
-    if (config["font_width"].valid())   bitmapFontWidth_ = config["font_width"].get<int>();
-    if (config["font_height"].valid())  bitmapFontHeight_ = config["font_height"].get<int>();
-
-        // normalize invalid/zero dimensions to fontSize_
-        if (bitmapFontWidth_ <= 0)  bitmapFontWidth_ = fontSize_;
-        if (bitmapFontHeight_ <= 0) bitmapFontHeight_ = fontSize_;
-
-        // If the caller did not explicitly supply a fontSize (it equals the Init
-        // default), prefer to adopt the canonical sprite height as the fontSize
-        // so we don't inadvertently scale glyphs (e.g., an 8x12 sprite sheet
-        // should render at 12px tall unless the user requested otherwise).
-        if (fontSize_ == init.fontSize && bitmapFontHeight_ > 0 && bitmapFontHeight_ != fontSize_) {
-            fontSize_ = bitmapFontHeight_;
-        }
-    }
-
 
     BitmapFont::~BitmapFont()
     {
@@ -848,46 +820,6 @@ namespace SDOM
             SDL_RenderTexture(renderer, outlineTex, nullptr, &destRect);
         }       
     } // END drawDropShadowGlyph()
-
-    // --- Lua Registration --- //
-
-    void BitmapFont::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "BitmapFont:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
-        auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
-        sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
-        sol::optional<sol::usertype<AssetHandle>> maybeUT = ut;
-
-        // Expose resource accessor and bitmap metrics
-        bf_bind_both_impl(handle, maybeUT, "getResourceHandle", [](AssetHandle& self) -> AssetHandle {
-            if (auto* bf = as_bf_handle(self)) return bf->getResourceHandle();
-            return AssetHandle();
-        });
-        bf_bind_both_impl(handle, maybeUT, "getBitmapFontWidth", [](AssetHandle& self) -> int {
-            if (auto* bf = as_bf_handle(self)) return bf->getBitmapFontWidth();
-            return 0;
-        });
-        bf_bind_both_impl(handle, maybeUT, "getBitmapFontHeight", [](AssetHandle& self) -> int {
-            if (auto* bf = as_bf_handle(self)) return bf->getBitmapFontHeight();
-            return 0;
-        });
-        // Intentionally omit setters: bitmap glyph metrics are immutable for public API.
-
-
-    } // END _registerLuaBindings()
-
-
 
 
     

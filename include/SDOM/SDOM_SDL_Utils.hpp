@@ -64,14 +64,6 @@ namespace SDOM
 
         static int keyToAscii(SDL_Keycode keycode, SDL_Keymod keymod);
 
-        static sol::table eventToLuaTable(const SDL_Event& event, sol::state_view lua);
-        static void registerLuaBindings(sol::state_view lua);
-
-        static SDL_FRect tableToFRect(const sol::table& t);
-        static SDL_Color colorFromSol(const sol::object& o);
-        
-        static SDL_ScaleMode scaleModeFromSol(const sol::object& o);
-
         inline static bool color_equal(const SDL_Color& a, const SDL_Color& b) {
             return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
         }
@@ -93,18 +85,7 @@ namespace SDOM
                         std::to_string(c.g) + ", " +
                         std::to_string(c.b) + ", " +
                         std::to_string(c.a) + ")";
-        }     
-        
-        // Convert a Lua table -> SDL_Color (supports {r=..,g=..,b=..,a=..} or {r,g,b,a})
-        static SDL_Color get__lua_color(const sol::table& lua_color);
-        
-        // Convert SDL_Color -> Lua table. Provide two overloads:
-        //  - caller supplies sol::state_view
-        //  - convenience overload that obtains the global lua state
-        static sol::table get_lua_color(sol::state_view lua, const SDL_Color& sdl_color);
-        static sol::table get_lua_color(const SDL_Color& sdl_color);
-        
-
+        } 
     };
 
 } // namespace SDOM

@@ -334,153 +334,153 @@ namespace SDOM
 
 
 
-        // ======================================================================
-        // Legacy Lua Binding Helpers
-        // ======================================================================
+    //     // ======================================================================
+    //     // Legacy Lua Binding Helpers
+    //     // ======================================================================
 
-    public:
-        template<typename T>
-        static T lua_value_case_insensitive(const sol::table& tbl, const std::string& key, const T& default_value)
-        {
-            for (const auto& kv : tbl)
-            {
-                std::string k = kv.first.as<std::string>();
-                if (std::equal(k.begin(), k.end(), key.begin(), key.end(),
-                    [](char a, char b) { return std::tolower(a) == std::tolower(b); }))
-                {
-                    return kv.second.as<T>();
-                }
-            }
-            return default_value;
-        }
+    // public:
+    //     template<typename T>
+    //     static T lua_value_case_insensitive(const sol::table& tbl, const std::string& key, const T& default_value)
+    //     {
+    //         for (const auto& kv : tbl)
+    //         {
+    //             std::string k = kv.first.as<std::string>();
+    //             if (std::equal(k.begin(), k.end(), key.begin(), key.end(),
+    //                 [](char a, char b) { return std::tolower(a) == std::tolower(b); }))
+    //             {
+    //                 return kv.second.as<T>();
+    //             }
+    //         }
+    //         return default_value;
+    //     }
 
-        static sol::table ensure_sol_table(sol::state_view lua, const std::string& typeName)
-        {
-            sol::table global = lua.globals();
-            sol::object maybe = global.raw_get_or(typeName, sol::lua_nil);
-            if (maybe.valid() && maybe != sol::lua_nil)
-            {
-                // Many sol2 builds expose a usertype as a table/metatable; some
-                // report it as a userdata. In either case, fetch the table view
-                // from the global entry without replacing it.
-                try {
-                    if (maybe.is<sol::table>()) {
-                        return maybe.as<sol::table>();
-                    }
-                } catch(...) {}
-                // Fallback: treat the existing global as a table-like and return it
-                try { return lua[typeName]; } catch(...) {}
-            }
-            // Not present: create and publish a fresh table
-            sol::table newTable = lua.create_table();
-            global[typeName] = newTable;
-            if (false)
-            {
-                std::cout << CLR::MAGENTA << "[LUA] Created table for type: "
-                        << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
-            }
-            return newTable;
-        }           
+    //     static sol::table ensure_sol_table(sol::state_view lua, const std::string& typeName)
+    //     {
+    //         sol::table global = lua.globals();
+    //         sol::object maybe = global.raw_get_or(typeName, sol::lua_nil);
+    //         if (maybe.valid() && maybe != sol::lua_nil)
+    //         {
+    //             // Many sol2 builds expose a usertype as a table/metatable; some
+    //             // report it as a userdata. In either case, fetch the table view
+    //             // from the global entry without replacing it.
+    //             try {
+    //                 if (maybe.is<sol::table>()) {
+    //                     return maybe.as<sol::table>();
+    //                 }
+    //             } catch(...) {}
+    //             // Fallback: treat the existing global as a table-like and return it
+    //             try { return lua[typeName]; } catch(...) {}
+    //         }
+    //         // Not present: create and publish a fresh table
+    //         sol::table newTable = lua.create_table();
+    //         global[typeName] = newTable;
+    //         if (false)
+    //         {
+    //             std::cout << CLR::MAGENTA << "[LUA] Created table for type: "
+    //                     << CLR::LT_MAGENTA << typeName << CLR::RESET << std::endl;
+    //         }
+    //         return newTable;
+    //     }           
 
-        // Register a usertype and attach it to the given Lua table (idempotent)
-        template <typename T, typename BaseT>
-        static sol::usertype<T> register_usertype_with_table(sol::state_view lua, const std::string& typeName)
-        {
-            // Guard against re-registration across multiple call sites and
-            // avoid clobbering existing usertype tables. We only track a
-            // boolean flag per (lua_State*, typeName), not sol objects.
-            using StateMap = std::unordered_map<std::string, bool>;
-            static std::unordered_map<lua_State*, StateMap> s_registered;
-            lua_State* L = lua.lua_state();
-            auto& reg = s_registered[L];
-            auto it = reg.find(typeName);
-            if (it != reg.end() && it->second) {
-                // Already registered in this state; return a handle to the existing usertype table.
-                try { return lua[typeName]; } catch(...) {
-                    // If the table is somehow missing, fall through to create below.
-                }
-            }
+    //     // Register a usertype and attach it to the given Lua table (idempotent)
+    //     template <typename T, typename BaseT>
+    //     static sol::usertype<T> register_usertype_with_table(sol::state_view lua, const std::string& typeName)
+    //     {
+    //         // Guard against re-registration across multiple call sites and
+    //         // avoid clobbering existing usertype tables. We only track a
+    //         // boolean flag per (lua_State*, typeName), not sol objects.
+    //         using StateMap = std::unordered_map<std::string, bool>;
+    //         static std::unordered_map<lua_State*, StateMap> s_registered;
+    //         lua_State* L = lua.lua_state();
+    //         auto& reg = s_registered[L];
+    //         auto it = reg.find(typeName);
+    //         if (it != reg.end() && it->second) {
+    //             // Already registered in this state; return a handle to the existing usertype table.
+    //             try { return lua[typeName]; } catch(...) {
+    //                 // If the table is somehow missing, fall through to create below.
+    //             }
+    //         }
 
-            // If a table already exists and was marked as registered, reuse it.
-            sol::object existing = lua.globals().raw_get_or(typeName, sol::lua_nil);
-            if (existing.valid() && existing != sol::lua_nil) {
-                try {
-                    sol::table t = lua[typeName];
-                    sol::object flag = t.raw_get_or("__usertype_registered", sol::lua_nil);
-                    if (flag.valid() && flag.is<bool>() && flag.as<bool>()) {
-                        reg[typeName] = true;
-                        return lua[typeName];
-                    }
-                } catch(...) {}
-            }
+    //         // If a table already exists and was marked as registered, reuse it.
+    //         sol::object existing = lua.globals().raw_get_or(typeName, sol::lua_nil);
+    //         if (existing.valid() && existing != sol::lua_nil) {
+    //             try {
+    //                 sol::table t = lua[typeName];
+    //                 sol::object flag = t.raw_get_or("__usertype_registered", sol::lua_nil);
+    //                 if (flag.valid() && flag.is<bool>() && flag.as<bool>()) {
+    //                     reg[typeName] = true;
+    //                     return lua[typeName];
+    //                 }
+    //             } catch(...) {}
+    //         }
 
-            // Create once (no constructor exposed to Lua by default).
-            auto userType = lua.new_usertype<T>(
-                typeName,
-                sol::no_constructor,
-                sol::base_classes, sol::bases<BaseT>()
-            );
+    //         // Create once (no constructor exposed to Lua by default).
+    //         auto userType = lua.new_usertype<T>(
+    //             typeName,
+    //             sol::no_constructor,
+    //             sol::base_classes, sol::bases<BaseT>()
+    //         );
 
-            // Mark on the usertype table itself so subsequent calls can detect it.
-            try {
-                sol::table utbl = lua[typeName];
-                utbl["__usertype_registered"] = true;
-            } catch(...) {}
+    //         // Mark on the usertype table itself so subsequent calls can detect it.
+    //         try {
+    //             sol::table utbl = lua[typeName];
+    //             utbl["__usertype_registered"] = true;
+    //         } catch(...) {}
 
-            if (false)
-            {
-                std::cout << CLR::YELLOW << "[LUA] Registered usertype: "
-                        << CLR::LT_YELLOW << typeName << CLR::RESET << std::endl;
-            }
+    //         if (false)
+    //         {
+    //             std::cout << CLR::YELLOW << "[LUA] Registered usertype: "
+    //                     << CLR::LT_YELLOW << typeName << CLR::RESET << std::endl;
+    //         }
 
-            reg[typeName] = true;
-            return userType;
-        }        
+    //         reg[typeName] = true;
+    //         return userType;
+    //     }        
 
-        // Return both legacy per-type table (globals[typeName]) and canonical
-        // registry table (SDOM_Bindings[typeName]). Also ensures a proper
-        // usertype is registered with the provided BaseT.
-        template <typename T, typename BaseT>
-        static std::pair<sol::table, sol::table> ensure_type_tables(sol::state_view lua, const std::string& typeName)
-        {
-            // Ensure usertype with base relationship (idempotent)
-            (void)register_usertype_with_table<T, BaseT>(lua, typeName);
+    //     // Return both legacy per-type table (globals[typeName]) and canonical
+    //     // registry table (SDOM_Bindings[typeName]). Also ensures a proper
+    //     // usertype is registered with the provided BaseT.
+    //     template <typename T, typename BaseT>
+    //     static std::pair<sol::table, sol::table> ensure_type_tables(sol::state_view lua, const std::string& typeName)
+    //     {
+    //         // Ensure usertype with base relationship (idempotent)
+    //         (void)register_usertype_with_table<T, BaseT>(lua, typeName);
 
-            // Legacy/compatibility per-type table in globals
-            sol::table legacy = ensure_sol_table(lua, typeName);
+    //         // Legacy/compatibility per-type table in globals
+    //         sol::table legacy = ensure_sol_table(lua, typeName);
 
-            // Canonical registry root: SDOM_Bindings
-            sol::table root;
-            try { root = lua["SDOM_Bindings"]; } catch(...) {}
-            if (!root.valid()) {
-                root = lua.create_table();
-                lua["SDOM_Bindings"] = root;
-            }
+    //         // Canonical registry root: SDOM_Bindings
+    //         sol::table root;
+    //         try { root = lua["SDOM_Bindings"]; } catch(...) {}
+    //         if (!root.valid()) {
+    //             root = lua.create_table();
+    //             lua["SDOM_Bindings"] = root;
+    //         }
 
-            // Canonical per-type registry: SDOM_Bindings[typeName]
-            sol::table reg = root.raw_get_or(typeName, sol::lua_nil);
-            if (!reg.valid()) {
-                reg = lua.create_table();
-                root[typeName] = reg;
-            }
+    //         // Canonical per-type registry: SDOM_Bindings[typeName]
+    //         sol::table reg = root.raw_get_or(typeName, sol::lua_nil);
+    //         if (!reg.valid()) {
+    //             reg = lua.create_table();
+    //             root[typeName] = reg;
+    //         }
 
-            return { legacy, reg };
-        }
+    //         return { legacy, reg };
+    //     }
 
-        // Convenience: ensure usertype + tables, and return the canonical
-        // registry table (SDOM_Bindings[typeName]).
-        template <typename T, typename BaseT>
-        static sol::table getTypeTable(sol::state_view lua, const std::string& typeName)
-        {
-            auto both = ensure_type_tables<T, BaseT>(lua, typeName);
-            return both.second; // canonical registry table
-        }
+    //     // Convenience: ensure usertype + tables, and return the canonical
+    //     // registry table (SDOM_Bindings[typeName]).
+    //     template <typename T, typename BaseT>
+    //     static sol::table getTypeTable(sol::state_view lua, const std::string& typeName)
+    //     {
+    //         auto both = ensure_type_tables<T, BaseT>(lua, typeName);
+    //         return both.second; // canonical registry table
+    //     }
 
-        // New preferred Lua binding path
-        void registerLuaBindings(const std::string& typeName, sol::state_view lua)
-        {
-            this->_registerLuaBindings(typeName, lua);
-        }        
+        // // New preferred Lua binding path
+        // void registerLuaBindings(const std::string& typeName, sol::state_view lua)
+        // {
+        //     this->_registerLuaBindings(typeName, lua);
+        // }        
 
 
     protected:
@@ -508,48 +508,48 @@ namespace SDOM
 
 
 
-        //  ============================================================
-        // 🧱 Legacy Lua Binding Helpers
-        //  ============================================================
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
-        {
-            // 1. Make sure the per-type Lua table exists.
-            sol::table typeTable;
-            try {
-                typeTable = ensure_sol_table(lua, typeName);
-            } catch (...) {
-                return;  // If Lua isn’t ready yet, fail silently.
-            }
+        // //  ============================================================
+        // // 🧱 Legacy Lua Binding Helpers
+        // //  ============================================================
+        // virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua)
+        // {
+        //     // 1. Make sure the per-type Lua table exists.
+        //     sol::table typeTable;
+        //     try {
+        //         typeTable = ensure_sol_table(lua, typeName);
+        //     } catch (...) {
+        //         return;  // If Lua isn’t ready yet, fail silently.
+        //     }
 
-            // 2. Make sure we run this block only once per type.
-            sol::object registered = typeTable.raw_get_or("__idataobject_initialized", sol::lua_nil);
-            if (registered.valid() && registered.is<bool>() && registered.as<bool>()) {
-                return; // Already initialized; ancestors can still add keys later.
-            }
-            typeTable["__idataobject_initialized"] = true;
+        //     // 2. Make sure we run this block only once per type.
+        //     sol::object registered = typeTable.raw_get_or("__idataobject_initialized", sol::lua_nil);
+        //     if (registered.valid() && registered.is<bool>() && registered.as<bool>()) {
+        //         return; // Already initialized; ancestors can still add keys later.
+        //     }
+        //     typeTable["__idataobject_initialized"] = true;
 
-            // 3. Add the base-level helpers that every IDataObject should expose.
-            auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
-                sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
-                if (!cur.valid() || cur == sol::lua_nil) {
-                    tbl.set_function(name, std::forward<decltype(fn)>(fn));
-                }
-            };
+        //     // 3. Add the base-level helpers that every IDataObject should expose.
+        //     auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
+        //         sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
+        //         if (!cur.valid() || cur == sol::lua_nil) {
+        //             tbl.set_function(name, std::forward<decltype(fn)>(fn));
+        //         }
+        //     };
 
-            set_if_absent(typeTable, "getName", [](IDataObject& self) { return self.getName(); });
-            set_if_absent(typeTable, "setName", [](IDataObject& self, const std::string& newName) { self.setName(newName); });
+        //     set_if_absent(typeTable, "getName", [](IDataObject& self) { return self.getName(); });
+        //     set_if_absent(typeTable, "setName", [](IDataObject& self, const std::string& newName) { self.setName(newName); });
 
-            // if (DEBUG_REGISTER_LUA)
-            if (false)
-            {
-                std::string typeNameLocal = "IDataObject";
-                std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                        << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                        << typeName << CLR::RESET << std::endl;
-            }            
-        }   
+        //     // if (DEBUG_REGISTER_LUA)
+        //     if (false)
+        //     {
+        //         std::string typeNameLocal = "IDataObject";
+        //         std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
+        //                 << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
+        //                 << typeName << CLR::RESET << std::endl;
+        //     }            
+        // }   
         
-        sol::usertype<IDataObject> objHandleType_;
+        // sol::usertype<IDataObject> objHandleType_;
 
         // --- End New Virtual LUA Registration for Sol2 ---
 

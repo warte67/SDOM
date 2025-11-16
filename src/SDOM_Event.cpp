@@ -61,16 +61,6 @@ namespace SDOM
         // Constructor implementation
         useCapture = true; // Default to using capture phase
 
-        // Ensure payload is a valid Lua table so callers can safely set payload values
-        try {
-            // Attempt to acquire the Core-managed Lua state and create an empty table
-            sol::state_view sv = SDOM::getLua();
-            payload = sv.create_table();
-        } catch (...) {
-            // Non-fatal: if Lua isn't available yet, leave payload in its default state
-            // and warn so debugging is easier.
-            WARNING("Event: unable to initialize Lua payload table (Lua state not available yet)");
-        }
     }
 
 
@@ -362,217 +352,11 @@ namespace SDOM
     }
 
 
-    // Lua registration implementation
-    void Event::registerLua(sol::state_view lua)
-    {
-        try {
-            // Ensure EventType usertype is fully registered. Delegate to
-            // EventType::registerLua so the canonical usertype (with properties)
-            // is created exactly once and avoids partial registrations when
-            // Event::registerLua is called earlier than EventType::registerLua.
-            EventType::registerLua(lua);
-
-            if (!lua["Event"].valid()) {
-                lua.new_usertype<Event>("Event", sol::no_constructor,
-                    // existing convenience properties
-                    "dt", sol::property([](const Event& e) { return e.getElapsedTime(); }),
-                    "type", sol::property([](const Event& e) { return e.getTypeName(); }),
-                    "target", sol::property([](const Event& e) { return e.getTarget(); }),
-                    // sdl: returns a Lua table representation of the underlying SDL_Event (if any)
-                    "sdl", sol::property([](const Event& e, sol::this_state s) -> sol::object {
-                        sol::state_view lua(s);
-                        try {
-                            // Convert the stored SDL_Event into a Lua table using SDL_Utils
-                            sol::table tbl = SDL_Utils::eventToLuaTable(e.getSDL_Event(), lua);
-                            return sol::object(lua, tbl);
-                        } catch (...) {
-                            // Return nil on any failure
-                            return sol::object(lua, sol::lua_nil);
-                        }
-                    }),
-                    // name helpers
-                    "name", sol::property([](const Event& e) {
-                        try {
-                            DisplayHandle dh = e.getTarget();
-                            // If there is an underlying object prefer its live name
-                            if (auto* obj = dh.get()) return obj->getName();
-                            // If no underlying object, fall back to the handle's cached name
-                            std::string hn = dh.getName();
-                            if (!hn.empty()) return hn;
-                        } catch (...) {}
-                        return e.getTypeName();
-                    }),
-                    "getName", [](const Event& e) -> std::string {
-                        DisplayHandle dh = e.getTarget();
-                        if (auto* obj = dh.get()) return obj->getName();
-                        std::string hn = dh.getName();
-                        if (!hn.empty()) return hn;
-                        return e.getTypeName();
-                    },
-
-                    // Payload accessors
-                    // getPayload requires access to the Lua state to return a sol::table safely
-                    "getPayload", [](const Event& e, sol::this_state ts) -> sol::object {
-                        sol::state_view sv(ts);
-                        try {
-                            return sol::object(sv, e.getPayload());
-                        } catch (...) {
-                            return sol::object(sv, sv.create_table());
-                        }
-                    },                
-                    "setPayload", [](Event& e, const sol::table& t) { e.setPayload(t); return e; },
-
-                    // Mouse event accessors (methods)
-                    "getMouseX", &Event::getMouseX,
-                    "setMouseX", &Event::setMouseX,
-                    "getMouseY", &Event::getMouseY,
-                    "setMouseY", &Event::setMouseY,
-                    "getWheelX", &Event::getWheelX,
-                    "setWheelX", &Event::setWheelX,
-                    "getWheelY", &Event::getWheelY,
-                    "setWheelY", &Event::setWheelY,
-                    "getDragOffsetX", &Event::getDragOffsetX,
-                    "setDragOffsetX", &Event::setDragOffsetX,
-                    "getDragOffsetY", &Event::getDragOffsetY,
-                    "setDragOffsetY", &Event::setDragOffsetY,
-                    "getClickCount", &Event::getClickCount,
-                    "setClickCount", &Event::setClickCount,
-                    "getButton", &Event::getButton,
-                    "setButton", &Event::setButton,
-
-                    // Keyboard accessors (methods)
-                    "getScanCode", &Event::getScanCode,
-                    "setScanCode", &Event::setScanCode,
-                    "getKeycode", &Event::getKeycode,
-                    "setKeycode", &Event::setKeycode,
-                    "getKeymod", &Event::getKeymod,
-                    "setKeymod", &Event::setKeymod,
-                    "getAsciiCode", &Event::getAsciiCode,
-                    "setAsciiCode", &Event::setAsciiCode,
-
-                    // Core/default accessors (methods)
-                    "getType", &Event::getType,
-                    "getTypeName", &Event::getTypeName,
-                    "getPhaseString", &Event::getPhaseString,
-                    "getPhase", &Event::getPhase,
-                    "setPhase", &Event::setPhase,
-                    "getTarget", &Event::getTarget,
-                    "setTarget", &Event::setTarget,
-                    "getCurrentTarget", &Event::getCurrentTarget,
-                    "setCurrentTarget", &Event::setCurrentTarget,
-                    "getRelatedTarget", &Event::getRelatedTarget,
-                    "setRelatedTarget", &Event::setRelatedTarget,
-                    "isPropagationStopped", &Event::isPropagationStopped,
-                    "stopPropagation", &Event::stopPropagation,
-                    "isDefaultBehaviorDisabled", &Event::isDefaultBehaviorDisabled,
-                    "setDisableDefaultBehavior", &Event::setDisableDefaultBehavior,
-                    "getUseCapture", &Event::getUseCapture,
-                    "setUseCapture", &Event::setUseCapture,
-                    "getElapsedTime", &Event::getElapsedTime,
-                    "setElapsedTime", &Event::setElapsedTime,
-                    "getSDLEvent", &Event::getSDL_Event,
-                    "setSDLEvent", &Event::setSDL_Event,
-
-                    // Lower-camelcase properties (convenience) - readable and writable where applicable
-                    "mouse_x", sol::property(&Event::getMouseX, &Event::setMouseX),
-                    "mouse_y", sol::property(&Event::getMouseY, &Event::setMouseY),
-                    "wheel_x", sol::property(&Event::getWheelX, &Event::setWheelX),
-                    "wheel_y", sol::property(&Event::getWheelY, &Event::setWheelY),
-                    "drag_offset_x", sol::property(&Event::getDragOffsetX, &Event::setDragOffsetX),
-                    "drag_offset_y", sol::property(&Event::getDragOffsetY, &Event::setDragOffsetY),
-                    "click_count", sol::property(&Event::getClickCount, &Event::setClickCount),
-                    "button", sol::property(&Event::getButton, &Event::setButton),
-                    "scan_code", sol::property(&Event::getScanCode, &Event::setScanCode),
-                    "keycode", sol::property(&Event::getKeycode, &Event::setKeycode),
-                    "keymod", sol::property(&Event::getKeymod, &Event::setKeymod),
-                    "ascii_code", sol::property(&Event::getAsciiCode, &Event::setAsciiCode),
-                    // Targets as lower-camelcase properties for Lua convenience
-                    "currentTarget", sol::property(&Event::getCurrentTarget, &Event::setCurrentTarget),
-                    "relatedTarget", sol::property(&Event::getRelatedTarget, &Event::setRelatedTarget),
-
-                    // maintain previous pairs meta-function
-                    sol::meta_function::pairs, [](const Event& e, sol::this_state ts) {
-                        sol::state_view lua(ts);
-
-                        // iterator state stored in Lua as a user value
-                        struct event_iter_state {
-                            struct item {
-                                std::string key;
-                                // kind: 1 = string, 2 = number, 3 = object pointer
-                                int kind = 0;
-                                std::string sval;
-                                double dval = 0.0;
-                                SDOM::IDataObject* obj = nullptr;
-                            };
-                            std::size_t idx = 0;
-                            std::vector<item> items;
-                        };
-
-                        // populate iterator state with snapshot of keys/values we want to expose
-                        auto st = event_iter_state();
-                        try {
-                            st.items.push_back({"type", 1, e.getTypeName(), 0.0, nullptr});
-                        } catch (...) {}
-                        try {
-                            st.items.push_back({"dt", 2, std::string(), static_cast<double>(e.getElapsedTime()), nullptr});
-                        } catch (...) {}
-                        try {
-                            DisplayHandle dh = e.getTarget();
-                            if (dh) {
-                                // Prefer live object's name when available, otherwise the handle's cached name
-                                std::string targName;
-                                if (auto* obj = dh.get()) {
-                                    try { targName = obj->getName(); } catch(...) { targName.clear(); }
-                                } else {
-                                    try { targName = dh.getName(); } catch(...) { targName.clear(); }
-                                }
-                                if (!targName.empty()) {
-                                    st.items.push_back({"target", 1, targName, 0.0, nullptr});
-                                }
-                            }
-                        } catch (...) {}
-
-                        // the 'next' function for our iterator: it advances the index and returns key,value
-                        auto event_next = +[] (sol::user<event_iter_state&> user_st, sol::this_state ts) -> std::tuple<sol::object, sol::object> {
-                            sol::state_view lua(ts);
-                            event_iter_state& s = user_st;
-                            if (s.idx >= s.items.size()) {
-                                return std::make_tuple(sol::object(lua, sol::lua_nil), sol::object(lua, sol::lua_nil));
-                            }
-                            auto &it = s.items[s.idx++];
-                            sol::object k(lua, sol::in_place, it.key);
-                            sol::object v;
-                            if (it.kind == 1) {
-                                v = sol::object(lua, sol::in_place, it.sval);
-                            } else if (it.kind == 2) {
-                                v = sol::object(lua, sol::in_place, it.dval);
-                            } else {
-                                v = sol::object(lua, sol::lua_nil);
-                            }
-                            return std::make_tuple(k, v);
-                        };
-
-                        // return (iterator function, user state, nil)
-                        return std::make_tuple(event_next, sol::user<event_iter_state>(std::move(st)), sol::lua_nil);
-                    }
-                );
-            }
-        } catch (...) {
-            // non-fatal
-            WARNING("Failed to register Event with Lua");
-        }
-    } // END Event::registerLua(sol::state_view lua)
-
     // IDataObject binding registration for Event (DataRegistry + Lua helpers)
     void Event::registerBindingsImpl(const std::string& typeName)
     {
         // Base info
         BIND_INFO(typeName, "Event");
-
-        // Ensure EventType usertype/table is registered in Lua so scripts can refer to constants
-        try {
-            EventType::registerLua(SDOM::getLua());
-        } catch(...) {}
 
         // Properties
         addProperty(typeName, "name",
@@ -597,13 +381,13 @@ namespace SDOM
                 if (!desc["name"].valid()) return;
                 std::string name = desc["name"].get<std::string>();
                 EventType et(name);
-                if (desc["captures"].valid()) et.setCaptures(desc["captures"].get<bool>());
-                if (desc["bubbles"].valid()) et.setBubbles(desc["bubbles"].get<bool>());
-                if (desc["targetOnly"].valid()) et.setTargetOnly(desc["targetOnly"].get<bool>());
-                if (desc["global"].valid()) et.setGlobal(desc["global"].get<bool>());
-                if (desc["critical"].valid()) et.setCritical(desc["critical"].get<bool>());
-                if (desc["meter_enabled"].valid()) et.setMeterEnabled(desc["meter_enabled"].get<bool>());
-                if (desc["meter_interval_ms"].valid()) et.setMeterIntervalMs(static_cast<uint16_t>(desc["meter_interval_ms"].get<int>()));
+                // if (desc["captures"].valid()) et.setCaptures(desc["captures"].get<bool>());
+                // if (desc["bubbles"].valid()) et.setBubbles(desc["bubbles"].get<bool>());
+                // if (desc["targetOnly"].valid()) et.setTargetOnly(desc["targetOnly"].get<bool>());
+                // if (desc["global"].valid()) et.setGlobal(desc["global"].get<bool>());
+                // if (desc["critical"].valid()) et.setCritical(desc["critical"].get<bool>());
+                // if (desc["meter_enabled"].valid()) et.setMeterEnabled(desc["meter_enabled"].get<bool>());
+                // if (desc["meter_interval_ms"].valid()) et.setMeterIntervalMs(static_cast<uint16_t>(desc["meter_interval_ms"].get<int>()));
                 // coalesce enums may be passed as integer
                 if (desc["coalesce_strategy"].valid()) et.setCoalesceStrategy(static_cast<EventType::CoalesceStrategy>(desc["coalesce_strategy"].get<int>()));
                 if (desc["coalesce_key"].valid()) et.setCoalesceKey(static_cast<EventType::CoalesceKey>(desc["coalesce_key"].get<int>()));

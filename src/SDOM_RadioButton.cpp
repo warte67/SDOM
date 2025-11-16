@@ -26,32 +26,6 @@ namespace SDOM
         // add custom properties here
     } // END: RadioButton::RadioButton(const InitStruct& init)
 
-    RadioButton::RadioButton(const sol::table& config) : TristateButton(config, RadioButton::InitStruct())
-    {
-        setType(TypeName);
-        icon_index_ = radioIconIndexFromState(buttonState_); // set icon index based on initial state
-
-        InitStruct init; // default init struct to fall back on
-        
-        // accept multiple aliases for the checked state
-        if (config["is_checked"].valid()) {
-            try { selected_ = config["is_checked"].get<bool>(); } catch(...) {}
-        } else if (config["checked"].valid()) {
-            try { selected_ = config["checked"].get<bool>(); } catch(...) {}
-        } else if (config["is_selected"].valid()) {
-            try { selected_ = config["is_selected"].get<bool>(); } catch(...) {}
-        } else if (config["selected"].valid()) {
-            try { selected_ = config["selected"].get<bool>(); } catch(...) {}
-        } else {
-            selected_ = init.selected;
-        }
-        // if (selected_)
-        //     clearSiblings_();
-        // setState(selected_ ? ButtonState::Checked : ButtonState::Unchecked);
-
-        // add custom properties here
-    } // END: RadioButton::RadioButton(const sol::table& config)
-
 
     // --- Lifecycle & Core Virtuals --- //
     bool RadioButton::onInit()
@@ -171,11 +145,11 @@ namespace SDOM
 
         onStateChanged(buttonState_, state); 
         // dispatch event
-        queue_event(EventType::StateChanged, [this, state](Event& ev) {
-            ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
-            ev.setPayloadValue("new_state", static_cast<int>(state));
-            ev.setPayloadValue("buttonName", getName());
-        });
+        // queue_event(EventType::StateChanged, [this, state](Event& ev) {
+        //     ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
+        //     ev.setPayloadValue("new_state", static_cast<int>(state));
+        //     ev.setPayloadValue("buttonName", getName());
+        // });
         buttonState_ = state;
         // Update internal icon button if present. Prefer the internal child handle
         // created during onInit(); otherwise, try to resolve the conventional
@@ -241,37 +215,6 @@ namespace SDOM
             }   
         }
     } // END: RadioButton::clearSiblings_()
-
-
-    // --- Lua Registration --- //
-    void RadioButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Include IButtonObject bindings first
-        IButtonObject::registerLuaBindings(lua);
-
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "RadioButton";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings on DisplayHandle:
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool 
-        // {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
-        
-    } // END: RadioButton::_registerLuaBindings()
-    
 
 
     

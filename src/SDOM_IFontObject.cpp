@@ -24,48 +24,11 @@ namespace SDOM
             fontType_ = FontType::Bitmap;
         }
         type_ = FontTypeToString.at(fontType_);
-        fontSize_ = (init.fontSize_ > 0) ? init.fontSize_ : 8; // sane default
+        fontSize_ = (init.font_size > 0) ? init.font_size : 8; // sane default
 
 
 
         
-    }
-
-
-    IFontObject::IFontObject(const sol::table& config) : IAssetObject(config)
-    {
-        // name (required)
-        if (!config["name"].valid()) {
-            ERROR("IFontObject constructed without required field 'name' in config");
-        }
-        name_ = config["name"].get<std::string>();
-
-        // filename (required)
-        if (!config["filename"].valid()) {
-            ERROR("IFontObject constructed without required field 'filename' in config");
-        }
-        filename_ = config["filename"].get<std::string>();
-
-        // type (required) -> normalize and map to FontType
-        std::string requested = config["type"].valid() ? config["type"].get<std::string>() : std::string();
-        if (requested.empty()) {
-            DEBUG_LOG("IFontObject constructed without required field 'type' in config");
-            requested = "bitmap";
-        }
-        std::transform(requested.begin(), requested.end(), requested.begin(), [](unsigned char c){ return std::tolower(c); });
-
-        auto it = StringToFontType.find(requested);
-        if (it != StringToFontType.end()) {
-            fontType_ = it->second;
-        } else {
-            DEBUG_LOG("IFontObject constructed with unknown font type: " + requested);
-            fontType_ = FontType::Bitmap;
-        }
-        type_ = FontTypeToString.at(fontType_);
-
-        // optional size
-        fontSize_ = config["size"].valid() ? config["size"].get<int>() : 8;
-        if (fontSize_ <= 0) fontSize_ = 8;
     }
 
 
@@ -134,30 +97,6 @@ namespace SDOM
             else if (bmpH > 0) outFontSize = bmpH;
         }
     }
-
-
-    // --- Lua Regisstration --- //
-
-    void IFontObject::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "IFontObject:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle handles in Lua)
-        // Go-by for future bindings on AssetHandle:
-        //   auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
-    } // END _registerLuaBindings()
-
-
 
 
     

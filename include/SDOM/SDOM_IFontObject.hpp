@@ -151,33 +151,46 @@ namespace SDOM
             // --- Construction & Initialization --- //
             struct InitStruct : public IAssetObject::InitStruct
             {
-                InitStruct() : IAssetObject::InitStruct() 
-                { 
-                    name = TypeName; 
-                    type = TypeName;
-                    filename = TypeName; // Default filename, can be overridden
+                InitStruct()
+                    : IAssetObject::InitStruct()
+                {
+                    name      = TypeName;   // "IFontObject"
+                    type      = TypeName;
+                    filename  = TypeName;   // may be overridden by derived classes
+                    font_size = 8;          // shared uniform size scalar
                 }
-                int fontSize_ = 8; // Font size property for TrueType fonts (and BitmapFont scaling)
+
+                int font_size = 8;   // <-- THE canonical font size (shared by bitmap + truetype)
+
+
+                // --------------------------------------------------------------------
+                // Correct JSON signature: from_json(json, InitStruct&)
+                // --------------------------------------------------------------------
+                static void from_json(const nlohmann::json& j, InitStruct& i)
+                {
+                    // Base asset fields
+                    if (j.contains("name"))         i.name        = j["name"].get<std::string>();
+                    if (j.contains("type"))         i.type        = j["type"].get<std::string>();
+                    if (j.contains("filename"))     i.filename    = j["filename"].get<std::string>();
+
+                    if (j.contains("is_internal"))
+                        i.is_internal = j["is_internal"].get<bool>();
+                    if (j.contains("internal"))
+                        i.is_internal = j["internal"].get<bool>();
+
+                    // Shared font-level fields
+                    if (j.contains("font_size"))
+                        i.font_size = j["font_size"].get<int>();
+                }
             };
-                    
+
+
 
         protected:
             // --- Constructors --- //
             IFontObject(const InitStruct& init);
-            IFontObject(const sol::table& config);
-
-            // // The filename is immutable after initialization
-            // explicit IFontObject(const std::string& assetName, int fontSize = 10);
 
         public:
-            // // --- Static Factory Methods --- //
-            // static std::unique_ptr<IFontObject> CreateFromLua(const sol::table& config) {
-            //     return std::unique_ptr<IFontObject>(new IFontObject(config));
-            // }
-            // static std::unique_ptr<IFontObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-            //     const auto& fontInit = static_cast<const IFontObject::InitStruct&>(baseInit);
-            //     return std::unique_ptr<IFontObject>(new IFontObject(fontInit));
-            // }
         
             ~IFontObject() override;
 
@@ -228,13 +241,6 @@ namespace SDOM
 
             int fontSize_ = 8; // Font size property for TrueType fonts (and BitmapFont scaling)
             FontType fontType_ = FontType::Bitmap;
-        
-
-            // ---------------------------------------------------------------------
-            // 🔗 Legacy Lua Registration
-            // ---------------------------------------------------------------------
-            void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
             // -----------------------------------------------------------------
             // 📜 Data Registry Integration

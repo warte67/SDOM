@@ -25,28 +25,9 @@ namespace SDOM
 
 
     bool IDisplayObject_UnitTests();
-    bool Event_UnitTests();
-    bool EventType_UnitTests();
-    bool ArrowButton_UnitTests();
-    bool AssetHandle_UnitTests();
-    bool BitmapFont_UnitTests();
-    bool Button_UnitTests();
-    bool TristateButton_UnitTests();
-
-    bool Variant_UnitTests();
     bool DataRegistry_UnitTests();
     bool Event_CAPI_UnitTests();
     bool EventType_CAPI_UnitTests();    
+    bool Variant_UnitTests();
     
-    // bool Factory_UnitTests();
-    // bool Stage_UnitTests();
-    // bool Box_UnitTests();
-    // bool LUA_UnitTests();
-    // bool DisplayHandle_UnitTests();
-    // bool Event_UnitTests();
-    // bool GarbageCollection_UnitTests();
-    // bool SpriteSheet_UnitTests();
-    // bool Label_UnitTests();
-    // bool Group_UnitTests(); // new Group unit tests
-    // add more unit tests here as needed ...
 }

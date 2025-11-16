@@ -21,15 +21,6 @@ namespace SDOM
         // Initialize texture-specific parameters from init if any
     }
 
-    Texture::Texture(const sol::table& config) : IAssetObject(config)
-    {
-        std::string type = config["type"].valid() ? config["type"].get<std::string>() : TypeName;
-        if (type != TypeName) 
-        {
-            ERROR("Error: Texture constructed with incorrect type: " + type);
-        }
-        // Extract texture-specific parameters from config if any
-    }
 
     bool Texture::onInit()
     {
@@ -198,30 +189,6 @@ namespace SDOM
     } // END: Texture::onUnitTest()
 
 
-
-    // --- Lua Regisstration --- //
-
-    void Texture::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "Texture:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings:
-        // To expose Texture helpers on AssetHandle in Lua, follow the unified pattern:
-        //   auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
-        //   // then bind on both 'ut' (method syntax) and 'handle' (function syntax).
-
-
-    }
     
     void Texture::registerBindingsImpl(const std::string& typeName)
     {

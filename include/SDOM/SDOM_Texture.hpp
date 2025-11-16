@@ -41,32 +41,51 @@ namespace SDOM
         // --- Initialization Struct --- //
         struct InitStruct : public IAssetObject::InitStruct
         {
-            InitStruct() : IAssetObject::InitStruct() 
-            { 
-                name = TypeName; 
-                type = TypeName;
-                filename = TypeName; // Default filename, can be overridden
+            InitStruct()
+                : IAssetObject::InitStruct()
+            {
+                name     = TypeName;   // registry key
+                type     = TypeName;   // concrete type
+                filename = TypeName;   // default resource identifier
+                is_internal = true;    // inherited from IAssetObject
             }
-            // add texture-specific initialization parameters here
-            // ...
+
+            // JSON loader (correct signature!)
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                // 1) Load all base-class asset fields
+                IAssetObject::InitStruct::from_json(j, out);
+
+                // 2) Texture-specific fields
+                if (j.contains("filename"))
+                    out.filename = j["filename"].get<std::string>();
+            }
         };
 
+
     protected:
+        friend Factory;
+        friend Core;    
+        
         // --- Constructors --- //
         Texture(const InitStruct& init);
-        Texture(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IAssetObject>(new Texture(config));
+        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const Texture::InitStruct&>(baseInit);
+            return std::unique_ptr<IAssetObject>(new Texture(init));
         }
-        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-            const auto& textureInit = static_cast<const Texture::InitStruct&>(baseInit);
-            return std::unique_ptr<IAssetObject>(new Texture(textureInit));
+        static std::unique_ptr<IAssetObject> CreateFromJson(const nlohmann::json& j)
+        {
+            Texture::InitStruct init;                // defaults
+            Texture::InitStruct::from_json(j, init); // JSON overrides
+            return std::unique_ptr<IAssetObject>(new Texture(init));
         }
 
-        Texture() = default;
+
+        Texture() = default;  // "null" default constructor     
         ~Texture() override = default;
         bool onInit() override;
         void onQuit() override;
@@ -79,20 +98,9 @@ namespace SDOM
         float getTextureHeight() const { return textureHeight_; }
 
     protected:
-        friend Factory;
-        friend Core;
-
         SDL_Texture* texture_ = nullptr;
         float textureWidth_ = 0;
         float textureHeight_ = 0;
-
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

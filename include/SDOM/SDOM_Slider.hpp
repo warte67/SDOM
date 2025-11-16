@@ -17,49 +17,105 @@ namespace SDOM
         static constexpr const char* TypeName = "Slider";
 
         // --- Initialization Struct --- //
-        struct InitStruct : IRangeControl::InitStruct
+        struct InitStruct : public IRangeControl::InitStruct
         {
-            InitStruct() : IRangeControl::InitStruct()
-            { 
-                // from IDisplayObject
-                name = TypeName;
-                type = TypeName;
-                tabEnabled = false;
+            InitStruct()
+                : IRangeControl::InitStruct()
+            {
+                //
+                // From IDisplayObject (overrides)
+                //
+                name       = TypeName;
+                type       = TypeName;
                 isClickable = true;
-                tabEnabled = true;
-                
-                // Default colors for Slider
-                color = { 128, 128, 128, 255 };             // Track Color
-                foregroundColor = { 255, 255, 255, 255 };   // Knob Color
-                backgroundColor = { 16, 16, 16, 128 };      // Background Color
-                borderColor = { 0, 0, 0, 32 };              // Border Color
+                tabEnabled  = true;   // sliders should be keyboard accessible
 
-                // from IRangeControl
-                min = 0.0f;      // Minimum value (0.0% - 100.0%)
-                max = 100.0f;    // Maximum value (0.0% - 100.0%)
-                value = 0.0f;    // Current value (0.0% - 100.0%)
+                //
+                // Slider-specific colors for track/knob/background/border
+                //
+                color           = {128, 128, 128, 255};   // track
+                foregroundColor = {255, 255, 255, 255};   // knob
+                backgroundColor = {16, 16, 16, 128};      // background
+                borderColor     = {0, 0, 0, 32};          // border
+
+                //
+                // IRangeControl fields already initialized by parent InitStruct
+                // but we override to ensure slider-specific defaults
+                //
+                min         = 0.0f;
+                max         = 100.0f;
+                value       = 0.0f;
                 orientation = Orientation::Horizontal;
-                std::string icon_resource = "internal_icon_8x8"; 
 
+                //
+                // Fix: icon_resource must NOT be shadowed
+                //
+                icon_resource = "internal_icon_8x8";
+
+                //
+                // Slider-specific addition
+                //
+                step = 0.0f;   // 0 = continuous, >0 = discrete stepping
             }
-            float step = 0.0f; // 0.0 = continuous, >0.0 = discrete steps in units
 
+            float step = 0.0f;   // Slider-specific
+
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                //
+                // 1. Load IRangeControl (and IDisplayObject) fields first
+                //
+                IRangeControl::InitStruct::from_json(j, out);
+
+                //
+                // 2. Slider-specific overrides
+                //
+
+                // Track color
+                if (j.contains("color"))
+                    out.color = json_to_color(j["color"]);
+
+                // Knob color
+                if (j.contains("foreground_color"))
+                    out.foregroundColor = json_to_color(j["foreground_color"]);
+
+                // Background color
+                if (j.contains("background_color"))
+                    out.backgroundColor = json_to_color(j["background_color"]);
+
+                // Border color
+                if (j.contains("border_color"))
+                    out.borderColor = json_to_color(j["border_color"]);
+
+                // Override icon pack
+                if (j.contains("icon_resource"))
+                    out.icon_resource = j["icon_resource"].get<std::string>();
+
+                // Slider-only field: step interval
+                if (j.contains("step"))
+                    out.step = j["step"].get<float>();
+            }
         }; // END: InitStruct
         
     protected:
         // --- Protected Constructors --- //
         Slider(const InitStruct& init);  
-        Slider(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new Slider(config));
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const Slider::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new Slider(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& SliderInit = static_cast<const Slider::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new Slider(SliderInit));
+
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const nlohmann::json& j)
+        {
+            Slider::InitStruct init;
+            Slider::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new Slider(init));
         }
+
 
         // --- Default Constructor and Destructor --- //
         Slider() = default;
@@ -86,13 +142,6 @@ namespace SDOM
         // --- Protected Virtual Methods --- //
         void _onValueChanged(float oldValue, float newValue) override;
         
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
-
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------

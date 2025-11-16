@@ -24,30 +24,66 @@ namespace SDOM
         // --- Initialization Struct --- //
         struct InitStruct : public IAssetObject::InitStruct
         {
-            InitStruct() : IAssetObject::InitStruct() 
-            { 
-                name = TypeName; 
-                type = TypeName;
-                filename = "internal_ttf"; // Default filename, can be overridden
+            InitStruct()
+                : IAssetObject::InitStruct()
+            {
+                name      = TypeName;        // "TTFAsset"
+                type      = TypeName;
+                filename  = "internal_ttf";  // default virtual filename
+                internal_font_size = 10;     // unified internal representation
             }
-            int internalFontSize = 10;     // Font size property for TrueType fonts
-        };
-    
+
+            // unified internal size representation
+            int internal_font_size = 10;
+
+            // alias for convenience – optional
+            int size() const { return internal_font_size; }
+
+            // ------------------------------------------------------------
+            // JSON loader — correct signature & inheritance-safe
+            // ------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                // 1) Load base asset fields
+                IAssetObject::InitStruct::from_json(j, out);
+
+                // 2) Unified size handling with multiple compatibility keys
+                if (j.contains("size"))
+                {
+                    out.internal_font_size = j["size"].get<int>();
+                }
+                else if (j.contains("internal_font_size"))
+                {
+                    out.internal_font_size = j["internal_font_size"].get<int>();
+                }
+                else if (j.contains("internalFontSize"))
+                {
+                    out.internal_font_size = j["internalFontSize"].get<int>();
+                }
+                // else leave default (10)
+            }
+        };    
 
     protected:
         // --- Constructors --- //
         TTFAsset(const InitStruct& init);
-        TTFAsset(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IAssetObject>(new TTFAsset(config));
+        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const TTFAsset::InitStruct&>(baseInit);
+            return std::unique_ptr<IAssetObject>(new TTFAsset(init));
         }
-        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-            const auto& ttfInit = static_cast<const TTFAsset::InitStruct&>(baseInit);
-            return std::unique_ptr<IAssetObject>(new TTFAsset(ttfInit));
+
+        static std::unique_ptr<IAssetObject> CreateFromJson(const nlohmann::json& j)
+        {
+            TTFAsset::InitStruct init;
+            TTFAsset::InitStruct::from_json(j, init);
+            return std::unique_ptr<IAssetObject>(new TTFAsset(init));
         }
+
+
 
         TTFAsset() = default;
         ~TTFAsset() override;
@@ -67,13 +103,6 @@ namespace SDOM
         int internalFontSize_ = 10;           // Uniform scaling for both font types
 
         TTF_Font* ttf_font_ = nullptr;
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

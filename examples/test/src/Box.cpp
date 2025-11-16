@@ -33,19 +33,6 @@ Box::Box(const SDOM::IDisplayObject::InitStruct& init)
     setClickable(true);
 }
 
-Box::Box(const sol::table& config)
-: IDisplayObject(config, Box::InitStruct())
-{
-    // std::cout << "Box constructed with Lua config: " << getName() 
-    //         << " at address: " << this << std::endl;            
-
-    std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
-    if (type != TypeName) {
-        ERROR("Error: Box constructed with incorrect type: " + type);
-    }
-    setTabEnabled(true);
-    setClickable(true);
-}
 
 Box::~Box() 
 {
@@ -398,30 +385,6 @@ bool Box::onUnitTest(int frame)
 
     return SUPER::onUnitTest(frame); // Call base class unit test handler
 }
-
-
-
-void Box::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-{
-    // Include inherited bindings first
-    SUPER::_registerLuaBindings(typeName, lua);
-
-    // if (DEBUG_REGISTER_LUA)
-    if (false) // TEMP DISABLE
-    {
-        std::string typeNameLocal = "Box";
-        std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                  << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                  << typeName << CLR::RESET << std::endl;
-    }
-
-    // // Augment the single shared DisplayHandle handle usertype
-    // sol::table handle = SDOM::DisplayHandle::ensure_handle_table(lua);
-
-    // Note: no usertype creation and no this->objHandleType_ assignment.
-
- } // End Box::_registerDisplayObject()
-
 
 
 void Box::registerBindingsImpl(const std::string& typeName)

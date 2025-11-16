@@ -106,27 +106,27 @@ namespace SDOM
         SDL_Event getSDL_Event() const;
         Event& setSDL_Event(const SDL_Event& sdlEvent);
 
-        // Payload accessors
-        const sol::table& getPayload() const {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            return payload;
-        }
-        Event& setPayload(const sol::table& data) {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            payload = data;
-            return *this;
-        }
-        template<typename T>
-        Event& setPayloadValue(const std::string& key, const T& value) {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            payload[key] = value;
-            return *this;
-        }
-        template<typename T>
-        T getPayloadValue(const std::string& key) const {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            return payload[key].get_or(T{});
-        }
+        // // Payload accessors
+        // const sol::table& getPayload() const {
+        //     std::lock_guard<std::mutex> lock(eventMutex_);
+        //     return payload;
+        // }
+        // Event& setPayload(const sol::table& data) {
+        //     std::lock_guard<std::mutex> lock(eventMutex_);
+        //     payload = data;
+        //     return *this;
+        // }
+        // template<typename T>
+        // Event& setPayloadValue(const std::string& key, const T& value) {
+        //     std::lock_guard<std::mutex> lock(eventMutex_);
+        //     payload[key] = value;
+        //     return *this;
+        // }
+        // template<typename T>
+        // T getPayloadValue(const std::string& key) const {
+        //     std::lock_guard<std::mutex> lock(eventMutex_);
+        //     return payload[key].get_or(T{});
+        // }
 
 
         // Mouse event accessors
@@ -265,11 +265,6 @@ namespace SDOM
             }
             return *this;
         }
-
-        // Register Lua bindings for Event and EventType
-        // This registers the Event userdata and convenience properties/methods
-        // so Lua scripts can use evt.dt, evt.type, evt.target, evt.name, and evt:getName().
-        static void registerLua(sol::state_view lua);
 
     protected:
         // IDataObject binding registration implementation (overrides IDataObject)

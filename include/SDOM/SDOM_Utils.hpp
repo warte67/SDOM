@@ -29,8 +29,6 @@ namespace SDOM
     SDL_Window* getWindow();
     SDL_Texture* getTexture();
 
-    sol::state& getLua();
-
     // helper function to extract SDL_Color from Lua table
     SDL_Color parseColor(const sol::object& colorObj);
 
@@ -39,9 +37,6 @@ namespace SDOM
 
     // helper function to validate anchor point strings
     bool validateAnchorPointString(const std::string& anchorString);
-
-    // helper function to validate anchor point assignments in a config table
-    bool validateAnchorAssignments(const sol::table& config);
 
     // helper function to print a message box to the terminal
     void printMessageBox(const std::string& title, const std::string& message, 
@@ -59,4 +54,7 @@ namespace SDOM
     bool drop_invalid_cached_texture(SDL_Texture*& tex,
                                      SDL_Renderer* currentRenderer,
                                      SDL_Renderer*& textureOwnerRenderer);
+
+    AnchorPoint parseAnchorPoint(const nlohmann::json& j);
+                                     
 } // namespace SDOM

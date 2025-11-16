@@ -96,28 +96,91 @@ namespace SDOM
         // --- Initialization Struct --- //
         struct InitStruct : public IDisplayObject::InitStruct
         {
-            InitStruct() : IDisplayObject::InitStruct() 
-            { 
-                name = TypeName; 
-                type = TypeName;
-                color = {96, 0, 96, 255};   // panel color
+            InitStruct()
+                : IDisplayObject::InitStruct()
+            {
+                //
+                // Base DisplayObject defaults
+                //
+                name        = TypeName;
+                type        = TypeName;
+                color       = {96, 0, 96, 255}; // default panel tint
+
+                //
+                // Panel-specific defaults
+                //
+                base_index     = PanelBaseIndex::Frame;
+
+                icon_resource  = "internal_icon_8x8";
+                icon_width     = 8;
+                icon_height    = 8;
+
+                font_resource  = "internal_font_8x8";
+                font_width     = 8;
+                font_height    = 8;
             }
+
+            //
+            // IPanelObject expansion fields
+            //
             PanelBaseIndex base_index = PanelBaseIndex::Frame;
-            std::string icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
-            int icon_width = 8;        // default icon width is 8
-            int icon_height = 8;       // default icon height is 8
-            std::string font_resource = "internal_font_8x8"; // Default to internal 8x8 font 
-            int font_width = 8;        // default font width is 8
-            int font_height = 8;       // default font height is 8
-        };
+
+            std::string icon_resource = "internal_icon_8x8";
+            int icon_width            = 8;
+            int icon_height           = 8;
+
+            std::string font_resource = "internal_font_8x8";
+            int font_width            = 8;
+            int font_height           = 8;
+
+            // ------------------------------------------------------------
+            // JSON loader — correct signature & inheritance-safe
+            // ------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                // --- 1) Parse all inherited DisplayObject fields first ---
+                IDisplayObject::InitStruct::from_json(j, out);
+
+                // --- 2) Parse Panel-specific fields ---
+                
+                // Panel color override
+                if (j.contains("color"))
+                    out.color = json_to_color(j["color"]);
+
+                // base_index: string → enum
+                if (j.contains("base_index"))
+                {
+                    std::string s = j["base_index"].get<std::string>();
+                    auto it = stringToPanelBaseIndex_.find(s);
+                    if (it != stringToPanelBaseIndex_.end())
+                        out.base_index = it->second;
+                }
+
+                // icon settings
+                if (j.contains("icon_resource"))
+                    out.icon_resource = j["icon_resource"].get<std::string>();
+
+                if (j.contains("icon_width"))
+                    out.icon_width = j["icon_width"].get<int>();
+
+                if (j.contains("icon_height"))
+                    out.icon_height = j["icon_height"].get<int>();
+
+                // font settings
+                if (j.contains("font_resource"))
+                    out.font_resource = j["font_resource"].get<std::string>();
+
+                if (j.contains("font_width"))
+                    out.font_width = j["font_width"].get<int>();
+
+                if (j.contains("font_height"))
+                    out.font_height = j["font_height"].get<int>();
+            }
+        }; // END: struct InitStruct
 
     protected:
         // --- Constructors --- //
         IPanelObject(const InitStruct& init);  
-        IPanelObject(const sol::table& config);
-        // Defaults-aware Lua constructor to allow derived InitStruct defaults
-        IPanelObject(const sol::table& config, const InitStruct& defaults);
-
         // IPanelObject();
 
     public:
@@ -179,14 +242,7 @@ namespace SDOM
         SDL_PixelFormat current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
 
         bool rebuildPanelTexture_(int width, int height, SDL_PixelFormat fmt);
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
-
+ 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------

@@ -201,10 +201,11 @@ bool Main_UnitTests()
 {
     bool done = true;
 
-    done &= Variant_UnitTests();         // "insane" (ASAN fails)
-    done &= DataRegistry_UnitTests();    // okay
-    done &= Event_CAPI_UnitTests();      // okay
-    done &= EventType_CAPI_UnitTests();  // okay
+    done &= IDisplayObject_UnitTests();
+    done &= DataRegistry_UnitTests();
+    done &= Event_CAPI_UnitTests();
+    done &= EventType_CAPI_UnitTests();    
+    done &= Variant_UnitTests();    
 
     return done;
 } // END: EventType_UnitTests()
@@ -221,13 +222,13 @@ int main(int argc, char** argv)
     SDOM::Core::CoreConfig cfg; // defaults are reasonable (window + renderer will be created)
     core.configure(cfg);
 
-    // Disable Lua-driven unit tests for this headless variant
-    core.getLua()["SDOM_RUN_LUA_UNIT_TESTS"] = false;
+    // // Disable Lua-driven unit tests for this headless variant
+    // core.getLua()["SDOM_RUN_LUA_UNIT_TESTS"] = false;
 
     // Register minimal types needed by tests
     core.getFactory().registerDisplayObjectType("Box", TypeCreators{
-        Box::CreateFromLua,
-        Box::CreateFromInitStruct
+        Box::CreateFromInitStruct,
+        Box::CreateFromJson
     });
 
     // Now that the Factory is initialized, create the Stage and set it as root
@@ -239,7 +240,7 @@ int main(int argc, char** argv)
     core.registerOnUnitTest(Main_UnitTests);
 
     // Start the main loop (no additional config needed)
-    // core.setStopAfterUnitTests(true);
+    core.setStopAfterUnitTests(true);
     bool ok = core.run();
     
     return ok ? 0 : 1;

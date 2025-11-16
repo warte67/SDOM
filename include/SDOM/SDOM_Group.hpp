@@ -16,45 +16,93 @@ namespace SDOM
         static constexpr const char* TypeName = "Group";
 
         // --- Initialization Struct --- //
-        struct InitStruct : IPanelObject::InitStruct
+        struct InitStruct : public IPanelObject::InitStruct
         {
-            InitStruct() : IPanelObject::InitStruct() 
-            { 
-                // from IDisplayObject
-                name = TypeName;
-                type = TypeName;
-                color = {96, 0, 96, 255};   // Group color
-                tabEnabled = false;     // groups are not tab-enabled by default   
-                isClickable = false;    // groups are not clickable by default
-                // from IPanelObject
-                base_index = PanelBaseIndex::Group; 
-                icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
-                icon_width = 8;         // default icon width is 8
-                icon_height = 8;        // default icon height is 8
-                font_resource = "internal_font_8x8"; // Default to internal 8x8 font 
-                font_width = 8;         // default font width is 8
-                font_height = 8;        // default font height is 8
-            }
-            std::string text = "Group"; // default group text
-            int font_size = 8;          // default font size is 8
-            SDL_Color label_color_ = {255, 255, 255, 255}; // default label color is white
+            InitStruct()
+                : IPanelObject::InitStruct()
+            {
+                //
+                // From IDisplayObject
+                //
+                name        = TypeName;
+                type        = TypeName;
+                color       = {96, 0, 96, 255};     // purple-ish group color
+                tabEnabled  = false;                // groups are NOT tab-focusable
+                isClickable = false;                // groups are NOT clickable
 
+                //
+                // From IPanelObject
+                //
+                base_index    = PanelBaseIndex::Group;
+                icon_resource = "internal_icon_8x8";
+                icon_width    = 8;
+                icon_height   = 8;
+
+                font_resource = "internal_font_8x8";
+                font_width    = 8;
+                font_height   = 8;
+
+                //
+                // Group-specific
+                //
+                text        = "Group";
+                font_size   = 8;
+                label_color = {255, 255, 255, 255}; // white
+            }
+
+            // --- Group-specific members ---
+            std::string text = "Group";
+            int font_size = 8;
+            SDL_Color label_color = {255, 255, 255, 255};
+
+            // ---------------------------------------------------------------------
+            // 📜 JSON Loader (mirrors Button::InitStruct::from_json)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                // 1) Load inherited fields first
+                IPanelObject::InitStruct::from_json(j, out);
+
+                // 2) Load Group-specific fields
+                if (j.contains("text"))
+                    out.text = j["text"].get<std::string>();
+
+                if (j.contains("font_size"))
+                    out.font_size = j["font_size"].get<int>();
+
+                if (j.contains("label_color") && j["label_color"].is_array() && j["label_color"].size() == 4)
+                {
+                    const auto& c = j["label_color"];
+                    out.label_color = {
+                        c[0].get<uint8_t>(),
+                        c[1].get<uint8_t>(),
+                        c[2].get<uint8_t>(),
+                        c[3].get<uint8_t>()
+                    };
+                }
+            }
         }; // END: InitStruct
+
     protected:
         // --- Constructors --- //
         Group(const InitStruct& init);  
-        Group(const sol::table& config);
 
     public:
 
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new Group(config));
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const Group::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new Group(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& groupInit = static_cast<const Group::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new Group(groupInit));
+
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const nlohmann::json& j)
+        {
+            Group::InitStruct init;
+            Group::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new Group(init));
         }
+
 
         Group() = default;
         ~Group() override = default;     
@@ -108,13 +156,6 @@ namespace SDOM
         int font_height_ = 8;                               // intended for use during initialization only
         SDL_Color label_color_ = {255, 255, 255, 255};      // default label color is white
         
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
-
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------

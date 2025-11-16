@@ -31,42 +31,83 @@ namespace SDOM
 
 
         // --- Initialization Struct --- //
-        struct InitStruct : IDisplayObject::InitStruct
+        struct InitStruct : public IDisplayObject::InitStruct
         {
-            InitStruct() : IDisplayObject::InitStruct()
-            { 
-                // from IDisplayObject
+            InitStruct()
+                : IDisplayObject::InitStruct()
+            {
+                //
+                // From IDisplayObject
+                //
                 name = TypeName;
                 type = TypeName;
-                color = {96, 0, 96, 255};   // Icon Color
+
+                color      = {96, 0, 96, 255};  // default control tint
                 tabEnabled = false;
                 isClickable = true;
-            }
-            // Additional IRangeControl Parameters
-            float min = 0.0f;      // Minimum value (0.0% - 100.0%)
-            float max = 100.0f;    // Maximum value (0.0% - 100.0%)
-            float value = 0.0f;    // Current value (0.0% - 100.0%)
-            Orientation orientation = Orientation::Horizontal;
-            std::string icon_resource = "internal_icon_8x8"; 
 
+                //
+                // IRangeControl-specific defaults
+                //
+                min         = 0.0f;
+                max         = 100.0f;
+                value       = 0.0f;
+                orientation = Orientation::Horizontal;
+
+                icon_resource = "internal_icon_8x8";   // NOTE: fixed — no local variable shadowing!
+            }
+
+            //
+            // IRangeControl-specific fields
+            //
+            float min         = 0.0f;
+            float max         = 100.0f;
+            float value       = 0.0f;
+            Orientation orientation = Orientation::Horizontal;
+            std::string icon_resource = "internal_icon_8x8";
+
+
+            // ---------------------------------------------------------------------
+            // JSON loader (inheritance-safe)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                IDisplayObject::InitStruct::from_json(j, out);
+
+                if (j.contains("min"))   out.min   = j["min"].get<float>();
+                if (j.contains("max"))   out.max   = j["max"].get<float>();
+                if (j.contains("value")) out.value = j["value"].get<float>();
+
+                if (j.contains("orientation"))
+                    out.orientation = static_cast<Orientation>( j["orientation"].get<int>() );
+
+                if (j.contains("icon_resource"))
+                    out.icon_resource = j["icon_resource"].get<std::string>();
+            }
         }; // END: InitStruct
+        
         
     protected:
         // --- Protected Constructors --- //
         IRangeControl(const InitStruct& init);  
-        IRangeControl(const sol::table& config);
-        // Defaults-aware Lua constructor which accepts derived InitStruct defaults
-        IRangeControl(const sol::table& config, const InitStruct& defaults);
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new IRangeControl(config));
+        static std::unique_ptr<IDisplayObject>
+        CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const IRangeControl::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new IRangeControl(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& IRangeControlInit = static_cast<const IRangeControl::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new IRangeControl(IRangeControlInit));
+
+        static std::unique_ptr<IDisplayObject>
+        CreateFromJson(const nlohmann::json& j)
+        {
+            IRangeControl::InitStruct init;
+            IRangeControl::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new IRangeControl(init));
         }
+
 
         // --- Default Constructor and Destructor --- //
         IRangeControl() = default;
@@ -115,8 +156,7 @@ namespace SDOM
         void setOrientation(Orientation o);
 
         // --- Protected Virtual Methods --- //
-        virtual void _onValueChanged(float oldValue, float newValue);
-   
+        virtual void _onValueChanged(float oldValue, float newValue);   
 
         // --- Cached rendering --- //
         SDL_Texture* cachedTexture_ = nullptr;
@@ -125,14 +165,6 @@ namespace SDOM
         int current_height_ = 0;
         SDL_PixelFormat current_pixel_format_ = SDL_PIXELFORMAT_UNKNOWN;
         bool rebuildRangeTexture_(int width, int height, SDL_PixelFormat fmt);
-
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

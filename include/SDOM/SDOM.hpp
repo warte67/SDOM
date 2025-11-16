@@ -77,16 +77,8 @@
 #include <vector>
 
 // #define SOL_ALL_AUTOMAGIC 0
-#include <sol/sol.hpp>
-
-constexpr bool DEBUG_REGISTER_LUA = false;  // set to true to enable verbose Lua registration logs
-// #define UNIT_TESTS_ENABLED true
-
-
-// Enable verbose Lua-related test/info logs when set to 1. Default is off.
-#ifndef DEBUG_LUA_TESTS
-#define DEBUG_LUA_TESTS 0
-#endif
+// #include <sol/sol.hpp>
+#include <external/nlohmann/json.hpp>
 
 // Garbage Collection / Orphan Retention
 constexpr int ORPHAN_GRACE_PERIOD = 5000; // default grace period for orphaned objects (in milliseconds)
@@ -484,9 +476,16 @@ namespace SDOM
  * @param message Error message to report.
  */
 // Macro for throwing exceptions
-#define ERROR(message) throw SDOM::Exception(message, __FILE__, __LINE__)
+#include <sstream>
 
+#define ERROR(msg)                                                          \
+    do {                                                                    \
+        std::ostringstream sdom_err_stream__;                               \
+        sdom_err_stream__ << msg;                                           \
+        throw SDOM::Exception(sdom_err_stream__.str(), __FILE__, __LINE__); \
+    } while (0)
 
+    
 /**
  * @brief Shows a warning message with file and line info.
  * @param message Warning message to display.

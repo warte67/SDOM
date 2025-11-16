@@ -4,10 +4,13 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/include",
+                "${workspaceFolder}/include/external",
                 "${workspaceFolder}/examples/test/include",
                 "${workspaceFolder}/sol2/include",
                 "/usr/include/lua5.3",
-                "/usr/include/SDL3"
+                "/usr/include/SDL3",
+                "/usr/include/SDL3_image",
+                "/usr/local/include/SDL3_ttf"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",

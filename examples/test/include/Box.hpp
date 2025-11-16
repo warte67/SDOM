@@ -19,28 +19,55 @@ class Box final : public SDOM::IDisplayObject
         static constexpr const char* TypeName = "Box";
         struct InitStruct : public IDisplayObject::InitStruct
         {
-            InitStruct() : IDisplayObject::InitStruct() 
-            { 
-                name = TypeName; 
-                type = TypeName; 
-                color = {255, 0, 255, 255}; 
+            InitStruct()
+                : IDisplayObject::InitStruct()
+            {
+                //
+                // From IDisplayObject
+                //
+                name = TypeName;
+                type = TypeName;
+
+                // Default color for Box (your original value)
+                color = {255, 0, 255, 255};  // magenta box
+            }
+
+            // ---------------------------------------------------------------------
+            // JSON Loader (Inheritance-Safe)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                IDisplayObject::InitStruct::from_json(j, out);
+
+                if (j.contains("color"))
+                    out.color = SDOM::json_to_color(j["color"]);
             }
         };
 
+
+
     protected:
         Box(const SDOM::IDisplayObject::InitStruct& init);
-        Box(const sol::table& config);
 
     public:
         virtual ~Box();
 
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new Box(config));
+        // --- Static Factory Methods --- //
+        static std::unique_ptr<IDisplayObject>
+        CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const Box::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new Box(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& boxInit = static_cast<const Box::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new Box(boxInit));
+
+        static std::unique_ptr<IDisplayObject>
+        CreateFromJson(const nlohmann::json& j)
+        {
+            Box::InitStruct init;
+            Box::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new Box(init));
         }
+
 
         // Override DisplayHandle methods
         virtual bool onInit() override; 
@@ -59,9 +86,6 @@ class Box final : public SDOM::IDisplayObject
         static int getTestClickCount() { return test_click_count_.load(); }
 
     protected:
-    // --- LUA Registration --- //
-        virtual void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-        sol::usertype<Box> objHandleType_;        
 
         // Lua Registration
         virtual void registerBindingsImpl(const std::string& typeName) override;        

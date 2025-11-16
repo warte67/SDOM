@@ -835,9 +835,9 @@ namespace SDOM
             {
                 // Include new size in payload for listeners that care
                 auto evt = std::make_unique<Event>(EventType::Resize, stageHandle);
-                evt->setSDL_Event(e);
-                evt->setPayloadValue("width",  e.window.data1);
-                evt->setPayloadValue("height", e.window.data2);
+                // evt->setSDL_Event(e);
+                // evt->setPayloadValue("width",  e.window.data1);
+                // evt->setPayloadValue("height", e.window.data2);
                 addEvent(std::move(evt));
                 break;
             }
@@ -852,9 +852,9 @@ namespace SDOM
                 {
                     auto evt = std::make_unique<Event>(EventType::Move, stageHandle);
                     evt->setSDL_Event(e);
-                    // Provide compositor-reported position in payload
-                    evt->setPayloadValue("x", e.window.data1);
-                    evt->setPayloadValue("y", e.window.data2);
+                    // // Provide compositor-reported position in payload
+                    // evt->setPayloadValue("x", e.window.data1);
+                    // evt->setPayloadValue("y", e.window.data2);
                     addEvent(std::move(evt));
                 }
                 break;

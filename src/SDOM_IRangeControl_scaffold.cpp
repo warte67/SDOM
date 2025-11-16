@@ -11,9 +11,6 @@ namespace SDOM
     {
     } // END: IRangeControl_scaffold::IRangeControl_scaffold(const InitStruct& init)
 
-    IRangeControl_scaffold::IRangeControl_scaffold(const sol::table& config) : IRangeControl(config, IRangeControl_scaffold::InitStruct())
-    {
-    } // END: IRangeControl_scaffold::IRangeControl_scaffold(const sol::table& config)
 
     // --- Virtual Methods --- //
 
@@ -142,50 +139,9 @@ namespace SDOM
 
 
 
-    // --- Lua Registration --- //
-
-    void IRangeControl_scaffold::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = typeName;
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings on DisplayHandle:
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool 
-        // {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
-
-        // // EXAMPLE --- Expose min/max/value as properties (getters/setters)
-        // if (absent("min")) {
-        //     handle.set("min", sol::property(
-        //         [](SDOM::DisplayHandle h) -> float {
-        //             auto* r = h.as<IRangeControl>();
-        //             return r ? r->getMin() : 0.0f;
-        //         },
-        //         [](SDOM::DisplayHandle h, double v) {
-        //             auto* r = h.as<IRangeControl>();
-        //             if (r) r->setMin(static_cast<float>(v));
-        //         }
-        //     ));
-        // }
-
-    } // END: void IRangeControl_scaffold::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-
-
-
-
+    // -----------------------------------------------------------------
+    // 📜 Data Registry Integration
+    // -----------------------------------------------------------------
     
     void IRangeControl_scaffold::registerBindingsImpl(const std::string& typeName)
     {

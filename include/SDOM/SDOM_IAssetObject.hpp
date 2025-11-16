@@ -16,26 +16,46 @@ namespace SDOM
         static constexpr const char* TypeName = "IAssetObject";
 
         // --- Construction & Initialization --- //
-        struct InitStruct {
-            std::string name = TypeName;
-            std::string type = TypeName;
-            std::string filename = "";
-            bool isInternal = true;
+        struct InitStruct
+        {
+            std::string name     = TypeName;   // default registry key
+            std::string type     = TypeName;   // asset type name
+            std::string filename = "";         // backing file or virtual identifier
+            bool is_internal     = true;       // legacy: was "isInternal"
+
+            // ------------------------------------------------------------
+            // JSON deserializer — correct signature & inheritance-ready
+            // ------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                if (j.contains("name"))
+                    out.name = j["name"].get<std::string>();
+
+                if (j.contains("type"))
+                    out.type = j["type"].get<std::string>();
+
+                if (j.contains("filename"))
+                    out.filename = j["filename"].get<std::string>();
+
+                if (j.contains("is_internal"))
+                    out.is_internal = j["is_internal"].get<bool>();
+            }
         };
 
+
+
         IAssetObject(const InitStruct& init);
-        IAssetObject(const sol::table& config);
         IAssetObject();
 
         virtual ~IAssetObject();
 
         bool onInit() override = 0;
         void onQuit() override = 0;
-    virtual void onLoad() = 0;
-    virtual void onUnload() = 0;
-    // Owner-controlled load/unload helpers (idempotent)
-    bool load();
-    void unload();
+        virtual void onLoad() = 0;
+        virtual void onUnload() = 0;
+        // Owner-controlled load/unload helpers (idempotent)
+        bool load();
+        void unload();
         // Owner-controlled lifecycle helpers (idempotent)
         bool startup();
         void shutdown();
@@ -60,19 +80,11 @@ namespace SDOM
         std::string type_;
         std::string filename_;
         bool isInternal_;
-        
-        sol::usertype<IAssetObject> objHandleType_;
 
-    // Lifecycle state: true if startup() completed and onInit() ran.
-    bool started_ = false;
-    // Resource loaded state for onLoad()/onUnload() ownership
-    bool isLoaded_ = false;
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
+        // Lifecycle state: true if startup() completed and onInit() ran.
+        bool started_ = false;
+        // Resource loaded state for onLoad()/onUnload() ownership
+        bool isLoaded_ = false;
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

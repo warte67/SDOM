@@ -14,7 +14,7 @@
 #include <atomic>
 #include <shared_mutex>
 #include <cstdint>
-#include <sol/sol.hpp>
+#include <external/nlohmann/json.hpp>
 
 // include the concrete interface headers so unique_ptr<T> is instantiated with a complete type
 // #include <SDOM/SDOM_IDataObject.hpp>
@@ -34,15 +34,22 @@ namespace SDOM
     // --- Type Creation Structs --- //
     struct TypeCreators 
     {
-        std::function<std::unique_ptr<IDisplayObject>(const sol::table&)> fromLua;
-        std::function<std::unique_ptr<IDisplayObject>(const IDisplayObject::InitStruct&)> fromInitStruct;
+        using InitFn = std::function<std::unique_ptr<IDisplayObject>(const IDisplayObject::InitStruct&)>;
+        using JsonFn = std::function<std::unique_ptr<IDisplayObject>(const nlohmann::json&)>;
+
+        InitFn fromInitStruct;
+        JsonFn fromJson;
     };
 
     struct AssetTypeCreators 
     {
-        std::function<std::unique_ptr<IAssetObject>(const sol::table&)> fromLua;
-        std::function<std::unique_ptr<IAssetObject>(const IAssetObject::InitStruct&)> fromInitStruct;
+        using InitFn = std::function<std::unique_ptr<IAssetObject>(const IAssetObject::InitStruct&)>;
+        using JsonFn = std::function<std::unique_ptr<IAssetObject>(const nlohmann::json&)>;
+
+        InitFn fromInitStruct;
+        JsonFn fromJson;
     };
+
 
     // --- Registry Record Types --- //
     // Wrap an owned display object plus metadata (type + stable id)
@@ -94,18 +101,11 @@ namespace SDOM
 
         // --- Object Creation --- //
         // Preferred explicit names
-        DisplayHandle createDisplayObject(const std::string& typeName, const sol::table& config);
         DisplayHandle createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init);
-        DisplayHandle createDisplayObject(const std::string& typeName, const std::string& luaScript);
+        DisplayHandle createDisplayObjectFromJson(const std::string& typeName, const nlohmann::json&);
 
-        AssetHandle createAssetObject(const std::string& typeName, const sol::table& config);
         AssetHandle createAssetObject(const std::string& typeName, const IAssetObject::InitStruct& init);
-        AssetHandle createAssetObject(const std::string& typeName, const std::string& luaScript);
-
-        // Helper: attach a newly-created display object (by name/type) to a
-        // parent specified in a Lua config value. Accepts string name, DomHandle,
-        // or a nested table { parent = ... }. Returns true if attachment occurred.
-        bool attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig);
+        AssetHandle createAssetObjectFromJson(const std::string& typeName, const nlohmann::json&);
 
         // --- Object Lookup --- //
         // Preferred modern names: return raw interface pointers for callers
@@ -143,10 +143,6 @@ namespace SDOM
         void printAssetRegistry() const;   // NEW, needs LUA bindings
         void printAssetTree() const;       // Print a dependency tree of assets (BitmapFont->SpriteSheet->Texture, TruetypeFont->TTFAsset)
         void printAssetTreeGrouped() const; // Grouped view with Texture/TTFAsset roots and dependents indented like printTree()
-
-        // --- Internal Lua Integration --- //
-        void initFromLua(const sol::table& lua);
-        // void initLuaProcessResource(const sol::table& resource);
 
         // Helper: find an existing asset by filename (optionally matching type)
         AssetHandle findAssetByFilename(const std::string& filename, const std::string& typeName = "") const;

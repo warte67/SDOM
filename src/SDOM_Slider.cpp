@@ -17,15 +17,6 @@ namespace SDOM
         step_ = init.step;
     } // END: Slider::Slider(const InitStruct& init)
 
-    Slider::Slider(const sol::table& config) : IRangeControl(config, InitStruct())
-    {
-        // Parse step from Lua config
-        step_ = lua_value_case_insensitive<float>(config, "step", 0.0f);
-
-        // Now that we forwarded Slider::InitStruct into the base parsing, no further
-        // default-fixups are necessary here.
-    } // END: Slider::Slider(const sol::table& config)
-
 
 
 
@@ -92,11 +83,11 @@ namespace SDOM
                     float oldValue = value_;
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                        ev.setPayloadValue("name", getName());
-                        ev.setPayloadValue("old_value", oldValue);
-                        ev.setPayloadValue("new_value", newValue);
-                    });
+                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    //     ev.setPayloadValue("name", getName());
+                    //     ev.setPayloadValue("old_value", oldValue);
+                    //     ev.setPayloadValue("new_value", newValue);
+                    // });
                 }
             }
             else // vertical
@@ -131,11 +122,11 @@ namespace SDOM
                     float oldValue = value_;
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                        ev.setPayloadValue("name", getName());
-                        ev.setPayloadValue("old_value", oldValue);
-                        ev.setPayloadValue("new_value", newValue);
-                    });
+                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    //     ev.setPayloadValue("name", getName());
+                    //     ev.setPayloadValue("old_value", oldValue);
+                    //     ev.setPayloadValue("new_value", newValue);
+                    // });
                 }                
             }
         } // END: Mouse click or drag
@@ -152,11 +143,11 @@ namespace SDOM
             float newValue = snapToStep(std::clamp(value_ + wheel_delta, min_, max_));
             if (newValue == oldValue) return;
             setValue(newValue);
-            queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                ev.setPayloadValue("name", getName());
-                ev.setPayloadValue("old_value", oldValue);
-                ev.setPayloadValue("new_value", newValue);
-            });
+            // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+            //     ev.setPayloadValue("name", getName());
+            //     ev.setPayloadValue("old_value", oldValue);
+            //     ev.setPayloadValue("new_value", newValue);
+            // });
         } // END: MouseWheel event
 
         // Key Events to adjust the slider value (if key focused)
@@ -205,11 +196,11 @@ namespace SDOM
             if (newValue != oldValue)
             {
                 setValue(newValue);
-                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                    ev.setPayloadValue("name", getName());
-                    ev.setPayloadValue("old_value", oldValue);
-                    ev.setPayloadValue("new_value", newValue);
-                });
+                // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                //     ev.setPayloadValue("name", getName());
+                //     ev.setPayloadValue("old_value", oldValue);
+                //     ev.setPayloadValue("new_value", newValue);
+                // });
             }
         } // END: Key Events to adjust the slider value
     } // END: void Slider::onEvent(const Event& event)
@@ -495,29 +486,6 @@ namespace SDOM
         // });
     } // END: void Slider::_onValueChanged(float oldValue, float newValue)
 
-
-
-
-    // --- Lua Registration --- //
-
-    void Slider::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = typeName;
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings on DisplayHandle:
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-
-
-    } // END: void Slider::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
     
     void Slider::registerBindingsImpl(const std::string& typeName)

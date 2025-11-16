@@ -43,39 +43,6 @@ namespace SDOM
         spriteHeight_ = init.spriteHeight;
     }
 
-    SpriteSheet::SpriteSheet(const sol::table& config) : IAssetObject(config)
-    {
-        std::string type = config["type"].valid() ? config["type"].get<std::string>() : TypeName;
-        if (type != TypeName) 
-        {
-            ERROR("Error: SpriteSheet constructed with incorrect type: " + type);
-        }
-        // Extract spriteWidth and spriteHeight from config, with defaults.
-        // Accept both camelCase (spriteWidth/spriteHeight) and snake_case
-        // (sprite_width/sprite_height) to make the Lua config authoring
-        // more ergonomic.
-        try {
-            if (config["spriteWidth"].valid()) {
-                spriteWidth_ = config["spriteWidth"].get<int>();
-            } else if (config["sprite_width"].valid()) {
-                spriteWidth_ = config["sprite_width"].get<int>();
-            } else {
-                spriteWidth_ = 8;
-            }
-        } catch(...) { spriteWidth_ = 8; }
-
-        try {
-            if (config["spriteHeight"].valid()) {
-                spriteHeight_ = config["spriteHeight"].get<int>();
-            } else if (config["sprite_height"].valid()) {
-                spriteHeight_ = config["sprite_height"].get<int>();
-            } else {
-                spriteHeight_ = 8;
-            }
-        } catch(...) { spriteHeight_ = 8; }
-    }
-
-
 
     bool SpriteSheet::onInit()
     {
@@ -177,7 +144,7 @@ namespace SDOM
                     Texture* texturePtr = textureAsset.as<Texture>();
                     if (texturePtr)
                     {
-                        texturePtr->registerLuaBindings(Texture::TypeName, getLua());
+                        texturePtr->registerBindings(Texture::TypeName);
                     }
                 }
                 else {
@@ -210,7 +177,7 @@ namespace SDOM
             if (texturePtr)
             {
                 // INFO("SpriteSheet::onLoad: created Texture asset '" + textureAsset.getName() + "' for filename: " + filename_);
-                texturePtr->registerLuaBindings(Texture::TypeName, getLua());
+                texturePtr->registerBindings(Texture::TypeName);
             }
             else
             {
@@ -235,7 +202,7 @@ namespace SDOM
             Texture* texturePtr = textureAsset.as<Texture>();
             if (texturePtr)
             {
-                texturePtr->registerLuaBindings(Texture::TypeName, getLua());
+                texturePtr->registerBindings(Texture::TypeName);
             }
             else
             {
@@ -805,247 +772,6 @@ namespace SDOM
     }
 
 
-    // --- Lua wrapper helpers for SpriteSheet --- //
-    void SpriteSheet::setSpriteWidth_Lua(IAssetObject* obj, int width)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::setSpriteWidth_Lua: invalid SpriteSheet object"); }
-        ss->setSpriteWidth(width);
-    }
-
-    void SpriteSheet::setSpriteHeight_Lua(IAssetObject* obj, int height)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::setSpriteHeight_Lua: invalid SpriteSheet object"); }
-        ss->setSpriteHeight(height);
-    }
-
-    void SpriteSheet::setSpriteSize_Lua(IAssetObject* obj, int width, int height)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::setSpriteSize_Lua: invalid SpriteSheet object"); }
-        ss->setSpriteSize(width, height);
-    }
-
-    int SpriteSheet::getSpriteWidth_Lua(IAssetObject* obj)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::getSpriteWidth_Lua: invalid SpriteSheet object"); }
-        return ss->getSpriteWidth();
-    }
-
-    int SpriteSheet::getSpriteHeight_Lua(IAssetObject* obj)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::getSpriteHeight_Lua: invalid SpriteSheet object"); }
-        return ss->getSpriteHeight();
-    }
-
-    sol::table SpriteSheet::getSpriteSize_Lua(IAssetObject* obj, sol::state_view lua)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::getSpriteSize_Lua: invalid SpriteSheet object"); }
-        sol::table t = lua.create_table();
-        t[1] = ss->getSpriteWidth();
-        t[2] = ss->getSpriteHeight();
-        t["w"] = ss->getSpriteWidth();
-        t["h"] = ss->getSpriteHeight();
-        return t;
-    }
-
-    int SpriteSheet::getSpriteCount_Lua(IAssetObject* obj)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::getSpriteCount_Lua: invalid SpriteSheet object"); }
-        return ss->getSpriteCount();
-    }
-
-    int SpriteSheet::getSpriteX_Lua(IAssetObject* obj, int spriteIndex)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::getSpriteX_Lua: invalid SpriteSheet object"); }
-        return ss->getSpriteX(spriteIndex);
-    }
-
-    int SpriteSheet::getSpriteY_Lua(IAssetObject* obj, int spriteIndex)
-    {
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("SpriteSheet::getSpriteY_Lua: invalid SpriteSheet object"); }
-        return ss->getSpriteY(spriteIndex);
-    }
-
-
-    void SpriteSheet::drawSprite_lua( int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode /*= SDL_SCALEMODE_NEAREST*/ )
-    {
-        // delegate to the concrete implementation
-            drawSprite(spriteIndex, x, y, color, scaleMode);
-    } 
-
-    void SpriteSheet::drawSprite_dst_lua( int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode /*= SDL_SCALEMODE_NEAREST*/ )
-    {
-        // delegate to the concrete implementation that renders to a destination rect
-            drawSprite(spriteIndex, destRect, color, scaleMode);
-    }
-
-    void SpriteSheet::drawSprite_ext_Lua( IAssetObject* obj, int spriteIndex, sol::table srcRect, sol::table dstRect,
-                                    sol::object color, sol::object scaleMode)
-    {
-        // resolve target instance (defensive)
-        SpriteSheet* ss = dynamic_cast<SpriteSheet*>(obj);
-        if (!ss) { ERROR("drawSprite_ext_Lua: invalid SpriteSheet object"); }
-
-        SDL_FRect s = SDL_Utils::tableToFRect(srcRect);
-        SDL_FRect d = SDL_Utils::tableToFRect(dstRect);
-        SDL_Color c = SDL_Utils::colorFromSol(color);
-        SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleMode);
-
-        // call concrete draw implementation on the instance
-        ss->drawSprite(spriteIndex, s, d, c, sm);
-    }
-
-
-    // --- Lua Regisstration --- //
-
-    void SpriteSheet::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "SpriteSheet:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Augment the single shared AssetHandle handle usertype (assets are exposed via AssetHandle in Lua)
-        // Acquire or create the AssetHandle table/usertype (do not clobber; idempotent).
-        auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
-        sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
-
-        auto ss_bind_both = [&](const char* name, auto&& fn) {
-            sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-            if (!cur.valid() || cur == sol::lua_nil) {
-                handle.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-            // Bind on usertype as well for method-call syntax
-            try { ut[name] = fn; } catch(...) {}
-        };
-
-        // --- Size accessors --- //
-        ss_bind_both("setSpriteWidth", [](AssetHandle& self, int w) {
-            if (auto* ss = as_ss_handle(self)) ss->setSpriteWidth(w);
-        });
-        ss_bind_both("setSpriteHeight", [](AssetHandle& self, int h) {
-            if (auto* ss = as_ss_handle(self)) ss->setSpriteHeight(h);
-        });
-        ss_bind_both("setSpriteSize", [](AssetHandle& self, int w, int h) {
-            if (auto* ss = as_ss_handle(self)) ss->setSpriteSize(w, h);
-        });
-        ss_bind_both("getSpriteWidth", [](AssetHandle& self) -> int {
-            if (auto* ss = as_ss_handle(self)) return ss->getSpriteWidth();
-            return 0;
-        });
-        ss_bind_both("getSpriteHeight", [](AssetHandle& self) -> int {
-            if (auto* ss = as_ss_handle(self)) return ss->getSpriteHeight();
-            return 0;
-        });
-        ss_bind_both("getSpriteSize", [lua](AssetHandle& self) -> sol::table {
-            sol::state_view L = lua; // capture state for table creation
-            sol::table t = L.create_table();
-            if (auto* ss = as_ss_handle(self)) {
-                t[1] = ss->getSpriteWidth();
-                t[2] = ss->getSpriteHeight();
-                t["w"] = ss->getSpriteWidth();
-                t["h"] = ss->getSpriteHeight();
-            }
-            return t;
-        });
-        ss_bind_both("getSpriteCount", [](AssetHandle& self) -> int {
-            if (auto* ss = as_ss_handle(self)) return ss->getSpriteCount();
-            return 0;
-        });
-        ss_bind_both("getSpriteX", [](AssetHandle& self, int index) -> int {
-            if (auto* ss = as_ss_handle(self)) return ss->getSpriteX(index);
-            return 0;
-        });
-        ss_bind_both("getSpriteY", [](AssetHandle& self, int index) -> int {
-            if (auto* ss = as_ss_handle(self)) return ss->getSpriteY(index);
-            return 0;
-        });
-
-        // --- Drawing --- //
-        // Overloaded drawSprite supporting: (idx, x, y, [color], [scale])
-        //                                  (idx, dstRectTable, [color], [scale])
-        //                                  (idx, srcRectTable, dstRectTable, [color], [scale])
-        auto draw_xy = [](AssetHandle& self, int idx, int x, int y, sol::object colorOpt, sol::object scaleOpt) {
-            if (auto* ss = as_ss_handle(self)) {
-                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
-                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
-                ss->drawSprite(idx, x, y, c, sm);
-            }
-        };
-        auto draw_dst = [](AssetHandle& self, int idx, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
-            if (auto* ss = as_ss_handle(self)) {
-                SDL_FRect d = SDL_Utils::tableToFRect(dst);
-                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
-                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
-                ss->drawSprite(idx, d, c, sm);
-            }
-        };
-        auto draw_ext = [](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
-            if (auto* ss = as_ss_handle(self)) {
-                SDL_FRect s = SDL_Utils::tableToFRect(src);
-                SDL_FRect d = SDL_Utils::tableToFRect(dst);
-                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
-                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
-                ss->drawSprite(idx, s, d, c, sm);
-            }
-        };
-
-        ss_bind_both("drawSprite", sol::overload(
-            // idx, x, y
-            [draw_xy](AssetHandle& self, int idx, int x, int y) { draw_xy(self, idx, x, y, sol::lua_nil, sol::lua_nil); },
-            // idx, x, y, color
-            [draw_xy](AssetHandle& self, int idx, int x, int y, sol::object color) { draw_xy(self, idx, x, y, color, sol::lua_nil); },
-            // idx, x, y, color, scale
-            draw_xy,
-            // idx, dst
-            [draw_dst](AssetHandle& self, int idx, sol::table dst) { draw_dst(self, idx, dst, sol::lua_nil, sol::lua_nil); },
-            // idx, dst, color
-            [draw_dst](AssetHandle& self, int idx, sol::table dst, sol::object color) { draw_dst(self, idx, dst, color, sol::lua_nil); },
-            // idx, dst, color, scale
-            draw_dst,
-            // idx, src, dst
-            [draw_ext](AssetHandle& self, int idx, sol::table src, sol::table dst) { draw_ext(self, idx, src, dst, sol::lua_nil, sol::lua_nil); },
-            // idx, src, dst, color
-            [draw_ext](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object color) { draw_ext(self, idx, src, dst, color, sol::lua_nil); },
-            // idx, src, dst, color, scale
-            draw_ext
-        ));
-
-        // Explicitly-named variants for clarity
-        ss_bind_both("drawSprite_dst", [](AssetHandle& self, int idx, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
-            if (auto* ss = as_ss_handle(self)) {
-                SDL_FRect d = SDL_Utils::tableToFRect(dst);
-                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
-                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
-                ss->drawSprite(idx, d, c, sm);
-            }
-        });
-
-        ss_bind_both("drawSprite_ext", [](AssetHandle& self, int idx, sol::table src, sol::table dst, sol::object colorOpt, sol::object scaleOpt) {
-            if (auto* ss = as_ss_handle(self)) {
-                SDL_FRect s = SDL_Utils::tableToFRect(src);
-                SDL_FRect d = SDL_Utils::tableToFRect(dst);
-                SDL_Color c = SDL_Utils::colorFromSol(colorOpt);
-                SDL_ScaleMode sm = SDL_Utils::scaleModeFromSol(scaleOpt);
-                ss->drawSprite(idx, s, d, c, sm);
-            }
-        });
-
-    } // END _registerLuaBindings()
 
     
     void SpriteSheet::registerBindingsImpl(const std::string& typeName)

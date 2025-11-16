@@ -14,10 +14,6 @@ namespace SDOM
     {    
     } // END: TruetypeFont(const InitStruct& init) : IFontObject(init)
 
-    TruetypeFont::TruetypeFont(const sol::table& config) : IFontObject(config)
-    {
-    } // END: TruetypeFont(const sol::table& config) : IFontObject(config)
-
     TruetypeFont::~TruetypeFont()
     {
         // std::cout << CLR::LT_ORANGE << "BitmapFont::" << CLR::YELLOW << "~BitmapFont()" 
@@ -49,8 +45,8 @@ namespace SDOM
                 init.type = TTFAsset::TypeName;
                 init.filename = filename_;
                 // use currently configured font size if available
-                init.internalFontSize = (fontSize_ > 0 ? fontSize_ : 10);
-                std::cout << "TruetypeFont::onInit -> creating TTFAsset: name='" << init.name << "' filename='" << init.filename << "' size=" << init.internalFontSize << "\n";
+                init.internal_font_size = (fontSize_ > 0 ? fontSize_ : 10);
+                std::cout << "TruetypeFont::onInit -> creating TTFAsset: name='" << init.name << "' filename='" << init.filename << "' size=" << init.internal_font_size << "\n";
                 AssetHandle h = getFactory().createAssetObject(TTFAsset::TypeName, init);
                 if (h.isValid()) {
                     ttf_font_handle_ = h;
@@ -138,7 +134,7 @@ namespace SDOM
             init.name = ttfAssetName;
             init.type = TTFAsset::TypeName;
             init.filename = looksLikePath ? filename_ : ttfAssetName;
-            init.internalFontSize = fontSize_;
+            init.internal_font_size = fontSize_;
 
             ttf_font_handle_ = getFactory().createAssetObject(TTFAsset::TypeName, init);
             if (!ttf_font_handle_)
@@ -493,30 +489,7 @@ namespace SDOM
         return ttf_font;
     } // END: TruetypeFont::_getValidTTFFontPtr() const   
 
-    // --- Lua Registration --- //
-
-    void TruetypeFont::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "TruetypeFont:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings:
-        // To expose TruetypeFont helpers on AssetHandle in Lua, use the unified pattern:
-        //   auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
-        //   // then bind functions on both 'ut' and 'handle'.
-
-
-    } // END _registerLuaBindings()
-
+    
     
     void TruetypeFont::registerBindingsImpl(const std::string& typeName)
     {

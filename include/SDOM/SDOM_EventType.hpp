@@ -103,51 +103,51 @@ namespace SDOM
         static EventType Quit;              // 🚫
 
         // 🔄 Application Lifecycle ----------------------------------------------------
-        static EventType Added;             // 🧩🧠 EventType_test{3}, Event_test{7}
-        static EventType Removed;           // 🧩🧠 EventType_test{3}, Event_test{7}
-        static EventType AddedToStage;      // 🧩🧠 EventType_test{3}, Event_test{7}
-        static EventType RemovedFromStage;  // 🧩🧠 EventType_test{3}, Event_test{7}
-        static EventType StageOpened;       // 🧩🧠 EventType_test{4}
-        static EventType StageClosed;       // 🧩🧠 EventType_test{4}
+        static EventType Added;             // 
+        static EventType Removed;           // 
+        static EventType AddedToStage;      // 
+        static EventType RemovedFromStage;  // 
+        static EventType StageOpened;       // 
+        static EventType StageClosed;       // 
 
         // 🔄 Input --------------------------------------------------------------------
         // Keyboard
-        static EventType KeyDown;           // 🧩 EventType_test{1}, Event_test{3}  📜 Lua: EventType_UnitTests.lua test{2}
-        static EventType KeyUp;             // 🧩 EventType_test{1}, Event_test{3}  📜 Lua: EventType_UnitTests.lua test{2}
-        static EventType TextInput;         // ❓ IME/TextInput system not yet implemented
+        static EventType KeyDown;           // 
+        static EventType KeyUp;             // 
+        static EventType TextInput;         // 
         // Mouse
-        static EventType MouseButtonDown;   // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{3}
-        static EventType MouseButtonUp;     // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{3}
-        static EventType MouseWheel;        // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{3}
-        static EventType MouseMove;         // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{1,3}
-        static EventType MouseClick;        // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{4}
-        static EventType MouseDoubleClick;  // 🧩 Event_test{4, 8}                  📜 Lua: EventType_UnitTests.lua test{4}
-        static EventType MouseEnter;        // 🧩🧠 EventType_test{5}               📜 Lua: EventType_UnitTests.lua test{5}
-        static EventType MouseLeave;        // 🧩🧠 EventType_test{5}               📜 Lua: EventType_UnitTests.lua test{5}
+        static EventType MouseButtonDown;   // 
+        static EventType MouseButtonUp;     // 
+        static EventType MouseWheel;        // 
+        static EventType MouseMove;         // 
+        static EventType MouseClick;        // 
+        static EventType MouseDoubleClick;  // 
+        static EventType MouseEnter;        // 
+        static EventType MouseLeave;        // 
 
         // 🔄 Window / Focus -----------------------------------------------------------
-        static EventType FocusGained;       // Do not use yet. Only applies to the not yet implemented Window objects.
-        static EventType FocusLost;         // Do not use yet. Only applies to the not yet implemented Window objects.
-        static EventType Resize;            // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
-        static EventType Move;              // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
-        static EventType Show;              // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
-        static EventType Hide;              // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
-        static EventType EnterFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
-        static EventType LeaveFullscreen;   // 🧩🧠 Event_test{5}, EventType_test{5}   📜 Lua: EventType_UnitTests.lua test{6}
+        static EventType FocusGained;       // 
+        static EventType FocusLost;         // 
+        static EventType Resize;            // 
+        static EventType Move;              // 
+        static EventType Show;              // 
+        static EventType Hide;              // 
+        static EventType EnterFullscreen;   // 
+        static EventType LeaveFullscreen;   // 
 
         // 🔄 UI / State ---------------------------------------------------------------
-        static EventType ValueChanged;      // 🧩 Event_test{6}
-        static EventType StateChanged;      // 🧩 Event_test{6}
-        static EventType SelectionChanged;  // 🧩 Event_test{6}
-        static EventType Enabled;           // 🧩 Event_test{6}
-        static EventType Disabled;          // 🧩 Event_test{6}
-        static EventType Visible;           // 🧩 Event_test{6}
-        static EventType Hidden;            // 🧩 Event_test{6}
+        static EventType ValueChanged;      // 
+        static EventType StateChanged;      // 
+        static EventType SelectionChanged;  // 
+        static EventType Enabled;           // 
+        static EventType Disabled;          // 
+        static EventType Visible;           // 
+        static EventType Hidden;            // 
 
         // 🔄 Drag & Drop --------------------------------------------------------------
-        static EventType Drag;              // 🧩 Event_test{4, 8}
-        static EventType Dragging;          // 🧩 Event_test{4, 8}
-        static EventType Drop;              // 🧩 Event_test{4, 8}
+        static EventType Drag;              // 
+        static EventType Dragging;          // 
+        static EventType Drop;              // 
 
         // ❓ Timer (no Timer system yet) ----------------------------------------------
         static EventType TimerStart;        
@@ -170,18 +170,18 @@ namespace SDOM
         //   • OnEvent – SDL and user input routed correctly to Lua.
         //   • OnUpdate / OnRender / OnPreRender – verified per-frame ordering and stability.
         //
-        static EventType OnInit;            // 🧩📜 Verified in listener_callbacks.lua:on_init
-        static EventType OnQuit;            // 🧩📜 Verified in listener_callbacks.lua:on_quit
-        static EventType OnEvent;           // 🧩📜 Verified in listener_callbacks.lua:on_event
-        static EventType OnUpdate;          // 🧩📜 Verified in listener_callbacks.lua:on_update
-        static EventType OnRender;          // 🧩📜 Verified in listener_callbacks.lua:on_render
-        static EventType OnPreRender;       // 🧩📜 Verified in listener_callbacks.lua:on_prerender
+        static EventType OnInit;            // 
+        static EventType OnQuit;            // 
+        static EventType OnEvent;           // 
+        static EventType OnUpdate;          // 
+        static EventType OnRender;          // 
+        static EventType OnPreRender;       // 
 
 
         // 🔄 Frame / Misc -------------------------------------------------------------
-        static EventType EnterFrame;        // 🧩 Event_test{3}
-        static EventType SDL_Event;         // 🧩 Event_test{3}
-        static EventType User;              // 🗓️ Planned
+        static EventType EnterFrame;        // 
+        static EventType SDL_Event;         // 
+        static EventType User;              // 
                
         explicit EventType(const std::string& name, const std::string& doc = std::string())
             : name(name), doc_(doc), category_("Uncategorized"), captures_(true), bubbles_(true), targetOnly_(false), global_(false)
@@ -226,21 +226,6 @@ namespace SDOM
 
         // Return the internal registry mapping event name -> EventType*
         static const std::unordered_map<std::string, EventType*>& getRegistry() { return registry; }
-
-        // // Ensure all predefined EventType static instances are inserted into
-        // // the registry. Calling this from startup code avoids static
-        // // initialization order issues on some platforms.
-        // // NOTE: Each EventType constructor already registers itself via
-        // // registerEventType(name, this). This helper is therefore
-        // // usually redundant, but is retained here to force initialization
-        // ///ODR-use of the predefined statics in cases where static
-        // // initialization order across translation units could lead to an
-        // // empty registry. It is kept for backward-compatibility and safety.
-        // static void registerAll();
-
-        // Register EventType usertype/table in a Lua state so scripts can
-        // access EventType constants and query properties.
-        static void registerLua(sol::state_view lua);
 
         // -- Getters -- //
         bool getCaptures() const;

@@ -85,29 +85,63 @@ namespace SDOM
             {
                 name = TypeName;
                 type = TypeName;
-                filename = TypeName; // Default filename, may be overridden
+                filename = TypeName; // default filename unless overridden
             }
 
-            int fontSize = 8;       ///< Font scaling hint (for TTF compatibility)
-            int font_width = -1;    ///< Optional fixed glyph width override
-            int font_height = -1;   ///< Optional fixed glyph height override
+            // BitmapFont-specific parameters
+            int fontSize = 8;        // Uniform scaling, BitmapFont-compatible
+            int font_width = -1;     // Optional override; if negative → use atlas metrics
+            int font_height = -1;    // Optional override; if negative → use atlas metrics
+
+            // JSON hydration
+            static InitStruct from_json(const nlohmann::json& j)
+            {
+                InitStruct i;
+
+                // --- inherited IAssetObject / IFontObject settings ---
+                if (j.contains("name"))       i.name = j["name"].get<std::string>();
+                if (j.contains("type"))       i.type = j["type"].get<std::string>();
+                if (j.contains("filename"))   i.filename = j["filename"].get<std::string>();
+                if (j.contains("isInternal")) i.is_internal = j["isInternal"].get<bool>();
+
+                // inherited: TrueType/Bitmap-compatible uniform scaling
+                if (j.contains("fontSize"))
+                    i.fontSize = j["fontSize"].get<int>();
+
+                // inherited IFontObject base (fontSize_) — keep synced
+                i.font_size = i.fontSize;
+
+                // --- BitmapFont-specific overrides ---
+                if (j.contains("font_width"))
+                    i.font_width = j["font_width"].get<int>();
+
+                if (j.contains("font_height"))
+                    i.font_height = j["font_height"].get<int>();
+
+                return i;
+            }
         };
 
     protected:
         BitmapFont(const InitStruct& init);
-        BitmapFont(const sol::table& config);
 
     public:
         // ---------------------------------------------------------------------
         // 🏗️ Static Factory Methods
         // ---------------------------------------------------------------------
-        static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IAssetObject>(new BitmapFont(config));
+        static std::unique_ptr<IAssetObject> CreateFromInitStruct(
+            const IAssetObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const BitmapFont::InitStruct&>(baseInit);
+            return std::unique_ptr<IAssetObject>(new BitmapFont(init));
         }
-        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-            const auto& fontInit = static_cast<const BitmapFont::InitStruct&>(baseInit);
-            return std::unique_ptr<IAssetObject>(new BitmapFont(fontInit));
-        }  
+
+        static std::unique_ptr<IAssetObject> CreateFromJson(const nlohmann::json& j)
+        {
+            auto init = BitmapFont::InitStruct::from_json(j);
+            return std::unique_ptr<IAssetObject>(new BitmapFont(init));
+        }
+
         ~BitmapFont() override;
 
         // ---------------------------------------------------------------------
@@ -159,12 +193,6 @@ namespace SDOM
         void drawForegroundGlyph(Uint32 ch, int x, int y, const FontStyle& style);
         void drawOutlineGlyph(Uint32 ch, int x, int y, const FontStyle& style);
         void drawDropShadowGlyph(Uint32 ch, int x, int y, const FontStyle& style);
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

@@ -17,9 +17,8 @@
 #include <memory>
 
 using namespace SDOM;
-
 // ---------------------------------------------------------------------------
-// C wrapper implementations (moved here from C_API_EndToEnd.cpp)
+// C wrapper implementations (kept local for tests)
 // ---------------------------------------------------------------------------
 extern "C" {
 
@@ -93,25 +92,21 @@ void sdom_test_destroy(sdom_handle_t handle)
 
 
 // ---------------------------------------------------------------------------
-// Legacy test0 + Lua test (moved from DataRegistry_UnitTest.cpp)
+// Legacy tests + Lua wrapper (kept for compatibility)
 // ---------------------------------------------------------------------------
 
-// Example template test from the original file. Keep it here so there's a
-// single canonical DataRegistry_UnitTests() implementation for the module.
+// Example template test from the original file. Keep this as the canonical
+// DataRegistry unit test template for the module. Tests should return `true`
+// once finished; multi-frame tests may return `false` until complete.
 bool DataRegistry_test0([[maybe_unused]] std::vector<std::string>& errors)
 {
-    // Placeholder - keep returning finished=true so the harness is stable.
+    // Placeholder - finished immediately so harness remains stable.
     return true;
 }
 
 
-bool DataRegistry_LUA_Tests(std::vector<std::string>& errors)
-{
-    return UnitTests::getInstance().run_lua_tests(errors, "src/DataRegistry_UnitTests.lua");
-}
-
 // ---------------------------------------------------------------------------
-// Deadlock regression test (moved here)
+// Deadlock regression test
 // ---------------------------------------------------------------------------
 class DeadlockGenerator : public IBindingGenerator {
 public:
@@ -127,7 +122,7 @@ public:
 };
 
 // ---------------------------------------------------------------------------
-// C API end-to-end test (moved here)
+// C API end-to-end and registration
 // ---------------------------------------------------------------------------
 
 // Forward declare test implementations used by the UnitTests harness.
@@ -136,28 +131,9 @@ namespace SDOM {
     bool C_API_EndToEnd_test_impl(std::vector<std::string>& errors);
 }
 
+
 namespace SDOM {
 
-bool DataRegistry_UnitTests()
-{
-    const std::string objName = "DataRegistry";
-    UnitTests& ut = UnitTests::getInstance();
-
-    static bool registered = false;
-    if (!registered) {
-        ut.add_test(objName, "Test DataRegistry (template)", DataRegistry_test0);
-
-        // Generator / integration tests
-        ut.add_test(objName, "Generator: deadlock regression", DataRegistry_Deadlock_Regression_test_impl);
-        ut.add_test(objName, "C API end-to-end: create/get/set/restore name", C_API_EndToEnd_test_impl);
-        registered = true;
-
-        // LUA Tests
-        ut.add_test(objName, "Lua: src/DataRegistry_UnitTests.lua", DataRegistry_LUA_Tests, false);
-
-    }
-    return true;
-}
 
 bool DataRegistry_Deadlock_Regression_test_impl(std::vector<std::string>& errors)
 {
@@ -178,6 +154,7 @@ bool DataRegistry_Deadlock_Regression_test_impl(std::vector<std::string>& errors
 
     return true;
 }
+
 
 bool C_API_EndToEnd_test_impl(std::vector<std::string>& errors)
 {
@@ -225,5 +202,36 @@ bool C_API_EndToEnd_test_impl(std::vector<std::string>& errors)
 
     return true;
 }
+
+
+    // --- Lua Integration Tests --- //
+
+    bool DataRegistry_LUA_Tests(std::vector<std::string>& errors)
+    {
+        return UnitTests::getInstance().run_lua_tests(errors, "src/DataRegistry_UnitTests.lua");
+    }
+
+
+    bool DataRegistry_UnitTests()
+    {
+        const std::string objName = "DataRegistry";
+        UnitTests& ut = UnitTests::getInstance();
+
+        static bool registered = false;
+        if (!registered) {
+            ut.add_test(objName, "Test DataRegistry (template)", DataRegistry_test0);
+
+            // Generator / integration tests
+            ut.add_test(objName, "Generator: deadlock regression", DataRegistry_Deadlock_Regression_test_impl);
+            ut.add_test(objName, "C API end-to-end: create/get/set/restore name", C_API_EndToEnd_test_impl);
+            registered = true;
+
+            // // LUA Tests (kept but disabled by default)
+            // ut.add_test(objName, "Lua: src/DataRegistry_UnitTests.lua", DataRegistry_LUA_Tests, false);
+
+        }
+        return true;
+    }
+
 
 } // namespace SDOM

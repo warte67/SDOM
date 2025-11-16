@@ -18,56 +18,83 @@ namespace SDOM
         static constexpr const char* TypeName = "ProgressBar";
 
         // --- Initialization Struct --- //
-        struct InitStruct : IRangeControl::InitStruct
+        struct InitStruct : public IRangeControl::InitStruct
         {
-            InitStruct() : IRangeControl::InitStruct()
-            { 
-                // from IDisplayObject
-                name = TypeName;
-                type = TypeName;
-                color = {96, 0, 96, 255};   // Icon Color
-                tabEnabled = false;
-                isClickable = true;
-                
-                // Default colors for Slider
-                color = { 128, 128, 128, 255 };             // Track Color
-                foregroundColor = { 255, 255, 255, 255 };   // Knob Color
-                backgroundColor = { 16, 16, 16, 128 };      // Background Color
-                borderColor = { 0, 0, 0, 32 };              // Border Color
+            InitStruct()
+                : IRangeControl::InitStruct()
+            {
+                //
+                // From IDisplayObject
+                //
+                name       = TypeName;
+                type       = TypeName;
+                isClickable = false;  // Progress bars are typically not interactive
+                tabEnabled  = false;
 
-                // from IRangeControl
-                min = 0.0f;      // Minimum value (0.0% - 100.0%)
-                max = 100.0f;    // Maximum value (0.0% - 100.0%)
-                value = 0.0f;    // Current value (0.0% - 100.0%)
+                //
+                // ProgressBar-specific colors
+                //
+                trackColor      = {128, 128, 128, 255};  // background track
+                fillColor       = {255, 255, 255, 255};  // progress fill
+                backgroundColor = {16, 16, 16, 128};     // behind everything
+                borderColor     = {0, 0, 0, 32};         // thin border
+
+                //
+                // IRangeControl fields — overridden defaults
+                //
+                min         = 0.0f;
+                max         = 100.0f;
+                value       = 0.0f;
                 orientation = Orientation::Horizontal;
-                std::string icon_resource = "internal_icon_8x8"; 
+
+                //
+                // Fix: assign to the **member**, not a local
+                //
+                icon_resource = "internal_icon_8x8";
             }
-            // Additional ProgressBar Parameters as needed:
-            // e.g., float step = 1.0f; // Step size for each increment/decrement
+
+            //
+            // ProgressBar-specific visual fields
+            //
+            SDL_Color trackColor      = {128,128,128,255};
+            SDL_Color fillColor       = {255,255,255,255};
+            SDL_Color backgroundColor = {16,16,16,128};
+            SDL_Color borderColor     = {0,0,0,32};
+
+            // ---------------------------------------------------------------------
+            // JSON loader (inheritance-safe)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                IRangeControl::InitStruct::from_json(j, out);
+
+                if (j.contains("trackColor"))       { out.trackColor      = json_to_color(j["trackColor"]); }
+                if (j.contains("fillColor"))        { out.fillColor       = json_to_color(j["fillColor"]); }
+                if (j.contains("backgroundColor"))  { out.backgroundColor = json_to_color(j["backgroundColor"]); }
+                if (j.contains("borderColor"))      { out.borderColor     = json_to_color(j["borderColor"]); }
+                if (j.contains("icon_resource"))    { out.icon_resource   = j["icon_resource"].get<std::string>(); }
+            }
         }; // END: InitStruct
         
     protected:
         // --- Protected Constructors --- //
-            // NOTE: when implementing a Lua constructor for a derived class you should
-            // forward the derived class InitStruct() into the base-class Lua parser
-            // so that derived defaults are applied when the Lua table omits keys.
-            // Example:
-            //   DerivedControl::DerivedControl(const sol::table& config)
-            //     : IRangeControl(config, DerivedControl::InitStruct()) { }
-            // This ensures color/anchor/font defaults from DerivedControl::InitStruct
-            // are used by the IDisplayObject/IRangeControl parsing code.
-            ProgressBar(const InitStruct& init);  
-            ProgressBar(const sol::table& config);
+        ProgressBar(const InitStruct& init);  
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new ProgressBar(config));
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const ProgressBar::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new ProgressBar(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& ProgressBarInit = static_cast<const ProgressBar::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new ProgressBar(ProgressBarInit));
+
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const nlohmann::json& j)
+        {
+            ProgressBar::InitStruct init;
+            ProgressBar::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new ProgressBar(init));
         }
+
 
         // --- Default Constructor and Destructor --- //
         ProgressBar() = default;
@@ -93,14 +120,6 @@ namespace SDOM
         
         // --- Protected Virtual Methods --- //
         void _onValueChanged(float oldValue, float newValue) override;
-
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

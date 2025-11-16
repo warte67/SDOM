@@ -32,8 +32,6 @@ namespace SDOM
     SDL_Window* getWindow() { return Core::getInstance().getWindow(); }
     SDL_Texture* getTexture() { return Core::getInstance().getTexture(); }  
 
-    sol::state& getLua() { return getCore().getLua(); }    
-
     // helper function to extract SDL_Color from Lua table
     SDL_Color parseColor(const sol::object& colorObj) {
         SDL_Color color = {255, 255, 255, 255};
@@ -169,25 +167,6 @@ namespace SDOM
         return true;
     } // validateAnchorPointString
 
-    bool validateAnchorAssignments(const sol::table& config)
-    {
-        const std::vector<std::string> anchorKeys = {
-            "anchorTop", "anchorLeft", "anchorBottom", "anchorRight"
-        };
-
-        bool allValid = true;
-        for (const auto& key : anchorKeys) {
-            if (config[key].valid() && config[key].is<std::string>()) {
-                std::string anchorStr = config[key].get<std::string>();
-                if (!validateAnchorPointString(anchorStr)) {
-                    WARNING("Invalid anchor string for " + key + ": '" + anchorStr + "'");
-                    allValid = false;
-                }
-            }
-        }
-        return allValid;
-    }
-
 
     void printMessageBox(const std::string& title, const std::string& message, 
                             const std::string& file, int line, 
@@ -256,5 +235,20 @@ namespace SDOM
         }
         return false;
     }
+
+    AnchorPoint parseAnchorPoint(const nlohmann::json& j)
+    {
+        if (!j.is_string())
+            return AnchorPoint::TOP_LEFT;
+
+        std::string s = j.get<std::string>();
+        s = normalizeAnchorString(s);
+
+        if (!validateAnchorPointString(s))
+            return AnchorPoint::TOP_LEFT;
+
+        return SDOM::stringToAnchorPoint_.at(s);
+    } // END parseAnchorPoint()
+
 
 } // namespace SDOM

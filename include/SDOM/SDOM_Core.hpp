@@ -68,9 +68,6 @@ namespace SDOM
         // --- Main Loop & Event Dispatch --- //
         // Return true when the run completed successfully (no failing unit tests or runtime errors).
         bool run();
-        bool run(const CoreConfig& config);          // Convenience overload to configure (from C++) and run
-        bool run(const sol::table& config);      // Convenience overload to configure and run
-        bool run(const std::string& configFile); // Convenience overload to load config from Lua file
 
         // Signal the main loop to stop. Provide a clear, non-generic message
         // so test output indicates this was a deliberate shutdown requested
@@ -87,8 +84,6 @@ namespace SDOM
 
         // --- Configuration & Initialization --- //
         void configure(const CoreConfig& config);
-        void configureFromLua(const sol::table& config);
-        void configureFromLuaFile(const std::string& filename);
         void reconfigure(const CoreConfig& config);
 
         // --- Callback/Hook Registration --- //
@@ -197,8 +192,8 @@ namespace SDOM
         DisplayHandle getMouseHoveredObject() const;
         void clearMouseHoveredObject();
 
-        // --- Lua State Access --- //
-        sol::state& getLua() { return lua_; }
+        // // --- Lua State Access --- //
+        // sol::state& getLua() { return lua_; }
 
         // --- UnitTest Wrappers --- //
         int getFrameCount() const;
@@ -383,12 +378,6 @@ namespace SDOM
 
     protected:
         friend Factory;
-
-        Core* core_ptr_ = nullptr;
-
-        // --- Legacy Lua Registration --- //
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-        sol::usertype<Core> objHandleType_;
 
         // --- Lua Registration --- //
         void registerBindingsImpl(const std::string& typeName) override;

@@ -387,94 +387,96 @@ namespace SDOM
     // ============================================================================
     bool UnitTests::run_lua_tests(std::vector<std::string>& errors, const std::string& filename)
     {
-        Core& core = getCore();
-        sol::state& lua = core.getLua();
+        (void)errors; (void)filename;
+        return true;
 
-        // --- Resolve module name from filename (e.g., "src/Core_UnitTests.lua" -> "src.Core_UnitTests") ---
-        std::string module = filename;
-        // strip trailing .lua if present
-        if (module.size() > 4 && module.substr(module.size() - 4) == ".lua")
-            module.erase(module.size() - 4);
-        // normalize path separators and convert to dotted module path
-        for (char& c : module)
-        {
-            if (c == '\\') c = '/';
-            if (c == '/')   c = '.';
-        }
+        // Core& core = getCore();
+        // sol::state& lua = core.getLua();
 
-        // --- Load module once via require() and obtain its return value ---
-        std::string script = "return require('" + module + "')";
-        sol::protected_function_result result = lua.safe_script(script, sol::script_pass_on_error);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            errors.push_back(std::string("Lua runtime error: ") + err.what());
-            return true; // treat as finished to avoid blocking the test loop
-        }
+        // // --- Resolve module name from filename (e.g., "src/Core_UnitTests.lua" -> "src.Core_UnitTests") ---
+        // std::string module = filename;
+        // // strip trailing .lua if present
+        // if (module.size() > 4 && module.substr(module.size() - 4) == ".lua")
+        //     module.erase(module.size() - 4);
+        // // normalize path separators and convert to dotted module path
+        // for (char& c : module)
+        // {
+        //     if (c == '\\') c = '/';
+        //     if (c == '/')   c = '.';
+        // }
 
-        sol::object return_value = result;
-        bool finished = true; // default: one-shot unless a step() says otherwise
+        // // --- Load module once via require() and obtain its return value ---
+        // std::string script = "return require('" + module + "')";
+        // sol::protected_function_result result = lua.safe_script(script, sol::script_pass_on_error);
+        // if (!result.valid())
+        // {
+        //     sol::error err = result;
+        //     errors.push_back(std::string("Lua runtime error: ") + err.what());
+        //     return true; // treat as finished to avoid blocking the test loop
+        // }
 
-        // --- Case 1: Table return type (preferred re-entrant API) ---
-        if (return_value.is<sol::table>())
-        {
-            sol::table tbl = return_value.as<sol::table>();
+        // sol::object return_value = result;
+        // bool finished = true; // default: one-shot unless a step() says otherwise
 
-            // If present, call step() to advance the test one frame
-            sol::object step_field = tbl["step"];
-            if (step_field.get_type() == sol::type::function)
-            {
-                sol::protected_function step = step_field.as<sol::protected_function>();
-                sol::protected_function_result step_res = step();
-                if (!step_res.valid())
-                {
-                    sol::error err = step_res;
-                    errors.push_back(std::string("Lua step() error: ") + err.what());
-                    finished = true;
-                }
-                else
-                {
-                    sol::object step_ret = step_res;
-                    if (step_ret.is<bool>())
-                        finished = step_ret.as<bool>();
-                    else
-                        finished = true; // non-boolean treated as finished
-                }
-            }
+        // // --- Case 1: Table return type (preferred re-entrant API) ---
+        // if (return_value.is<sol::table>())
+        // {
+        //     sol::table tbl = return_value.as<sol::table>();
 
-            // Extract reported errors if present
-            sol::object err_field = tbl["errors"];
-            if (err_field.is<sol::table>())
-            {
-                sol::table err_table = err_field.as<sol::table>();
-                for (auto& kv : err_table)
-                {
-                    sol::object value = kv.second;
-                    if (value.is<std::string>())
-                        errors.push_back(value.as<std::string>());
-                }
-            }
-            else if (err_field.is<std::string>())
-            {
-                errors.push_back(err_field.as<std::string>());
-            }
-            // Legacy advisory ok flag is ignored for control flow; pass/fail derives from errors
-        }
-        // --- Case 2: Boolean return type (legacy/simple API) ---
-        else if (return_value.is<bool>())
-        {
-            bool ok_flag = return_value.as<bool>();
-            // Re-entrant semantic: true = finished; false = continue next frame
-            finished = ok_flag;
-        }
-        // --- Case 3: Invalid or unexpected type ---
-        else
-        {
-            errors.push_back("Lua test did not return a valid result (expected table or boolean).");
-            finished = true;
-        }
+        //     // If present, call step() to advance the test one frame
+        //     sol::object step_field = tbl["step"];
+        //     if (step_field.get_type() == sol::type::function)
+        //     {
+        //         sol::protected_function step = step_field.as<sol::protected_function>();
+        //         sol::protected_function_result step_res = step();
+        //         if (!step_res.valid())
+        //         {
+        //             sol::error err = step_res;
+        //             errors.push_back(std::string("Lua step() error: ") + err.what());
+        //             finished = true;
+        //         }
+        //         else
+        //         {
+        //             sol::object step_ret = step_res;
+        //             if (step_ret.is<bool>())
+        //                 finished = step_ret.as<bool>();
+        //             else
+        //                 finished = true; // non-boolean treated as finished
+        //         }
+        //     }
 
-        return finished;
+        //     // Extract reported errors if present
+        //     sol::object err_field = tbl["errors"];
+        //     if (err_field.is<sol::table>())
+        //     {
+        //         sol::table err_table = err_field.as<sol::table>();
+        //         for (auto& kv : err_table)
+        //         {
+        //             sol::object value = kv.second;
+        //             if (value.is<std::string>())
+        //                 errors.push_back(value.as<std::string>());
+        //         }
+        //     }
+        //     else if (err_field.is<std::string>())
+        //     {
+        //         errors.push_back(err_field.as<std::string>());
+        //     }
+        //     // Legacy advisory ok flag is ignored for control flow; pass/fail derives from errors
+        // }
+        // // --- Case 2: Boolean return type (legacy/simple API) ---
+        // else if (return_value.is<bool>())
+        // {
+        //     bool ok_flag = return_value.as<bool>();
+        //     // Re-entrant semantic: true = finished; false = continue next frame
+        //     finished = ok_flag;
+        // }
+        // // --- Case 3: Invalid or unexpected type ---
+        // else
+        // {
+        //     errors.push_back("Lua test did not return a valid result (expected table or boolean).");
+        //     finished = true;
+        // }
+        // return finished;
     } // END: UnitTests::run_lua_tests(std::vector<std::string>& errors, const std::string& filename)
 
 
@@ -495,23 +497,23 @@ namespace SDOM
 
     void UnitTests::registerLua()
     {
-        /* Example LUA usage: 
-            local ut = getUnitTests()
-            ut:push_error("Something went wrong")
-        */
-        Core& core = getCore();
-        sol::state& lua = core.getLua();
-        if (!lua.lua_state()) {
-            ERROR("Cannot register UnitTests Lua bindings: Lua state is not initialized.");
-            return;
-        }
+        // /* Example LUA usage: 
+        //     local ut = getUnitTests()
+        //     ut:push_error("Something went wrong")
+        // */
+        // Core& core = getCore();
+        // sol::state& lua = core.getLua();
+        // if (!lua.lua_state()) {
+        //     ERROR("Cannot register UnitTests Lua bindings: Lua state is not initialized.");
+        //     return;
+        // }
 
-        lua.new_usertype<UnitTests>("UnitTests"
-            , "clear_tests", &UnitTests::clear_tests
-            , "add_test", &UnitTests::add_test
-            , "run_all", &UnitTests::run_all
-        );
-        lua.set_function("getUnitTests", &UnitTests::getInstance);
+        // lua.new_usertype<UnitTests>("UnitTests"
+        //     , "clear_tests", &UnitTests::clear_tests
+        //     , "add_test", &UnitTests::add_test
+        //     , "run_all", &UnitTests::run_all
+        // );
+        // lua.set_function("getUnitTests", &UnitTests::getInstance);
 
     } // END: registerLua()
 

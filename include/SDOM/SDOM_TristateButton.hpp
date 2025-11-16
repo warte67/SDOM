@@ -109,54 +109,148 @@ namespace SDOM
         // --------------------------------------------------------------------
         // ⚙️ Initialization Struct
         // --------------------------------------------------------------------
-        struct InitStruct : IDisplayObject::InitStruct
+        struct InitStruct : public IDisplayObject::InitStruct
         {
-            InitStruct() : IDisplayObject::InitStruct()
+            InitStruct()
+                : IDisplayObject::InitStruct()
             {
+                //
+                // From IDisplayObject
+                //
                 name = TypeName;
                 type = TypeName;
-                color = {96, 0, 96, 255};   // Icon Color
-                tabEnabled = false;
+
+                color = {96, 0, 96, 255};     // default purple-ish UI color
+                tabEnabled  = false;
                 isClickable = true;
+
+                //
+                // TristateButton-specific defaults
+                //
+                text          = TypeName;
+                font_size     = 8;
+                label_color   = {0, 255, 255, 255};   // cyan-ish label
+                border_color  = {0, 0, 0, 128};       // semi-transparent black
+                state         = ButtonState::Unchecked;
+
+                icon_resource = "internal_icon_8x8";
+                icon_width    = 8;
+                icon_height   = 8;
+
+                font_resource = "internal_font_8x8";
+                font_width    = 8;
+                font_height   = 8;
+
+                border        = false;
             }
 
-            // TristateButton Initialization Properties
-            std::string text = TypeName;
-            int font_size = 8;
-            SDL_Color label_color = {0, 255, 255, 255};
-            SDL_Color border_color = {0, 0, 0, 128};
-            ButtonState state = ButtonState::Unchecked;
-            std::string icon_resource = "internal_icon_8x8";
-            int icon_width = 8;
-            int icon_height = 8;
-            std::string font_resource = "internal_font_8x8";
-            int font_width = 8;
-            int font_height = 8;
-            bool border = false;
-        };
+            // --- TristateButton-specific fields ---
+            std::string text;
+            int font_size;
+            SDL_Color label_color;
+            SDL_Color border_color;
+            ButtonState state;
+
+            std::string icon_resource;
+            int icon_width;
+            int icon_height;
+
+            std::string font_resource;
+            int font_width;
+            int font_height;
+
+            bool border;
+
+            // ---------------------------------------------------------------------
+            // 📜 JSON Loader (Inheritance-Safe)
+            // ---------------------------------------------------------------------
+            static void from_json(const nlohmann::json& j, InitStruct& out)
+            {
+                // 1. Load base IDisplayObject values
+                IDisplayObject::InitStruct::from_json(j, out);
+
+                // 2. Load TristateButton-specific values
+
+                if (j.contains("text"))
+                    out.text = j["text"].get<std::string>();
+
+                if (j.contains("font_size"))
+                    out.font_size = j["font_size"].get<int>();
+
+                if (j.contains("label_color") && j["label_color"].is_array() && j["label_color"].size() == 4)
+                {
+                    const auto& c = j["label_color"];
+                    out.label_color = {
+                        c[0].get<uint8_t>(),
+                        c[1].get<uint8_t>(),
+                        c[2].get<uint8_t>(),
+                        c[3].get<uint8_t>()
+                    };
+                }
+
+                if (j.contains("border_color") && j["border_color"].is_array() && j["border_color"].size() == 4)
+                {
+                    const auto& c = j["border_color"];
+                    out.border_color = {
+                        c[0].get<uint8_t>(),
+                        c[1].get<uint8_t>(),
+                        c[2].get<uint8_t>(),
+                        c[3].get<uint8_t>()
+                    };
+                }
+
+                if (j.contains("state"))
+                    out.state = static_cast<ButtonState>( j["state"].get<int>() );
+
+                if (j.contains("icon_resource"))
+                    out.icon_resource = j["icon_resource"].get<std::string>();
+
+                if (j.contains("icon_width"))
+                    out.icon_width = j["icon_width"].get<int>();
+
+                if (j.contains("icon_height"))
+                    out.icon_height = j["icon_height"].get<int>();
+
+                if (j.contains("font_resource"))
+                    out.font_resource = j["font_resource"].get<std::string>();
+
+                if (j.contains("font_width"))
+                    out.font_width = j["font_width"].get<int>();
+
+                if (j.contains("font_height"))
+                    out.font_height = j["font_height"].get<int>();
+
+                if (j.contains("border"))
+                    out.border = j["border"].get<bool>();
+            }
+        }; // END: InitStruct
 
     protected:
         // --------------------------------------------------------------------
         // 🏭 Constructors
         // --------------------------------------------------------------------
         TristateButton(const InitStruct& init);
-        TristateButton(const sol::table& config);
-        TristateButton(const sol::table& config, const InitStruct& defaults);
 
     public:
         // --------------------------------------------------------------------
         // 🏭 Static Factory Methods
         // --------------------------------------------------------------------
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config)
+        static std::unique_ptr<IDisplayObject>
+        CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
         {
-            return std::unique_ptr<IDisplayObject>(new TristateButton(config));
+            const auto& init = static_cast<const TristateButton::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new TristateButton(init));
         }
 
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        static std::unique_ptr<IDisplayObject>
+        CreateFromJson(const nlohmann::json& j)
         {
-            const auto& TristateButtonInit = static_cast<const TristateButton::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new TristateButton(TristateButtonInit));
+            TristateButton::InitStruct init;
+            TristateButton::InitStruct::from_json(j, init);
+            return std::unique_ptr<IDisplayObject>(new TristateButton(init));
         }
+
+
 
         // --------------------------------------------------------------------
         // 🌱 Lifecycle
@@ -227,13 +321,6 @@ namespace SDOM
         IconIndex icon_index_ = IconIndex::Checkbox_Empty;
         int icon_width_ = 8;
         int icon_height_ = 8;
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

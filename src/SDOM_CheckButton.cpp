@@ -14,12 +14,6 @@ namespace SDOM
         // add custom properties here
     } // END: CheckButton::CheckButton(const InitStruct& init)
 
-    CheckButton::CheckButton(const sol::table& config) : TristateButton(config, CheckButton::InitStruct())
-    {
-        setType(TypeName);
-        // add custom properties here
-    } // END: CheckButton::CheckButton(const sol::table& config)
-
 
     // --- Lifecycle & Core Virtuals --- //
     bool CheckButton::onInit()
@@ -91,12 +85,12 @@ namespace SDOM
         // INFO(getType() +"::setState() - on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
 
         onStateChanged(buttonState_, state); 
-        // dispatch event
-        queue_event(EventType::StateChanged, [this, state](Event& ev) {
-            ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
-            ev.setPayloadValue("new_state", static_cast<int>(state));
-            ev.setPayloadValue("buttonName", getName());
-        });
+        // // dispatch event
+        // queue_event(EventType::StateChanged, [this, state](Event& ev) {
+        //     ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
+        //     ev.setPayloadValue("new_state", static_cast<int>(state));
+        //     ev.setPayloadValue("buttonName", getName());
+        // });
         buttonState_ = state;
         // Keep cached icon index in sync with new state
         icon_index_ = iconIndexForState(state);
@@ -144,40 +138,6 @@ namespace SDOM
             default:                      return IconIndex::Checkbox_Empty;
         }
     } // END: CheckButton::iconIndexForState()
-
-    // --- Data Members --- //
-    // ...
-
-    // --- Lua Registration --- //
-    void CheckButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Include IButtonObject bindings first
-        IButtonObject::registerLuaBindings(lua);
-
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "CheckButton";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings on DisplayHandle:
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-
-        // // Helper to check if a property/command is already registered
-        // auto absent = [&](const char* name) -> bool 
-        // {
-        //     sol::object cur = handle.raw_get_or(name, sol::lua_nil);
-        //     return !cur.valid() || cur == sol::lua_nil;
-        // };
-        
-    } // END: CheckButton::_registerLuaBindings()
-
-
 
 
     

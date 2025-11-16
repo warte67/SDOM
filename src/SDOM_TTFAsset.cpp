@@ -10,30 +10,12 @@ namespace SDOM
 
     TTFAsset::TTFAsset(const InitStruct& init) : IAssetObject(init)
     {
-        internalFontSize_ = init.internalFontSize;
+        internalFontSize_ = init.internal_font_size;
         name_ = init.name;
         type_ = init.type;
         filename_ = init.filename;
 
     } // END:  TTFAsset::TTFAsset(const InitStruct& init)
-
-    TTFAsset::TTFAsset(const sol::table& config) : IAssetObject(config)
-    {
-        // Set defaults
-        InitStruct init;        
-        name_ = init.name;
-        type_ = init.type;
-        filename_ = init.filename;
-        internalFontSize_ = init.internalFontSize;
-        // Read from Lua table if present
-        if (config.valid()) 
-        {
-            if (config["name"].valid())        name_ = config["name"];
-            if (config["type"].valid())        type_ = config["type"];
-            if (config["filename"].valid())    filename_ = config["filename"];
-            if (config["internalFontSize"].valid()) internalFontSize_ = config["internalFontSize"];
-        }
-    } // END: TTFAsset::TTFAsset(const sol::table& config)
 
     TTFAsset::~TTFAsset()
     {
@@ -150,30 +132,6 @@ namespace SDOM
     } // END: TTFAsset::onUnitTest()
 
 
-
-
-    // --- Lua Registration --- //
-    void TTFAsset::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Call base class registration to include inherited properties/commands
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "TTFAsset:" + getName();
-            std::cout << CLR::MAGENTA << "Registered " << CLR::LT_MAGENTA << typeNameLocal 
-                    << CLR::MAGENTA << " Lua bindings for type: " << CLR::LT_MAGENTA 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Go-by for future bindings:
-        // To expose TTFAsset helpers on AssetHandle in Lua, use the unified pattern:
-        //   auto ut = SDOM::IDataObject::register_usertype_with_table<AssetHandle, SDOM::IDataObject>(lua, AssetHandle::LuaHandleName);
-        //   sol::table handle = SDOM::IDataObject::ensure_sol_table(lua, AssetHandle::LuaHandleName);
-        //   // then bind functions on both 'ut' and 'handle'.
-
-
-    } // END: TTFAsset::_registerLuaBindings()
 
     
     void TTFAsset::registerBindingsImpl(const std::string& typeName)

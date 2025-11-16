@@ -14,7 +14,6 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Utils.hpp> // for parseColor
-#include <SDOM/SDOM_Core_Lua.hpp>
 #include <SDOM/SDOM_IconButton.hpp>
 #include <SDOM/SDOM_ArrowButton.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
@@ -25,35 +24,28 @@ namespace SDOM
 
     Core::Core() : IDataObject()
     {
-        if (core_ptr_) { throw std::runtime_error("Core already initialized"); }
-        core_ptr_ = this;
 
-        // Open base libraries plus package and io so embedded scripts can use
-        // `require`/`package` and basic I/O if desired by examples.
+        // // Open base libraries plus package and io so embedded scripts can use
+        // // `require`/`package` and basic I/O if desired by examples.
         lua_.open_libraries(sol::lib::base, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::package, sol::lib::io);
 
-        // Register Core, Factory, EventManager, Version, and SDL_Utils usertypes
-        SDL_Utils::registerLuaBindings(lua_);  // This should inherit from IDataObject?
         factory_ = new Factory();
         eventManager_ = new EventManager();
         version_ = new Version(lua_);
 
-        // Expose CLR constants and helpers to Lua through a single helper
-        // so updates to CLR are reflected in embedded Lua states.
-        CLR::exposeToLua(lua_);   // This should inherit from IDataObject?
+        // // Expose CLR constants and helpers to Lua through a single helper
+        // // so updates to CLR are reflected in embedded Lua states.
+        // CLR::exposeToLua(lua_);   // This should inherit from IDataObject?
 
         
         // register the DisplayHandle handle last so other types can use it
         DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-        prototypeHandle._registerLuaBindings("DisplayHandle", lua_);
         prototypeHandle.registerBindings("DisplayHandle", getDataRegistry());
 
-            AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
-        prototypeAssetHandle._registerLuaBindings("AssetHandle", lua_);
+        AssetHandle prototypeAssetHandle; // Default AssetHandle for registration
         prototypeAssetHandle.registerBindings("AssetHandle", getDataRegistry());
             
-            // Register Core usertype
-        this->_registerLuaBindings("Core", lua_);      
+        // Register Core usertype
         this->registerBindings("Core", getDataRegistry()); 
 
         // Note: Factory initialization is performed later (e.g. during
@@ -94,173 +86,6 @@ namespace SDOM
         }
     }
 
-    void Core::configureFromLua(const sol::table& lua)
-    {
-        CoreConfig config;
-        sol::table coreObj = lua;
-        config.windowWidth = coreObj["windowWidth"].get_or(1280.0f);
-        config.windowHeight = coreObj["windowHeight"].get_or(720.0f);
-        config.pixelWidth  = coreObj["pixelWidth"].get_or(2.0f);
-        config.pixelHeight = coreObj["pixelHeight"].get_or(2.0f);
-        config.preserveAspectRatio = coreObj["preserveAspectRatio"].get_or(true);
-        config.allowTextureResize = coreObj["allowTextureResize"].get_or(true);
-        config.rendererLogicalPresentation = SDL_Utils::rendererLogicalPresentationFromString(
-            coreObj["rendererLogicalPresentation"].get_or(std::string("SDL_LOGICAL_PRESENTATION_LETTERBOX")));
-        config.windowFlags = SDL_Utils::windowFlagsFromString(
-            coreObj["windowFlags"].get_or(std::string("SDL_WINDOW_RESIZABLE")));
-        config.pixelFormat = SDL_Utils::pixelFormatFromString(
-            coreObj["pixelFormat"].get_or(std::string("SDL_PIXELFORMAT_RGBA8888")));
-        if (coreObj["color"].valid()) {
-            config.color = parseColor(coreObj["color"]);
-        } else {
-            config.color = {0, 0, 0, 255};
-        }        
-        configure(config);
-
-        // Recursive resource creation
-        std::function<void(sol::table, DisplayHandle)> createResourceRecursive;
-        createResourceRecursive = [&](sol::table obj, DisplayHandle parent) 
-        {
-            std::string type = obj["type"].get_or(std::string(""));
-            std::string name = obj["name"].get_or(std::string(""));
-            DisplayHandle handle;
-            if (!type.empty()) 
-            {
-                // DEBUG_LOG("Core::configureFromLua: creating type='" + type + "' name='" + name + "'");
-                handle = factory_->createDisplayObject(type, obj);
-                if (!handle.isValid()) {
-                    ERROR("Core::configureFromLua: factory->create returned invalid handle for type '" + type + "' name='" + name + "'");
-                } 
-                // else 
-                // {
-                //     DEBUG_LOG("Core::configureFromLua: created handle for '" + type + "' name='" + name + "'");
-                // }
-                if (parent.isValid() && handle.isValid()) 
-                {
-                    parent.get()->addChild(handle);
-                }
-            }
-            if (obj["children"].valid() && obj["children"].is<sol::table>()) 
-            {
-                sol::table children = obj["children"];
-                for (auto& kv : children) 
-                {
-                    sol::table child = kv.second.as<sol::table>();
-                    createResourceRecursive(child, handle);
-                }
-            }
-        };
-
-        // Parse children and create resources
-        if (coreObj["children"].valid() && coreObj["children"].is<sol::table>()) 
-        {
-            sol::table children = coreObj["children"];
-            for (auto& kv : children) 
-            {
-                sol::table child = kv.second.as<sol::table>();
-                createResourceRecursive(child, DisplayHandle());
-            }
-        }
-
-        // // Debug: print factory registries so we can see registered/created types
-        // try {
-        //     factory_->printObjectRegistry();
-        //     factory_->printAssetRegistry();
-        // } catch(...) {}
-
-        // Set the "mainStage" as the root node
-        std::string rootStageName = "mainStage";
-        if (coreObj["rootStage"].valid())
-            rootStageName = coreObj["rootStage"].get<std::string>();
-        rootNode_ = factory_->getDisplayObject(rootStageName);
-        setWindowTitle("Stage: " + rootStageName);
-    }
-
-    void Core::configureFromLuaFile(const std::string& filename)
-    {
-        std::ifstream file(filename);
-        if (!file.is_open()) 
-        {
-            ERROR("Could not open configuration file: " + filename);
-            return;
-        }
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-
-        // Execute the configuration file in the Core's Lua state so that
-        // globals registered by the host (Core, CLR, unit-test functions)
-        // are available to the script.
-        try {
-            // Prefer scripts that return the config table. If the chunk
-            // returns a table, use it. Otherwise fall back to a global
-            // `config` table for backward compatibility.
-            sol::load_result chunk = lua_.load(buffer.str());
-            if (!chunk.valid()) {
-                sol::error err = chunk;
-                ERROR(std::string("Failed to load Lua config chunk: ") + err.what());
-                return;
-            }
-
-            sol::protected_function_result result = chunk();
-            if (!result.valid()) {
-                sol::error err = result;
-                ERROR(std::string("Error executing Lua config chunk: ") + err.what());
-                return;
-            }
-
-            // If the chunk returned a table, use that as the config.
-            sol::object ret = result.get<sol::object>();
-            // If the script overwrote the global `Core` (common when authors
-            // set a config table into Core), restore our forwarding table so
-            // callbacks and later code see the table-based API. The
-            // _registerLuaBindings() created CoreForward.
-            try {
-                if (lua_["CoreForward"].valid()) {
-                    lua_["Core"] = lua_["CoreForward"];
-                }
-            } catch (...) {}
-            if (ret.is<sol::table>()) {
-                sol::table configTable = ret.as<sol::table>();
-                // Defensive: scripts may call the global `configure(table)`
-                // themselves and also return the table. To avoid double-apply
-                // (which can lead to duplicate-named object errors), detect
-                // whether the returned table's rootStage has already been
-                // created and skip re-applying if so.
-                std::string rootStageName = "mainStage";
-                try {
-                    if (configTable["rootStage"].valid())
-                        rootStageName = configTable["rootStage"].get<std::string>();
-                } catch(...) {}
-
-                bool alreadyApplied = false;
-                try {
-                    if (factory_) {
-                        DisplayHandle existing = factory_->getDisplayObject(rootStageName);
-                        if (existing.isValid()) alreadyApplied = true;
-                    }
-                } catch(...) { alreadyApplied = false; }
-
-                if (alreadyApplied) {
-                    return;
-                }
-
-                configureFromLua(configTable);
-                return;
-            }
-
-            // Fall back to global `config` table
-            sol::table configTable = lua_["config"];
-            if (!configTable.valid()) {
-                ERROR("Lua config file did not produce a valid 'config' table (no return value and global 'config' missing).");
-                return;
-            }
-            configureFromLua(configTable);
-        } catch (const sol::error& e) {
-            ERROR(std::string("Error executing Lua config file: ") + e.what());
-            return;
-        }
-    }
-
     void Core::shutdown_SDL()
     {
         if (texture_) {
@@ -285,99 +110,6 @@ namespace SDOM
         SDL_Quit();
     }
 
-
-    bool Core::run(const sol::table& config)
-    {
-        configureFromLua(config);
-        // Now run normally
-        return run();
-    }
-
-    bool Core::run(const CoreConfig& config)
-    {
-        // Apply the provided configuration synchronously and then start the main loop.
-        configure(config);
-        return run();
-    }
-
-
-    bool Core::run(const std::string& configFile)
-    {
-        if (!configFile.empty()) {
-            // Prefer an explicit existence check (robust against debugger CWD differences)
-            namespace fs = std::filesystem;
-            bool fileExists = false;
-            try {
-                fileExists = fs::exists(fs::path(configFile));
-            } catch (...) {
-                fileExists = false;
-            }
-
-            if (fileExists) {
-                configureFromLuaFile(configFile);
-            } else {
-                // Heuristic: only treat the string as raw Lua source if it clearly *looks* like code.
-                // Otherwise assume the caller meant a filename and report a clear error.
-                bool looksLikeCode = (configFile.find('\n') != std::string::npos)
-                                    || (configFile.find("return") != std::string::npos)
-                                    || (configFile.find("function") != std::string::npos)
-                                    || (configFile.find("local") != std::string::npos)
-                                    || (configFile.rfind(".lua") == configFile.size() - 4 && configFile.size() >= 4);
-
-                // If the string contains path separators but the file doesn't exist, give a helpful error
-                bool containsPathSep = (configFile.find('/') != std::string::npos) || (configFile.find('\\') != std::string::npos);
-
-                if (!looksLikeCode && containsPathSep) {
-                    ERROR(std::string("Config file not found: ") + configFile);
-                    return false;
-                }
-
-                // If it doesn't look like code and no path separators, treat as missing file rather than raw script
-                if (!looksLikeCode) {
-                    ERROR(std::string("Config string does not appear to be Lua code and no file found: ") + configFile);
-                    return false;
-                }
-
-                // Treat as inline Lua code
-                try {
-                    sol::load_result chunk = lua_.load(configFile);
-                    if (!chunk.valid()) {
-                        sol::error err = chunk;
-                        ERROR(std::string("Failed to load Lua config chunk: ") + err.what());
-                        return false;
-                    }
-                    sol::protected_function_result result = chunk();
-                    if (!result.valid()) {
-                        sol::error err = result;
-                        ERROR(std::string("Error executing Lua config chunk: ") + err.what());
-                        return false;
-                    }
-                    sol::object ret = result.get<sol::object>();
-                    // Restore Core global to CoreForward (if present) so that
-                    // subsequent code and callbacks use the forwarding table
-                    // instead of any config table the script may have assigned.
-                    try {
-                        if (lua_["CoreForward"].valid()) {
-                            lua_["Core"] = lua_["CoreForward"];
-                        }
-                    } catch (...) {}
-                    if (ret.is<sol::table>()) {
-                        configureFromLua(ret.as<sol::table>());
-                    } else {
-                        sol::table configTable = lua_["config"];
-                        if (configTable.valid()) {
-                            configureFromLua(configTable);
-                        } else {
-                            ERROR("Lua script did not produce a valid 'config' table.");
-                        }
-                    }
-                } catch (const sol::error& e) {
-                    ERROR(std::string("Error executing Lua script for configuration: ") + e.what());
-                }
-            }
-        }
-        return run();
-    }
 
     void Core::reconfigure(const CoreConfig& config)
     {
@@ -862,9 +594,9 @@ namespace SDOM
         // destructor after all sol::reference objects are destroyed.
         shutdown_SDL();
 
-        // Clean up any orphaned display objects in Lua
-        getLua().collect_garbage();
-        getLua().collect_garbage();
+        // // Clean up any orphaned display objects in Lua
+        // getLua().collect_garbage();
+        // getLua().collect_garbage();
 
         // // Proactively destroy the Lua state before global/static teardown.
         // // This avoids use-after-free in sol2's usertype registry cleanup
@@ -1790,27 +1522,12 @@ namespace SDOM
 
 
     // --- Factory Wrapper Implementations --- //
-
-    DisplayHandle Core::createDisplayObject(const std::string& typeName, const sol::table& config) {
-    return getFactory().createDisplayObject(typeName, config);
-    }
     DisplayHandle Core::createDisplayObject(const std::string& typeName, const IDisplayObject::InitStruct& init) {
     return getFactory().createDisplayObject(typeName, init);
-    }
-    DisplayHandle Core::createDisplayObjectFromScript(const std::string& typeName, const std::string& luaScript) {
-    return getFactory().createDisplayObject(typeName, luaScript);
-    }
-
-    AssetHandle Core::createAssetObject(const std::string& typeName, const sol::table& config) {
-    return getFactory().createAssetObject(typeName, config);
     }
     AssetHandle Core::createAssetObject(const std::string& typeName, const SDOM::IAssetObject::InitStruct& init) {
     return getFactory().createAssetObject(typeName, init);
     }
-    AssetHandle Core::createAssetObjectFromScript(const std::string& typeName, const std::string& luaScript) {
-    return getFactory().createAssetObject(typeName, luaScript);
-    }
-
 
     IDisplayObject* Core::getDisplayObjectPtr(const std::string& name) {
     return getFactory().getDisplayObjectPtr(name);
@@ -1947,7 +1664,6 @@ namespace SDOM
 		if (renderer) 
 		{
 			SDL_RenderCoordinatesToWindow(renderer, sx, sy, &winX, &winY);
-			LUA_INFO("pushMouseEvent_lua: SDL_RenderCoordinatesToWindow stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
 		} 
 		else 
 		{
@@ -1955,11 +1671,9 @@ namespace SDOM
 			const Core::CoreConfig& cfg = c->getConfig();
 			winX = sx * cfg.pixelWidth;
 			winY = sy * cfg.pixelHeight;
-			LUA_INFO("pushMouseEvent_lua: Fallback scaling stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
 		}
 
 		// Debug logging for synthetic mouse events
-		LUA_INFO("[pushMouseEvent_lua] stage:(" << sx << "," << sy << ") -> window:(" << winX << "," << winY << ") type:" << type << " button:" << button);
 
         Uint32 winID = 0;
         if (c->getWindow()) winID = SDL_GetWindowID(c->getWindow());
@@ -2057,356 +1771,6 @@ namespace SDOM
         return ut.get_frame_counter(); 
     }
 
-
-
-
-    // --- Lua UserType Registration --- //
-
-
-    void Core::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // --- Call base class registration to include inherited properties/commands --- //
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        // --- Debug output --- //
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "Core";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal 
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN 
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // --- Create the Core usertype (no constructor) and bind methods directly --- //
-
-        // Register Core userdata and ensure userdata lookups delegate to the
-        // authoritative per-type table. Provide IDataObject as the base so
-        // sol2 registers the proper base class information.
-        
-        // SDOM::IDataObject::ensure_sol_table(lua, typeName);        
-        sol::usertype<Core> objHandleType = SDOM::IDataObject::register_usertype_with_table<Core, SDOM::IDataObject>(lua, typeName);
-
-        this->objHandleType_ = objHandleType;   // Save usertype
-        // Use the authoritative per-type table as the Core forwarding table
-        // so userdata and table-based calls resolve to the same functions.
-        sol::table coreTable = SDOM::IDataObject::ensure_sol_table(lua, typeName);
-        // Publish an explicit CoreForward entry so callers that restore the
-        // Core global after running config scripts can find the forwarding
-        // table. Also ensure the global `Core` initially points to this
-        // forwarding table if nothing else has set it.
-        try {
-            lua["CoreForward"] = coreTable;
-            sol::object maybeCore = lua.globals().raw_get_or("Core", sol::lua_nil);
-            if (!maybeCore.valid() || maybeCore == sol::lua_nil) {
-                lua["Core"] = coreTable;
-            }
-        } catch(...) {}
-        // --- Register Event types and EventType table (best-effort) --- //
-        try {
-            Event::registerLua(lua);
-            sol::table etbl = lua.create_table();
-            const auto& reg = EventType::getRegistry();
-            for (const auto& kv : reg) {
-                const std::string& name = kv.first;
-                EventType* ptr = kv.second;
-                if (ptr) {
-                    etbl[name] = sol::make_object(lua, std::ref(*ptr));
-                }
-            }
-            lua["EventType"] = etbl;
-        } catch (const std::exception& e) {
-            DEBUG_LOG("Failed to register EventType bindings: " << e.what());
-        } catch (...) {
-            DEBUG_LOG("Failed to register EventType bindings: unknown exception");
-        }
-
-        // --- Expose IconIndex & IconButton constants early --- //
-        try {
-            auto make_lua_key = [](const std::string &s) -> std::string {
-                std::string out;
-                std::size_t i = 0;
-                while (i < s.size()) {
-                    std::size_t j = s.find('_', i);
-                    if (j == std::string::npos) j = s.size();
-                    std::string part = s.substr(i, j - i);
-                    if (!part.empty()) part[0] = static_cast<char>(std::toupper(part[0]));
-                    if (!out.empty()) out += "_";
-                    out += part;
-                    i = j + 1;
-                }
-                return out;
-            };
-
-            sol::table iconIndexTable = lua.create_table();
-            for (const auto &p : SDOM::icon_index_to_string) {
-                int idx = p.first;
-                const std::string &name = p.second;
-                std::string luaKey = make_lua_key(name);
-                iconIndexTable.set(luaKey, idx);
-            }
-
-            sol::object existing = lua["IconIndex"];
-            if (!existing.valid() || existing == sol::lua_nil) {
-                lua["IconIndex"] = iconIndexTable;
-            } else {
-                sol::table t = lua["IconIndex"];
-                for (const auto &p : SDOM::icon_index_to_string) {
-                    std::string k = make_lua_key(p.second);
-                    sol::object cur = t.raw_get<sol::object>(k);
-                    if (!cur.valid() || cur == sol::lua_nil) t.set(k, p.first);
-                }
-            }
-
-            // Also populate a global IconButton table to expose constants
-            sol::object maybeClass = lua["IconButton"];
-            sol::table classTable;
-            if (!maybeClass.valid() || maybeClass == sol::lua_nil) {
-                classTable = lua.create_table();
-                lua["IconButton"] = classTable;
-            } else {
-                classTable = maybeClass.as<sol::table>();
-            }
-            for (const auto &p : SDOM::icon_index_to_string) {
-                std::string k = make_lua_key(p.second);
-                sol::object cur2 = classTable.raw_get<sol::object>(k);
-                if (!cur2.valid() || cur2 == sol::lua_nil) classTable.set(k, p.first);
-            }
-
-            // Add "direction" for ArrowButton
-            sol::table arrowDirTable = lua.create_table();
-            for (const auto& p : SDOM::ArrowButton::arrow_direction_to_string) {
-                std::string k = p.second;
-                arrowDirTable.set(k, static_cast<int>(p.first));
-            }
-            lua["ArrowDirection"] = arrowDirTable;
-
-            // Add ArrowState for ArrowButton
-            sol::table arrowStateTable = lua.create_table();
-            arrowStateTable.set("raised", static_cast<int>(SDOM::ArrowButton::ArrowState::Raised));
-            arrowStateTable.set("depressed", static_cast<int>(SDOM::ArrowButton::ArrowState::Depressed));
-            lua["ArrowState"] = arrowStateTable;
-
-        } catch(...) {
-            // Non-fatal: registration is best-effort
-        }
-
-        // ---------------------------------------- //
-        // --- Register Core Functions with Lua --- //
-        // ---------------------------------------- //
-
-
-        // --- Main Loop & Event Dispatch --- //        
-        core_bind_noarg("quit", SDOM::quit, objHandleType, coreTable, lua);
-        core_bind_noarg("shutdown", SDOM::shutdown, objHandleType, coreTable, lua);
-        // bind_noarg("run", run_lua, objHandleType, coreTable, lua);
-        core_bind_table("configure", core_configure_lua, objHandleType, coreTable, lua);
-        // Also expose a top-level global `configure(table)` convenience
-        // function that forwards to the Core singleton.  The Core method
-        // bound into `Core` expects a userdata first-argument (the Core
-        // forwarder), so we must expose a separate free function that
-        // accepts a table and calls the singleton directly.
-        try {
-            // Expose a top-level `configure(table)` that forwards to our
-            // configure_lua wrapper so the 'resources' preprocessing runs.
-            lua.set_function("configure", [](const sol::table& t) {
-                SDOM::core_configure_lua(t);
-            });
-        } catch(...) {}
-        core_bind_string("configureFromFile", core_configureFromFile_lua, objHandleType, coreTable, lua);        
-
-	    // --- Callback/Hook Registration --- //
-        core_bind_string_function_forwarder("registerOn", core_registerOn_lua, objHandleType, coreTable, lua); // custom handling above
-
-	    // --- Stage/Root Node Management --- //
-        SDOM::core_bind_name_or_handle("setRootNodeByName", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_name_or_handle("setRootNode", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_name_or_handle("setRoot", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_name_or_handle("setStageByName", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua); // alias of setRootNode()
-        SDOM::core_bind_name_or_handle("setStage", setRootNodeByName_lua, setRootNode_lua, objHandleType, coreTable, lua); // alias of setRoot()
-        SDOM::core_bind_return_displayobject("getRoot", getRoot_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_displayobject("getRootHandle", getRoot_lua, objHandleType, coreTable, lua);   // alias of getRoot()
-        SDOM::core_bind_return_displayobject("getStage", getStage_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_displayobject("getStageHandle", getStage_lua, objHandleType, coreTable, lua); // alias of getStage()
-
-        // --- Factory & EventManager Access --- //
-        SDOM::core_bind_return_bool("getIsTraversing", getIsTraversing_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_bool_arg("setIsTraversing", setIsTraversing_lua, objHandleType, coreTable, lua);
-
-        // --- Object Creation --- //
-        SDOM::core_bind_string_table_return_do("createDisplayObject", createDisplayObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_string_return_do("getDisplayObject", getDisplayObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_string_return_bool("hasDisplayObject", hasDisplayObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_string_table_return_asset("createAssetObject", createAssetObject_lua, objHandleType, coreTable, lua);
-
-        // Alias for historical/shortcut usage: expose Core:createAsset -> createAssetObject
-        SDOM::core_bind_string_table_return_asset("createAsset", createAssetObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_string_return_asset("getAssetObject", getAssetObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_string_return_bool("hasAssetObject", hasAssetObject_lua, objHandleType, coreTable, lua);
-
-	    // --- Focus & Hover Management --- //
-        SDOM::core_bind_noarg("doTabKeyPressForward", doTabKeyPressForward_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("doTabKeyPressReverse", doTabKeyPressReverse_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("handleTabKeyPress", doTabKeyPressForward_lua, objHandleType, coreTable, lua); // alias of doTabKeyPressForward()
-        SDOM::core_bind_noarg("handleTabKeyPressReverse", doTabKeyPressReverse_lua, objHandleType, coreTable, lua); // alias of doTabKeyPressReverse()
-        SDOM::core_bind_do_arg("setKeyboardFocusedObject", setKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("clearKeyboardFocusedObject", clearKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_displayobject("getKeyboardFocusedObject", getKeyboardFocusedObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_do_arg("setMouseHoveredObject", setMouseHoveredObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_displayobject("getMouseHoveredObject", getMouseHoveredObject_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("clearMouseHoveredObject", clearMouseHoveredObject_lua, objHandleType, coreTable, lua);
-
-        // --- Window/Renderer/Texture/Config (read-only accessors) --- //
-        SDOM::core_bind_return_float("getPixelWidth", [](){ return Core::getInstance().getPixelWidth(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_float("getPixelHeight", [](){ return Core::getInstance().getPixelHeight(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_int("getWindowFlags", [](){ return static_cast<int>(Core::getInstance().getWindowFlags()); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_int("getPixelFormat", [](){ return static_cast<int>(Core::getInstance().getPixelFormat()); }, objHandleType, coreTable, lua);
-        // Additional config getters
-        SDOM::core_bind_return_float("getWindowWidth", [](){ return Core::getInstance().getWindowWidth(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_float("getWindowHeight", [](){ return Core::getInstance().getWindowHeight(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_bool("getPreserveAspectRatio", [](){ return Core::getInstance().getPreserveAspectRatio(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_bool("getAllowTextureResize", [](){ return Core::getInstance().getAllowTextureResize(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_int("getRendererLogicalPresentation", [](){ return static_cast<int>(Core::getInstance().getRendererLogicalPresentation()); }, objHandleType, coreTable, lua);
-
-        // Window mode helpers (reintroduced for Lua-driven window tests)
-        SDOM::core_bind_return_bool("isFullscreen", [](){ return Core::getInstance().isFullscreen(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_bool("isWindowed", [](){ return Core::getInstance().isWindowed(); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_bool_arg("setFullscreen", [](bool v){ Core::getInstance().setFullscreen(v); }, objHandleType, coreTable, lua);
-        SDOM::core_bind_bool_arg("setWindowed", [](bool v){ Core::getInstance().setWindowed(v); }, objHandleType, coreTable, lua);
-
-        // (window mode helpers were not previously bound here)
-
-        // Setter bindings for pixel metrics and format/flags (accept numeric args)
-        objHandleType["setPixelWidth"] = [](Core& /*core*/, float w) { Core::getInstance().setPixelWidth(w); return true; };
-        coreTable.set_function("setPixelWidth", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<float>()) Core::getInstance().setPixelWidth(v.as<float>());
-                else if (v.is<double>()) Core::getInstance().setPixelWidth(static_cast<float>(v.as<double>()));
-                else if (v.is<int>()) Core::getInstance().setPixelWidth(static_cast<float>(v.as<int>()));
-            } catch(...) {}
-        });
-
-        objHandleType["setPixelHeight"] = [](Core& /*core*/, float h) { Core::getInstance().setPixelHeight(h); return true; };
-        coreTable.set_function("setPixelHeight", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<float>()) Core::getInstance().setPixelHeight(v.as<float>());
-                else if (v.is<double>()) Core::getInstance().setPixelHeight(static_cast<float>(v.as<double>()));
-                else if (v.is<int>()) Core::getInstance().setPixelHeight(static_cast<float>(v.as<int>()));
-            } catch(...) {}
-        });
-
-        objHandleType["setWindowFlags"] = [](Core& /*core*/, int flags) { Core::getInstance().setWindowFlags(static_cast<SDL_WindowFlags>(flags)); return true; };
-        coreTable.set_function("setWindowFlags", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<int>()) Core::getInstance().setWindowFlags(static_cast<SDL_WindowFlags>(v.as<int>()));
-                else if (v.is<double>()) Core::getInstance().setWindowFlags(static_cast<SDL_WindowFlags>(static_cast<int>(v.as<double>())));
-            } catch(...) {}
-        });
-
-        objHandleType["setPixelFormat"] = [](Core& /*core*/, int fmt) { Core::getInstance().setPixelFormat(static_cast<SDL_PixelFormat>(fmt)); return true; };
-        coreTable.set_function("setPixelFormat", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<int>()) Core::getInstance().setPixelFormat(static_cast<SDL_PixelFormat>(v.as<int>()));
-                else if (v.is<double>()) Core::getInstance().setPixelFormat(static_cast<SDL_PixelFormat>(static_cast<int>(v.as<double>())));
-            } catch(...) {}
-        });
-
-        // Additional config setters
-        objHandleType["setWindowWidth"] = [](Core& /*core*/, float w) { Core::getInstance().setWindowWidth(w); return true; };
-        coreTable.set_function("setWindowWidth", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<float>()) Core::getInstance().setWindowWidth(v.as<float>());
-                else if (v.is<double>()) Core::getInstance().setWindowWidth(static_cast<float>(v.as<double>()));
-                else if (v.is<int>()) Core::getInstance().setWindowWidth(static_cast<float>(v.as<int>()));
-            } catch(...) {}
-        });
-
-        objHandleType["setWindowHeight"] = [](Core& /*core*/, float h) { Core::getInstance().setWindowHeight(h); return true; };
-        coreTable.set_function("setWindowHeight", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<float>()) Core::getInstance().setWindowHeight(v.as<float>());
-                else if (v.is<double>()) Core::getInstance().setWindowHeight(static_cast<float>(v.as<double>()));
-                else if (v.is<int>()) Core::getInstance().setWindowHeight(static_cast<float>(v.as<int>()));
-            } catch(...) {}
-        });
-
-        objHandleType["setPreserveAspectRatio"] = [](Core& /*core*/, bool p) { Core::getInstance().setPreserveAspectRatio(p); return true; };
-        coreTable.set_function("setPreserveAspectRatio", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<bool>()) Core::getInstance().setPreserveAspectRatio(v.as<bool>());
-                else if (v.is<int>()) Core::getInstance().setPreserveAspectRatio(v.as<int>() != 0);
-            } catch(...) {}
-        });
-
-        objHandleType["setAllowTextureResize"] = [](Core& /*core*/, bool a) { Core::getInstance().setAllowTextureResize(a); return true; };
-        coreTable.set_function("setAllowTextureResize", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<bool>()) Core::getInstance().setAllowTextureResize(v.as<bool>());
-                else if (v.is<int>()) Core::getInstance().setAllowTextureResize(v.as<int>() != 0);
-            } catch(...) {}
-        });
-
-        objHandleType["setRendererLogicalPresentation"] = [](Core& /*core*/, int p) { Core::getInstance().setRendererLogicalPresentation(static_cast<SDL_RendererLogicalPresentation>(p)); return true; };
-        coreTable.set_function("setRendererLogicalPresentation", [](sol::this_state, sol::object /*self*/, sol::object v){
-            try {
-                if (v.is<int>()) Core::getInstance().setRendererLogicalPresentation(static_cast<SDL_RendererLogicalPresentation>(v.as<int>()));
-                else if (v.is<double>()) Core::getInstance().setRendererLogicalPresentation(static_cast<SDL_RendererLogicalPresentation>(static_cast<int>(v.as<double>())));
-            } catch(...) {}
-        });
-
-	    // --- Window Title & Timing --- //
-        SDOM::core_bind_return_string("getWindowTitle", getWindowTitle_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_string("setWindowTitle", setWindowTitle_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_float("getElapsedTime", getElapsedTime_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_float("getDeltaTime", getElapsedTime_lua, objHandleType, coreTable, lua); // alias of getElapsedTime()
-        // Expose the current frame counter from UnitTests via Core wrapper
-        SDOM::core_bind_return_int("getFrameCount", [](){ return Core::getInstance().getFrameCount(); }, objHandleType, coreTable, lua);
-
-	    // --- Event helpers (exposed to Lua) --- //
-        SDOM::core_bind_noarg("pumpEventsOnce", pumpEventsOnce_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_object_arg("pushMouseEvent", pushMouseEvent_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_object_arg("pushKeyboardEvent", pushKeyboardEvent_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_object_arg("setWindowPosition", setWindowPosition_any_lua, objHandleType, coreTable, lua);
-        coreTable.set_function("getWindowPosition", [](sol::this_state ts, sol::object /*self*/) {
-            return getWindowPosition_lua(ts);
-        });
-
-	    // --- Orphan / Future Child Management --- //
-        // Accept handle/name/table for destroyDisplayObject for consistency
-        SDOM::core_bind_object_arg("destroyDisplayObject", destroyDisplayObject_any_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_object_arg("destroyAssetObject", destroyAssetObject_any_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_int("countOrphanedDisplayObjects", countOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_vector_do("getOrphanedDisplayObjects", getOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
-        // SDOM::core_bind_noarg("destroyOrphanedDisplayObjects", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua);
-        // SDOM::core_bind_noarg("destroyOrphanedObjects", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua); // alias of destroyOrphanedDisplayObjects()
-        // SDOM::core_bind_noarg("destroyOrphans", destroyOrphanedDisplayObjects_lua, objHandleType, coreTable, lua); // alias of destroyOrphanedDisplayObjects()
-        SDOM::core_bind_noarg("collectGarbage", collectGarbage_lua, objHandleType, coreTable, lua);
-
-        // --- Factory Utilities --- //
-        SDOM::core_bind_noarg("clearFactory", clearFactory_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_string_return_asset("findAssetByFilename", findAssetByFilename_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_object_return_asset("findSpriteSheetByParams", findSpriteSheetByParams_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("unloadAllAssetObjects", unloadAllAssetObjects_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("reloadAllAssetObjects", reloadAllAssetObjects_lua, objHandleType, coreTable, lua);
-
-        // --- Utility Methods --- //
-        SDOM::core_bind_return_vector_string("getDisplayObjectNames", getDisplayObjectNames_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_noarg("printObjectRegistry", printObjectRegistry_lua, objHandleType, coreTable, lua);
-
-        // --- Version --- //
-        SDOM::core_bind_return_string("getVersionString", getVersionString_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionFullString", getVersionFullString_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_int("getVersionMajor", getVersionMajor_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_int("getVersionMinor", getVersionMinor_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_int("getVersionPatch", getVersionPatch_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionCodename", getVersionCodename_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionBuild", getVersionBuild_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionBuildDate", getVersionBuildDate_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionCommit", getVersionCommit_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionBranch", getVersionBranch_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionCompiler", getVersionCompiler_lua, objHandleType, coreTable, lua);
-        SDOM::core_bind_return_string("getVersionPlatform", getVersionPlatform_lua, objHandleType, coreTable, lua);
-
-    } // End Core::_registerDisplayObject()
 
 
     

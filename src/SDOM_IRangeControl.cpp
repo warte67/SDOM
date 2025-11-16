@@ -16,67 +16,6 @@ namespace SDOM
     } // END: IRangeControl(const InitStruct& init)
 
 
-    IRangeControl::IRangeControl(const sol::table& config) : IDisplayObject(config)
-    {
-        try 
-        {
-            if (config["min"].valid()) min_ = static_cast<float>(config.get_or("min", static_cast<double>(min_)));
-            if (config["max"].valid()) max_ = static_cast<float>(config.get_or("max", static_cast<double>(max_)));
-            if (config["value"].valid()) value_ = static_cast<float>(config.get_or("value", static_cast<double>(value_)));
-            if (config["orientation"].valid()) 
-            {
-                if (config["orientation"].get_type() == sol::type::string) 
-                {
-                    std::string s = config.get<std::string>("orientation");
-                    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-                    auto it = string_to_orientation.find(s);
-                    if (it != string_to_orientation.end()) orientation_ = it->second;
-                } 
-                else if (config["orientation"].get_type() == sol::type::number) 
-                {
-                    int o = config.get<int>("orientation");
-                    orientation_ = (o == 1) ? Orientation::Vertical : Orientation::Horizontal;
-                }
-            }
-            if (config["icon_resource"].valid())
-                icon_resource_ = config.get<std::string>("icon_resource");
-            // ensure value is clamped to min/max
-            setValue(value_);
-        } catch (...) { /* keep defaults on parse errors */ }
-    } // END: IRangeControl(const sol::table& config)
-
-
-    IRangeControl::IRangeControl(const sol::table& config, const InitStruct& defaults)
-        : IDisplayObject(config, defaults)
-    {
-        try 
-        {
-            if (config["min"].valid()) min_ = static_cast<float>(config.get_or("min", static_cast<double>(min_)));
-            if (config["max"].valid()) max_ = static_cast<float>(config.get_or("max", static_cast<double>(max_)));
-            if (config["value"].valid()) value_ = static_cast<float>(config.get_or("value", static_cast<double>(value_)));
-            if (config["orientation"].valid()) 
-            {
-                if (config["orientation"].get_type() == sol::type::string) 
-                {
-                    std::string s = config.get<std::string>("orientation");
-                    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-                    auto it = string_to_orientation.find(s);
-                    if (it != string_to_orientation.end()) orientation_ = it->second;
-                } 
-                else if (config["orientation"].get_type() == sol::type::number) 
-                {
-                    int o = config.get<int>("orientation");
-                    orientation_ = (o == 1) ? Orientation::Vertical : Orientation::Horizontal;
-                }
-            }
-            if (config["icon_resource"].valid())
-                icon_resource_ = config.get<std::string>("icon_resource");
-            // ensure value is clamped to min/max
-            setValue(value_);
-        } catch (...) { /* keep defaults on parse errors */ }
-    } // END: IRangeControl(const sol::table& config, const InitStruct& defaults)
-
-
 
     // --- Virtual Methods --- //
 
@@ -151,7 +90,7 @@ namespace SDOM
                         init.name = resource_name;
                         init.type = "SpriteSheet";
                         init.filename = icon_resource_;
-                        init.isInternal = true;
+                        init.is_internal = true;
                         init.spriteWidth = chosenW;
                         init.spriteHeight = chosenH;
 
@@ -205,7 +144,7 @@ namespace SDOM
                 init.name = resource_name;
                 init.type = "SpriteSheet";
                 init.filename = icon_resource_;
-                init.isInternal = true;
+                init.is_internal = true;
                 init.spriteWidth = inferredW;
                 init.spriteHeight = inferredH;
                 ss = factory.createAssetObject("SpriteSheet", init);
@@ -457,94 +396,28 @@ namespace SDOM
 
     void IRangeControl::_onValueChanged(float oldValue, float newValue)
     {
-    // dispatch event
-        queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-            ev.setPayloadValue("name", getName());
-            ev.setPayloadValue("old_value", oldValue);
-            ev.setPayloadValue("new_value", newValue);
-            // always include current bounds
-            ev.setPayloadValue("current_min", getMin());
-            ev.setPayloadValue("current_max", getMax());
-            // include old bounds if we captured them
-            if (!std::isnan(pending_old_min_)) {
-                ev.setPayloadValue("old_min", pending_old_min_);
-            }
-            if (!std::isnan(pending_old_max_)) {
-                ev.setPayloadValue("old_max", pending_old_max_);
-            }
-            // clear pending markers
-            pending_old_min_ = std::numeric_limits<float>::quiet_NaN();
-            pending_old_max_ = std::numeric_limits<float>::quiet_NaN();
-        });
+        (void )oldValue; (void )newValue;
+        // dispatch event
+        // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+        //     ev.setPayloadValue("name", getName());
+        //     ev.setPayloadValue("old_value", oldValue);
+        //     ev.setPayloadValue("new_value", newValue);
+        //     // always include current bounds
+        //     ev.setPayloadValue("current_min", getMin());
+        //     ev.setPayloadValue("current_max", getMax());
+        //     // include old bounds if we captured them
+        //     if (!std::isnan(pending_old_min_)) {
+        //         ev.setPayloadValue("old_min", pending_old_min_);
+        //     }
+        //     if (!std::isnan(pending_old_max_)) {
+        //         ev.setPayloadValue("old_max", pending_old_max_);
+        //     }
+        //     // clear pending markers
+        //     pending_old_min_ = std::numeric_limits<float>::quiet_NaN();
+        //     pending_old_max_ = std::numeric_limits<float>::quiet_NaN();
+        // });
 
     } // END: void IRangeControl::_onValueChanged(float oldValue, float newValue)
-
-
-
-
-    // --- Lua Registration --- //
-
-    void IRangeControl::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
-    {
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "IRangeControl";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Augment the shared DisplayHandle with range-control helpers
-        sol::table handleTbl;
-        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handleTbl.valid()) {
-            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-        }
-
-        auto set_if_absent = [](sol::table& tbl, const char* name, auto&& fn) {
-            sol::object cur = tbl.raw_get_or(name, sol::lua_nil);
-            if (!cur.valid() || cur == sol::lua_nil) {
-                tbl.set_function(name, std::forward<decltype(fn)>(fn));
-            }
-        };
-
-        auto getValue_bind = [](SDOM::DisplayHandle& self) -> float {
-            auto* r = self.as<IRangeControl>();
-            return r ? r->getValue() : 0.0f;
-        };
-        auto setValue_bind = [](SDOM::DisplayHandle& self, double v) {
-            auto* r = self.as<IRangeControl>();
-            if (r) r->setValue(static_cast<float>(v));
-        };
-        auto getMin_bind = [](SDOM::DisplayHandle& self) -> float {
-            auto* r = self.as<IRangeControl>();
-            return r ? r->getMin() : 0.0f;
-        };
-        auto setMin_bind = [](SDOM::DisplayHandle& self, double v) {
-            auto* r = self.as<IRangeControl>();
-            if (r) r->setMin(static_cast<float>(v));
-        };
-        auto getMax_bind = [](SDOM::DisplayHandle& self) -> float {
-            auto* r = self.as<IRangeControl>();
-            return r ? r->getMax() : 0.0f;
-        };
-        auto setMax_bind = [](SDOM::DisplayHandle& self, double v) {
-            auto* r = self.as<IRangeControl>();
-            if (r) r->setMax(static_cast<float>(v));
-        };
-
-        set_if_absent(handleTbl, "getValue", getValue_bind);
-        set_if_absent(handleTbl, "setValue", setValue_bind);
-        set_if_absent(handleTbl, "getMin", getMin_bind);
-        set_if_absent(handleTbl, "setMin", setMin_bind);
-        set_if_absent(handleTbl, "getMax", getMax_bind);
-        set_if_absent(handleTbl, "setMax", setMax_bind);
-
-
-    } // END: void IRangeControl::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
     // --- Cached rendering helper --- //
@@ -617,7 +490,9 @@ namespace SDOM
 
 
 
-
+    // -----------------------------------------------------------------
+    // 📜 Data Registry Integration
+    // -----------------------------------------------------------------
     
     void IRangeControl::registerBindingsImpl(const std::string& typeName)
     {

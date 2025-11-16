@@ -20,30 +20,61 @@ namespace SDOM
         // --- Initialization Struct --- //
         struct InitStruct : public IAssetObject::InitStruct
         {
-            InitStruct() : IAssetObject::InitStruct() 
-            { 
-                name = TypeName; 
-                type = TypeName;
-                filename = TypeName; // Default filename, can be overridden
+            // --- Defaults ---
+            int spriteWidth  = 8;
+            int spriteHeight = 8;
+
+            InitStruct()
+                : IAssetObject::InitStruct()
+            {
+                name     = TypeName;
+                type     = TypeName;
+                filename = TypeName;    // Default filename (typically overridden)
+                is_internal = false;     // From IAssetObject::InitStruct
             }
-            int spriteWidth = 8;   // Default sprite width
-            int spriteHeight = 8;  // Default sprite height
+
+            // --- JSON loader ---
+            static InitStruct from_json(const nlohmann::json& j)
+            {
+                InitStruct init;
+
+                // Standard IAssetObject::InitStruct fields
+                if (j.contains("name"))       init.name       = j["name"].get<std::string>();
+                if (j.contains("type"))       init.type       = j["type"].get<std::string>();
+                if (j.contains("filename"))   init.filename   = j["filename"].get<std::string>();
+                if (j.contains("is_internal")) init.is_internal = j["is_internal"].get<bool>();
+
+                // SpriteSheet-specific fields
+                if (j.contains("sprite_width"))  
+                    init.spriteWidth = j["sprite_width"].get<int>();
+
+                if (j.contains("sprite_height")) 
+                    init.spriteHeight = j["sprite_height"].get<int>();
+
+                return init;
+            }
         };
+
         
     protected:
         // --- Constructors --- //
         SpriteSheet(const InitStruct& init);
-        SpriteSheet(const sol::table& config);
 
     public:
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IAssetObject>(new SpriteSheet(config));
+        static std::unique_ptr<IAssetObject> CreateFromInitStruct(
+            const IAssetObject::InitStruct& baseInit)
+        {
+            const auto& spriteInit = static_cast<const SpriteSheet::InitStruct&>(baseInit);
+            return std::unique_ptr<IAssetObject>(new SpriteSheet(spriteInit));
         }
-        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-            const auto& spriteSheetInit = static_cast<const SpriteSheet::InitStruct&>(baseInit);
-            return std::unique_ptr<IAssetObject>(new SpriteSheet(spriteSheetInit));
+
+        static std::unique_ptr<IAssetObject> CreateFromJson(const nlohmann::json& j)
+        {
+            auto init = SpriteSheet::InitStruct::from_json(j);
+            return std::unique_ptr<IAssetObject>(new SpriteSheet(init));
         }
+
 
         SpriteSheet() = default;
         ~SpriteSheet() override = default;
@@ -107,29 +138,6 @@ namespace SDOM
             SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST
         );
 
-        // --- Lua Wrappers --- //
-        void setSpriteWidth_Lua(IAssetObject* obj, int width);
-        void setSpriteHeight_Lua(IAssetObject* obj, int height);
-        void setSpriteSize_Lua(IAssetObject* obj, int width, int height);
-        int getSpriteWidth_Lua(IAssetObject* obj);
-        int getSpriteHeight_Lua(IAssetObject* obj);
-        sol::table getSpriteSize_Lua(IAssetObject* obj, sol::state_view lua);
-        int getSpriteCount_Lua(IAssetObject* obj);
-        int getSpriteX_Lua(IAssetObject* obj, int spriteIndex);
-        int getSpriteY_Lua(IAssetObject* obj, int spriteIndex);
-
-        void drawSprite_lua( int spriteIndex, int x, int y, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );    
-        void drawSprite_dst_lua( int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode = SDL_SCALEMODE_NEAREST );
-
-        // For the Lua extended variant the spriteIndex is the 2nd parameter after the object
-        void drawSprite_ext_Lua(
-            IAssetObject* obj,
-            int spriteIndex,
-            sol::table srcRect,                 // {x=,y=,w=,h=} or {x,y,w,h}
-            sol::table dstRect,                 // {x=,y=,w=,h=} or {x,y,w,h}
-            sol::object color = sol::nil,       // table {r,g,b,a} or nil
-            sol::object scaleMode = sol::nil    // SDL_Utils::scaleModeFromSol(const sol::object& o)
-        );
 
         // SDL_Texture* getTexture()
         // {
@@ -153,14 +161,7 @@ namespace SDOM
 
         // Equality comparison for parameter-based reuse checks
         bool operator==(const SpriteSheet& other) const;        
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
-
+ 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------

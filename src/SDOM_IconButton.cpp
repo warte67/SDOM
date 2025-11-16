@@ -30,66 +30,6 @@ namespace SDOM
     }
 
 
-    IconButton::IconButton(const sol::table& config) : IconButton(config, InitStruct())
-    {
-    }
-
-    IconButton::IconButton(const sol::table& config, const InitStruct& defaults) : IDisplayObject(config, defaults)
-    {
-        // std::cout << "Box constructed with Lua config: " << getName() 
-        //         << " at address: " << this << std::endl;            
-
-        std::string type = config["type"].valid() ? config["type"].get<std::string>() : "";
-
-        // INFO("IconButton::IconButton(const sol::table& config) -- name: " << getName() 
-        //         << " type: " << type << " typeName: " << TypeName << std::endl 
-        // ); // END INFO()
-
-        // if (type != TypeName) {
-        //     ERROR("Error: IconButton constructed with incorrect type: " + type);
-        // }
-        
-    InitStruct init;
-
-        // robust parsing for icon_index: accept string names or numeric indices
-        auto parse_icon_index = [&](const sol::table& cfg, const char* key, IconIndex def) -> IconIndex 
-        {
-            if (!cfg[key].valid()) return def;
-            sol::object obj = cfg[key];
-            if (obj.is<std::string>()) 
-            {
-                auto opt = SDOM::icon_index_from_name(obj.as<std::string>());
-                return opt.has_value() ? opt.value() : def;
-            } 
-            else if (obj.is<int>()) 
-            {
-                return static_cast<IconIndex>(obj.as<int>());
-            } 
-            else 
-            {
-                try {
-                    return obj.as<IconIndex>();
-                } catch (...) {
-                    return def;
-                }
-            }
-        };
-        // IconButton Specific Properties
-        icon_index_ = parse_icon_index(config, "icon_index", init.icon_index);
-        icon_resource_ = config["icon_resource"].valid() ? config["icon_resource"].get<std::string>() : init.icon_resource;
-        icon_width_ = config["icon_width"].valid() ? config["icon_width"].get<int>() : init.icon_width;
-        icon_height_ = config["icon_height"].valid() ? config["icon_height"].get<int>() : init.icon_height;
-        int x_pos = config["x"].valid() ? config["x"].get<int>() : init.x;
-        int y_pos = config["y"].valid() ? config["y"].get<int>() : init.y;
-        int width = config["width"].valid() ? config["width"].get<int>() : icon_width_;
-        int height = config["height"].valid() ? config["height"].get<int>() : icon_height_;
-        setX(x_pos);    
-        setY(y_pos);
-        setWidth(width);
-        setHeight(height);        
-    }
-
-
     // --- Virtual Methods --- //
     bool IconButton::onInit()
     {
@@ -152,7 +92,7 @@ namespace SDOM
                         init_struct.filename = icon_resource_;
                         init_struct.spriteWidth = chosenW;
                         init_struct.spriteHeight = chosenH;
-                        init_struct.isInternal = true;
+                        init_struct.is_internal = true;
                         AssetHandle created = factory.createAssetObject("SpriteSheet", init_struct);
                         if (created.isValid()) {
                             iconSpriteSheet_ = created;
@@ -180,7 +120,7 @@ namespace SDOM
                             init_struct2.filename = icon_resource_;
                             init_struct2.spriteWidth = (icon_width_ > 0) ? icon_width_ : 8;
                             init_struct2.spriteHeight = (icon_height_ > 0) ? icon_height_ : 8;
-                            init_struct2.isInternal = true;
+                            init_struct2.is_internal = true;
                             AssetHandle created2 = factory.createAssetObject("SpriteSheet", init_struct2);
                             if (created2.isValid()) {
                                 iconSpriteSheet_ = created2;
@@ -370,34 +310,13 @@ namespace SDOM
 
 
 
-    // --- Lua Registration --- //
-
-    void IconButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
+    void IconButton::registerBindingsImpl(const std::string& typeName)
     {
-        // Include IButtonObject bindings first
-        IButtonObject::registerLuaBindings(lua);
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "IconButton");
+        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+    }    
 
-        // Include inherited bindings first
-        SUPER::_registerLuaBindings(typeName, lua);
-
-        if (DEBUG_REGISTER_LUA)
-        {
-            std::string typeNameLocal = "IconButton";
-            std::cout << CLR::CYAN << "Registered " << CLR::LT_CYAN << typeNameLocal
-                    << CLR::CYAN << " Lua bindings for type: " << CLR::LT_CYAN
-                    << typeName << CLR::RESET << std::endl;
-        }
-
-        // Acquire or create the DisplayHandle table (do not clobber usertype).
-        sol::table handleTbl;
-        try { handleTbl = lua[SDOM::DisplayHandle::LuaHandleName]; } catch(...) {}
-        if (!handleTbl.valid()) {
-            handleTbl = SDOM::IDataObject::ensure_sol_table(lua, SDOM::DisplayHandle::LuaHandleName);
-        }
-
-        // add lua bindings ...
-
-    } // END: void IconButton::_registerLuaBindings(const std::string& typeName, sol::state_view lua)
 
 
 

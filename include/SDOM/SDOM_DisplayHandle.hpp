@@ -108,14 +108,6 @@ namespace SDOM
         IDisplayObject* operator->() const { return get(); }
         operator bool() const { return get() != nullptr; }
 
-        // DisplayHandle& operator=(const DisplayHandle& other) {
-        //     if (this != &other) {
-        //         name_ = other.name_;
-        //         type_ = other.type_;
-        //     }
-        //     return *this;
-        // }
-
         // // Allow assignment from nullptr
         // DisplayHandle& operator=(std::nullptr_t) 
         //     return *this;
@@ -155,19 +147,6 @@ namespace SDOM
             return get() != nullptr;
         }          
 
-        // --- LUA Wrapper Functions --- //
-
-        // Resolve a Lua child spec (string, DisplayHandle, or table{ child=... | name=... })
-        static DisplayHandle resolveChildSpec(const sol::object& spec);
-        
-        IDisplayObject* get_lua(DisplayHandle* self) const { return self->get(); }
-        bool isValid_lua(DisplayHandle* self) const { return self->isValid(); }
-        std::string getName_lua(DisplayHandle* self) const { return self->getName(); }
-        std::string getType_lua(DisplayHandle* self) const { return self->getType(); }
-
-        // Shared Lua handle usertype helpers (augmentable by base/descendants)
-        inline static constexpr const char* LuaHandleName = "DisplayHandle";
-
     public:
         inline static Factory* factory_ = nullptr;
     private:
@@ -182,18 +161,7 @@ namespace SDOM
 
         
     protected:
-        // --- LUA Registration --- //
-        // virtual void _registerLua(const std::string& typeName, sol::state_view lua);
-        sol::usertype<DisplayHandle> objHandleType_;
         
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
-
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
         // -----------------------------------------------------------------

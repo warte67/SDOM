@@ -138,6 +138,15 @@ include_directories(/usr/include/lua5.4)
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
 # ======================================================
+# nlohmann::json (header-only)
+# ======================================================
+add_library(nlohmann_json INTERFACE)
+
+target_include_directories(nlohmann_json INTERFACE
+    ${CMAKE_SOURCE_DIR}/include/external
+)
+
+# ======================================================
 #  Build Library
 # ======================================================
 add_library(${PROJECT_NAME} STATIC ${SOURCES})

@@ -46,50 +46,38 @@ namespace SDOM
         if (initialized_) {
             return true;
         }
-        // Ensure the central Lua bindings root exists before any types register
-        try {
-            sol::state& lua = SDOM::getLua();
-            if (!lua["SDOM_Bindings"].valid()) {
-                sol::table bindingsRoot = lua.create_table();
-                lua["SDOM_Bindings"] = bindingsRoot;
-                // std::cout << "[Factory::onInit] created SDOM_Bindings root table" << std::endl;
-            } else {
-                // std::cout << "[Factory::onInit] SDOM_Bindings root already present" << std::endl;
-            }
-        } catch(...) {}
+                                    // // --- Lua UserType Registration --- //
+                                    // Core& core = getCore();
 
-        // Ensure Event and EventType bindings are registered into Lua and the DataRegistry
-        try {
-            // Register EventType Lua constants using the global Lua state
-            EventType::registerLua(SDOM::getLua());
-        } catch(...) {}
+                                    // // Register the DisplayHandle early so any returned handles to Lua
+                                    // // have a valid usertype/metatable for indexing minimal helpers.
+                                    // try {
+                                    //     DisplayHandle prototypeHandle; // Default DisplayHandle for registration
+                                    //     prototypeHandle.registerLuaBindings("DisplayHandle", core.getLua());
+                                    // } catch(...) {}
+
+        TTFAsset::InitStruct ttf_init;
+        ttf_init.name = "internal_ttf_asset";     // internal registry key
+
+        // Register the Event System
         try {
             // Register IDataObject bindings for Event into the Factory's registry
             Event evt; // temporary to call registerBindings
             evt.registerBindings("Event", registry_);
-        } catch(...) {}
-        // --- Lua UserType Registration --- //
-        Core& core = getCore();
+        } catch(...) {
+            ERROR("Factory::onInit: failed to register Event bindings");
+        }        
 
-        // Register the DisplayHandle early so any returned handles to Lua
-        // have a valid usertype/metatable for indexing minimal helpers.
-        try {
-            DisplayHandle prototypeHandle; // Default DisplayHandle for registration
-            prototypeHandle.registerLuaBindings("DisplayHandle", core.getLua());
-        } catch(...) {}
-
-            TTFAsset::InitStruct ttf_init;
-            ttf_init.name = "internal_ttf_asset";     // internal registry key
         // register the Stage
         registerDisplayObjectType("Stage", TypeCreators{
-            Stage::CreateFromLua, 
-            Stage::CreateFromInitStruct
+            Stage::CreateFromInitStruct, 
+            Stage::CreateFromJson
         });
 
         // register the Texture asset
         registerAssetObjectType("Texture", AssetTypeCreators{
-            Texture::CreateFromLua,
-            Texture::CreateFromInitStruct
+            Texture::CreateFromInitStruct,
+            Texture::CreateFromJson
         });
 
         // Note: Do NOT pre-register a Texture under the name 'default_bmp_8x8'.
@@ -97,33 +85,32 @@ namespace SDOM
         // that filename when initialized. Pre-creating a Texture with the same
         // registry name conflicts with BitmapFont's intended resource name.
 
-        // register a few internal icon Textures (skip if already created)
+        // --- Internal Icon Texture Registration (Lua-Free) ---
         {
-            auto ensureTexture = [&](const std::string& defaultIconName) {
-                // If Core's renderer isn't available yet, skip creating internal
-                // textures now. They will be created/reloaded later when SDL
-                // resources are ready (e.g., during refreshSDLResources()).
+            auto ensureTexture = [&](const std::string& name) {
+                // Defer creation until renderer exists
                 if (!getCore().getRenderer()) {
-                    INFO("Factory::onInit: Renderer not available yet; deferring creation of internal texture '" << defaultIconName << "'");
+                    INFO("Factory::onInit: Renderer not available; deferring internal texture '" << name << "'");
                     return;
                 }
 
-                if (!getAssetObjectPtr(defaultIconName)) {
+                // Create only if not already registered
+                if (!getAssetObjectPtr(name)) {
                     Texture::InitStruct init;
-                    init.name = defaultIconName;
-                    init.type = "Texture";
-                    init.filename = defaultIconName;
-                    AssetHandle spriteSheet = createAssetObject("Texture", init);
-                        if (auto* spriteSheetPtr = spriteSheet.as<Texture>()) {
-                        spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
-                        spriteSheetPtr->registerBindings("Texture", registry_);
+                    init.name     = name;
+                    init.type     = Texture::TypeName;
+                    init.filename = name;        // internal embedded image name
+                    init.is_internal = true;
+
+                    // Create the asset
+                    AssetHandle h = createAssetObject("Texture", init);
+                    if (auto* tex = h.as<Texture>()) {
+                        tex->registerBindings("Texture", registry_);   // DataRegistry only
                     }
                 } else {
-                    // Ensure Lua bindings are registered for existing instance
-                    IAssetObject* existing = getAssetObjectPtr(defaultIconName);
-                    if (auto* spriteSheetPtr = dynamic_cast<Texture*>(existing)) {
-                        spriteSheetPtr->_registerLuaBindings("Texture", core.getLua()); 
-                        spriteSheetPtr->registerBindings("Texture", registry_);
+                    // Already exists — just ensure C++ DataRegistry bindings exist
+                    if (auto* existing = dynamic_cast<Texture*>(getAssetObjectPtr(name))) {
+                        existing->registerBindings("Texture", registry_);
                     }
                 }
             };
@@ -133,60 +120,46 @@ namespace SDOM
             ensureTexture("internal_icon_16x16");
         }
 
-
         // register a TTFAsset
         registerAssetObjectType("TTFAsset", AssetTypeCreators{
-            TTFAsset::CreateFromLua,
-            TTFAsset::CreateFromInitStruct
+            TTFAsset::CreateFromInitStruct,
+            TTFAsset::CreateFromJson,
         });    
-
+        
         // register the TruetypeFont resource type so factory can create truetype font assets
-        registerAssetObjectType(TruetypeFont::TypeName, AssetTypeCreators{
-            TruetypeFont::CreateFromLua,
-            TruetypeFont::CreateFromInitStruct
-        });
-        // Also register a friendly alias matching config usage
-        registerAssetObjectType("TruetypeFont", AssetTypeCreators{
-            TruetypeFont::CreateFromLua,
-            TruetypeFont::CreateFromInitStruct
-        });
-
-        // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
-    if (!getAssetObjectPtr("internal_ttf_asset")) {
-            TTFAsset::InitStruct ttf_init;
-            ttf_init.name = "internal_ttf_asset";     // internal registry key
-            ttf_init.type = TTFAsset::TypeName;     // concrete type name
-            ttf_init.filename = "internal_ttf";      // internal ttf filename
-            ttf_init.isInternal = true;             // is internal
-            ttf_init.internalFontSize = 10;         // member name in InitStruct
-            AssetHandle ttfFontAsset = createAssetObject("TTFAsset", ttf_init);
-            (void)ttfFontAsset;
-        }
-
-        // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
-    if (!getAssetObjectPtr("internal_ttf")) {
-            TruetypeFont::InitStruct ttInit;
-            ttInit.name = "internal_ttf";           // public registry key expected by Label
-            ttInit.type = TruetypeFont::TypeName;
-            ttInit.filename = "internal_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
-
-            // Attempt to create the truetype font; if TTF isn't available or creation fails, fall back to bitmap font
-            AssetHandle defaultTTFont;
-            try {
-                defaultTTFont = createAssetObject(TruetypeFont::TypeName, ttInit);
-            } catch (...) {
-                // If creation failed, leave defaultTTFont invalid and fall back below
-                defaultTTFont = AssetHandle();
+        {
+            registerAssetObjectType("TruetypeFont", AssetTypeCreators{
+                TruetypeFont::CreateFromInitStruct,
+                TruetypeFont::CreateFromJson
+            });
+            // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
+            if (!getAssetObjectPtr("internal_ttf_asset")) {
+                TTFAsset::InitStruct ttf_init;
+                ttf_init.name = "internal_ttf_asset";     // internal registry key
+                ttf_init.type = TTFAsset::TypeName;     // concrete type name
+                ttf_init.filename = "internal_ttf";      // internal ttf filename
+                ttf_init.is_internal = true;             // is internal
+                ttf_init.internal_font_size = 10;         // member name in InitStruct
+                AssetHandle ttfFontAsset = createAssetObject("TTFAsset", ttf_init);
+                (void)ttfFontAsset;
             }
+
+            // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
+            if (!getAssetObjectPtr("internal_ttf")) {
+                TruetypeFont::InitStruct ttInit;
+                ttInit.name = "internal_ttf";           // public registry key expected by Label
+                ttInit.type = TruetypeFont::TypeName;
+                ttInit.filename = "internal_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
+
+                AssetHandle defaultTTFont = createAssetObject(TruetypeFont::TypeName, ttInit);
+            }            
         }
-            
 
         // register the SpriteSheet asset
         registerAssetObjectType("SpriteSheet", AssetTypeCreators{
-            SpriteSheet::CreateFromLua,
-            SpriteSheet::CreateFromInitStruct
+            SpriteSheet::CreateFromInitStruct,
+            SpriteSheet::CreateFromJson
         });
-
         // Also ensure there is a SpriteSheet wrapper for the internal icon texture
         {
             auto ensureSpriteSheet = [&](const std::string& spriteSheetName, const std::string& textureFilename, int spriteW, int spriteH) {
@@ -197,185 +170,130 @@ namespace SDOM
                     ssInit.filename = textureFilename; // underlying texture filename
                     ssInit.spriteWidth = spriteW;
                     ssInit.spriteHeight = spriteH;
-                    ssInit.isInternal = true;
+                    ssInit.is_internal = true;
                     AssetHandle ss = createAssetObject("SpriteSheet", ssInit);
                     (void)ss;
                 }
             };
-
             ensureSpriteSheet("internal_icon_8x8_SpriteSheet",  "internal_icon_8x8",  8,  8);
             ensureSpriteSheet("internal_icon_12x12_SpriteSheet", "internal_icon_12x12", 12, 12);
             ensureSpriteSheet("internal_icon_16x16_SpriteSheet", "internal_icon_16x16", 16, 16);
         }
 
-
-
         // register the BitmapFont asset
-        registerAssetObjectType("BitmapFont", AssetTypeCreators{
-            BitmapFont::CreateFromLua,
-            BitmapFont::CreateFromInitStruct
-        });
-
-        // Create the default 8x8 bitmap font asset if it doesn't exist.
-        // Use the filename as the canonical resource name so Lua can refer to
-        // the font simply as "internal_font_8x8". The BitmapFont will create
-        // (or reuse) an internal SpriteSheet named '<filename>_SpriteSheet'.
-    if (!getAssetObjectPtr("internal_font_8x8")) {
-            BitmapFont::InitStruct init;
-            init.name = "internal_font_8x8";      // registry key == filename
-            init.type = BitmapFont::TypeName;   // concrete type name
-            init.filename = "internal_font_8x8";  // underlying texture filename
-            init.isInternal = true;             // is an internal resource
-            init.fontSize = 8;                  // member name in InitStruct
-            init.font_width = 8;                 // font_width for this resource
-            init.font_height = 8;                // font_height for this resource            
-            AssetHandle bmpFont = createAssetObject("BitmapFont", init);
-            (void)bmpFont;
-        }
-    if (!getAssetObjectPtr("internal_font_8x12")) {
-            BitmapFont::InitStruct init;
-            init.name = "internal_font_8x12";     // registry key == filename
-            init.type = BitmapFont::TypeName;   // concrete type name
-            init.filename = "internal_font_8x12"; // underlying texture filename
-            init.isInternal = true;             // is an internal resource
-            // Set both BitmapFont-specific fontSize and the base IFontObject's
-            // fontSize_ so the inherited constructor sees the correct value.
-            init.fontSize = 12;                 // BitmapFont::InitStruct field
-            init.fontSize_ = 12;                // IFontObject::InitStruct field used by base ctor
-            init.font_width = 8;                 // font_width for this resource
-            init.font_height = 12;               // font_height for this resource
-            AssetHandle bmpFont = createAssetObject("BitmapFont", init);
-            (void)bmpFont;
+        {
+            registerAssetObjectType("BitmapFont", AssetTypeCreators{
+                BitmapFont::CreateFromInitStruct,
+                BitmapFont::CreateFromJson
+            });
+            // Create the default 8x8 bitmap font asset if it doesn't exist.
+            if (!getAssetObjectPtr("internal_font_8x8")) {
+                BitmapFont::InitStruct init;
+                init.name = "internal_font_8x8";      // registry key == filename
+                init.type = BitmapFont::TypeName;   // concrete type name
+                init.filename = "internal_font_8x8";  // underlying texture filename
+                init.is_internal = true;             // is an internal resource
+                init.fontSize = 8;                  // member name in InitStruct
+                init.font_width = 8;                 // font_width for this resource
+                init.font_height = 8;                // font_height for this resource            
+                AssetHandle bmpFont = createAssetObject("BitmapFont", init);
+                (void)bmpFont;
+            }
+            if (!getAssetObjectPtr("internal_font_8x12")) {
+                BitmapFont::InitStruct init;
+                init.name = "internal_font_8x12";     // registry key == filename
+                init.type = BitmapFont::TypeName;   // concrete type name
+                init.filename = "internal_font_8x12"; // underlying texture filename
+                init.is_internal = true;             // is an internal resource
+                // Set both BitmapFont-specific fontSize and the base IFontObject's
+                // fontSize_ so the inherited constructor sees the correct value.
+                init.fontSize = 12;                 // BitmapFont::InitStruct field
+                init.font_size = 12;                // IFontObject::InitStruct field used by base ctor
+                init.font_width = 8;                 // font_width for this resource
+                init.font_height = 12;               // font_height for this resource
+                AssetHandle bmpFont = createAssetObject("BitmapFont", init);
+                (void)bmpFont;
+            }
         }
 
         // register the Label display object
         registerDisplayObjectType("Label", TypeCreators{
-            Label::CreateFromLua,
-            // Wrap the init-struct creator to accept the base InitStruct
-            [](const IDisplayObject::InitStruct& baseInit) -> std::unique_ptr<IDisplayObject> {
-                const auto& init = static_cast<const Label::InitStruct&>(baseInit);
-                return Label::CreateFromInitStruct(init);
-            }
+            Label::CreateFromInitStruct_Base,   // InitStruct path
+            Label::CreateFromJson               // JSON path
         });
 
         // --- Register the IPanelObject Decendants --- //
 
         // register Frame
         registerDisplayObjectType("Frame", TypeCreators{
-            Frame::CreateFromLua,
-            Frame::CreateFromInitStruct
+            Frame::CreateFromInitStruct,
+            Label::CreateFromJson 
         });
 
         // register Button
         registerDisplayObjectType("Button", TypeCreators{
-            Button::CreateFromLua,
-            Button::CreateFromInitStruct
-        }); 
+            Button::CreateFromInitStruct,   // C++ / InitStruct path
+            Button::CreateFromJson          // JSON loader path
+        });
 
         // register Group
         registerDisplayObjectType("Group", TypeCreators{
-            Group::CreateFromLua,
-            Group::CreateFromInitStruct
+            Group::CreateFromInitStruct,   // JSON → InitStruct → Group
+            Group::CreateFromJson          // InitStruct → Group
         });
 
         // register the IconButton
         registerDisplayObjectType("IconButton", TypeCreators{
-            IconButton::CreateFromLua,
-            IconButton::CreateFromInitStruct
+            IconButton::CreateFromInitStruct,
+            IconButton::CreateFromJson
         });
 
         // register the ArrowButton
         registerDisplayObjectType("ArrowButton", TypeCreators{
-            ArrowButton::CreateFromLua,
-            ArrowButton::CreateFromInitStruct
-        });
-
-        // register CheckButton
-        registerDisplayObjectType("CheckButton", TypeCreators{
-            CheckButton::CreateFromLua,
-            CheckButton::CreateFromInitStruct
-        });
-
-        // register RadioButton
-        registerDisplayObjectType("RadioButton", TypeCreators{
-            RadioButton::CreateFromLua,
-            RadioButton::CreateFromInitStruct
+            ArrowButton::CreateFromInitStruct,
+            ArrowButton::CreateFromJson
         });
 
         // register the TristateButton
         registerDisplayObjectType("TristateButton", TypeCreators{
-            TristateButton::CreateFromLua,
-            TristateButton::CreateFromInitStruct
+            TristateButton::CreateFromInitStruct,
+            TristateButton::CreateFromJson
         });
+
+        // register CheckButton
+        registerDisplayObjectType("CheckButton", TypeCreators{
+            CheckButton::CreateFromInitStruct,
+            CheckButton::CreateFromJson
+        });
+
+        // register RadioButton
+        registerDisplayObjectType("RadioButton", TypeCreators{
+            RadioButton::CreateFromInitStruct,
+            RadioButton::CreateFromJson
+        });
+
 
         // register the Slider
         registerDisplayObjectType("Slider", TypeCreators{
-            Slider::CreateFromLua,
-            Slider::CreateFromInitStruct
+            Slider::CreateFromInitStruct,
+            Slider::CreateFromJson
         });
 
         // register the ProgressBar
         registerDisplayObjectType("ProgressBar", TypeCreators{
-            ProgressBar::CreateFromLua,
-            ProgressBar::CreateFromInitStruct
+            ProgressBar::CreateFromInitStruct,
+            ProgressBar::CreateFromJson
         });
 
         // register the ScrollBar
         registerDisplayObjectType("ScrollBar", TypeCreators{
-            ScrollBar::CreateFromLua,
-            ScrollBar::CreateFromInitStruct
+            ScrollBar::CreateFromInitStruct,
+            ScrollBar::CreateFromJson
         });
 
 
         // return initialized state
         initialized_ = true;
-
-        // Diagnostic: list everything in SDOM_Bindings["Group"]
-        if (false)
-        {
-            try {
-                sol::state& lua = SDOM::getLua();
-                sol::table bindingsRoot = lua["SDOM_Bindings"];
-                if (bindingsRoot.valid() && bindingsRoot["Group"].valid()) {
-                    sol::table g = bindingsRoot["Group"];
-                    sol::function tostring_fn = lua["tostring"];
-                    std::cout << "[Factory::onInit] SDOM_Bindings['Group'] contents:\n";
-                    for (auto& kv : g) {
-                        sol::object key = kv.first;
-                        sol::object val = kv.second;
-                        std::string keyStr;
-                        try {
-                            if (key.valid()) {
-                                if (key.is<std::string>()) keyStr = key.as<std::string>();
-                                else keyStr = tostring_fn(key);
-                            } else {
-                                keyStr = "<invalid key>";
-                            }
-                        } catch(...) { keyStr = "<key?>"; }
-
-                        std::string valStr;
-                        try {
-                            if (val.valid()) valStr = tostring_fn(val);
-                            else valStr = "<nil>";
-                        } catch(...) { valStr = "<value?>"; }
-
-                        bool rawPresent = false;
-                        try {
-                            if (key.is<std::string>()) {
-                                sol::object raw = g.raw_get_or(key.as<std::string>(), sol::lua_nil);
-                                rawPresent = (raw.valid() && raw != sol::lua_nil);
-                            }
-                        } catch(...) { rawPresent = false; }
-
-                        int valType = static_cast<int>(val.get_type());
-                        std::cout << "  key='" << keyStr << "' raw=" << (rawPresent ? "Y" : "N")
-                                << " type=" << valType << " val=" << valStr << "\n";
-                    }
-                } else {
-                    std::cout << "[Factory::onInit] Group bindings table missing entirely\n";
-                }
-            } catch(...) {}
-        }
 
         return initialized_;
     } // END: bool Factory::onInit()
@@ -460,45 +378,56 @@ namespace SDOM
     {
         creators_[typeName] = creators;
 
-        // Create a lightweight prototype for Lua registration.
-        // Avoid calling the InitStruct-based creator with a base InitStruct
-        // which may be static_cast'd to a derived InitStruct by the
-        // concrete creator (undefined behaviour). Prefer to use the
-        // fromLua creator to construct a safe temporary prototype.
-        if (creators.fromLua) {
-            try {
-                sol::state_view lua = SDOM::getLua();
-                sol::table proto = lua.create_table();
-                proto["name"] = std::string("__proto:") + typeName;
-                proto["type"] = typeName;
-                proto["x"] = 0;
-                proto["y"] = 0;
-                proto["width"] = 1;
-                proto["height"] = 1;
-                auto prototype = creators.fromLua(proto);
-                if (prototype) {
-                    // Register Lua bindings for the concrete instance so methods
-                    // are available on the shared userdata/handle.
-                    try {
-                        if (DEBUG_REGISTER_LUA) {
-                            printf("[TRACE] Factory::registerDisplayObjectType prototype->_registerLuaBindings for type='%s' lua_state=%p\n",
-                                   typeName.c_str(), (void*)SDOM::getLua().lua_state());
-                        }
-                        prototype->_registerLuaBindings(typeName, SDOM::getLua());
-                        // prototype->registerBindings(typeName);
-                        prototype->IDataObject::registerBindings(typeName, registry_);
+        try
+        {
+            nlohmann::json empty_json = nlohmann::json::object();
 
-                    } catch(...) {
-                        // swallow registration errors for prototypes
-                    }
-                    // prototype unique_ptr will be destroyed here; no need to
-                    // insert into the factory registry.
+            std::unique_ptr<IDisplayObject> prototype;
+
+            // --- Prefer JSON constructor if available ---
+            if (creators.fromJson)
+            {
+                try {
+                    prototype = creators.fromJson(empty_json);
                 }
-            } catch(...) {
-                // ignore prototype creation failures; registration can proceed
+                catch (...) {
+                    ERROR("Prototype JSON constructor failed for type '" + typeName + "'");
+                    return;
+                }
+            }
+            // --- Fallback: InitStruct path ---
+            else if (creators.fromInitStruct)
+            {
+                try {
+                    IDisplayObject::InitStruct baseInit;
+                    baseInit.name = "__proto:" + typeName;
+                    baseInit.type = typeName;
+                    prototype = creators.fromInitStruct(baseInit);
+                }
+                catch (...) {
+                    ERROR("Prototype InitStruct constructor failed for type '" << typeName << "'");
+                    return;
+                }
+            }
+            if (!prototype)
+            {
+                ERROR("Prototype creation returned null for type '" << typeName << "'");
+                return;
+            }
+            // --- Register DataRegistry bindings ---
+            try {
+                prototype->IDataObject::registerBindings(typeName, registry_);
+            }
+            catch (...) {
+                ERROR("DataRegistry binding failure for type '" << typeName << "'");
             }
         }
+        catch (...)
+        {
+            ERROR("Unknown exception during registerDisplayObjectType('" << typeName << "')");
+        }
     }
+
 
     IDisplayObject* Factory::getDisplayObjectPtr(const std::string& name)
     {
@@ -517,8 +446,7 @@ namespace SDOM
 
         // Create a prototype AssetHandle for Lua registration
         AssetHandle prototypeHandle(typeName, typeName, typeName);
-            prototypeHandle._registerLuaBindings(typeName, SDOM::getLua());
-            prototypeHandle.registerBindings(typeName, registry_);
+        prototypeHandle.registerBindings(typeName, registry_);
     }
 
     IAssetObject* Factory::getAssetObjectPtr(const std::string& name)
@@ -637,226 +565,6 @@ namespace SDOM
         return getDisplayObject(stageName);
     }
 
-    // String (LUA text) based object creator
-    DisplayHandle Factory::createDisplayObject(const std::string& typeName, const sol::table& config)
-    {
-        // Get main texture size for defaults
-        // int maxStageWidth = 0;
-        // int maxStageHeight = 0;
-        // SDL_Texture* texture = getTexture();
-        // if (texture) {
-        //     maxStageWidth = texture->w;
-        //     maxStageHeight = texture->h;
-        // }
-
-        int maxStageWidth = 0;
-        int maxStageHeight = 0;
-        SDL_Texture* texture = getTexture();
-        if (texture) 
-        {
-            float texW = 0.0f, texH = 0.0f;
-            if (SDL_GetTextureSize(texture, &texW, &texH)) 
-            {
-                maxStageWidth  = static_cast<int>(texW);
-                maxStageHeight = static_cast<int>(texH);
-            } 
-            else 
-            {
-                // fallback: keep 0s (or log)
-            }
-        }
-
-        // Minimum required properties (x, y, width, height now optional)
-        std::vector<std::string> missing;
-        if (!config["name"].valid()) missing.push_back("name");
-        if (!config["type"].valid()) missing.push_back("type");
-
-        if (!missing.empty()) 
-        {
-            std::string msg = "Factory::create: Missing required property(s) in Lua config: ";
-            for (size_t i = 0; i < missing.size(); ++i) 
-            {
-                msg += "'" + missing[i] + "'";
-                if (i < missing.size() - 1) msg += ", ";
-            }
-            ERROR(msg); // Throws and aborts creation
-            return DisplayHandle(); // This line is not reached if ERROR throws
-        }
-
-        // // Prevent creating an object with a name that already exists in the factory
-        // std::string requestedName = config["name"];
-        // if (!requestedName.empty()) 
-        // {
-        //     auto existing = displayObjects_.find(requestedName);
-        //     if (existing != displayObjects_.end()) 
-        //     {
-        //         ERROR(std::string("Factory::create: Display object with name '") + requestedName + "' already exists");
-        //         return DisplayHandle();
-        //     }
-        // }
-
-        // If the name already exists, return a DisplayHandle to the existing object
-        std::string requestedName = config["name"];
-        if (!requestedName.empty())
-        {
-            auto existing = displayObjects_.find(requestedName);
-            if (existing != displayObjects_.end())
-            {
-                // ✅ Return reference/alias without re-initializing
-                return DisplayHandle(requestedName, typeName);
-            }
-        }        
-
-        auto it = creators_.find(typeName);
-        if (it != creators_.end() && it->second.fromLua) 
-        {
-            // Set defaults for x, y, width, height if not present
-            int x = config["x"].valid() ? static_cast<int>(config["x"].get<double>()) : 0;
-            int y = config["y"].valid() ? static_cast<int>(config["y"].get<double>()) : 0;
-            int width = config["width"].valid() ? static_cast<int>(config["width"].get<double>()) : maxStageWidth - x;
-            int height = config["height"].valid() ? static_cast<int>(config["height"].get<double>()) : maxStageHeight - y;
-
-            // Optionally, you may want to inject these values into config for the display object constructor:
-            sol::table configCopy = config;
-            configCopy["x"] = x;
-            configCopy["y"] = y;
-            configCopy["width"] = width;
-            configCopy["height"] = height;
-
-            auto displayObject = it->second.fromLua(configCopy);
-            if (!displayObject) 
-            {
-                // std::cout << "Factory::create: Failed to create display object of type '" << typeName
-                //         << "' from Lua. Display object is nullptr.\n";
-                return DisplayHandle(); // Invalid handle
-            }
-            std::string name = config["name"];
-            // Double-check before inserting (race-safe within this thread)
-            if (!name.empty() && displayObjects_.find(name) != displayObjects_.end()) 
-            {
-                ERROR(std::string("Factory::create: Display object with name '") + name + "' already exists (insertion aborted)");
-                return DisplayHandle();
-            }
-            // Wrap the concrete object into a DisplayRecord and insert
-            displayObjects_[name] = std::make_unique<DisplayRecord>(std::move(displayObject), typeName, 0);
-            auto& entry = displayObjects_[name];
-            // Ensure internal object knows its concrete type
-            if (entry->obj) entry->obj->setType(typeName);
-
-            // --- Set common properties from config ---
-            if (config["color"].valid())
-            {
-                SDL_Color color = parseColor(config["color"]);
-                entry->obj->color_ = color;
-            }
-            // set anchorPoints if present
-            auto setAnchorFromConfig = [](const sol::object& obj, auto setter) 
-            {
-                if (obj.valid()) 
-                {
-                    if (obj.is<std::string>()) 
-                    {
-                        std::string key = SDOM::normalizeAnchorString(obj.as<std::string>());
-                        auto it = SDOM::stringToAnchorPoint_.find(key);
-                        if (it != SDOM::stringToAnchorPoint_.end())
-                            setter(it->second);
-                    } 
-                    else if (obj.is<int>()) 
-                    {
-                        setter(static_cast<SDOM::AnchorPoint>(obj.as<int>()));
-                    }
-                }
-            };
-            setAnchorFromConfig(config["anchorLeft"],   [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorLeft(ap); });
-            setAnchorFromConfig(config["anchorTop"],    [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorTop(ap); });
-            setAnchorFromConfig(config["anchorRight"],  [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorRight(ap); });
-            setAnchorFromConfig(config["anchorBottom"], [&](SDOM::AnchorPoint ap){ entry->obj->setAnchorBottom(ap); });
-            
-            // set additional properties if present
-            if (config["z_order"].valid())      entry->obj->setZOrder(static_cast<int>(config["z_order"].get<double>()));
-            if (config["priority"].valid())     entry->obj->setPriority(static_cast<int>(config["priority"].get<double>()));
-            if (config["isClickable"].valid())  entry->obj->setClickable(config["isClickable"].get<bool>());
-            if (config["isEnabled"].valid())    entry->obj->setEnabled(config["isEnabled"].get<bool>());
-            if (config["isHidden"].valid())     entry->obj->setHidden(config["isHidden"].get<bool>());
-            if (config["tabPriority"].valid())  entry->obj->setTabPriority(static_cast<int>(config["tabPriority"].get<double>()));
-            if (config["tabEnabled"].valid())   entry->obj->setTabEnabled(config["tabEnabled"].get<bool>());
-
-            // Set x, y, width, height
-            entry->obj->setX(x);
-            entry->obj->setY(y);
-            entry->obj->setWidth(width);
-            entry->obj->setHeight(height);
-
-            // --- Finally initialize the display object ---
-            entry->obj->startup();
-
-            // Dispatch EventType::OnInit so global or pre-registered listeners can observe creation
-            // Included for completeness.  There may still be room to add an event listener.
-            {
-                auto& eventManager = getCore().getEventManager();
-                std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayHandle(name, typeName));
-                // relatedTarget: stage handle when available
-                DisplayHandle stageHandle = getCore().getRootNode();
-                if (stageHandle) initEvent->setRelatedTarget(stageHandle);
-                eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
-            }
-
-            // If the Lua config included a parent, attach this new object to it
-            if (config["parent"].valid()) {
-                attachCreatedObjectToParentFromConfig(name, typeName, config["parent"]);
-            }
-
-            // Register stable ID for external consumers
-            try {
-                registerDisplayObject(name, DisplayHandle(name, typeName));
-            } catch(...) {}
-
-            return DisplayHandle(name, typeName);
-        }
-        return DisplayHandle(); // Invalid handle
-    }
-
-    // // InitStruct based object creator
-    // DisplayHandle Factory::create(const std::string& typeName, const IDisplayObject::InitStruct& init)
-    // {
-    //     auto it = creators_.find(typeName);
-    //     if (it != creators_.end() && it->second.fromInitStruct) 
-    //     {
-    //         // If an explicit name was provided, ensure it doesn't already exist
-    //         if (!init.name.empty() && displayObjects_.find(init.name) != displayObjects_.end()) {
-    //             ERROR(std::string("Factory::create(init): Display object with name '") + init.name + "' already exists");
-    //             return DisplayHandle();
-    //             //return DisplayHandle(init.name, typeName);
-    //         }
-
-    //         auto displayObject = it->second.fromInitStruct(init);
-    //         if (displayObject) 
-    //         {
-    //             std::string name = init.name;
-    //             // Insert into the registry and set type BEFORE calling onInit so
-    //             // child objects created during onInit can locate their parent
-    //             // via the Factory (getDomObj/getDisplayObject).
-    //             displayObject->setType(typeName); // Ensure type is set
-    //             displayObjects_[name] = std::move(displayObject);
-
-    //             // Initialize the display object now that it's in the registry
-    //             displayObjects_[name]->onInit();
-
-    //             // Dispatch EventType::OnInit for this newly-initialized object
-    //             {
-    //                 auto& eventManager = getCore().getEventManager();
-    //                 std::unique_ptr<Event> initEvent = std::make_unique<Event>(EventType::OnInit, DisplayHandle(name, typeName));
-    //                 DisplayHandle stageHandle = getCore().getRootNode();
-    //                 if (stageHandle) 
-    //                     initEvent->setRelatedTarget(stageHandle);
-    //                 eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
-    //             }
-
-    //             return DisplayHandle(name, typeName);
-    //         }
-    //     }
-    //     return DisplayHandle(); // Invalid handle
-    // }
 
     DisplayHandle Factory::createDisplayObject(const std::string& typeName,
                                 const IDisplayObject::InitStruct& init)
@@ -909,153 +617,30 @@ namespace SDOM
         return DisplayHandle(); // invalid
     }
 
-
-
-    DisplayHandle Factory::createDisplayObject(const std::string& typeName, const std::string& luaScript) 
+    DisplayHandle Factory::createDisplayObjectFromJson(
+        const std::string& typeName,
+        const nlohmann::json& j)
     {
-        // Use the global SDOM Lua state instead of creating a fresh state. This
-        // ensures created tables/functions are visible to the rest of the
-        // application and preserves registered bindings and globals.
-        sol::state& lua = SDOM::getLua();
+        auto it = creators_.find(typeName);
+        if (it == creators_.end())
+            return DisplayHandle{};
 
-        // Try to parse and execute the string as a Lua table
-        // sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
+        auto obj = it->second.fromJson(j);
+        if (!obj)
+            return DisplayHandle{};
 
-        // sol::table result = lua.safe_script(luaScript, sol::script_pass_on_error).get<sol::table>();        
-        sol::object result = lua.safe_script("return {" + luaScript + "}", sol::script_pass_on_error).get<sol::object>();        
+        // We want InitStruct to own the name/type parsing,
+        // so we can either:
+        // 1) let fromJson() construct via InitStruct and use that,
+        // 2) or pull "name" from JSON here.
+        // I recommend using InitStruct::from_json inside the type's CreateFromJson
+        // and having the concrete type ensure `init.name` is correct.
 
-        if (!result.valid() || !result.is<sol::table>()) 
-        {
-            std::cout << "Factory::create: Provided string is not a valid Lua table.\n";
-            return DisplayHandle();
-        }
-
-    sol::table config = result.as<sol::table>();
-    return createDisplayObject(typeName, config);
+        const std::string name = obj->getName(); // assuming IDisplayObject has getName()
+        addDisplayObject(name, std::move(obj));
+        return getDisplayObject(name);
     }
 
-    AssetHandle Factory::createAssetObject(const std::string& typeName, const sol::table& config)
-    {
-        // Check required fields
-        if (!config["name"].valid() || !config["type"].valid() || !config["filename"].valid()) 
-        {
-            ERROR("Factory::createAsset: Missing required property(s) in Lua config: 'name' or 'type' or 'filename'");
-            return AssetHandle();
-        }
-
-        
-        // std::string requestedName = config["name"];
-        // if (assetObjects_.find(requestedName) != assetObjects_.end()) {
-        //     // ERROR("Factory::createAsset: Asset object with name '" + requestedName + "' already exists");
-        //     return AssetHandle();
-        // }
-        std::string requestedName = config["name"];
-        if (auto itExisting = assetObjects_.find(requestedName); itExisting != assetObjects_.end())
-        {
-            // Return a new handle pointing to the existing asset
-            return AssetHandle(requestedName, itExisting->second->type, itExisting->second->obj->getFilename());
-        }    
-        
-        
-        std::string filename = config["filename"];
-        if (filename.empty()) {
-            ERROR("Factory::createAsset: 'filename' cannot be empty");
-            return AssetHandle();
-        }
-        // If an asset already exists for this filename, consider reusing it.
-        // Special-case TTFAsset: only reuse if font size matches the requested size
-            // Only certain asset types should be reused by filename. Avoid reusing
-            // wrapper types like 'TruetypeFont' which are per-resource wrappers.
-            auto shouldReuseByFilename = [&](const std::string& t) -> bool {
-                return (t == "Texture" || t == TTFAsset::TypeName);
-            };
-
-            if (shouldReuseByFilename(typeName) && typeName == TTFAsset::TypeName) {
-            int desiredSize = 0;
-            try {
-                if (config["internalFontSize"].valid()) desiredSize = config["internalFontSize"].get<int>();
-                else if (config["internal_font_size"].valid()) desiredSize = config["internal_font_size"].get<int>();
-                else if (config["fontSize"].valid()) desiredSize = config["fontSize"].get<int>();
-                else if (config["font_size"].valid()) desiredSize = config["font_size"].get<int>();
-                else if (config["size"].valid()) desiredSize = config["size"].get<int>();
-            } catch(...) { desiredSize = 0; }
-
-            if (desiredSize > 0) {
-                for (const auto& pair : assetObjects_) {
-                    const auto& assetEntry = pair.second;
-                    if (!assetEntry || !assetEntry->obj) continue;
-                    try {
-                        if (assetEntry->obj->getFilename() == filename && assetEntry->obj->getType() == TTFAsset::TypeName) {
-                            TTFAsset* existingTTF = dynamic_cast<TTFAsset*>(assetEntry->obj.get());
-                            if (existingTTF && existingTTF->getFontSize() == desiredSize) {
-                                AssetHandle out;
-                                out.name_ = pair.first;
-                                out.type_ = assetEntry->obj->getType();
-                                out.filename_ = assetEntry->obj->getFilename();
-                                // std::cout << "Factory::createAsset: Reusing existing TTFAsset '" << out.getName() << "' for filename '" << filename << "' (size=" << desiredSize << ")\n";
-                                return out;
-                            }
-                        }
-                    } catch(...) {}
-                }
-            }
-            // If desiredSize == 0 we fall through and do not reuse to avoid size-mismatch surprises
-        } else if (shouldReuseByFilename(typeName)) {
-            AssetHandle existing = findAssetByFilename(filename, typeName);
-            if (existing) {
-                // std::cout << "Factory::createAsset: Reusing existing asset '" << existing.getName() << "' for filename '" << filename << "' (type=" << typeName << ")\n";
-                return existing;
-            }
-        }
-            
-        // NOTE: Do not reuse SpriteSheet objects here. Even if a SpriteSheet with
-        // matching params exists, create a fresh SpriteSheet instance so the
-        // requested registry name becomes the asset's logical name. Texture
-        // reuse (by filename) remains in place so heavy GPU resources are not
-        // duplicated. This preserves existing unit-test expectations.
-
-        auto it = assetCreators_.find(typeName);
-        if (it != assetCreators_.end() && it->second.fromLua) 
-        {
-                auto uniqueAssetObj = it->second.fromLua(config);
-                if (!uniqueAssetObj) 
-                {
-                    ERROR("Factory::createAsset: Failed to create asset object of type '" + typeName + "' from Lua.");
-                    return AssetHandle();
-                }
-                uniqueAssetObj->setType(typeName);
-                // convert to shared_ptr for aliasing support
-                std::shared_ptr<IAssetObject> sharedAsset = std::move(uniqueAssetObj);
-                // Wrap into AssetRecord and insert
-                assetObjects_[requestedName] = std::make_unique<AssetRecord>(sharedAsset, typeName, 0);
-                auto& entry = assetObjects_[requestedName];
-                if (entry && entry->obj) entry->obj->startup();
-
-                // Register Lua bindings for this concrete asset instance so its methods are available
-                try {
-                    entry->obj->registerLuaBindings(typeName, SDOM::getLua());
-                } catch(...) {
-                    ERROR("Factory::createAsset: Failed to register Lua bindings for asset: " + requestedName);
-                }
-
-                // Eagerly load the asset now that it has been initialized and registered.
-                try {
-                    if (!entry->obj->isLoaded()) {
-                        if (!entry->obj->load()) {
-                            ERROR("Factory::createAsset: load() failed for asset: " + requestedName);
-                        }
-                    }
-                } catch(...) {
-                    ERROR("Factory::createAsset: load() threw for asset: " + requestedName);
-                }
-
-                try {
-                    registerAssetObject(requestedName, AssetHandle(requestedName, typeName, filename));
-                } catch(...) {}
-                return AssetHandle(requestedName, typeName, filename);
-        }
-        return AssetHandle();
-    }
 
 
     AssetHandle Factory::createAssetObject(const std::string& typeName, const IAssetObject::InitStruct& init)
@@ -1073,7 +658,7 @@ namespace SDOM
             {
                 try {
                     const auto& ttfInit = static_cast<const TTFAsset::InitStruct&>(init);
-                    int desiredSize = ttfInit.internalFontSize;
+                    int desiredSize = ttfInit.internal_font_size;
 
                     for (const auto& [key, assetEntry] : assetObjects_)
                     {
@@ -1116,12 +701,6 @@ namespace SDOM
             if (entry && entry->obj) entry->obj->startup();
 
             try {
-                entry->obj->registerLuaBindings(typeName, SDOM::getLua());
-            } catch(...) {
-                ERROR("Factory::createAsset(init): Failed to register Lua bindings for asset: " + init.name);
-            }
-
-            try {
                 if (!entry->obj->isLoaded()) {
                     if (!entry->obj->load()) {
                         ERROR("Factory::createAsset(init): load() failed for asset: " + init.name);
@@ -1140,124 +719,6 @@ namespace SDOM
         return AssetHandle(); // invalid
     }
 
-
-    AssetHandle Factory::createAssetObject(const std::string& typeName, const std::string& luaScript)
-    {
-        // Use global Lua state so created tables are visible to the rest of the app
-        sol::state& lua = SDOM::getLua();
-        // sol::object result = lua.script("return " + luaScript, sol::script_pass_on_error);
-        sol::object result = lua.safe_script("return {" + luaScript + "}", sol::script_pass_on_error).get<sol::object>();     
-
-        if (!result.valid() || !result.is<sol::table>()) {
-            ERROR("Factory::createAsset: Provided string is not a valid Lua table.");
-            return AssetHandle();
-        }
-    sol::table config = result.as<sol::table>();
-    return createAssetObject(typeName, config);
-    }
-
-    // Note: createDisplayObject/createAssetObject now contain the canonical
-    // implementations (migrated from the legacy create()/createAsset()).
-
-
-    bool Factory::attachCreatedObjectToParentFromConfig(const std::string& name, const std::string& typeName, const sol::object& parentConfig)
-    {
-        DisplayHandle parentHandle;
-        // Try to coerce the parentConfig into a DisplayHandle in several ways.
-        try {
-            // First, attempt a direct conversion (works even if is<> returned false)
-            parentHandle = parentConfig.as<DisplayHandle>();
-        } catch(...) {
-            // ignored
-        }
-        if (!parentHandle) {
-            try {
-                if (parentConfig.is<std::string>()) {
-                    parentHandle = getDisplayObject(parentConfig.as<std::string>());
-                }
-            } catch(...) {}
-        }
-        if (!parentHandle && parentConfig.is<sol::table>()) {
-            try {
-                // Prefer the centralized resolver on DisplayHandle which knows how to
-                // interpret userdata, string names, and nested tables. This avoids
-                // unsafe direct get<DisplayHandle>() calls on userdata that may be a
-                // different concrete usertype (e.g. Stage*) and which can trigger
-                // sol2 type-errors.
-                parentHandle = DisplayHandle::resolveChildSpec(parentConfig);
-
-                // If resolveChildSpec didn't find a handle, try a conservative
-                // approach: if the table exposes a getName() function, call it
-                // to obtain a name to look up in the factory.
-                if (!parentHandle) {
-                    sol::table t = parentConfig.as<sol::table>();
-                    sol::object maybeGetName = t["getName"];
-                    if (maybeGetName.valid() && maybeGetName.get_type() == sol::type::function) {
-                        try {
-                            sol::protected_function f = maybeGetName.as<sol::protected_function>();
-                            sol::protected_function_result r = f(t);
-                            if (r.valid()) {
-                                try {
-                                    std::string resolved = r.get<std::string>();
-                                    parentHandle = getDisplayObject(resolved);
-                                } catch(...) {}
-                            }
-                        } catch(...) {}
-                    }
-                }
-            } catch(...) {}
-        }
-        // If parentConfig is a string, interpret as a name lookup
-        if (!parentHandle) {
-            try {
-                if (parentConfig.is<std::string>()) {
-                    parentHandle = getDisplayObject(parentConfig.as<std::string>());
-                }
-            } catch(...) {}
-        }
-
-        // If it's a table (or any other form), prefer the centralized resolver
-        // which understands tables like { parent = <handle|name> } and nested
-        // descriptors. This avoids unsafe direct get<DisplayHandle>() calls on
-        // userdata that may be a different concrete usertype.
-        if (!parentHandle && parentConfig.is<sol::table>()) {
-            try {
-                parentHandle = DisplayHandle::resolveChildSpec(parentConfig);
-
-                // If resolveChildSpec didn't find a handle, try a conservative
-                // approach: if the table exposes a getName() function, call it
-                // to obtain a name to look up in the factory.
-                if (!parentHandle) {
-                    sol::table t = parentConfig.as<sol::table>();
-                    sol::object maybeGetName = t.get<sol::object>("getName");
-                    if (maybeGetName.valid() && maybeGetName.get_type() == sol::type::function) {
-                        try {
-                            sol::protected_function f = maybeGetName.as<sol::protected_function>();
-                            sol::protected_function_result r = f(t);
-                            if (r.valid()) {
-                                try {
-                                    std::string resolved = r.get<std::string>();
-                                    parentHandle = getDisplayObject(resolved);
-                                } catch(...) {}
-                            }
-                        } catch(...) {}
-                    }
-                }
-            } catch(...) {}
-        }
-
-        if (!parentHandle || !parentHandle.get()) {
-            return false;
-        }
-
-        if (auto* newParentObj = dynamic_cast<IDisplayObject*>(parentHandle.get())) 
-        {
-            // Use addChild to ensure parent/child bookkeeping and ordering occurs
-            newParentObj->addChild(DisplayHandle(name, typeName));
-            return true;
-        }
-        return false;
-    }
 
 
     void Factory::addDisplayObject(const std::string& name, 

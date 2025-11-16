@@ -15,42 +15,61 @@ namespace SDOM
         static constexpr const char* TypeName = "Frame";
 
         // --- Initialization Struct --- //
-        struct InitStruct : IPanelObject::InitStruct
+        struct InitStruct : public IPanelObject::InitStruct
         {
-            InitStruct() : IPanelObject::InitStruct() 
-            { 
-                // from IDisplayObject
-                name = TypeName;
-                type = TypeName;
-                color = {96, 0, 96, 255};   // panel color
+            InitStruct()
+                : IPanelObject::InitStruct()
+            {
+                //
+                // Override defaults for Frame
+                //
+                name        = TypeName;
+                type        = TypeName;
+
+                // Frame color (purple-ish default)
+                color       = {96, 0, 96, 255};
+
+                // UI behavior overrides
                 isClickable = false;
-                tabEnabled = false;
-                // from IPanelObject
-                base_index = PanelBaseIndex::Frame; 
-                icon_resource = "internal_icon_8x8"; // Default to internal 8x8 sprite sheet
-                icon_width = 8;        // default icon width is 8
-                icon_height = 8;       // default icon height is 8
-                font_resource = "internal_font_8x8"; // Default to internal 8x8 font 
-                font_width = 8;        // default font width is 8
-                font_height = 8;       // default font height is 8
+                tabEnabled  = false;
+
+                //
+                // IPanelObject-specific overrides for Frame
+                //
+                base_index    = PanelBaseIndex::Frame;
+
+                icon_resource = "internal_icon_8x8";
+                icon_width    = 8;
+                icon_height   = 8;
+
+                font_resource = "internal_font_8x8";
+                font_width    = 8;
+                font_height   = 8;
             }
-            // no additional members from Frame        
+
+            // No additional JSON fields → inherit JSON parser safely.
         }; // END: InitStruct
+
     protected:
         // --- Constructors --- //
         Frame(const InitStruct& init);  
-        Frame(const sol::table& config);
 
     public:
 
         // --- Static Factory Methods --- //
-        static std::unique_ptr<IDisplayObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IDisplayObject>(new Frame(config));
+        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit)
+        {
+            const auto& init = static_cast<const Frame::InitStruct&>(baseInit);
+            return std::unique_ptr<IDisplayObject>(new Frame(init));
         }
-        static std::unique_ptr<IDisplayObject> CreateFromInitStruct(const IDisplayObject::InitStruct& baseInit) {
-            const auto& frameInit = static_cast<const Frame::InitStruct&>(baseInit);
-            return std::unique_ptr<IDisplayObject>(new Frame(frameInit));
+
+        static std::unique_ptr<IDisplayObject> CreateFromJson(const nlohmann::json& j)
+        {
+            Frame::InitStruct init;
+            Frame::InitStruct::from_json(j, init); // inherited fields handled internally
+            return std::unique_ptr<IDisplayObject>(new Frame(init));
         }
+
 
         Frame() = default;
         ~Frame() override = default;     
@@ -64,13 +83,6 @@ namespace SDOM
         bool onUnitTest(int frame) override;        // Called to run unit tests
 
     protected:
-        
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

@@ -19,26 +19,46 @@ namespace SDOM
         // --- Construction & Initialization --- //
         struct InitStruct : public IFontObject::InitStruct
         {
-            InitStruct() : IFontObject::InitStruct() 
-            { 
-                name = TypeName; 
+            InitStruct()
+                : IFontObject::InitStruct()
+            {
+                name = TypeName;
                 type = TypeName;
-                filename = TypeName; // Default filename, can be overridden
+                filename = TypeName;   // default asset lookup name (usually overridden)
+                font_size = 12;        // a more sensible TTF default
+            }
+
+            // Convert from JSON:
+            static InitStruct from_json(const nlohmann::json& j)
+            {
+                InitStruct i;
+
+                if (j.contains("name"))        i.name = j["name"];
+                if (j.contains("type"))        i.type = j["type"];
+                if (j.contains("filename"))    i.filename = j["filename"];
+                if (j.contains("is_internal"))  i.is_internal = j["is_internal"];
+
+                if (j.contains("font_size"))    i.font_size = j["font_size"];
+
+                return i;
             }
         };
 
     protected:
         TruetypeFont(const InitStruct& init);
-        TruetypeFont(const sol::table& config);
 
     public:
-        // --- Static Factory Methods --- //
-        static std::unique_ptr<IAssetObject> CreateFromLua(const sol::table& config) {
-            return std::unique_ptr<IAssetObject>(new TruetypeFont(config));
+        // --- Static Factory Methods (JSON + InitStruct) --- //
+        static std::unique_ptr<IAssetObject> CreateFromJson(const nlohmann::json& j)
+        {
+            using IS = TruetypeFont::InitStruct;
+            return std::unique_ptr<IAssetObject>(new TruetypeFont(IS::from_json(j)));
         }
-        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit) {
-            const auto& fontInit = static_cast<const TruetypeFont::InitStruct&>(baseInit);
-            return std::unique_ptr<IAssetObject>(new TruetypeFont(fontInit));
+
+        static std::unique_ptr<IAssetObject> CreateFromInitStruct(const IAssetObject::InitStruct& baseInit)
+        {
+            const auto& tfInit = static_cast<const TruetypeFont::InitStruct&>(baseInit);
+            return std::unique_ptr<IAssetObject>(new TruetypeFont(tfInit));
         }
 
         ~TruetypeFont() override;
@@ -92,14 +112,6 @@ namespace SDOM
         void drawForegroundGlyph(Uint32 ch, int x, int y, const FontStyle& style);
         void drawOutlineGlyph(Uint32 ch, int x, int y, const FontStyle& style);
         void drawDropShadowGlyph(Uint32 ch, int x, int y, const FontStyle& style);
-
-    
-
-        // ---------------------------------------------------------------------
-        // 🔗 Legacy Lua Registration
-        // ---------------------------------------------------------------------
-        void _registerLuaBindings(const std::string& typeName, sol::state_view lua) override;
-
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration
