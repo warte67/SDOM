@@ -409,8 +409,8 @@ Next up: consistent ordering, documentation quality, full property/function gene
 
 ---
 
-<a id="november-15-2025"></a>
-<a id="latest-update"></a>
+
+
 
 ## 🗓️ November 15, 2025 — *The Day SDOM Filed for Legal Separation from Lua*
 
@@ -449,42 +449,104 @@ Lua becomes a wrapper — safe, isolated, and completely replaceable.
 
 ### 🚧 **ToDo Today**
 
-- ✅ Fix mismatch: app displayed `SDOM Version: 0.5.218 (early pre-alpha)` instead of `0.5.222`
-- ☐ Fully implement **MAIN_VARIANT 2**, pure C++ front-end  
-- ✅ Remove all legacy Lua binders  
-- ☐ Convert all variables to *snake_case*  
-- ✅ Add full `Release` build support to the `compile` script  
-- ☐ Implement a 100% C++ startup sequence (no Lua for initialization)
-
 ### 🚧 **DisplayHandle Refactor**
 
 - ✅ Removed all embedded Lua-binding state  
-- ☐ Convert `DisplayHandle` back into a *pure value type* (`name`, `type`, `formatted_`)  
+- ✅ Convert `DisplayHandle` back into a *pure value type* (`name`, `type`, `formatted_`)  
 - ✅ Restore default destructor/copy/move semantics  
 - ✅ Verify under ASan that `DisplayHandle` no longer causes delayed heap corruption  
-
-### 🚧 **DataRegistry → CAPI Generation Pipeline**
-
-- ☐ Audit snapshot → generator → output directory flow  
-- ☐ Ensure generator never leaks C++-only semantics into C  
-- ☐ Validate designated initializers produce correct defaults  
-- ☐ Test generator on assets, display objects, and event types  
-- ☐ Verify optional-field handling  
-- ☐ Review namespace boundaries & symbol-export macros  
-
-
-### 🚧 **JSON Integration**
-
-- ✅ Reintroduce JSON as a supported serialization format  
-- ☐ Initialize DataRegistry from JSON  
-- ☐ Serialize/deserialize the full DOM tree from JSON  
-  *(Eventually replacing — or complementing — Lua initialization)*
 
 
 ### 🤔 **End of Day Reflection**
 > *"Clarity isn’t something you find — it’s what remains after everything unnecessary has been removed."_*
 
 
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
+<a id="november-16-2025"></a>
+<a id="latest-update"></a>
+
+# 🗓️ **November 16, 2025 — FrontEnd Solidification & Regression Coverage Day**
+
+> 💬 *“One clean test reveals more truth than ten assumptions.”*
+
+Today was all about **anchoring SDOM’s FrontEnd in bedrock** — converting the old Lua-driven config into a complete, deterministic C++ test scaffold and validating the object model from top to bottom.
+
+---
+
+## 🧩 **FrontEnd Regression Test Suite**
+
+### ✔️ Comprehensive Validation  
+You implemented the **largest and most complete FrontEnd test suite SDOM has ever had**, covering:
+
+- Stage initialization  
+- Frame loading & assets  
+- Panel defaults  
+- Groups, auto-generated labels, and resource inheritance  
+- CheckButtons  
+- RadioButtons + Tristate  
+- Sliders (H & V)  
+- ProgressBars (H & V)  
+- ScrollBars (H & V)  
+- Stage-level Buttons, IconButtons, and ArrowButtons  
+- Decorative Labels (bitmap, TTF, wrapped text, size-aware layout)
+
+Each test validates **type**, **geometry**, **color**, **font resource**, **icon sheet**, and **initial state**.
+
+### ✔️ Strong Diagnostics  
+Helpful utilities added:
+
+- `logDisplayTree()`  
+- `expectColorEq()`  
+- `getChildOrReport()`  
+- `castOrReport<T>()`  
+
+This means malformed UI structures are reported with precise context — a huge improvement.
+
+### ✔️ Modular Test Registration  
+FrontEnd tests now register under a named category, making SDOM’s test harness cleaner and easier to extend.
+
+## 🧩 **Main Variant Architecture**
+
+### ✔️ Extraction of `main_variant_1`, `2`, `3`  
+You committed to a cleaner main system:
+
+- **main_variant_1** → Lua-driven configuration  
+- **main_variant_2** → C++ FrontEnd & regression tests (the big one today)  
+- **main_variant_3** → pure CAPI bootstrapping  
+
+The “real” `main.cpp` will soon dispatch between them based on arguments (`--variant`, etc.). 
+This separation reduces compilation noise and massively improves clarity.
+
+## 🧩 **Core Initialization & Asset Work**
+
+### ✔️ Confirmed correct ordering  
+You verified that resources **must be registered after** `core.configure(cfg)` — otherwise pixel scaling isn’t available yet.  
+
+### ✔️ Asset Registration  
+TTF, BitmapFont, SpriteSheet assets were successfully created and validated through the FrontEnd tests.
+
+
+## 🌟 **Summary**
+
+Today, SDOM transitioned from **prototype FrontEnd construction** into **formalized regression validation**.  The FrontEnd object graph is now completely testable, repeatable, and guaranteed to load correctly. This was a *structural milestone* — the kind that only needs to be done once, and then supports the rest of the engine forever.
+
+## 🚧 **ToDo Today / Carryover**
+
+- ☐ Finalize `main.cpp` argument dispatch system.
+- ☐ Flesh out `main_variant_2.cpp` with event listeners for buttons, sliders, and interactive UI.
+- ☐ Add FPS label + update callback for real-time diagnostics.
+- ☐ Continue validating each DisplayObject type via FrontEnd_UnitTests.
+- ☐ Expand asset init coverage: ensure every asset type (TTF, bitmap, spritesheet) has full JSON + InitStruct parity.
+- ☐ Improve unit-test coverage around default property initialization (colors, fonts, flags).
+- ☐ Prepare documentation section explaining **asset naming rules**, **lookup order**, and **default fallbacks** now that Lua is removed.
+- ☐ Add minimal logging hooks for UI events (click, change, drag).
+
+## 🤔 **End of Day Reflection**
+
+> *““A test that fails today prevents a thousand whispers of chaos tomorrow.””*  
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 
@@ -494,7 +556,14 @@ Lua becomes a wrapper — safe, isolated, and completely replaceable.
 
 ---
 
+
 ### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
+### 🚧 **JSON Integration**
+- ✅ Reintroduce JSON as a supported serialization format  
+- ☐ Initialize DataRegistry from JSON  
+- ☐ Serialize/deserialize the full DOM tree from JSON  
+  *(Eventually replacing — or complementing — Lua initialization)*
+
 - ☐ **Core::registerResource()**
 - ☐ Implement C ABI unit-test harness as registry proof-of-concept  
   - ☐ Convert `SDOM_CLR` to a static singleton inheriting from `IDataObject`  
