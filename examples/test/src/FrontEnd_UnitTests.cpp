@@ -501,7 +501,18 @@ namespace SDOM
                 {
                     errors.push_back("FrontEnd_test5: Tristate button should start inactive");
                 }
+
+                DisplayHandle labelHandle = tristate->getLabelObject();
+                Label* label = castOrReport<Label>(labelHandle, "Label", "FrontEnd_test5", errors);
+                if (label)
+                {
+                    const FontStyle style = label->getDefaultStyle();
+                    expectColorEq(style.foregroundColor,
+                                  SDL_Color{255, 255, 255, 255},
+                                  "FrontEnd_test5: mainFrame_tristate_1 label color", errors);
+                }
             }
+
         }
 
         return true;

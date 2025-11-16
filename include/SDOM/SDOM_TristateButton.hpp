@@ -177,27 +177,11 @@ namespace SDOM
                 if (j.contains("font_size"))
                     out.font_size = j["font_size"].get<int>();
 
-                if (j.contains("label_color") && j["label_color"].is_array() && j["label_color"].size() == 4)
-                {
-                    const auto& c = j["label_color"];
-                    out.label_color = {
-                        c[0].get<uint8_t>(),
-                        c[1].get<uint8_t>(),
-                        c[2].get<uint8_t>(),
-                        c[3].get<uint8_t>()
-                    };
-                }
+                if (j.contains("label_color"))
+                    out.label_color = json_to_color(j["label_color"]);
 
-                if (j.contains("border_color") && j["border_color"].is_array() && j["border_color"].size() == 4)
-                {
-                    const auto& c = j["border_color"];
-                    out.border_color = {
-                        c[0].get<uint8_t>(),
-                        c[1].get<uint8_t>(),
-                        c[2].get<uint8_t>(),
-                        c[3].get<uint8_t>()
-                    };
-                }
+                if (j.contains("border_color"))
+                    out.border_color = json_to_color(j["border_color"]);
 
                 if (j.contains("state"))
                     out.state = static_cast<ButtonState>( j["state"].get<int>() );

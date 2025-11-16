@@ -32,12 +32,12 @@ namespace SDOM
                 tabEnabled  = false;
 
                 //
-                // ProgressBar-specific colors
-                //
-                trackColor      = {128, 128, 128, 255};  // background track
-                fillColor       = {255, 255, 255, 255};  // progress fill
-                backgroundColor = {16, 16, 16, 128};     // behind everything
-                borderColor     = {0, 0, 0, 32};         // thin border
+                // ProgressBar colors align with base fields so rendering uses
+                // the configured palette without extra plumbing.
+                foregroundColor = {128, 128, 128, 255};  // frame/rail color
+                color           = {255, 255, 255, 255};  // fill color
+                backgroundColor = {16, 16, 16, 128};     // backdrop
+                borderColor     = {0, 0, 0, 32};         // thin outline
 
                 //
                 // IRangeControl fields — overridden defaults
@@ -53,14 +53,6 @@ namespace SDOM
                 icon_resource = "internal_icon_8x8";
             }
 
-            //
-            // ProgressBar-specific visual fields
-            //
-            SDL_Color trackColor      = {128,128,128,255};
-            SDL_Color fillColor       = {255,255,255,255};
-            SDL_Color backgroundColor = {16,16,16,128};
-            SDL_Color borderColor     = {0,0,0,32};
-
             // ---------------------------------------------------------------------
             // JSON loader (inheritance-safe)
             // ---------------------------------------------------------------------
@@ -68,8 +60,8 @@ namespace SDOM
             {
                 IRangeControl::InitStruct::from_json(j, out);
 
-                if (j.contains("trackColor"))       { out.trackColor      = json_to_color(j["trackColor"]); }
-                if (j.contains("fillColor"))        { out.fillColor       = json_to_color(j["fillColor"]); }
+                if (j.contains("trackColor"))       { out.foregroundColor = json_to_color(j["trackColor"]); }
+                if (j.contains("fillColor"))        { out.color           = json_to_color(j["fillColor"]); }
                 if (j.contains("backgroundColor"))  { out.backgroundColor = json_to_color(j["backgroundColor"]); }
                 if (j.contains("borderColor"))      { out.borderColor     = json_to_color(j["borderColor"]); }
                 if (j.contains("icon_resource"))    { out.icon_resource   = j["icon_resource"].get<std::string>(); }

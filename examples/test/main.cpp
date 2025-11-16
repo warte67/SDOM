@@ -619,6 +619,8 @@ int main(int argc, char** argv)
                 {"height", 140},
                 {"icon_resource", "internal_icon_16x16"},
                 {"step", 2.5},
+                {"color", { {"r",128}, {"g",128}, {"b",128}, {"a",255} }},
+                {"foreground_color", { {"r",255}, {"g",255}, {"b",255}, {"a",255} }},
                 {"background_color", { {"r",16}, {"g",16}, {"b",16}, {"a",0} }},
                 {"border_color",     { {"r",0},  {"g",0},  {"b",0},  {"a",0} }}
             }
@@ -660,7 +662,7 @@ int main(int argc, char** argv)
                 {"height", 140},
                 {"icon_resource", "internal_icon_16x16"},
                 {"value", 50.0},
-                {"step", 5.0}
+                {"step", 5.0},
             }
         );
     rightMainFrame->addChild(vScroll);

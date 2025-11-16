@@ -34,13 +34,13 @@ namespace SDOM
                 tabEnabled  = true;  // ScrollBars should be keyboard accessible
 
                 //
-                // ScrollBar-specific colors
-                // (knob, track, arrows all share similar defaults)
-                //
-                trackColor      = {128, 128, 128, 255};   // track + arrow background
-                thumbColor      = {255, 255, 255, 255};   // the draggable knob
-                backgroundColor = {16, 16, 16, 128};      // background
-                borderColor     = {0, 0, 0, 32};          // border
+                // ScrollBar colors map onto the base IDisplayObject fields so
+                // downstream rendering and child ArrowButtons automatically pick
+                // up the configured palette.
+                color           = {128, 128, 128, 255};   // track + arrow tint
+                foregroundColor = {255, 255, 255, 255};   // draggable thumb
+                backgroundColor = {16, 16, 16, 128};      // surrounding backdrop
+                borderColor     = {0, 0, 0, 32};          // thin outline
 
                 //
                 // IRangeControl values (override parent defaults)
@@ -64,14 +64,6 @@ namespace SDOM
                 min_thumb_length = 8.0f;   // minimum pixel size of thumb
             }
 
-            //
-            // ScrollBar-specific properties
-            //
-            SDL_Color trackColor      = {128,128,128,255};
-            SDL_Color thumbColor      = {255,255,255,255};
-            SDL_Color backgroundColor = {16,16,16,128};
-            SDL_Color borderColor     = {0,0,0,32};
-
             float step            = 0.0f;
             float page_size       = 25.0f;
             float content_size    = 100.0f;
@@ -84,8 +76,8 @@ namespace SDOM
             {
                 IRangeControl::InitStruct::from_json(j, out);
 
-                if (j.contains("trackColor"))       { out.trackColor        = json_to_color(j["trackColor"]); }
-                if (j.contains("thumbColor"))       { out.thumbColor        = json_to_color(j["thumbColor"]); }
+                if (j.contains("trackColor"))       { out.color             = json_to_color(j["trackColor"]); }
+                if (j.contains("thumbColor"))       { out.foregroundColor   = json_to_color(j["thumbColor"]); }
                 if (j.contains("backgroundColor"))  { out.backgroundColor   = json_to_color(j["backgroundColor"]); }
                 if (j.contains("borderColor"))      { out.borderColor       = json_to_color(j["borderColor"]); }
                 if (j.contains("icon_resource"))    { out.icon_resource     = j["icon_resource"].get<std::string>(); }

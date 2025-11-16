@@ -138,7 +138,10 @@ namespace SDOM
                         init.fontType = it->second;
                 }
 
-                init.fontSize = j.value("font_size", init.fontSize);
+                if (j.contains("font_size"))
+                    init.fontSize = j["font_size"].get<int>();
+                else
+                    init.fontSize = 0;
                 init.fontWidth = j.value("font_width", init.fontWidth);
                 init.fontHeight = j.value("font_height", init.fontHeight);
 
