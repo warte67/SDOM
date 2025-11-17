@@ -1,11 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203":[4,0,0,12,6],
-"structSDOM_1_1TypeInfo.html#a1e2047f9de4ee959d4a4967678252e09":[3,0,0,12,1],
-"structSDOM_1_1TypeInfo.html#a1e2047f9de4ee959d4a4967678252e09":[4,0,0,12,1],
-"structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1":[3,0,0,12,4],
-"structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1":[4,0,0,12,4],
-"structSDOM_1_1TypeInfo.html#a75ed484c5b0fb3ee5b8ee712378c188b":[3,0,0,12,2],
 "structSDOM_1_1TypeInfo.html#a75ed484c5b0fb3ee5b8ee712378c188b":[4,0,0,12,2],
 "structSDOM_1_1TypeInfo.html#a961e44baf50d45450cab6f0dc8d003d3":[3,0,0,12,0],
 "structSDOM_1_1TypeInfo.html#a961e44baf50d45450cab6f0dc8d003d3":[4,0,0,12,0],

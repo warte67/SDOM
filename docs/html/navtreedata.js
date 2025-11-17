@@ -155,12 +155,12 @@ var NAVTREEINDEX =
 "sdom__capi__objects__generated_8cpp.html#a69a00ccff55407f50a79e84a24d88054",
 "structSDOM_1_1ArrowButton_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a",
 "structSDOM_1_1CAPI_1_1CallArg.html#ac7377c271af0c9e56b7ce43cbb804192",
-"structSDOM_1_1Frame_1_1InitStruct.html#a0c2780810724da93d510c0650dca446b",
-"structSDOM_1_1IDisplayObject_1_1InitStruct.html#acda95a896651eee200d55e80ea104150",
-"structSDOM_1_1IconButton_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08",
-"structSDOM_1_1ProgressBar_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085",
-"structSDOM_1_1Slider_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6",
-"structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203"
+"structSDOM_1_1Frame_1_1InitStruct.html#a0981d916e4b89bb3d08f0a56041e0f08",
+"structSDOM_1_1IDisplayObject_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085",
+"structSDOM_1_1IconButton_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a",
+"structSDOM_1_1ProgressBar_1_1InitStruct.html#acda95a896651eee200d55e80ea104150",
+"structSDOM_1_1Slider_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085",
+"structSDOM_1_1TypeInfo.html#a75ed484c5b0fb3ee5b8ee712378c188b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

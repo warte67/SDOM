@@ -1,11 +1,5 @@
 var NAVTREEINDEX53 =
 {
-"structSDOM_1_1Slider_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6":[4,0,0,44,0,24],
-"structSDOM_1_1Slider_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf":[3,0,0,44,0,33],
-"structSDOM_1_1Slider_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf":[4,0,0,44,0,33],
-"structSDOM_1_1Slider_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[3,0,0,44,0,28],
-"structSDOM_1_1Slider_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[4,0,0,44,0,28],
-"structSDOM_1_1Slider_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[3,0,0,44,0,17],
 "structSDOM_1_1Slider_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[4,0,0,44,0,17],
 "structSDOM_1_1Slider_1_1InitStruct.html#aca892a749013e52b0877e8940a2d7cbc":[3,0,0,44,0,3],
 "structSDOM_1_1Slider_1_1InitStruct.html#aca892a749013e52b0877e8940a2d7cbc":[4,0,0,44,0,3],
@@ -249,5 +243,11 @@ var NAVTREEINDEX53 =
 "structSDOM_1_1TypeCreators.html#a8f1b35e4252d9454a20f926ee0d053df":[4,0,0,20,1],
 "structSDOM_1_1TypeInfo.html":[3,0,0,12],
 "structSDOM_1_1TypeInfo.html":[4,0,0,12],
-"structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203":[3,0,0,12,6]
+"structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203":[3,0,0,12,6],
+"structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203":[4,0,0,12,6],
+"structSDOM_1_1TypeInfo.html#a1e2047f9de4ee959d4a4967678252e09":[3,0,0,12,1],
+"structSDOM_1_1TypeInfo.html#a1e2047f9de4ee959d4a4967678252e09":[4,0,0,12,1],
+"structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1":[3,0,0,12,4],
+"structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1":[4,0,0,12,4],
+"structSDOM_1_1TypeInfo.html#a75ed484c5b0fb3ee5b8ee712378c188b":[3,0,0,12,2]
 };

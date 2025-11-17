@@ -9,7 +9,9 @@
 #include <array>
 #include <iomanip>
 #include <sstream>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_CAPI.h>
@@ -23,7 +25,9 @@
 #include <SDOM/SDOM_TruetypeFont.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
+#include <SDOM/SDOM_Slider.hpp>
 #include <SDOM/SDOM_Label.hpp>
+#include <SDOM/SDOM_ProgressBar.hpp>
 
 #include "Box.hpp"
 #include "UnitTests.hpp"
@@ -35,11 +39,20 @@ namespace
     class FpsOverlay
     {
     public:
-        void setLabel(DisplayHandle handle) { label_ = std::move(handle); }
+        void setLabel(DisplayHandle handle)
+        {
+            labels_.clear();
+            addLabel(std::move(handle));
+        }
+
+        void addLabel(DisplayHandle handle)
+        {
+            labels_.push_back(std::move(handle));
+        }
 
         void update(float deltaTime)
         {
-            if (!label_.isValid())
+            if (labels_.empty())
                 return;
 
             fpsSampleTime_ += deltaTime;
@@ -62,17 +75,29 @@ namespace
             if (fpsToDisplay <= 0.0f && deltaTime > 0.0f)
                 fpsToDisplay = 1.0f / deltaTime;
 
-            if (auto* label = label_.as<Label>())
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(1) << fpsToDisplay;
+            const std::string fpsText = "FPS: " + oss.str();
+
+            for (auto it = labels_.begin(); it != labels_.end();)
             {
-                std::ostringstream oss;
-                oss << std::fixed << std::setprecision(1) << fpsToDisplay;
-                label->setText("FPS: " + oss.str());
+                if (!it->isValid())
+                {
+                    it = labels_.erase(it);
+                    continue;
+                }
+
+                if (auto* label = it->as<Label>())
+                {
+                    label->setText(fpsText);
+                }
+                ++it;
             }
         }
 
     private:
         static constexpr float kUpdateInterval_ = 1.0f / 20.0f; // 20 updates per second
-        DisplayHandle label_;
+        std::vector<DisplayHandle> labels_;
         float fpsSampleTime_ = 0.0f;
         int framesSinceSample_ = 0;
         float currentFps_ = 0.0f;
@@ -116,9 +141,9 @@ bool Main_UnitTests()
     bool done = true;
 
     done &= IDisplayObject_UnitTests();
-    done &= DataRegistry_UnitTests();
     done &= Event_CAPI_UnitTests();
     done &= EventType_CAPI_UnitTests();
+    done &= DataRegistry_UnitTests();
     done &= Variant_UnitTests();
     done &= FrontEnd_UnitTests();
 
@@ -216,6 +241,150 @@ int SDOM_main_variant_2(int argc, char** argv)
 
 
     // ============================================================================
+    // Additional stages used for simple root switching demo
+    // ============================================================================
+    DisplayHandle stageTwo =
+        factory.createDisplayObjectFromJson(
+            "Stage",
+            nlohmann::json{
+                {"name", "stageTwo"},
+                {"type", "Stage"},
+                {"color", { {"r",16}, {"g",32}, {"b",8}, {"a",255} }}
+            }
+        );
+
+    DisplayHandle rightStage2Frame =
+        factory.createDisplayObjectFromJson(
+            "Frame",
+            nlohmann::json{
+                {"name", "rightStage2Frame"},
+                {"type", "Frame"},
+                {"x", 300},
+                {"y", 5},
+                {"width", 295},
+                {"height", 390},
+                {"color", { {"r",32}, {"g",64}, {"b",32}, {"a",255} }}
+            }
+        );
+    stageTwo->addChild(rightStage2Frame);
+
+    DisplayHandle stage2Button =
+        factory.createDisplayObjectFromJson(
+            "Button",
+            nlohmann::json{
+                {"name", "stage2_button"},
+                {"type", "Button"},
+                {"x", 5},
+                {"y", 370},
+                {"width", 150},
+                {"height", 25},
+                {"text", "[color=white]Go to [color=yellow]S[color=white]tage Three"},
+                {"font_resource", "VarelaRound16"},
+                {"font_size", 16},
+                {"color", { {"r",32}, {"g",96}, {"b",16}, {"a",255} }}
+            }
+        );
+    stageTwo->addChild(stage2Button);
+
+    DisplayHandle stageTwoFpsLabel =
+        factory.createDisplayObjectFromJson(
+            "Label",
+            nlohmann::json{
+                {"name", "stage2_fps_label"},
+                {"type", "Label"},
+                {"x", 8},
+                {"y", 8},
+                {"width", 150},
+                {"height", 18},
+                {"text", "FPS: --"},
+                {"resource_name", "VarelaRound16"},
+                {"font_size", 12},
+                {"alignment", "top_left"},
+                {"auto_resize", true},
+                {"wordwrap", false},
+                {"foreground_color", { {"r",255}, {"g",255}, {"b",255}, {"a",255} }}
+            }
+        );
+    stageTwo->addChild(stageTwoFpsLabel);
+
+    DisplayHandle stageThree =
+        factory.createDisplayObjectFromJson(
+            "Stage",
+            nlohmann::json{
+                {"name", "stageThree"},
+                {"type", "Stage"},
+                {"color", { {"r",8}, {"g",16}, {"b",32}, {"a",255} }}
+            }
+        );
+
+    DisplayHandle rightStage3Frame =
+        factory.createDisplayObjectFromJson(
+            "Frame",
+            nlohmann::json{
+                {"name", "rightStage3Frame"},
+                {"type", "Frame"},
+                {"x", 300},
+                {"y", 5},
+                {"width", 295},
+                {"height", 390},
+                {"color", { {"r",32}, {"g",32}, {"b",64}, {"a",255} }}
+            }
+        );
+    stageThree->addChild(rightStage3Frame);
+
+    DisplayHandle stage3Button =
+        factory.createDisplayObjectFromJson(
+            "Button",
+            nlohmann::json{
+                {"name", "stage3_button"},
+                {"type", "Button"},
+                {"x", 5},
+                {"y", 370},
+                {"width", 150},
+                {"height", 25},
+                {"text", "[color=white]Go to Main [color=yellow]S[color=white]tage"},
+                {"font_resource", "VarelaRound16"},
+                {"font_size", 16},
+                {"color", { {"r",16}, {"g",32}, {"b",96}, {"a",255} }}
+            }
+        );
+    stageThree->addChild(stage3Button);
+
+    DisplayHandle stageThreeFpsLabel =
+        factory.createDisplayObjectFromJson(
+            "Label",
+            nlohmann::json{
+                {"name", "stage3_fps_label"},
+                {"type", "Label"},
+                {"x", 8},
+                {"y", 8},
+                {"width", 150},
+                {"height", 18},
+                {"text", "FPS: --"},
+                {"resource_name", "VarelaRound16"},
+                {"font_size", 12},
+                {"alignment", "top_left"},
+                {"auto_resize", true},
+                {"wordwrap", false},
+                {"foreground_color", { {"r",255}, {"g",255}, {"b",255}, {"a",255} }}
+            }
+        );
+    stageThree->addChild(stageThreeFpsLabel);
+
+    auto switchRootStage = [&core](DisplayHandle targetStage) {
+        return [&core, targetStage](const Event&) {
+            if (targetStage.isValid())
+            {
+                core.setRootNode(targetStage);
+            }
+        };
+    };
+
+    stage2Button->addEventListener(EventType::MouseClick, switchRootStage(stageThree));
+    stage3Button->addEventListener(EventType::MouseClick, switchRootStage(rootStage));
+
+
+    // ============================================================================
     // FPS Overlay Label (top-left of the stage)
     // ============================================================================
     DisplayHandle fpsOverlayLabel =
@@ -239,7 +408,10 @@ int SDOM_main_variant_2(int argc, char** argv)
         );
     rootStage->addChild(fpsOverlayLabel);
 
+
     g_fpsOverlay.setLabel(fpsOverlayLabel);
+    g_fpsOverlay.addLabel(stageTwoFpsLabel);
+    g_fpsOverlay.addLabel(stageThreeFpsLabel);
     core.registerOnUpdate([](float deltaTime) {
         g_fpsOverlay.update(deltaTime);
     });
@@ -531,6 +703,7 @@ int SDOM_main_variant_2(int argc, char** argv)
                 {"width", 140},
                 {"height", 16},
                 {"icon_resource", "internal_icon_16x16"},
+                {"value", 50.0},
                 {"step", 2.5},
                 {"background_color", { {"r",16}, {"g",16}, {"b",16}, {"a",0} }},
                 {"border_color",     { {"r",0},  {"g",0},  {"b",0},  {"a",0} }}
@@ -557,6 +730,24 @@ int SDOM_main_variant_2(int argc, char** argv)
             }
         );
     rightMainFrame->addChild(hProgress);
+    auto attachSliderToProgress = [](DisplayHandle slider, DisplayHandle progress) {
+        auto syncProgress = [slider, progress]() {
+            if (auto* sliderObj = slider.as<Slider>())
+            {
+                if (auto* progressObj = progress.as<ProgressBar>())
+                {
+                    progressObj->setValue(sliderObj->getValue());
+                }
+            }
+        };
+        auto handler = [syncProgress](const Event&) { syncProgress(); };
+        slider->addEventListener(EventType::MouseButtonDown, handler);
+        slider->addEventListener(EventType::Dragging, handler);
+        slider->addEventListener(EventType::MouseWheel, handler);
+        slider->addEventListener(EventType::KeyDown, handler);
+        syncProgress();
+    };
+    attachSliderToProgress(hSlider, hProgress);
 
     DisplayHandle hScroll =
         factory.createDisplayObjectFromJson(
@@ -594,6 +785,7 @@ int SDOM_main_variant_2(int argc, char** argv)
                 {"width", 16},
                 {"height", 140},
                 {"icon_resource", "internal_icon_16x16"},
+                {"value", 25.0},
                 {"step", 2.5},
                 {"background_color", { {"r",16}, {"g",16}, {"b",16}, {"a",0} }},
                 {"border_color",     { {"r",0},  {"g",0},  {"b",0},  {"a",0} }}
@@ -622,6 +814,7 @@ int SDOM_main_variant_2(int argc, char** argv)
             }
         );
     rightMainFrame->addChild(vProgress);
+    attachSliderToProgress(vSlider, vProgress);
 
     DisplayHandle vScroll =
         factory.createDisplayObjectFromJson(
@@ -666,6 +859,7 @@ int SDOM_main_variant_2(int argc, char** argv)
                 }
             );
         rootStage->addChild(mainStageButton);
+        mainStageButton->addEventListener(EventType::MouseClick, switchRootStage(stageTwo));
 
         DisplayHandle hamburgerIcon =
             factory.createDisplayObjectFromJson(

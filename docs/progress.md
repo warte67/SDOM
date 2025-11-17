@@ -554,49 +554,56 @@ Performance is no longer a rumor whispered between frames; it is measured, obser
 - **Introduced a real-time FPS overlay**  
   - Smoothly averaged frame timings with ~20 Hz update cadence  
   - Auto-dirty propagation ensures zero overhead for dynamic updates  
-  - Validated across both Debug (~1500 FPS) and Release (~5000 FPS)
+  - Verified performance across:
+    - Debug builds (~1500 FPS)  
+    - Release builds (~5000 FPS on main stage, ~13,500 FPS on minimal stages)
 
 - **Revised and corrected timing logic**  
   - Fixed accumulator drift and sample-window inconsistencies  
-  - Verified consistent behavior across vsync, adaptive vsync, and uncapped clocks  
-  - Confirmed renderer bottleneck = nonexistent (SDOM remains GPU-blessed)
+  - Ensured stable timing under vsync, adaptive vsync, and uncapped modes  
+  - Confirmed that renderer throughput is extremely high — SDOM remains decidedly GPU-blessed
 
 - **Confirmed Label’s “auto-dirty” system is stable**  
-  - Dynamic overlays (FPS, debug widgets, inspectors) integrate seamlessly  
-  - Dirty-tracking remains O(1) and internal to IDisplayObject hierarchy
+  - Dynamic widgets (FPS, debug overlays, inspectors) now update seamlessly  
+  - Dirty-tracking remains lightweight, predictable, and fully contained within the display hierarchy
 
----
+## 🎛️ **UI Interaction & Stage Navigation**
+
+- **Connected stage buttons with proper event listeners**
+  - Stage transitions now work fluidly between MainStage, StageTwo, and StageThree
+  - FPS overlays appear correctly on each stage
+- **Performance profiling across stages**
+  - `mainStage` (heavy, multi-label, wrapped text): ~4,875 FPS  
+  - `stageTwo` / `stageThree` (minimal UI): ~13,500 FPS  
+  - Confirms expected cost of wrapped text layout and multi-object rendering  
+  - Validates renderer scaling, dirty region handling, and stage isolation
 
 ## ⚙️ **Core Configuration Enhancements**
 
 - **New `rendererVSync` property added to `CoreConfig::InitStruct`**  
   - Accepted modes: Off, Standard, Adaptive, LateSwapTear  
-  - Fully wired into the main initialization pipeline  
-  - Cleanly maps to SDL’s sync semantics without leaking backend details  
-  - Runtime return-value checking ensures driver compatibility
+  - Fully integrated into Core initialization  
+  - Clean abstraction over SDL’s sync model  
+  - Includes return-value validation to ensure compatibility per driver/backend
 
 This formally elevates vsync behavior into SDOM’s **public engine contract**, enabling predictable, testable, and configuration-driven frame pacing.
 
----
-
 ## 🌟 **Summary**
 
-A foundational diagnostic tool now lives inside SDOM.  
-With real-time frame analytics visible in MAIN_VARIANT_2, every future UI and performance test gains clarity and precision.
+A foundational diagnostic and interaction layer is now active within SDOM.  
+Real-time FPS visibility, stage switching, event-driven UI input, and corrected timing logic collectively establish the basis for future UI, input, and performance instrumentation.
 
-Next steps: strengthening event instrumentation, interactive UI wiring, and DisplayObject behavior validation.
+SDOM now sees itself — and responds — in real time.
 
----
+Next steps: strengthening event instrumentation, expanding DisplayObject behavior, and enhancing the interaction model.
 
 ## 🚧 **ToDo Today / Carryover**
 
 - ☐ Finalize `main.cpp` argument dispatch system  
-- ☐ Flesh out `main_variant_2.cpp` with event callbacks (buttons, sliders, toggles)  
+- ☐ Continue expanding `main_variant_2.cpp` with callbacks (buttons, sliders, toggles)  
 - ☐ Validate multi-object relationships across all initialization paths  
 - ☐ Continue isolating and verifying each DisplayObject subtype  
 - ☐ Begin drafting revised docs for asset loading rules & defaults  
-
----
 
 ## 🤔 **End-of-Day Reflection**
 > *“Frames flicker and vanish — but the truth they reveal endures.”*
@@ -621,7 +628,7 @@ Next steps: strengthening event instrumentation, interactive UI wiring, and Disp
 - ☐ **Core::registerResource()**
 - ☐ Implement C ABI unit-test harness as registry proof-of-concept  
   - ☐ Convert `SDOM_CLR` to a static singleton inheriting from `IDataObject`  
-  - ✅ `SDOM_Event` → inherits from `IDataObject`  
+  - 🔄 `SDOM_Event` → inherits from `IDataObject`  
   - ☐ `SDOM_EventType` → inherits from `IDataObject`  
   - ☐ `SDOM_IButtonObject` → inherits from `IDataObject`  
   - ☐ `SDOM_IconIndex` → static singleton inherits from `IDataObject`  
@@ -692,11 +699,11 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 | Button | ☐ |
 | CheckButton | ☐ |
 | CLR | ☐ |
-| Core | ✅ |
+| Core | ☐ |
 | DisplayHandle | ☐ |
-| Event | ✅ |
+| Event | 🔄 |
 | EventManager | ☐ |
-| EventType | ✅ |
+| EventType | 🔄 |
 | Factory | ☐ |
 
 </div>
@@ -711,7 +718,7 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 | IButtonObject | ☐ |
 | IconButton | ☐ |
 | IDataObject | ☐ |
-| IDisplayObject | ✅ |
+| IDisplayObject | 🔄 |
 | IFontObject | ☐ |
 | IPanelObject | ☐ |
 | IRangeControl | ☐ |
@@ -733,6 +740,9 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 | TristateButton | ☐ |
 | TruetypeFont | ☐ |
 | TTFAsset | ☐ |
+| DataRegistry | 🔄 |
+| Variant | 🔄 |
+| FrontEnd | 🔄 |
 
 </div>
 </div>
