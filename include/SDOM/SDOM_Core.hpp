@@ -50,6 +50,27 @@ namespace SDOM
             float pixelHeight = 2.0f;
             bool preserveAspectRatio = true;
             bool allowTextureResize = false;
+            // rendererVSync:
+            //  Controls how SDL synchronizes frame presentation with the display’s
+            //  vertical refresh cycle. Values are:
+            //    • -1 (SDL_RENDERER_VSYNC_ADAPTIVE)
+            //        Adaptive vsync. Uses standard vsync when the frame rate can be
+            //        maintained, but allows tearing if the engine falls behind to reduce
+            //        visible stutter.
+            //    • 0 (SDL_RENDERER_VSYNC_DISABLED)
+            //        Disable vsync entirely. Presentation returns immediately, allowing
+            //        the engine to run uncapped.
+            //    • 1 (SDL_RENDERER_VSYNC)
+            //        Standard vsync. Presentation blocks until the next vertical refresh.
+            //    • 2, 3, …
+            //        Attempt to synchronize with every 2nd, 3rd, etc. refresh interval.
+            //        Support for these values varies across drivers and platforms.
+            //  Note:
+            //    Not all backends support every mode. After calling SDL_SetRenderVSync(),
+            //    always check the return value to verify whether the requested mode was
+            //    successfully applied.
+    
+            int rendererVSync = SDL_RENDERER_VSYNC_DISABLED;
             SDL_RendererLogicalPresentation rendererLogicalPresentation = SDL_LOGICAL_PRESENTATION_LETTERBOX;
             SDL_WindowFlags windowFlags = SDL_WINDOW_RESIZABLE;
             SDL_PixelFormat pixelFormat = SDL_PIXELFORMAT_RGBA8888;

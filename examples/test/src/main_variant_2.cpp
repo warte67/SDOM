@@ -6,6 +6,7 @@
  * No behavior has been modified — only relocated into its own compilation unit.
  */
 
+#include <array>
 #include <iomanip>
 #include <sstream>
 #include <utility>
@@ -49,6 +50,7 @@ namespace
                 currentFps_ = static_cast<float>(framesSinceSample_) / fpsSampleTime_;
                 fpsSampleTime_ = 0.0f;
                 framesSinceSample_ = 0;
+                addHistorySample(currentFps_);
             }
 
             textUpdateTimer_ += deltaTime;
@@ -56,7 +58,7 @@ namespace
                 return;
             textUpdateTimer_ = 0.0f;
 
-            float fpsToDisplay = currentFps_;
+            float fpsToDisplay = getSmoothedFps();
             if (fpsToDisplay <= 0.0f && deltaTime > 0.0f)
                 fpsToDisplay = 1.0f / deltaTime;
 
@@ -75,6 +77,33 @@ namespace
         int framesSinceSample_ = 0;
         float currentFps_ = 0.0f;
         float textUpdateTimer_ = 0.0f;
+        static constexpr size_t kHistorySize_ = 25;  // average over this many frames
+        std::array<float, kHistorySize_> fpsHistory_ = {};
+        size_t historyIndex_ = 0;
+        size_t historyCount_ = 0;
+        float historySum_ = 0.0f;
+
+        void addHistorySample(float sample)
+        {
+            if (historyCount_ == kHistorySize_)
+            {
+                historySum_ -= fpsHistory_[historyIndex_];
+            }
+            else
+            {
+                ++historyCount_;
+            }
+            fpsHistory_[historyIndex_] = sample;
+            historySum_ += sample;
+            historyIndex_ = (historyIndex_ + 1) % kHistorySize_;
+        }
+
+        float getSmoothedFps() const
+        {
+            if (historyCount_ == 0)
+                return currentFps_;
+            return historySum_ / static_cast<float>(historyCount_);
+        }
     };
 
     FpsOverlay g_fpsOverlay;
@@ -116,6 +145,7 @@ int SDOM_main_variant_2(int argc, char** argv)
     cfg.pixelHeight = 2.0f;
     cfg.allowTextureResize = false;
     cfg.preserveAspectRatio = true;
+    cfg.rendererVSync = SDL_RENDERER_VSYNC_DISABLED; //SDL_RENDERER_VSYNC_ADAPTIVE;
     cfg.rendererLogicalPresentation = SDL_LOGICAL_PRESENTATION_LETTERBOX;
     cfg.windowFlags = SDL_WINDOW_RESIZABLE;
     cfg.pixelFormat = SDL_PIXELFORMAT_RGBA8888;
@@ -199,7 +229,7 @@ int SDOM_main_variant_2(int argc, char** argv)
                 {"width", 150},
                 {"height", 18},
                 {"text", "FPS: --"},
-                {"font_resource", "VarelaRound16"},
+                {"resource_name", "VarelaRound16"},
                 {"font_size", 12},
                 {"alignment", "top_left"},
                 {"auto_resize", true},

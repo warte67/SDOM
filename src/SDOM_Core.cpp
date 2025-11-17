@@ -156,6 +156,7 @@ namespace SDOM
             config_.windowWidth = config.windowWidth;
             config_.windowHeight = config.windowHeight;
             config_.windowFlags = config.windowFlags;
+            config_.rendererVSync = config.rendererVSync;
             config_.rendererLogicalPresentation = config.rendererLogicalPresentation;
             config_.pixelWidth = config.pixelWidth;
             config_.pixelHeight = config.pixelHeight;
@@ -249,6 +250,10 @@ namespace SDOM
             if (!renderer_) {
                 std::string errorMsg = "SDL_CreateRenderer() Error: " + std::string (SDL_GetError());
                 ERROR(errorMsg);
+            }
+            if (!SDL_SetRenderVSync(renderer_, config_.rendererVSync))
+            {
+                ERROR("Unable to set VSync mode: " + std::string(SDL_GetError()));
             }
         }
         if (recreate_texture && !texture_) 
@@ -1136,14 +1141,10 @@ namespace SDOM
     SDL_RendererLogicalPresentation Core::getRendererLogicalPresentation() const { return config_.rendererLogicalPresentation; }
     SDL_WindowFlags Core::getWindowFlags() const        { return config_.windowFlags; }
     SDL_PixelFormat Core::getPixelFormat() const        { return config_.pixelFormat; }
-    bool Core::isFullscreen() const { if (SDL_GetWindowFlags(getWindow()) & SDL_WINDOW_FULLSCREEN) return true; return false; }
-    bool Core::isWindowed() const { return !isFullscreen(); }
+    bool Core::isFullscreen() const                     { if (SDL_GetWindowFlags(getWindow()) & SDL_WINDOW_FULLSCREEN) return true; return false; }
+    bool Core::isWindowed() const                       { return !isFullscreen(); }
     void Core::setConfig(CoreConfig& config)            { config_ = config; refreshSDLResources(); }
-
-    void Core::setWindowWidth(float width)              { 
-        config_.windowWidth = width; 
-        refreshSDLResources(); 
-    }
+    void Core::setWindowWidth(float width)              { config_.windowWidth = width; refreshSDLResources(); }
     void Core::setWindowHeight(float height)            { config_.windowHeight = height; refreshSDLResources(); }
     void Core::setPixelWidth(float width)               { config_.pixelWidth = width; refreshSDLResources(); }
     void Core::setPixelHeight(float height)             { config_.pixelHeight = height; refreshSDLResources(); }
