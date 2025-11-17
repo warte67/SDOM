@@ -85,12 +85,12 @@ namespace SDOM
         // INFO(getType() +"::setState() - on '" + getName() + "' new state: " + std::to_string(static_cast<int>(getState())));
 
         onStateChanged(buttonState_, state); 
-        // // dispatch event
-        // queue_event(EventType::StateChanged, [this, state](Event& ev) {
-        //     ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
-        //     ev.setPayloadValue("new_state", static_cast<int>(state));
-        //     ev.setPayloadValue("buttonName", getName());
-        // });
+        // dispatch event
+        queue_event(EventType::StateChanged, [this, state](Event& ev) {
+            ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
+            ev.setPayloadValue("new_state", static_cast<int>(state));
+            ev.setPayloadValue("buttonName", getName());
+        });
         buttonState_ = state;
         // Keep cached icon index in sync with new state
         icon_index_ = iconIndexForState(state);

@@ -286,12 +286,12 @@ namespace SDOM
     void ProgressBar::_onValueChanged(float oldValue, float newValue)
     {
         SUPER::_onValueChanged(oldValue, newValue);
-        // // dispatch event
-        // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-        //     ev.setPayloadValue("name", getName());
-        //     ev.setPayloadValue("old_value", oldValue);
-        //     ev.setPayloadValue("new_value", newValue);
-        // });
+        // dispatch event
+        queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+            ev.setPayloadValue("name", getName());
+            ev.setPayloadValue("old_value", oldValue);
+            ev.setPayloadValue("new_value", newValue);
+        });
     } // END: void ProgressBar::_onValueChanged(float oldValue, float newValue)
 
 

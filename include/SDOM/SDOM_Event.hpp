@@ -45,6 +45,7 @@
 #include <SDOM/SDOM_EventType.hpp>
 #include <mutex>
 #include <SDOM/SDOM_DisplayHandle.hpp>
+#include <json.hpp>
 
 namespace SDOM
 {
@@ -106,27 +107,49 @@ namespace SDOM
         SDL_Event getSDL_Event() const;
         Event& setSDL_Event(const SDL_Event& sdlEvent);
 
-        // // Payload accessors
-        // const sol::table& getPayload() const {
-        //     std::lock_guard<std::mutex> lock(eventMutex_);
-        //     return payload;
-        // }
-        // Event& setPayload(const sol::table& data) {
-        //     std::lock_guard<std::mutex> lock(eventMutex_);
-        //     payload = data;
-        //     return *this;
-        // }
-        // template<typename T>
-        // Event& setPayloadValue(const std::string& key, const T& value) {
-        //     std::lock_guard<std::mutex> lock(eventMutex_);
-        //     payload[key] = value;
-        //     return *this;
-        // }
-        // template<typename T>
-        // T getPayloadValue(const std::string& key) const {
-        //     std::lock_guard<std::mutex> lock(eventMutex_);
-        //     return payload[key].get_or(T{});
-        // }
+        // ----------------------
+        // JSON Payload Accessors
+        // ----------------------
+        public:
+            const nlohmann::json& getPayload() const {
+                std::lock_guard<std::mutex> lock(eventMutex_);
+                return payload_;
+            }
+
+            Event& setPayload(const nlohmann::json& j) {
+                std::lock_guard<std::mutex> lock(eventMutex_);
+                payload_ = j;
+                return *this;
+            }
+
+            Event& setPayloadString(const std::string& jsonStr) {
+                std::lock_guard<std::mutex> lock(eventMutex_);
+                payload_ = nlohmann::json::parse(jsonStr, nullptr, false);
+                if (payload_.is_discarded()) {
+                    payload_ = nlohmann::json(); // fail-safe empty value
+                }
+                return *this;
+            }
+
+            std::string getPayloadString() const {
+                std::lock_guard<std::mutex> lock(eventMutex_);
+                return payload_.dump();
+            }
+
+            template<typename T>
+            Event& setPayloadValue(const std::string& key, const T& value) {
+                std::lock_guard<std::mutex> lock(eventMutex_);
+                payload_[key] = value;
+                return *this;
+            }
+
+            template<typename T>
+            T getPayloadValue(const std::string& key, const T& defaultValue = T{}) const {
+                std::lock_guard<std::mutex> lock(eventMutex_);
+                if (!payload_.contains(key)) return defaultValue;
+                try { return payload_[key].get<T>(); }
+                catch (...) { return defaultValue; }
+            }
 
 
         // Mouse event accessors
@@ -184,7 +207,7 @@ namespace SDOM
         mutable bool useCapture = false;                // Indicates if the event is in the capture phase
         float fElapsedTime = 0.0f;                      // Time elapsed since the last frame
 
-        sol::table payload; // Generic event-specific data
+        nlohmann::json payload_;   // JSON payload for event-specific data
 
         // Mouse Event Properties: (Not yet defined as proper JSON properties)
         float mouse_x;              // mouse x-coordinate
@@ -219,7 +242,7 @@ namespace SDOM
             disableDefaultBehavior(other.disableDefaultBehavior),
             useCapture(other.useCapture),
             fElapsedTime(other.fElapsedTime),
-            payload(other.payload),
+            payload_(other.payload_),
             mouse_x(other.mouse_x),
             mouse_y(other.mouse_y),
             wheelX(other.wheelX),
@@ -249,7 +272,7 @@ namespace SDOM
                 disableDefaultBehavior = other.disableDefaultBehavior;
                 useCapture = other.useCapture;
                 fElapsedTime = other.fElapsedTime;
-                payload = other.payload;
+                payload_ = other.payload_;
                 mouse_x = other.mouse_x;
                 mouse_y = other.mouse_y;
                 wheelX = other.wheelX;

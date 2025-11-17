@@ -433,79 +433,79 @@ namespace SDOM
             pp.doc = "Whether this event type is considered global.";
             etype.properties.push_back(pp);
     
-            // instance-style functions that accept EventType id as first arg
-            SDOM::FunctionInfo fi;
-            fi.name = "get_name";
-            fi.cpp_signature = "std::string(SDOM::EventType::IdType)";
-            fi.return_type = "const char*";
-            fi.c_signature = "const char* SDOM_EventType_name_for_id(SDOM_EventTypeId id);";
-            fi.doc = "Return the EventType name for the given id.";
-            etype.functions.push_back(fi);
+            // // instance-style functions that accept EventType id as first arg
+            // SDOM::FunctionInfo fi;
+            // fi.name = "get_name";
+            // fi.cpp_signature = "std::string(SDOM::EventType::IdType)";
+            // fi.return_type = "const char*";
+            // fi.c_signature = "const char* SDOM_EventType_name_for_id(SDOM_EventTypeId id);";
+            // fi.doc = "Return the EventType name for the given id.";
+            // etype.functions.push_back(fi);
     
-            fi.name = "get_id_for_name";
-            fi.cpp_signature = "SDOM::EventType::IdType(const std::string&)";
-            fi.return_type = "uint32_t";
-            fi.c_signature = "SDOM_EventTypeId SDOM_EventType_id_for_name(const char* name);";
-            fi.doc = "Return numeric id for the given EventType name (assigns if missing).";
-            etype.functions.push_back(fi);
+            // fi.name = "get_id_for_name";
+            // fi.cpp_signature = "SDOM::EventType::IdType(const std::string&)";
+            // fi.return_type = "uint32_t";
+            // fi.c_signature = "SDOM_EventTypeId SDOM_EventType_id_for_name(const char* name);";
+            // fi.doc = "Return numeric id for the given EventType name (assigns if missing).";
+            // etype.functions.push_back(fi);
     
-            // getters/setters for boolean properties (take id as first param)
-            SDOM::FunctionInfo g;
-            g.name = "get_captures";
-            g.cpp_signature = "bool(SDOM::EventType::IdType)";
-            g.return_type = "bool";
-            g.c_signature = "bool SDOM_EventType_get_captures(SDOM_EventTypeId id);";
-            g.doc = "Get captures flag for EventType id.";
-            etype.functions.push_back(g);
+            // // getters/setters for boolean properties (take id as first param)
+            // SDOM::FunctionInfo g;
+            // g.name = "get_captures";
+            // g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            // g.return_type = "bool";
+            // g.c_signature = "bool SDOM_EventType_get_captures(SDOM_EventTypeId id);";
+            // g.doc = "Get captures flag for EventType id.";
+            // etype.functions.push_back(g);
     
-            g.name = "set_captures";
-            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
-            g.return_type = "void";
-            g.c_signature = "void SDOM_EventType_set_captures(SDOM_EventTypeId id, bool v);";
-            g.doc = "Set captures flag for EventType id.";
-            etype.functions.push_back(g);
+            // g.name = "set_captures";
+            // g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            // g.return_type = "void";
+            // g.c_signature = "void SDOM_EventType_set_captures(SDOM_EventTypeId id, bool v);";
+            // g.doc = "Set captures flag for EventType id.";
+            // etype.functions.push_back(g);
     
-            g.name = "get_bubbles";
-            g.cpp_signature = "bool(SDOM::EventType::IdType)";
-            g.return_type = "bool";
-            g.c_signature = "bool SDOM_EventType_get_bubbles(SDOM_EventTypeId id);";
-            g.doc = "Get bubbles flag for EventType id.";
-            etype.functions.push_back(g);
+            // g.name = "get_bubbles";
+            // g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            // g.return_type = "bool";
+            // g.c_signature = "bool SDOM_EventType_get_bubbles(SDOM_EventTypeId id);";
+            // g.doc = "Get bubbles flag for EventType id.";
+            // etype.functions.push_back(g);
     
-            g.name = "set_bubbles";
-            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
-            g.return_type = "void";
-            g.c_signature = "void SDOM_EventType_set_bubbles(SDOM_EventTypeId id, bool v);";
-            g.doc = "Set bubbles flag for EventType id.";
-            etype.functions.push_back(g);
+            // g.name = "set_bubbles";
+            // g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            // g.return_type = "void";
+            // g.c_signature = "void SDOM_EventType_set_bubbles(SDOM_EventTypeId id, bool v);";
+            // g.doc = "Set bubbles flag for EventType id.";
+            // etype.functions.push_back(g);
     
-            g.name = "get_target_only";
-            g.cpp_signature = "bool(SDOM::EventType::IdType)";
-            g.return_type = "bool";
-            g.c_signature = "bool SDOM_EventType_get_target_only(SDOM_EventTypeId id);";
-            g.doc = "Get targetOnly flag for EventType id.";
-            etype.functions.push_back(g);
+            // g.name = "get_target_only";
+            // g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            // g.return_type = "bool";
+            // g.c_signature = "bool SDOM_EventType_get_target_only(SDOM_EventTypeId id);";
+            // g.doc = "Get targetOnly flag for EventType id.";
+            // etype.functions.push_back(g);
     
-            g.name = "set_target_only";
-            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
-            g.return_type = "void";
-            g.c_signature = "void SDOM_EventType_set_target_only(SDOM_EventTypeId id, bool v);";
-            g.doc = "Set targetOnly flag for EventType id.";
-            etype.functions.push_back(g);
+            // g.name = "set_target_only";
+            // g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            // g.return_type = "void";
+            // g.c_signature = "void SDOM_EventType_set_target_only(SDOM_EventTypeId id, bool v);";
+            // g.doc = "Set targetOnly flag for EventType id.";
+            // etype.functions.push_back(g);
     
-            g.name = "get_global";
-            g.cpp_signature = "bool(SDOM::EventType::IdType)";
-            g.return_type = "bool";
-            g.c_signature = "bool SDOM_EventType_get_global(SDOM_EventTypeId id);";
-            g.doc = "Get global flag for EventType id.";
-            etype.functions.push_back(g);
+            // g.name = "get_global";
+            // g.cpp_signature = "bool(SDOM::EventType::IdType)";
+            // g.return_type = "bool";
+            // g.c_signature = "bool SDOM_EventType_get_global(SDOM_EventTypeId id);";
+            // g.doc = "Get global flag for EventType id.";
+            // etype.functions.push_back(g);
     
-            g.name = "set_global";
-            g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
-            g.return_type = "void";
-            g.c_signature = "void SDOM_EventType_set_global(SDOM_EventTypeId id, bool v);";
-            g.doc = "Set global flag for EventType id.";
-            etype.functions.push_back(g);
+            // g.name = "set_global";
+            // g.cpp_signature = "void(SDOM::EventType::IdType, bool)";
+            // g.return_type = "void";
+            // g.c_signature = "void SDOM_EventType_set_global(SDOM_EventTypeId id, bool v);";
+            // g.doc = "Set global flag for EventType id.";
+            // etype.functions.push_back(g);
     
             // Register the canonical EventType data type in the global registry
             addDataType("EventType", etype);
