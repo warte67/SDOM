@@ -159,6 +159,7 @@ awk -v TODAY="$TODAY" -v DATE_ID="$DATE_ID" '
          "- ☐ [Task 2]\n\n" \
          "#### 🤔 *End of Day Reflection*\n" \
          "> *\"_reflechion quote\"*\n\n" \
+         "---\n\n" \
 
     backlink_line = "[⬆️ Back to Progress Updates](../progress.md#progress-updates)"
 

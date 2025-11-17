@@ -6,6 +6,10 @@
  * No behavior has been modified — only relocated into its own compilation unit.
  */
 
+#include <iomanip>
+#include <sstream>
+#include <utility>
+
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_CAPI.h>
 #include <SDOM/SDOM_Core.hpp>
@@ -18,11 +22,63 @@
 #include <SDOM/SDOM_TruetypeFont.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
+#include <SDOM/SDOM_Label.hpp>
 
 #include "Box.hpp"
 #include "UnitTests.hpp"
 
 using namespace SDOM;
+
+namespace
+{
+    class FpsOverlay
+    {
+    public:
+        void setLabel(DisplayHandle handle) { label_ = std::move(handle); }
+
+        void update(float deltaTime)
+        {
+            if (!label_.isValid())
+                return;
+
+            fpsSampleTime_ += deltaTime;
+            ++framesSinceSample_;
+
+            if (fpsSampleTime_ >= kUpdateInterval_)
+            {
+                currentFps_ = static_cast<float>(framesSinceSample_) / fpsSampleTime_;
+                fpsSampleTime_ = 0.0f;
+                framesSinceSample_ = 0;
+            }
+
+            textUpdateTimer_ += deltaTime;
+            if (textUpdateTimer_ < kUpdateInterval_)
+                return;
+            textUpdateTimer_ = 0.0f;
+
+            float fpsToDisplay = currentFps_;
+            if (fpsToDisplay <= 0.0f && deltaTime > 0.0f)
+                fpsToDisplay = 1.0f / deltaTime;
+
+            if (auto* label = label_.as<Label>())
+            {
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(1) << fpsToDisplay;
+                label->setText("FPS: " + oss.str());
+            }
+        }
+
+    private:
+        static constexpr float kUpdateInterval_ = 1.0f / 20.0f; // 20 updates per second
+        DisplayHandle label_;
+        float fpsSampleTime_ = 0.0f;
+        int framesSinceSample_ = 0;
+        float currentFps_ = 0.0f;
+        float textUpdateTimer_ = 0.0f;
+    };
+
+    FpsOverlay g_fpsOverlay;
+}
 
 
 // --- Main UnitTests Runner --- //
@@ -127,6 +183,36 @@ int SDOM_main_variant_2(int argc, char** argv)
     stage_init.color = SDL_Color{32, 8, 4, 255};
     DisplayHandle rootStage = core.createDisplayObject("Stage", stage_init);
     core.setRootNode(rootStage);
+
+
+    // ============================================================================
+    // FPS Overlay Label (top-left of the stage)
+    // ============================================================================
+    DisplayHandle fpsOverlayLabel =
+        factory.createDisplayObjectFromJson(
+            "Label",
+            nlohmann::json{
+                {"name", "stage_fps_label"},
+                {"type", "Label"},
+                {"x", 8},
+                {"y", 8},
+                {"width", 150},
+                {"height", 18},
+                {"text", "FPS: --"},
+                {"font_resource", "VarelaRound16"},
+                {"font_size", 12},
+                {"alignment", "top_left"},
+                {"auto_resize", true},
+                {"wordwrap", false},
+                {"foreground_color", { {"r",255}, {"g",255}, {"b",255}, {"a",255} }}
+            }
+        );
+    rootStage->addChild(fpsOverlayLabel);
+
+    g_fpsOverlay.setLabel(fpsOverlayLabel);
+    core.registerOnUpdate([](float deltaTime) {
+        g_fpsOverlay.update(deltaTime);
+    });
 
 
 

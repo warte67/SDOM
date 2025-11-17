@@ -349,7 +349,7 @@ namespace SDOM
         CoreConfig config_;
 
         // --- Lua State --- //
-        sol::state lua_;
+        sol::state lua_; // for eventual reintroduction of Lua integration
 
         // --- Subsystems --- //
         inline static Factory* factory_ = nullptr; 

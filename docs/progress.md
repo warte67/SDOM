@@ -465,9 +465,6 @@ Lua becomes a wrapper — safe, isolated, and completely replaceable.
 
 ---
 
-<a id="november-16-2025"></a>
-<a id="latest-update"></a>
-
 # 🗓️ **November 16, 2025 — FrontEnd Solidification & Regression Coverage Day**
 
 > 💬 *“One clean test reveals more truth than ten assumptions.”*
@@ -533,20 +530,63 @@ TTF, BitmapFont, SpriteSheet assets were successfully created and validated thro
 
 Today, SDOM transitioned from **prototype FrontEnd construction** into **formalized regression validation**.  The FrontEnd object graph is now completely testable, repeatable, and guaranteed to load correctly. This was a *structural milestone* — the kind that only needs to be done once, and then supports the rest of the engine forever.
 
-## 🚧 **ToDo Today / Carryover**
-
-- ☐ Finalize `main.cpp` argument dispatch system.
-- ☐ Flesh out `main_variant_2.cpp` with event listeners for buttons, sliders, and interactive UI.
-- ☐ Add FPS label + update callback for real-time diagnostics.
-- ☐ Continue validating each DisplayObject type via FrontEnd_UnitTests.
-- ☐ Expand asset init coverage: ensure every asset type (TTF, bitmap, spritesheet) has full JSON + InitStruct parity.
-- ☐ Improve unit-test coverage around default property initialization (colors, fonts, flags).
-- ☐ Prepare documentation section explaining **asset naming rules**, **lookup order**, and **default fallbacks** now that Lua is removed.
-- ☐ Add minimal logging hooks for UI events (click, change, drag).
-
 ## 🤔 **End of Day Reflection**
 
 > *““A test that fails today prevents a thousand whispers of chaos tomorrow.””*  
+
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
+<a id="november-17-2025"></a>
+<a id="latest-update"></a>
+
+## 🗓️ November 17, 2025 — Between Cycles and Shadows
+
+> 💬 *“A test that fails today prevents a thousand whispers of chaos tomorrow.”*  
+Today SDOM learned to see itself — not philosophically, but **numerically** — through the birth of the real-time FPS meter.  
+Performance is no longer a mystery whispered between frames; it is measured, observed, and illuminated.
+
+---
+
+### 🧩 Front-End Systems & Live Instrumentation
+
+- **Added a fully functional real-time FPS overlay** to the main stage.  
+  - Samples frame timings, averages smoothly, updates at 20Hz.  
+  - Automatically marks itself dirty on value changes with zero extra work.  
+  - Now SDOM can report performance with precision during all future UI tests.
+
+- **Investigated update frequency issues** and corrected timing logic.  
+  - Reworked accumulator and sampling algorithm for consistent behavior.  
+  - Verified against both Debug (~1500 FPS) and Release (~5000 FPS) builds.  
+  - Confirmed renderer is *not* a bottleneck — we’re GPU-blessed.
+
+- **Validated that Label auto-dirty mechanism works flawlessly**,  
+  ensuring dynamic overlays (FPS, debugging widgets, inspector panels)  
+  will integrate cleanly into future builds.
+
+---
+
+### 🌟 **Summary**
+A crucial diagnostic tool has been added to SDOM’s toolkit — one that will guide every optimization decision from here forward. With real-time performance metrics now visible inside MAIN_VARIANT 2, UI tests and future input/event instrumentation can proceed with confidence.  
+Next steps: wiring event listeners, interactive buttons, sliders, and dynamic UI responses.
+
+---
+
+# 🚧 **ToDo Today / Carryover**
+
+- ☐ Finalize `main.cpp` argument dispatch system.  
+- ☐ Flesh out `main_variant_2.cpp` with callbacks and event listeners to activate buttons and sliders.  
+- ☐ Validate multi-object relationships under different initialization paths.  
+- ☐ Continue validating each DisplayObject type in isolation.  
+- ☐ Start drafting updated docs for asset loading rules & defaults.  
+
+---
+
+#### 🤔 *End of Day Reflection*
+> *“Frames flicker and vanish — but the truth they reveal endures.”*
+
+
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 
