@@ -398,24 +398,24 @@ namespace SDOM
     {
         (void )oldValue; (void )newValue;
         // dispatch event
-        // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-        //     ev.setPayloadValue("name", getName());
-        //     ev.setPayloadValue("old_value", oldValue);
-        //     ev.setPayloadValue("new_value", newValue);
-        //     // always include current bounds
-        //     ev.setPayloadValue("current_min", getMin());
-        //     ev.setPayloadValue("current_max", getMax());
-        //     // include old bounds if we captured them
-        //     if (!std::isnan(pending_old_min_)) {
-        //         ev.setPayloadValue("old_min", pending_old_min_);
-        //     }
-        //     if (!std::isnan(pending_old_max_)) {
-        //         ev.setPayloadValue("old_max", pending_old_max_);
-        //     }
-        //     // clear pending markers
-        //     pending_old_min_ = std::numeric_limits<float>::quiet_NaN();
-        //     pending_old_max_ = std::numeric_limits<float>::quiet_NaN();
-        // });
+        queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+            ev.setPayloadValue("name", getName());
+            ev.setPayloadValue("old_value", oldValue);
+            ev.setPayloadValue("new_value", newValue);
+            // always include current bounds
+            ev.setPayloadValue("current_min", getMin());
+            ev.setPayloadValue("current_max", getMax());
+            // include old bounds if we captured them
+            if (!std::isnan(pending_old_min_)) {
+                ev.setPayloadValue("old_min", pending_old_min_);
+            }
+            if (!std::isnan(pending_old_max_)) {
+                ev.setPayloadValue("old_max", pending_old_max_);
+            }
+            // clear pending markers
+            pending_old_min_ = std::numeric_limits<float>::quiet_NaN();
+            pending_old_max_ = std::numeric_limits<float>::quiet_NaN();
+        });
 
     } // END: void IRangeControl::_onValueChanged(float oldValue, float newValue)
 

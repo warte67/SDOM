@@ -103,11 +103,11 @@ namespace SDOM
             auto doChange = [this](float newValue, float oldValue) {
                 if (newValue == oldValue) return;
                 setValue(newValue);
-                // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
-                //     e.setPayloadValue("name", getName());
-                //     e.setPayloadValue("old_value", oldValue);
-                //     e.setPayloadValue("new_value", newValue);
-                // });
+                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& e) {
+                    e.setPayloadValue("name", getName());
+                    e.setPayloadValue("old_value", oldValue);
+                    e.setPayloadValue("new_value", newValue);
+                });
             };
 
             // decrease handler (left or top)
@@ -215,11 +215,11 @@ namespace SDOM
                     float oldValue = getValue();
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                    //     ev.setPayloadValue("name", getName());
-                    //     ev.setPayloadValue("old_value", oldValue);
-                    //     ev.setPayloadValue("new_value", newValue);
-                    // });
+                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                        ev.setPayloadValue("name", getName());
+                        ev.setPayloadValue("old_value", oldValue);
+                        ev.setPayloadValue("new_value", newValue);
+                    });
                 }
             }
             else // vertical
@@ -263,11 +263,11 @@ namespace SDOM
                     float oldValue = getValue();
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                    //     ev.setPayloadValue("name", getName());
-                    //     ev.setPayloadValue("old_value", oldValue);
-                    //     ev.setPayloadValue("new_value", newValue);
-                    // });
+                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                        ev.setPayloadValue("name", getName());
+                        ev.setPayloadValue("old_value", oldValue);
+                        ev.setPayloadValue("new_value", newValue);
+                    });
                 }
             }
         } // END: Mouse click or drag
@@ -284,11 +284,11 @@ namespace SDOM
             float newValue = snapToStep(std::clamp(getValue() + wheel_delta, getMin(), getMax()));
             if (newValue == oldValue) return;
             setValue(newValue);
-            // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-            //     ev.setPayloadValue("name", getName());
-            //     ev.setPayloadValue("old_value", oldValue);
-            //     ev.setPayloadValue("new_value", newValue);
-            // });
+            queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                ev.setPayloadValue("name", getName());
+                ev.setPayloadValue("old_value", oldValue);
+                ev.setPayloadValue("new_value", newValue);
+            });
         } // END: MouseWheel event
 
         // Key Events to adjust the scrollbar value (if key focused)
@@ -338,11 +338,11 @@ namespace SDOM
             if (newValue != oldValue)
             {
                 setValue(newValue);
-                // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                //     ev.setPayloadValue("name", getName());
-                //     ev.setPayloadValue("old_value", oldValue);
-                //     ev.setPayloadValue("new_value", newValue);
-                // });
+                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    ev.setPayloadValue("name", getName());
+                    ev.setPayloadValue("old_value", oldValue);
+                    ev.setPayloadValue("new_value", newValue);
+                });
             }
         } // END: Key Events to adjust the scrollbar value
     } // END: void ScrollBar::onEvent(const Event& event)
@@ -629,12 +629,12 @@ namespace SDOM
     void ScrollBar::_onValueChanged(float oldValue, float newValue)
     {
         SUPER::_onValueChanged(oldValue, newValue);
-        // // dispatch event
-        // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-        //     ev.setPayloadValue("name", getName());
-        //     ev.setPayloadValue("old_value", oldValue);
-        //     ev.setPayloadValue("new_value", newValue);
-        // });
+        // dispatch event
+        queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+            ev.setPayloadValue("name", getName());
+            ev.setPayloadValue("old_value", oldValue);
+            ev.setPayloadValue("new_value", newValue);
+        });
     } // END: void ScrollBar::_onValueChanged(float oldValue, float newValue)
 
 

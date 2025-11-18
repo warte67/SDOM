@@ -83,11 +83,11 @@ namespace SDOM
                     float oldValue = value_;
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                    //     ev.setPayloadValue("name", getName());
-                    //     ev.setPayloadValue("old_value", oldValue);
-                    //     ev.setPayloadValue("new_value", newValue);
-                    // });
+                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                        ev.setPayloadValue("name", getName());
+                        ev.setPayloadValue("old_value", oldValue);
+                        ev.setPayloadValue("new_value", newValue);
+                    });
                 }
             }
             else // vertical
@@ -122,11 +122,11 @@ namespace SDOM
                     float oldValue = value_;
                     if (newValue == oldValue) return;
                     setValue(newValue);
-                    // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                    //     ev.setPayloadValue("name", getName());
-                    //     ev.setPayloadValue("old_value", oldValue);
-                    //     ev.setPayloadValue("new_value", newValue);
-                    // });
+                    queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                        ev.setPayloadValue("name", getName());
+                        ev.setPayloadValue("old_value", oldValue);
+                        ev.setPayloadValue("new_value", newValue);
+                    });
                 }                
             }
         } // END: Mouse click or drag
@@ -143,11 +143,11 @@ namespace SDOM
             float newValue = snapToStep(std::clamp(value_ + wheel_delta, min_, max_));
             if (newValue == oldValue) return;
             setValue(newValue);
-            // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-            //     ev.setPayloadValue("name", getName());
-            //     ev.setPayloadValue("old_value", oldValue);
-            //     ev.setPayloadValue("new_value", newValue);
-            // });
+            queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                ev.setPayloadValue("name", getName());
+                ev.setPayloadValue("old_value", oldValue);
+                ev.setPayloadValue("new_value", newValue);
+            });
         } // END: MouseWheel event
 
         // Key Events to adjust the slider value (if key focused)
@@ -196,11 +196,11 @@ namespace SDOM
             if (newValue != oldValue)
             {
                 setValue(newValue);
-                // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-                //     ev.setPayloadValue("name", getName());
-                //     ev.setPayloadValue("old_value", oldValue);
-                //     ev.setPayloadValue("new_value", newValue);
-                // });
+                queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+                    ev.setPayloadValue("name", getName());
+                    ev.setPayloadValue("old_value", oldValue);
+                    ev.setPayloadValue("new_value", newValue);
+                });
             }
         } // END: Key Events to adjust the slider value
     } // END: void Slider::onEvent(const Event& event)
@@ -478,12 +478,12 @@ namespace SDOM
     void Slider::_onValueChanged(float oldValue, float newValue)
     {
         SUPER::_onValueChanged(oldValue, newValue);
-        // // dispatch event
-        // queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
-        //     ev.setPayloadValue("name", getName());
-        //     ev.setPayloadValue("old_value", oldValue);
-        //     ev.setPayloadValue("new_value", newValue);
-        // });
+        // dispatch event
+        queue_event(EventType::ValueChanged, [this, oldValue, newValue](Event& ev) {
+            ev.setPayloadValue("name", getName());
+            ev.setPayloadValue("old_value", oldValue);
+            ev.setPayloadValue("new_value", newValue);
+        });
     } // END: void Slider::_onValueChanged(float oldValue, float newValue)
 
 

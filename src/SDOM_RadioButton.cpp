@@ -152,11 +152,11 @@ namespace SDOM
 
         onStateChanged(buttonState_, state); 
         // dispatch event
-        // queue_event(EventType::StateChanged, [this, state](Event& ev) {
-        //     ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
-        //     ev.setPayloadValue("new_state", static_cast<int>(state));
-        //     ev.setPayloadValue("buttonName", getName());
-        // });
+        queue_event(EventType::StateChanged, [this, state](Event& ev) {
+            ev.setPayloadValue("old_state", static_cast<int>(buttonState_));
+            ev.setPayloadValue("new_state", static_cast<int>(state));
+            ev.setPayloadValue("buttonName", getName());
+        });
         buttonState_ = state;
         // Update internal icon button if present. Prefer the internal child handle
         // created during onInit(); otherwise, try to resolve the conventional
