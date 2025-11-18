@@ -699,7 +699,7 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 | Button | ☐ |
 | CheckButton | ☐ |
 | CLR | ☐ |
-| Core | ☐ |
+| Core | ☐ | 
 | DisplayHandle | ☐ |
 | Event | 🔄 |
 | EventManager | ☐ |
