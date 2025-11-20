@@ -4,7 +4,9 @@
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
-#include <external/nlohmann/json.hpp>
+// #include <external/nlohmann/json.hpp>
+#include <json.hpp>
+
 
 /*
 

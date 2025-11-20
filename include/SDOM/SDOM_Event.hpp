@@ -110,46 +110,46 @@ namespace SDOM
         // ----------------------
         // JSON Payload Accessors
         // ----------------------
-        public:
-            const nlohmann::json& getPayload() const {
-                std::lock_guard<std::mutex> lock(eventMutex_);
-                return payload_;
-            }
+    public:
+        const nlohmann::json& getPayload() const {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            return payload_;
+        }
 
-            Event& setPayload(const nlohmann::json& j) {
-                std::lock_guard<std::mutex> lock(eventMutex_);
-                payload_ = j;
-                return *this;
-            }
+        Event& setPayload(const nlohmann::json& j) {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            payload_ = j;
+            return *this;
+        }
 
-            Event& setPayloadString(const std::string& jsonStr) {
-                std::lock_guard<std::mutex> lock(eventMutex_);
-                payload_ = nlohmann::json::parse(jsonStr, nullptr, false);
-                if (payload_.is_discarded()) {
-                    payload_ = nlohmann::json(); // fail-safe empty value
-                }
-                return *this;
+        Event& setPayloadString(const std::string& jsonStr) {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            payload_ = nlohmann::json::parse(jsonStr, nullptr, false);
+            if (payload_.is_discarded()) {
+                payload_ = nlohmann::json(); // fail-safe empty value
             }
+            return *this;
+        }
 
-            std::string getPayloadString() const {
-                std::lock_guard<std::mutex> lock(eventMutex_);
-                return payload_.dump();
-            }
+        std::string getPayloadString() const {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            return payload_.dump();
+        }
 
-            template<typename T>
-            Event& setPayloadValue(const std::string& key, const T& value) {
-                std::lock_guard<std::mutex> lock(eventMutex_);
-                payload_[key] = value;
-                return *this;
-            }
+        template<typename T>
+        Event& setPayloadValue(const std::string& key, const T& value) {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            payload_[key] = value;
+            return *this;
+        }
 
-            template<typename T>
-            T getPayloadValue(const std::string& key, const T& defaultValue = T{}) const {
-                std::lock_guard<std::mutex> lock(eventMutex_);
-                if (!payload_.contains(key)) return defaultValue;
-                try { return payload_[key].get<T>(); }
-                catch (...) { return defaultValue; }
-            }
+        template<typename T>
+        T getPayloadValue(const std::string& key, const T& defaultValue = T{}) const {
+            std::lock_guard<std::mutex> lock(eventMutex_);
+            if (!payload_.contains(key)) return defaultValue;
+            try { return payload_[key].get<T>(); }
+            catch (...) { return defaultValue; }
+        }
 
 
         // Mouse event accessors

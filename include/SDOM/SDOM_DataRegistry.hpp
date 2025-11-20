@@ -21,12 +21,12 @@ struct FunctionInfo {
     std::string cpp_signature;
     std::vector<std::string> param_types;
     std::string return_type;
-    std::string c_name; // optional explicit C symbol name
-    std::string c_signature; // optional explicit C prototype
-    std::string doc;
+    std::string c_name;         // optional explicit C symbol name
+    std::string c_signature;    // optional explicit C prototype
+    std::string doc;            // line comment for documentation
     bool is_static = false;
     bool exported = true;
-    std::any callable; // optional type-erased callable
+    std::any callable;          // optional type-erased callable
 
     enum class CallableKind : uint8_t { None = 0, CFunctionPtr, CppCallable, LuaRef, PythonRef, GenericRuntime };
     CallableKind callable_kind = CallableKind::None;
@@ -56,8 +56,8 @@ struct TypeInfo {
     std::vector<PropertyInfo> properties;
     std::vector<FunctionInfo> functions;
     std::vector<std::string> bases;
-    std::string doc;
-    std::string category; // optional grouping/category used by generators
+    std::string doc;        // line comment for documentation
+    std::string category;   // optional grouping/category used by generators
 };
 
 struct DataRegistrySnapshot {

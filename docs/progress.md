@@ -605,6 +605,14 @@ Next steps: strengthening event instrumentation, expanding DisplayObject behavio
 - ☐ Continue isolating and verifying each DisplayObject subtype  
 - ☐ Begin drafting revised docs for asset loading rules & defaults  
 
+- ☐ binding generator redesign
+- ☐ common ABI wrapper
+- ☐ JSON payload system
+- ☐ CAPI cleanup
+- ☐ unit test suite rebuild
+- ☐ Version.hpp → JSON-based versioning pipeline
+- ☐ Clean up SDOM API CMakeLists.txt to remove legacy ABI build paths
+
 ## 🤔 **End-of-Day Reflection**
 > *“Frames flicker and vanish — but the truth they reveal endures.”*
 

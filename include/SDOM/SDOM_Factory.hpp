@@ -14,7 +14,8 @@
 #include <atomic>
 #include <shared_mutex>
 #include <cstdint>
-#include <external/nlohmann/json.hpp>
+// #include <external/nlohmann/json.hpp>
+#include <json.hpp>
 
 // include the concrete interface headers so unique_ptr<T> is instantiated with a complete type
 // #include <SDOM/SDOM_IDataObject.hpp>
