@@ -1,7 +1,8 @@
 #pragma once
 
 #include <SDOM/SDOM_IDisplayObject.hpp>
-#include <external/nlohmann/json.hpp>
+// #include <external/nlohmann/json.hpp>
+#include <json.hpp> // nlohmann::json
 
 namespace SDOM
 {

@@ -54,11 +54,8 @@ namespace SDOM
 
     class Event : public IDataObject
     {
-        friend class EventManager;
         
     public:
-
-        // using Json = nlohmann::json;
 
         enum class Phase {
             Capture,
@@ -70,11 +67,19 @@ namespace SDOM
 
         virtual ~Event() = default;    
 
+
+        // ----------------------
         // virtual methods
+        // ----------------------
+
         bool onInit() override;
         void onQuit() override;        
         
+
+        // ----------------------
         // Default accessors 
+        // ----------------------
+
         EventType getType() const;
         std::string getTypeName() const;
 
@@ -110,49 +115,34 @@ namespace SDOM
         // ----------------------
         // JSON Payload Accessors
         // ----------------------
-    public:
-        const nlohmann::json& getPayload() const {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            return payload_;
-        }
-
-        Event& setPayload(const nlohmann::json& j) {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            payload_ = j;
-            return *this;
-        }
-
-        Event& setPayloadString(const std::string& jsonStr) {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            payload_ = nlohmann::json::parse(jsonStr, nullptr, false);
-            if (payload_.is_discarded()) {
-                payload_ = nlohmann::json(); // fail-safe empty value
-            }
-            return *this;
-        }
-
-        std::string getPayloadString() const {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            return payload_.dump();
-        }
+        
+        const nlohmann::json& getPayload() const;
+        Event& setPayload(const nlohmann::json& j);
+        Event& setPayloadString(const std::string& jsonStr);
+        std::string getPayloadString() const;
 
         template<typename T>
         Event& setPayloadValue(const std::string& key, const T& value) {
-            std::lock_guard<std::mutex> lock(eventMutex_);
+            std::lock_guard<std::mutex> lock(event_mutex_);
+            if (!payload_.is_object()) {
+                payload_ = nlohmann::json::object();
+            }
             payload_[key] = value;
             return *this;
         }
 
         template<typename T>
         T getPayloadValue(const std::string& key, const T& defaultValue = T{}) const {
-            std::lock_guard<std::mutex> lock(eventMutex_);
-            if (!payload_.contains(key)) return defaultValue;
+            std::lock_guard<std::mutex> lock(event_mutex_);
+            if (!payload_.is_object() || !payload_.contains(key)) return defaultValue;
             try { return payload_[key].get<T>(); }
             catch (...) { return defaultValue; }
         }
 
 
-        // Mouse event accessors
+        // ----------------------
+        // Mouse Event Accessors
+        // ----------------------
         float getMouseX() const;
         Event& setMouseX(float x);
 
@@ -176,9 +166,11 @@ namespace SDOM
 
         uint8_t getButton() const;
         Event& setButton(uint8_t btn);
+        
 
-        // keyboard event accessors
-
+        // ----------------------
+        // Keyboard Event Accessors
+        // ----------------------
         SDL_Scancode getScanCode() const;
         Event& setScanCode(SDL_Scancode scancode);
 
@@ -191,100 +183,54 @@ namespace SDOM
         int getAsciiCode() const;
         Event& setAsciiCode(int asciiCode);        
 
-// const EventType& getTypeRef() const { return type; }
-
-
-
     protected:
+
         EventType type;                                 // Type of the event, e.g., KeyDown, MouseClick, etc.
         DisplayHandle target = nullptr;                 // Target of the event, usually the object that triggered it    
-        DisplayHandle currentTarget = nullptr;          // Current target during event propagation
-        DisplayHandle relatedTarget = nullptr;          // For events that involve a related target (e.g., drag and drop)
-        SDL_Event sdlEvent;                             // underlying SDL event
-        mutable Phase currentPhase;                     // Current phase of the event propagation
-        mutable bool propagationStopped = false;        // Indicates if event propagation is stopped
-        mutable bool disableDefaultBehavior = false;    // Indicates if default behavior is disabled
-        mutable bool useCapture = false;                // Indicates if the event is in the capture phase
-        float fElapsedTime = 0.0f;                      // Time elapsed since the last frame
+        DisplayHandle current_target = nullptr;         // Current target during event propagation
+        DisplayHandle related_target = nullptr;         // For events that involve a related target (e.g., drag and drop)
+        SDL_Event sdl_event;                            // underlying SDL event
+        mutable Phase current_phase;                    // Current phase of the event propagation
+        mutable bool propagation_stopped = false;       // Indicates if event propagation is stopped
+        mutable bool disable_default_behavior = false;  // Indicates if default behavior is disabled
+        mutable bool use_capture = false;               // Indicates if the event is in the capture phase
+        float elapsed_time = 0.0f;                      // Time elapsed since the last frame
 
-        nlohmann::json payload_;   // JSON payload for event-specific data
+        nlohmann::json payload_;   // JSON payload for event-specific data (single source of truth)
+        mutable std::mutex event_mutex_;
 
-        // Mouse Event Properties: (Not yet defined as proper JSON properties)
-        float mouse_x;              // mouse x-coordinate
-        float mouse_y;              // mouse y-coordinate
-        float wheelX = 0.0f;        // Horizontal wheel movement
-        float wheelY = 0.0f;        // Vertical wheel movement
-        float dragOffsetX = 0.0f;   // horizontal drag offset
-        float dragOffsetY = 0.0f;   // vertical drag offset
-        int clickCount = 0;         // Number of clicks for double-click detection
-        uint8_t button = 0;         // Mouse button that triggered the event (SDL_BUTTON_LEFT, SDL_BUTTON_RIGHT, etc.)
-
-        // Keyboard Event Properties: (Not yet defined as proper JSON properties)
-        SDL_Scancode scancode_;     // The physical key pressed
-        SDL_Keycode keycode_;       // The virtual key pressed
-        Uint16 keymod_;             // Modifier keys (e.g., Shift, Ctrl, Alt)
-        int asciiCode_;             // ASCII code of the key pressed
-        mutable std::mutex eventMutex_;
-
-        // Prevent copying
-        // Event(const Event&) = delete;               // Deleted copy constructor
-        // Event& operator=(const Event&) = delete;    // Deleted copy assignment operator
     public:
         // Copy constructor
         Event(const Event& other)
             : type(other.type),
             target(other.target),
-            currentTarget(other.currentTarget),
-            relatedTarget(other.relatedTarget),
-            currentPhase(other.currentPhase),
-            sdlEvent(other.sdlEvent),
-            propagationStopped(other.propagationStopped),
-            disableDefaultBehavior(other.disableDefaultBehavior),
-            useCapture(other.useCapture),
-            fElapsedTime(other.fElapsedTime),
-            payload_(other.payload_),
-            mouse_x(other.mouse_x),
-            mouse_y(other.mouse_y),
-            wheelX(other.wheelX),
-            wheelY(other.wheelY),
-            dragOffsetX(other.dragOffsetX),
-            dragOffsetY(other.dragOffsetY),
-            clickCount(other.clickCount),
-            button(other.button),
-            scancode_(other.scancode_),
-            keycode_(other.keycode_),
-            keymod_(other.keymod_),
-            asciiCode_(other.asciiCode_) {
+            current_target(other.current_target),
+            related_target(other.related_target),
+            current_phase(other.current_phase),
+            sdl_event(other.sdl_event),
+            propagation_stopped(other.propagation_stopped),
+            disable_default_behavior(other.disable_default_behavior),
+            use_capture(other.use_capture),
+            elapsed_time(other.elapsed_time),
+            payload_(other.payload_) {
             // Note: `eventMutex_` is initialized as a new mutex
         }
 
         // Copy assignment operator
         Event& operator=(const Event& other) {
             if (this != &other) {
-                std::lock_guard<std::mutex> lock(eventMutex_);
+                std::lock_guard<std::mutex> lock(event_mutex_);
                 type = other.type;
                 target = other.target;
-                currentTarget = other.currentTarget;
-                relatedTarget = other.relatedTarget;
-                currentPhase = other.currentPhase;
-                sdlEvent = other.sdlEvent;
-                propagationStopped = other.propagationStopped;
-                disableDefaultBehavior = other.disableDefaultBehavior;
-                useCapture = other.useCapture;
-                fElapsedTime = other.fElapsedTime;
+                current_target = other.current_target;
+                related_target = other.related_target;
+                current_phase = other.current_phase;
+                sdl_event = other.sdl_event;
+                propagation_stopped = other.propagation_stopped;
+                disable_default_behavior = other.disable_default_behavior;
+                use_capture = other.use_capture;
+                elapsed_time = other.elapsed_time;
                 payload_ = other.payload_;
-                mouse_x = other.mouse_x;
-                mouse_y = other.mouse_y;
-                wheelX = other.wheelX;
-                wheelY = other.wheelY;
-                dragOffsetX = other.dragOffsetX;
-                dragOffsetY = other.dragOffsetY;
-                clickCount = other.clickCount;
-                button = other.button;
-                scancode_ = other.scancode_;
-                keycode_ = other.keycode_;
-                keymod_ = other.keymod_;
-                asciiCode_ = other.asciiCode_;
             }
             return *this;
         }

@@ -965,10 +965,10 @@ namespace SDOM
             {
                 auto evt = std::make_unique<Event>(EventType::MouseButtonDown, node, elapsed);
                 evt->setSDL_Event(e);
-                evt->mouse_x = mX;
-                evt->mouse_y = mY;
-                evt->button = e.button.button;
-                evt->clickCount = e.button.clicks;
+                evt->setMouseX(mX);
+                evt->setMouseY(mY);
+                evt->setButton(e.button.button);
+                evt->setClickCount(e.button.clicks);
                 evt->setTarget(topObject);
 
 // std::cout << "Dispatching " << evt->getTypeName()
@@ -984,10 +984,10 @@ namespace SDOM
             {
                 auto evt = std::make_unique<Event>(EventType::MouseButtonUp, node, elapsed);
                 evt->setSDL_Event(e);
-                evt->mouse_x = mX;
-                evt->mouse_y = mY;
-                evt->button = e.button.button;
-                evt->clickCount = e.button.clicks;
+                evt->setMouseX(mX);
+                evt->setMouseY(mY);
+                evt->setButton(e.button.button);
+                evt->setClickCount(e.button.clicks);
                 evt->setTarget(topObject);
                 
 // std::cout << "Dispatching " << evt->getTypeName()
@@ -1005,10 +1005,10 @@ namespace SDOM
                     {
                         auto clickEvent = std::make_unique<Event>(EventType::MouseClick, node, elapsed);
                         clickEvent->setSDL_Event(e);
-                        clickEvent->mouse_x = mX;
-                        clickEvent->mouse_y = mY;
-                        clickEvent->button = e.button.button;
-                        clickEvent->clickCount = clicks;
+                        clickEvent->setMouseX(mX);
+                        clickEvent->setMouseY(mY);
+                        clickEvent->setButton(e.button.button);
+                        clickEvent->setClickCount(clicks);
                         clickEvent->setTarget(topObject);
                 
 // std::cout << "Dispatching " << evt->getTypeName()
@@ -1022,10 +1022,10 @@ namespace SDOM
                     if (clicks >= 2) {
                         auto dblEvent = std::make_unique<Event>(EventType::MouseDoubleClick, node, elapsed);
                         dblEvent->setSDL_Event(e);
-                        dblEvent->mouse_x = mX;
-                        dblEvent->mouse_y = mY;
-                        dblEvent->button = e.button.button;
-                        dblEvent->clickCount = clicks;
+                        dblEvent->setMouseX(mX);
+                        dblEvent->setMouseY(mY);
+                        dblEvent->setButton(e.button.button);
+                        dblEvent->setClickCount(clicks);
                         dblEvent->setTarget(topObject);
                 
 // std::cout << "Dispatching " << evt->getTypeName()
@@ -1059,12 +1059,12 @@ namespace SDOM
                 getCore().setMouseHoveredObject(wheelTarget);
                 auto evt = std::make_unique<Event>(EventType::MouseWheel, wheelTarget, elapsed);
                 evt->setSDL_Event(e);
-                evt->wheelX = e.wheel.x;
-                evt->wheelY = e.wheel.y;
-                evt->mouse_x = mX;
-                evt->mouse_y = mY;
-                evt->button = e.wheel.direction;
-                evt->clickCount = 0;
+                evt->setWheelX(static_cast<float>(e.wheel.x));
+                evt->setWheelY(static_cast<float>(e.wheel.y));
+                evt->setMouseX(mX);
+                evt->setMouseY(mY);
+                evt->setButton(static_cast<uint8_t>(e.wheel.direction));
+                evt->setClickCount(0);
                 evt->setTarget(wheelTarget);
                 
 // std::cout << "Dispatching " << evt->getTypeName()
@@ -1116,8 +1116,8 @@ namespace SDOM
         {
             auto moveEvt = std::make_unique<Event>(EventType::MouseMove, currentHovered, elapsed);
             moveEvt->setSDL_Event(e);
-            moveEvt->mouse_x = mX;
-            moveEvt->mouse_y = mY;
+            moveEvt->setMouseX(mX);
+            moveEvt->setMouseY(mY);
             moveEvt->setTarget(currentHovered);
             moveEvt->setCurrentTarget(currentHovered);
             addEvent(std::move(moveEvt));
@@ -1132,8 +1132,8 @@ namespace SDOM
             {
                 auto leaveEvt = std::make_unique<Event>(EventType::MouseLeave, lastHoveredObject, elapsed);
                 leaveEvt->setSDL_Event(e);
-                leaveEvt->mouse_x = mX;
-                leaveEvt->mouse_y = mY;
+                leaveEvt->setMouseX(mX);
+                leaveEvt->setMouseY(mY);
                 leaveEvt->setTarget(lastHoveredObject);
                 leaveEvt->setCurrentTarget(lastHoveredObject);
                 leaveEvt->setRelatedTarget(currentHovered);
@@ -1145,8 +1145,8 @@ namespace SDOM
             {
                 auto enterEvt = std::make_unique<Event>(EventType::MouseEnter, currentHovered, elapsed);
                 enterEvt->setSDL_Event(e);
-                enterEvt->mouse_x = mX;
-                enterEvt->mouse_y = mY;
+                enterEvt->setMouseX(mX);
+                enterEvt->setMouseY(mY);
                 enterEvt->setTarget(currentHovered);
                 enterEvt->setCurrentTarget(currentHovered);
                 enterEvt->setRelatedTarget(lastHoveredObject);
@@ -1214,8 +1214,8 @@ namespace SDOM
         {
             auto enterEvt = std::make_unique<Event>(EventType::MouseEnter, stageObject, elapsed);
             enterEvt->setSDL_Event(e);
-            enterEvt->mouse_x = mX;
-            enterEvt->mouse_y = mY;
+            enterEvt->setMouseX(mX);
+            enterEvt->setMouseY(mY);
             enterEvt->setTarget(stageObject);
             enterEvt->setCurrentTarget(stageObject);
             addEvent(std::move(enterEvt));
@@ -1225,8 +1225,8 @@ namespace SDOM
         {
             auto leaveEvt = std::make_unique<Event>(EventType::MouseLeave, stageObject, elapsed);
             leaveEvt->setSDL_Event(e);
-            leaveEvt->mouse_x = mX;
-            leaveEvt->mouse_y = mY;
+            leaveEvt->setMouseX(mX);
+            leaveEvt->setMouseY(mY);
             leaveEvt->setTarget(stageObject);
             leaveEvt->setCurrentTarget(stageObject);
             addEvent(std::move(leaveEvt));
@@ -1301,11 +1301,11 @@ namespace SDOM
 
                 auto dragEvt = std::make_unique<Event>(EventType::Drag, node, elapsed);
                 dragEvt->setSDL_Event(e);
-                dragEvt->mouse_x = mX;
-                dragEvt->mouse_y = mY;
-                dragEvt->button  = drag_button;
-                dragEvt->dragOffsetX = drag_offset_x;
-                dragEvt->dragOffsetY = drag_offset_y;
+                dragEvt->setMouseX(mX);
+                dragEvt->setMouseY(mY);
+                dragEvt->setButton(drag_button);
+                dragEvt->setDragOffsetX(drag_offset_x);
+                dragEvt->setDragOffsetY(drag_offset_y);
                 dragEvt->setTarget(draggedObject);
                 dragEvt->setCurrentTarget(draggedObject);
                 dragEvt->setRelatedTarget(draggedObject->getParent());
@@ -1320,11 +1320,11 @@ namespace SDOM
 
             auto draggingEvt = std::make_unique<Event>(EventType::Dragging, node, elapsed);
             draggingEvt->setSDL_Event(e);
-            draggingEvt->mouse_x = mX;
-            draggingEvt->mouse_y = mY;
-            draggingEvt->button  = drag_button;
-            draggingEvt->dragOffsetX = drag_offset_x;
-            draggingEvt->dragOffsetY = drag_offset_y;
+            draggingEvt->setMouseX(mX);
+            draggingEvt->setMouseY(mY);
+            draggingEvt->setButton(drag_button);
+            draggingEvt->setDragOffsetX(drag_offset_x);
+            draggingEvt->setDragOffsetY(drag_offset_y);
             draggingEvt->setTarget(draggedObject);
             draggingEvt->setCurrentTarget(draggedObject);
             draggingEvt->setRelatedTarget(draggedObject->getParent());
@@ -1338,11 +1338,11 @@ namespace SDOM
 
             auto dropEvt = std::make_unique<Event>(EventType::Drop, dropTarget, elapsed);
             dropEvt->setSDL_Event(e);
-            dropEvt->mouse_x = mX;
-            dropEvt->mouse_y = mY;
-            dropEvt->dragOffsetX = drag_offset_x;
-            dropEvt->dragOffsetY = drag_offset_y;
-            dropEvt->button  = drag_button ? drag_button : e.button.button;
+            dropEvt->setMouseX(mX);
+            dropEvt->setMouseY(mY);
+            dropEvt->setDragOffsetX(drag_offset_x);
+            dropEvt->setDragOffsetY(drag_offset_y);
+            dropEvt->setButton(drag_button ? drag_button : e.button.button);
             dropEvt->setTarget(draggedObject);
             dropEvt->setCurrentTarget(draggedObject);
             dropEvt->setRelatedTarget(dropTarget);

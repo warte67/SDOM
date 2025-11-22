@@ -1,82 +1,68 @@
 cmake_minimum_required(VERSION 3.20)
 project(SDOM VERSION 1.0 LANGUAGES CXX)
 
+# Help CMake find locally installed packages in both user and system prefixes.
+# This ensures consistent package discovery for both Debug (local) and
+# Release (system) workflows triggered by `./rebuild`.
+list(APPEND CMAKE_PREFIX_PATH "$ENV{HOME}/.local" "/usr/local")
+
 # Option to enable generation of Lua dispatch wrappers in generated C API
 option(SDOM_ENABLE_LUA_BINDINGS "Enable generation of Lua dispatch prototypes/wrappers in generated C API" ON)
+
+# Option to treat warnings as errors for SDOM targets
+option(SDOM_ENABLE_WERROR "Treat compiler warnings as errors for SDOM targets" OFF)
 
 # ======================================================
 #  Version Auto-Generation (SDOM_Version.hpp)
 # ======================================================
 set(GEN_VERSION_SCRIPT "${CMAKE_SOURCE_DIR}/scripts/gen_version.sh")
-set(VERSION_TEMPLATE "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp.in")
-set(VERSION_HEADER "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp")
-set(VERSION_TRIGGER "${CMAKE_BINARY_DIR}/_version_trigger")
+set(VERSION_TEMPLATE   "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp.in")
+set(VERSION_HEADER     "${CMAKE_SOURCE_DIR}/include/SDOM/SDOM_Version.hpp")
+set(VERSION_TRIGGER    "${CMAKE_BINARY_DIR}/_version_trigger")
 
-option(ENABLE_ASAN "Enable AddressSanitizer for builds" OFF)
+# ======================================================
+#  Sanitizer Options
+# ======================================================
+option(ENABLE_ASAN  "Enable AddressSanitizer for builds" OFF)
 option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer for builds" OFF)
-option(ENABLE_TSAN "Enable ThreadSanitizer for builds (incompatible with ASAN)" OFF)
+option(ENABLE_TSAN  "Enable ThreadSanitizer for builds (incompatible with ASAN)" OFF)
+
+if(ENABLE_ASAN AND ENABLE_TSAN)
+    message(FATAL_ERROR "ENABLE_TSAN cannot be enabled together with ENABLE_ASAN")
+endif()
+
+# Small interface target to carry sanitizer compile/link flags.
+add_library(sdom_sanitizers INTERFACE)
 
 if(ENABLE_ASAN)
-    if(ENABLE_TSAN)
-        message(FATAL_ERROR "ENABLE_TSAN cannot be enabled together with ENABLE_ASAN")
-    endif()
     message(STATUS "AddressSanitizer: enabled")
-    add_compile_options(-fsanitize=address -fno-omit-frame-pointer -g -O1)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
-endif()
-
-if(ENABLE_UBSAN)
-    message(STATUS "UndefinedBehaviorSanitizer: enabled")
-    # We enable the common UBSAN checks; allow abort on error to make CI fail fast.
-    add_compile_options(-fsanitize=undefined -fno-sanitize-recover=undefined -g -O1)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=undefined")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=undefined")
-endif()
-
-if(ENABLE_TSAN)
-    if(ENABLE_ASAN)
-        message(FATAL_ERROR "ENABLE_TSAN cannot be enabled together with ENABLE_ASAN")
-    endif()
-    message(STATUS "ThreadSanitizer: enabled")
-    add_compile_options(-fsanitize=thread -g -O1)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=thread")
-endif()
-
-
-if(EXISTS "${GEN_VERSION_SCRIPT}")
-
-    # --- Ensure Bash is used instead of /bin/sh (dash) ---
-    find_program(BASH_EXECUTABLE bash)
-    if(NOT BASH_EXECUTABLE)
-        message(FATAL_ERROR "Bash not found! Required to run ${GEN_VERSION_SCRIPT}")
-    endif()
-
-    # --- Create trigger to force regeneration when inputs change ---
-    add_custom_command(
-        OUTPUT "${VERSION_TRIGGER}"
-        COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_TRIGGER}"
-        COMMENT "⏱ Updating version trigger"
+    target_compile_options(sdom_sanitizers INTERFACE
+        -fsanitize=address
+        -fno-omit-frame-pointer
+        -g -O1
     )
-    # # --- Generate version header using Bash explicitly ---
-    # get_filename_component(SDOM_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
-    # set(GEN_VERSION_SCRIPT "${SDOM_ROOT}/scripts/gen_version.sh")
-    # add_custom_command(
-    #     OUTPUT "${VERSION_HEADER}"
-    #     # COMMAND ${BASH_EXECUTABLE} -c "mkdir -p ${CMAKE_BINARY_DIR} && echo Running ${GEN_VERSION_SCRIPT} && ${GEN_VERSION_SCRIPT} > ${CMAKE_BINARY_DIR}/_version_log.txt 2>&1 || echo FAILED: $? "
-    #     COMMAND ${BASH_EXECUTABLE} "${GEN_VERSION_SCRIPT}" 2>&1 | tee "${CMAKE_BINARY_DIR}/_version_log.txt"
-    #     COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_HEADER}"
-    #     WORKING_DIRECTORY "${SDOM_ROOT}"
-    #     DEPENDS "${GEN_VERSION_SCRIPT}" "${VERSION_TEMPLATE}" "${VERSION_TRIGGER}"
-    #     COMMENT "🔄 Regenerating SDOM_Version.hpp (script/template/source changed)"
-    #     VERBATIM
-    # )
-    # add_custom_target(generate_version DEPENDS "${VERSION_HEADER}")
-    # message(STATUS "✅ SDOM version will regenerate when source files change")
-
-else()
-    message(WARNING "⚠️ Version generator script not found: ${GEN_VERSION_SCRIPT}")
+    target_link_options(sdom_sanitizers INTERFACE
+        -fsanitize=address
+    )
+elseif(ENABLE_UBSAN)
+    message(STATUS "UndefinedBehaviorSanitizer: enabled")
+    target_compile_options(sdom_sanitizers INTERFACE
+        -fsanitize=undefined
+        -fno-sanitize-recover=undefined
+        -g -O1
+    )
+    target_link_options(sdom_sanitizers INTERFACE
+        -fsanitize=undefined
+    )
+elseif(ENABLE_TSAN)
+    message(STATUS "ThreadSanitizer: enabled")
+    target_compile_options(sdom_sanitizers INTERFACE
+        -fsanitize=thread
+        -g -O1
+    )
+    target_link_options(sdom_sanitizers INTERFACE
+        -fsanitize=thread
+    )
 endif()
 
 # ======================================================
@@ -89,12 +75,47 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
 endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG
-    "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -Wall -Wno-comment -Wextra -Wno-reorder -Wno-unused-parameter"
+# Let CMake set its default Debug/Release flags, then layer on warnings.
+# (CMake already adds -g/-O0 for Debug and -O3/-DNDEBUG for Release for GCC/Clang.)
+
+# Common warning policy carried by an INTERFACE target
+add_library(sdom_warnings INTERFACE)
+target_compile_options(sdom_warnings INTERFACE
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wno-comment
+        -Wno-reorder
+    >
 )
-set(CMAKE_CXX_FLAGS_RELEASE
-    "${CMAKE_CXX_FLAGS_RELEASE} -O3 -Wall -Wextra -Wno-comment -Wno-reorder -Wno-unused-parameter -DNDEBUG"
-)
+
+if(SDOM_ENABLE_WERROR)
+    message(STATUS "SDOM: treating warnings as errors (-Werror)")
+    target_compile_options(sdom_warnings INTERFACE
+        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Werror>
+    )
+endif()
+
+# ======================================================
+#  Version generator hook (currently disabled block stays as-is)
+# ======================================================
+if(EXISTS "${GEN_VERSION_SCRIPT}")
+
+    find_program(BASH_EXECUTABLE bash)
+    if(NOT BASH_EXECUTABLE)
+        message(FATAL_ERROR "Bash not found! Required to run ${GEN_VERSION_SCRIPT}")
+    endif()
+
+    add_custom_command(
+        OUTPUT "${VERSION_TRIGGER}"
+        COMMAND ${CMAKE_COMMAND} -E touch "${VERSION_TRIGGER}"
+        COMMENT "⏱ Updating version trigger"
+    )
+
+else()
+    message(WARNING "⚠️ Version generator script not found: ${GEN_VERSION_SCRIPT}")
+endif()
 
 # ======================================================
 #  Dependencies
@@ -102,6 +123,8 @@ set(CMAKE_CXX_FLAGS_RELEASE
 find_package(SDL3 REQUIRED CONFIG)
 find_package(SDL3_image REQUIRED CONFIG)
 find_package(SDL3_ttf REQUIRED CONFIG)
+# SDL_mixer is optional for now
+find_package(SDL3_mixer QUIET CONFIG)
 find_library(LUA_LIB lua5.4)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
@@ -115,6 +138,15 @@ include_directories(/usr/include/lua5.4)
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
 # ======================================================
+# nlohmann::json (header-only)
+# ======================================================
+add_library(nlohmann_json INTERFACE)
+
+target_include_directories(nlohmann_json INTERFACE
+    ${CMAKE_SOURCE_DIR}/include/external
+)
+
+# ======================================================
 #  Build Library
 # ======================================================
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
@@ -126,7 +158,7 @@ else()
     target_compile_definitions(${PROJECT_NAME} PRIVATE SDOM_ENABLE_LUA_BINDINGS=0)
 endif()
 
-# Ensure the version generator runs before compilation
+# Ensure the version generator runs before compilation (if you re-enable generate_version)
 if(TARGET generate_version)
     add_dependencies(${PROJECT_NAME} generate_version)
 endif()
@@ -136,7 +168,10 @@ target_link_libraries(${PROJECT_NAME}
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
+        $<$<BOOL:${SDL3_mixer_FOUND}>:SDL3_mixer::SDL3_mixer>
         ${LUA_LIB}
+        sdom_warnings
+        sdom_sanitizers
 )
 
 # ======================================================
@@ -154,8 +189,6 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/SDOM DESTINATION include)
 set(GENERATED_DIR "${CMAKE_BINARY_DIR}/capi_generated")
 file(MAKE_DIRECTORY "${GENERATED_DIR}")
 
-# Build a small generator executable from local sources (keeps it separate
-# from the main library and avoids circular linking).
 set(GENERATOR_SOURCES
     "${CMAKE_SOURCE_DIR}/tools/run_dataregistry_test.cpp"
     "${CMAKE_SOURCE_DIR}/src/SDOM_DataRegistry.cpp"
@@ -163,6 +196,7 @@ set(GENERATOR_SOURCES
     "${CMAKE_SOURCE_DIR}/src/SDOM_EventType.cpp"
     "${CMAKE_SOURCE_DIR}/tools/dataregistry_generator_stubs.cpp"
 )
+
 add_executable(dataregistry_generator ${GENERATOR_SOURCES})
 target_include_directories(dataregistry_generator PRIVATE
     "${CMAKE_SOURCE_DIR}/include"
@@ -173,12 +207,17 @@ set_target_properties(dataregistry_generator PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tools"
 )
 
+# Give generator the same warnings/sanitizers (it’s your code, so strict is good)
+target_link_libraries(dataregistry_generator PRIVATE
+    SDL3::SDL3
+    SDL3_image::SDL3_image
+    SDL3_ttf::SDL3_ttf
+    sdom_warnings
+    sdom_sanitizers
+)
+
 # The generator may compile parts of the code that reference the Lua C API
-# (via sol2). Link the discovered Lua library so the generator can link.
 if(LUA_LIB)
-    # Link the Lua library and common runtime helpers that Lua may depend on
-    # (dl, math, threads). This ensures the generator links cleanly in all
-    # build configurations where Lua symbols are referenced.
     find_package(Threads REQUIRED)
     target_link_libraries(dataregistry_generator PRIVATE
         ${LUA_LIB}
@@ -186,6 +225,10 @@ if(LUA_LIB)
         Threads::Threads
     )
 endif()
+
+target_include_directories(dataregistry_generator PRIVATE
+    /usr/include/lua5.4
+)
 
 # Generated version marker file
 set(GENERATED_VERSION_FILE "${GENERATED_DIR}/sdom_capi_objects_generated.version")
@@ -246,9 +289,6 @@ message(STATUS "SDOM C API generated dir: ${GENERATED_DIR}")
 # compilable (prevents regressions where a repo-level shim hides the
 # build-generated header on clean builds).
 # ------------------------------------------------------------------
-
-# tests/generated_header_check.cpp is a tiny TU that includes the
-# `SDOM/CAPI/sdom_capi_objects_generated.h` shim and compiles a noop main.
 set(GENERATED_HEADER_TEST_SRC "${CMAKE_SOURCE_DIR}/tests/generated_header_check.cpp")
 if(EXISTS "${GENERATED_HEADER_TEST_SRC}")
     add_executable(generated_header_check ${GENERATED_HEADER_TEST_SRC})
@@ -256,7 +296,10 @@ if(EXISTS "${GENERATED_HEADER_TEST_SRC}")
         "${CMAKE_SOURCE_DIR}/include"
         "${GENERATED_DIR}"
     )
-    # Ensure the generator runs before building the test
+    target_link_libraries(generated_header_check PRIVATE
+        sdom_warnings
+        sdom_sanitizers
+    )
     add_dependencies(generated_header_check run_dataregistry_generator)
     add_test(NAME generated_header_check COMMAND generated_header_check)
 endif()
