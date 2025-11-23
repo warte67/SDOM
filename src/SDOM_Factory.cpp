@@ -454,10 +454,6 @@ namespace SDOM
     {
         // Register resource type with creators
         assetCreators_[typeName] = creators;
-
-        // Create a prototype AssetHandle for Lua registration
-        AssetHandle prototypeHandle(typeName, typeName, typeName);
-        prototypeHandle.registerBindings(typeName, data_registry_);
     }
 
     IAssetObject* Factory::getAssetObjectPtr(const std::string& name)

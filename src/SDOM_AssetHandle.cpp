@@ -45,6 +45,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IAssetObject.hpp>
+#include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
 #include <iostream>
 
@@ -60,7 +61,7 @@ namespace SDOM
     IAssetObject* AssetHandle::get() const
     {
         if (!factory_) return nullptr;
-    IAssetObject* res = factory_->getAssetObjectPtr(name_);
+        IAssetObject* res = factory_->getAssetObjectPtr(name_);
         if (!res) return nullptr;
         return res;    
     }
@@ -70,7 +71,55 @@ namespace SDOM
     {
         SUPER::registerBindingsImpl(typeName);
         BIND_INFO(typeName, "AssetHandle");
-        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+
+        (void)ensureType(typeName,
+                         SDOM::EntryKind::Object,
+                         "SDOM::AssetHandle",
+                         "Handles",
+                         "SDOM_AssetHandle",
+                         "Handles",
+                         "Lightweight proxy used to reference asset objects by name/type.");
+
+        const std::string exportName = "SDOM_AssetHandle";
+        if (!lookup(exportName)) {
+            SDOM::TypeInfo ti;
+            ti.name        = exportName;
+            ti.kind        = SDOM::EntryKind::Struct;
+            ti.cpp_type_id = "SDOM::AssetHandle";
+            ti.file_stem   = "Handles";
+            ti.export_name = exportName;
+            ti.category    = "Handles";
+            ti.doc         = "Opaque ABI struct describing an SDOM asset handle.";
+
+            auto addField = [&](const std::string& fieldName,
+                                const std::string& cppType,
+                                const std::string& doc) {
+                SDOM::PropertyInfo p;
+                p.name      = fieldName;
+                p.cpp_type  = cppType;
+                p.read_only = false;
+                p.doc       = doc;
+                ti.properties.push_back(std::move(p));
+            };
+
+            addField("object_id", "uint64_t", "Factory-assigned identifier (0 == invalid). ");
+            addField("name", "const char*", "Stable asset name token.");
+            addField("type", "const char*", "Asset type string (Texture, Font, …). ");
+
+            registry().registerType(ti);
+        }
+
+        registerMethod(
+            typeName,
+            "isValid",
+            "bool AssetHandle::isValid() const",
+            "bool",
+            "SDOM_AssetHandle_IsValid",
+            "bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)",
+            "Returns true if the referenced asset is still registered and resolves to a live instance.",
+            [](const AssetHandle* handle) -> bool {
+                return handle && handle->isValid();
+            });
     }    
 
 } // namespace SDOM

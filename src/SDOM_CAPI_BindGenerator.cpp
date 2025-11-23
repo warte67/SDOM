@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <unordered_set>
 
 #include <SDOM/SDOM_CAPI_BindGenerator.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
@@ -223,6 +224,10 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
     out << "#pragma once\n";
     out << "// Auto-generated SDOM C API module: " << module.file_stem << "\n\n";
 
+    if (moduleNeedsCstdint(module)) {
+        out << "#include <cstdint> // For uint64_t\n\n";
+    }
+
     emitEnums(out, module);
 
     emitStructs(out, module);
@@ -275,6 +280,35 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
     out << "#endif\n";
 }
 
+bool CAPI_BindGenerator::moduleNeedsCstdint(const BindModule& module)
+{
+    const auto requiresCstdint = [](const std::string& cppType) {
+        const std::string normalized = normalizeTypeToken(cppType);
+        static const std::set<std::string> fixedWidthTypes = {
+            "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
+            "std::int8_t",  "std::int16_t",  "std::int32_t",  "std::int64_t",
+            "uint8_t", "uint16_t", "uint32_t", "uint64_t",
+            "int8_t",  "int16_t",  "int32_t",  "int64_t"
+        };
+
+        return fixedWidthTypes.find(normalized) != fixedWidthTypes.end();
+    };
+
+    for (const TypeInfo* type : module.structs) {
+        if (!type) {
+            continue;
+        }
+
+        for (const auto& prop : type->properties) {
+            if (requiresCstdint(prop.cpp_type)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void CAPI_BindGenerator::emitStructs(std::ofstream& out, const BindModule& module) const
 {
     if (module.structs.empty()) {
@@ -306,8 +340,8 @@ void CAPI_BindGenerator::emitStructs(std::ofstream& out, const BindModule& modul
                 }
 
                 if (!prop.doc.empty() || field_type == "void*" || field_type == "const void*") {
-                    if (line.size() < 60) {
-                        line.append(60 - line.size(), ' ');
+                    if (line.size() < 52) {
+                        line.append(52 - line.size(), ' ');
                     } else {
                         line.push_back(' ');
                     }
@@ -446,11 +480,17 @@ void CAPI_BindGenerator::emitEnums(std::ofstream& out, const BindModule& module)
 void CAPI_BindGenerator::emitFunctionPrototypes(std::ofstream& out, const BindModule& module) const
 {
     bool wrote_any = false;
+    std::unordered_set<std::string> emitted_names;
 
     forEachCallableType(module, [&](const TypeInfo* type) {
         for (const auto& fn : type->functions) {
             if (!fn.exported || fn.c_signature.empty()) {
                 continue;
+            }
+
+            const std::string key = fn.c_name.empty() ? fn.c_signature : fn.c_name;
+            if (!emitted_names.insert(key).second) {
+                continue; // Skip duplicate metadata entries
             }
 
             if (!wrote_any) {
@@ -470,11 +510,17 @@ void CAPI_BindGenerator::emitFunctionPrototypes(std::ofstream& out, const BindMo
 void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule& module) const
 {
     bool wrote_any = false;
+    std::unordered_set<std::string> emitted_names;
 
     forEachCallableType(module, [&](const TypeInfo* type) {
         for (const auto& fn : type->functions) {
             if (!fn.exported || fn.c_signature.empty()) {
                 continue;
+            }
+
+            const std::string key = fn.c_name.empty() ? fn.c_signature : fn.c_name;
+            if (!emitted_names.insert(key).second) {
+                continue; // Avoid emitting duplicate bodies
             }
 
             out << fn.c_signature << " {\n";
