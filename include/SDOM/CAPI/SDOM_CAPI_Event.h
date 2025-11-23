@@ -78,7 +78,7 @@ typedef enum SDOM_EventType {
 } SDOM_EventType;
 
 typedef struct SDOM_Event {
-    void* impl;                                             ///< Pointer to the underlying C++ SDOM::Event instance.
+    void* impl;                                     ///< Pointer to the underlying C++ SDOM::Event instance.
 } SDOM_Event;
 
 #ifdef __cplusplus

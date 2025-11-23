@@ -152,7 +152,7 @@ A day of confusion, misfires, and runaway llamas — where even `configure()` qu
 - Order (and `Core`) were restored the following morning — *Boqer triumphed over Erev*.  
 - The documentation of this day remains deliberately fragmentary... for safety reasons.
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 <a id="november-9-2025"></a>
@@ -208,7 +208,7 @@ The SDOM project now has:
 Today centered on **design refinement** — clarifying SDOM’s reflection model, decoupling Variant from SDL,  
 and restoring stability to texture rendering. The groundwork for **DataRegistry** and **C ABI reflection** is now clear and mostly ready for implementation.  
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 <a id="november-11-2025"></a>
@@ -249,7 +249,7 @@ Together, these changes resolve all remaining `clang-analyzer-optin.cplusplus.Vi
 Today’s work transformed the Variant subsystem from an experimental prototype into a hardened, analyzer-clean, compiler-agnostic foundation.  
 The system is now **production-ready**, **thread-safe**, and **consistent across compilers**. Focus now shifts back to the **IDataObject** hierarchy and the design of the upcoming reflection and registry framework.
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 <a id="november-12-2025"></a>
@@ -306,7 +306,7 @@ With the core reflection layer stabilized and thread-safe, SDOM is ready to adva
 | ✅ | **Factory::registerResType** | **Factory::registerAssetObject** | Consistent naming for asset types |
 | ✅ | **Factory::attachCreatedObjectToParentFromConfig** | **Factory::attachCreatedObjectToParent** / **attachCreatedDisplayObjectToParent** | Shortened for clarity; “FromConfig” implied |
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -343,7 +343,7 @@ With `CBindingGenerator` producing valid ABIs, SDOM can now **express itself flu
 #### 🤔 *End of Day Reflection*  
 > *“When reflection becomes language, architecture becomes expression.”*  
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -405,7 +405,7 @@ Next up: consistent ordering, documentation quality, full property/function gene
 ### 🤔 **End of Day Reflection**
 > *“Every language starts as a whisper. Today, SDOM spoke clearly enough that even the Llama paused to listen.”*
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -461,7 +461,7 @@ Lua becomes a wrapper — safe, isolated, and completely replaceable.
 > *"Clarity isn’t something you find — it’s what remains after everything unnecessary has been removed."_*
 
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -534,7 +534,7 @@ Today, SDOM transitioned from **prototype FrontEnd construction** into **formali
 
 > *““A test that fails today prevents a thousand whispers of chaos tomorrow.””*  
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -599,7 +599,7 @@ SDOM now sees itself — and responds — in real time.
 > *“Frames flicker and vanish — but the truth they reveal endures.”*
 
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[⬆️ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -607,9 +607,6 @@ SDOM now sees itself — and responds — in real time.
 > 💬 *“Even the most tireless engines need to rest — for in stillness, new ideas take shape.”*
 
 --- 
-
-<a id="november-22-2025"></a>
-<a id="latest-update"></a>
 
 ## 🗓️ **November 22, 2025 — Binding the Boundless**
 
@@ -643,6 +640,41 @@ We are past the “experimental surgery on the living llama” phase.
 Next steps involve finishing the CAPI generator—especially function marshalling—and beginning Lua binding generation.  
 Once both are stable, SDOM’s reflection model will finally match its runtime behavior.
 
+#### 🤔 *End of Day Reflection*
+> *“Clarity is not a luxury — it is the cheapest optimization.”*
+
+---
+
+[⬆️ Back to Table of Contents](#table-of-contents)
+
+---
+
+<a id="november-23-2025"></a>
+<a id="latest-update"></a>
+
+## 🗓️ November 23, 2025 — *When Events Learned to Speak*
+
+> 💬 *“An interface isn’t truly finished until it can introduce itself without stuttering.”*  
+
+Today SDOM turned its attention to the **Event interface**, giving our polymorphic event system a proper public voice.  
+What began as a lone `SDOM_Event` handle with a single accessor is evolving into a complete, stable, language-agnostic contract.
+
+### 🧩 **CAPI — Event Interface Expansion**
+- Built out the foundation for a **fully featured C-level Event API**, moving beyond the minimalist placeholder.
+- Established consistent access patterns that avoid vtable exposure while preserving the full power of the C++ Event hierarchy.
+- Designed accessors for:
+  - Retrieving the event type (`uint32_t`)
+  - Reading JSON payloads (lazily serialized)
+  - Querying Variant-based properties on demand
+  - Access to metadata such as timestamps, window IDs, and originating objects (via handles)
+- Solidified the opaque-handle strategy to guarantee ABI stability and avoid per-event deep copies.
+- Aligned the Event API design with upcoming DisplayHandle / AssetHandle bindings and the `IDisplayObject` interface.
+
+### 🌟 **Summary**
+SDOM’s Event interface is now on track toward a **complete, ABI-stable, language-neutral contract**, ready for C, Lua, and future bindings.  
+Completing this interface sets the stage for the next major milestone:  
+**full handle bindings, DisplayObject reflection, and Core integration.**
+
 ## 🚧 **ToDo Today / Carryover**
 - 🔄 Revise `DataRegistry` to properly implement all custom data types and function calls  
 - ☐ Finalize `main.cpp` argument dispatch system  
@@ -658,13 +690,15 @@ Once both are stable, SDOM’s reflection model will finally match its runtime b
 - ☐ `Version.hpp` → JSON-based versioning pipeline  
 - ✅ Clean up SDOM API CMakeLists.txt to remove legacy ABI build paths  
 
-
 #### 🤔 *End of Day Reflection*
-> *“Clarity is not a luxury — it is the cheapest optimization.”*
+> *"The simplest interface is the one that only tells the truth — no more, no less."*
 
 ---
 
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+[🔝 **Back to Table of Contents**](#table-of-contents)
+
+---
+
 #### end-of-day
 
 ---
