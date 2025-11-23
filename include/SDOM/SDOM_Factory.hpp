@@ -92,9 +92,9 @@ namespace SDOM
 
         // --- DataRegistry access --- //
         // Preferred name for clarity
-        SDOM::DataRegistry& getDataRegistry() { return registry_; }
-        const SDOM::DataRegistry& getDataRegistry() const { return registry_; }
-        bool exportBindings(const std::string& outputDir) { return registry_.generateBindings(outputDir); }
+        SDOM::DataRegistry& getDataRegistry() { return data_registry_; }
+        const SDOM::DataRegistry& getDataRegistry() const { return data_registry_; }
+        bool exportBindings() { return data_registry_.generateBindings(); }
 
         // --- Object Type Registration --- //
         void registerDisplayObjectType(const std::string& typeName, const TypeCreators& creators);
@@ -242,25 +242,25 @@ namespace SDOM
         };            
         std::vector<futureChild> futureChildrenList_;
 
-    // --- ID Registry --- //
-    // Atomic counter for issuing stable 64-bit ids (0 reserved)
-    std::atomic<uint64_t> next_object_id_{1};
-    // Map stable id -> handle (separate maps for display and asset handles). Protected by a shared_mutex for concurrent reads.
-    std::unordered_map<uint64_t, DisplayHandle> display_id_map_;
-    std::unordered_map<uint64_t, AssetHandle> asset_id_map_;
-    mutable std::shared_mutex id_map_mutex_;
+        // --- ID Registry --- //
+        // Atomic counter for issuing stable 64-bit ids (0 reserved)
+        std::atomic<uint64_t> next_object_id_{1};
+        // Map stable id -> handle (separate maps for display and asset handles). Protected by a shared_mutex for concurrent reads.
+        std::unordered_map<uint64_t, DisplayHandle> display_id_map_;
+        std::unordered_map<uint64_t, AssetHandle> asset_id_map_;
+        mutable std::shared_mutex id_map_mutex_;
 
-    // ID registry helpers (private)
-    uint64_t registerDisplayObject(const std::string& name, const DisplayHandle& handle);
-    DisplayHandle resolveDisplayObject(uint64_t id) const;
-    void unregisterDisplayObject(uint64_t id);
+        // ID registry helpers (private)
+        uint64_t registerDisplayObject(const std::string& name, const DisplayHandle& handle);
+        DisplayHandle resolveDisplayObject(uint64_t id) const;
+        void unregisterDisplayObject(uint64_t id);
 
-    uint64_t registerAssetObject(const std::string& name, const AssetHandle& handle);
-    AssetHandle resolveAssetObject(uint64_t id) const;
-    void unregisterAssetObject(uint64_t id);
+        uint64_t registerAssetObject(const std::string& name, const AssetHandle& handle);
+        AssetHandle resolveAssetObject(uint64_t id) const;
+        void unregisterAssetObject(uint64_t id);
 
-    // --- DataRegistry owned by Factory --- //
-    SDOM::DataRegistry registry_;
+        // --- DataRegistry owned by Factory --- //
+        SDOM::DataRegistry data_registry_;
 
         // Calls TTF_CloseFont on all loaded TTFAsset objects
         void closeAllTruetypeAssets_();

@@ -2,6 +2,7 @@
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_CAPI_BindGenerator.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_IAssetObject.hpp>
@@ -63,7 +64,7 @@ namespace SDOM
         try {
             // Register IDataObject bindings for Event into the Factory's registry
             Event evt; // temporary to call registerBindings
-            evt.registerBindings("Event", registry_);
+            evt.registerBindings("Event", data_registry_);
         } catch(...) {
             ERROR("Factory::onInit: failed to register Event bindings");
         }        
@@ -105,12 +106,12 @@ namespace SDOM
                     // Create the asset
                     AssetHandle h = createAssetObject("Texture", init);
                     if (auto* tex = h.as<Texture>()) {
-                        tex->registerBindings("Texture", registry_);   // DataRegistry only
+                        tex->registerBindings("Texture", data_registry_);   // DataRegistry only
                     }
                 } else {
                     // Already exists — just ensure C++ DataRegistry bindings exist
                     if (auto* existing = dynamic_cast<Texture*>(getAssetObjectPtr(name))) {
-                        existing->registerBindings("Texture", registry_);
+                        existing->registerBindings("Texture", data_registry_);
                     }
                 }
             };
@@ -291,6 +292,16 @@ namespace SDOM
             ScrollBar::CreateFromJson
         });
 
+        // Add the CAPI_BindGenerator to the DataRegistry
+        data_registry_.addGenerator(
+            std::make_unique<CAPI_BindGenerator>(),
+            "../../include/SDOM/CAPI",
+            "../../src/CAPI",
+            true,   // overwrite existing
+            true    // verbose output
+        );
+        // Now generate all bindings (CAPI, Lua, etc.)
+        data_registry_.generateBindings();        
 
         // return initialized state
         initialized_ = true;
@@ -416,7 +427,7 @@ namespace SDOM
             }
             // --- Register DataRegistry bindings ---
             try {
-                prototype->IDataObject::registerBindings(typeName, registry_);
+                prototype->IDataObject::registerBindings(typeName, data_registry_);
             }
             catch (...) {
                 ERROR("DataRegistry binding failure for type '" << typeName << "'");
@@ -446,7 +457,7 @@ namespace SDOM
 
         // Create a prototype AssetHandle for Lua registration
         AssetHandle prototypeHandle(typeName, typeName, typeName);
-        prototypeHandle.registerBindings(typeName, registry_);
+        prototypeHandle.registerBindings(typeName, data_registry_);
     }
 
     IAssetObject* Factory::getAssetObjectPtr(const std::string& name)

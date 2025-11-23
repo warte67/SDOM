@@ -198,7 +198,7 @@ namespace SDOM
         SDOM::DataRegistry& getRegistry() { return getDataRegistry(); }
         [[deprecated("getRegistry() is deprecated; use getDataRegistry()")]]
         const SDOM::DataRegistry& getRegistry() const { return getDataRegistry(); }
-        bool exportBindings(const std::string& out) { return getFactory().exportBindings(out); }
+        bool exportBindings() { return getFactory().exportBindings(); }
 
         bool getIsTraversing() const { return isTraversing_; }
         void setIsTraversing(bool traversing) { isTraversing_ = traversing; }

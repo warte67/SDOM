@@ -6,14 +6,6 @@
 #include <SDOM/SDOM_IFontObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 
-// 🔥 Required to get SDOM_EventTypeDesc,
-//     SDOM_EventTypeHandle, SDOM_EventDesc,
-//     SDOM_CreateEventType(), SDOM_EnumEventTypes(), etc.
-#include <SDOM/SDOM_CAPI.h>
-#include <SDOM/CAPI/SDOM_CAPI_Events.h>
-
-// Need full EventManager definition for queue size test
-#include <SDOM/SDOM_EventManager.hpp>
 
 
 namespace SDOM

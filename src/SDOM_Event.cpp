@@ -46,7 +46,6 @@
 #include <SDOM/SDOM_Event.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
-#include <SDOM/CAPI/SDOM_CAPI_Events.h>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
@@ -131,7 +130,7 @@ namespace SDOM
     // ------------------------------ //
     // --- JSON Payload Accessors --- //
     // ------------------------------ //
-    
+
     const nlohmann::json& Event::getPayload() const {
         std::lock_guard<std::mutex> lock(event_mutex_);
         return payload_;
@@ -349,13 +348,118 @@ namespace SDOM
     }
 
 
-
-    // IDataObject binding registration for Event (DataRegistry + Lua helpers)
     void Event::registerBindingsImpl(const std::string& typeName)
     {
-        // Base info
         BIND_INFO(typeName, "Event");
 
+
+        // -----------------------------
+        // Register Functions
+        // -----------------------------
+        auto* activeRegistry = IDataObject::activeRegistry();
+        auto lookupTypeInfo = [&](const std::string& name) -> const SDOM::TypeInfo* {
+            if (activeRegistry) {
+                return activeRegistry->lookupType(name);
+            }
+            return SDOM::DataRegistry::instance().lookupType(name);
+        };
+
+        if (!lookupTypeInfo(typeName))
+        {
+            SDOM::TypeInfo eventInfo;
+            eventInfo.name        = typeName;
+            eventInfo.cpp_type_id = "SDOM::Event";
+            eventInfo.file_stem   = "Event";
+            eventInfo.export_name = "SDOM_Event";
+            eventInfo.kind        = SDOM::EntryKind::Object;
+            eventInfo.category    = "Events";
+            eventInfo.doc         = "SDOM Event object bindings";
+            addDataType(typeName, eventInfo);
+        }
+
+
+        SDOM::FunctionInfo getTypeInfo;
+        getTypeInfo.name          = "getType";
+        getTypeInfo.cpp_signature = "EventType Event::getType() const";
+        getTypeInfo.return_type   = "EventType";
+        getTypeInfo.doc           = "Retrieves the numeric SDOM_EventType id for this event.";
+        getTypeInfo.c_name        = "SDOM_GetEventType";
+        getTypeInfo.c_signature   = "bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type)";
+
+        auto getTypeBinding = [](const Event* evt, EventType::IdType* outType) -> bool {
+            if (!evt || !outType) {
+                return false;
+            }
+
+            std::lock_guard<std::mutex> lock(evt->event_mutex_);
+            Event* mutableEvent = const_cast<Event*>(evt);
+            EventType& typeRef = mutableEvent->type;
+            *outType = typeRef.getOrAssignId();
+            return true;
+        };
+
+        addFunction(typeName, std::move(getTypeInfo), getTypeBinding);
+
+        // -----------------------------
+        // Register Event Handle Struct
+        // -----------------------------
+        const std::string eventHandleName = "SDOM_Event";
+        if (!lookupTypeInfo(eventHandleName))
+        {
+            SDOM::TypeInfo eventHandle;
+            eventHandle.name        = eventHandleName;
+            eventHandle.cpp_type_id = eventHandleName;
+            eventHandle.file_stem   = "Event";
+            eventHandle.export_name = eventHandleName;
+            eventHandle.kind        = SDOM::EntryKind::Struct;
+            eventHandle.doc         = "C API opaque handle that wraps an SDOM::Event pointer.";
+
+            SDOM::PropertyInfo implField;
+            implField.name      = "impl";
+            implField.cpp_type  = "SDOM::Event*";
+            implField.read_only = true;
+            implField.doc       = "Pointer to the underlying C++ SDOM::Event instance.";
+            eventHandle.properties.push_back(std::move(implField));
+
+            addDataType(eventHandleName, eventHandle);
+        }
+
+
+        // -----------------------------
+        // Register EventType Enumeration
+        // -----------------------------
+        auto makeEventTypeInfo = [](const EventType& et) {
+            SDOM::TypeInfo ti;
+            ti.name        = std::string("EventType::") + et.getName();
+            ti.cpp_type_id = et.getName();
+            ti.file_stem   = "Event";  // EventType enumeration belongs in the SDOM_CAPI_Event.h header
+            ti.export_name = "SDOM_EventType";
+            ti.kind        = SDOM::EntryKind::Enum;
+            ti.enum_value  = const_cast<EventType&>(et).getOrAssignId();
+            ti.doc         = et.getDoc();
+            ti.category    = et.getCategory();
+
+            auto addBoolProp = [&](std::string_view prop, std::string_view doc) {
+                SDOM::PropertyInfo p;
+                p.name      = std::string(prop);
+                p.cpp_type  = "bool";
+                p.read_only = false;
+                p.doc       = std::string(doc);
+                ti.properties.push_back(std::move(p));
+            };
+            addBoolProp("captures",    "Whether this event type participates in capture.");
+            addBoolProp("bubbles",     "Whether this event type bubbles.");
+            addBoolProp("target_only", "If true, event is target-only.");
+            addBoolProp("global",      "Whether this event type is global.");
+
+            return ti;
+        };
+
+        for (EventType* et : EventType::getAll())
+        {
+            if (!et) continue;
+            addDataType(et->getName(), makeEventTypeInfo(*et));
+        }
     } // END Event::registerBindingsImpl(const std::string& typeName)
 
 

@@ -614,121 +614,7 @@ namespace SDOM
         // }
     } // END: Core::onQuit()
 
-    // void Core::onRender()
-    // {
-    //     SDL_Renderer* renderer = getRenderer();
-    //     if (!renderer)
-    //         ERROR("Core::onRender() Error: Renderer is null.");
-
-    //     // Lambda for recursive render handling using std::function
-    //     std::function<void(IDisplayObject&)> handleRender;
-    //     SDL_Texture* texture = texture_;
-    //     IDisplayObject* activeRoot = dynamic_cast<IDisplayObject*>(rootNode_.get());
-    //     handleRender = [this, &handleRender, renderer, texture, activeRoot](IDisplayObject& node) 
-    //     {
-    //         // Skip nested Stage subtrees when a different Stage is active.
-    //         if (dynamic_cast<Stage*>(&node) && (&node != activeRoot))
-    //             return;
-    //         // render the node with pointer-based timers to avoid name races
-    //         const std::string objName = node.getName();
-    //         DisplayHandle selfRender(objName, node.getType());
-    //         getFactory().start_render_time(&node);
-    //         node.onRender();
-    //         if (selfRender.isValid()) {
-    //             getFactory().stop_render_time(&node, &objName);
-    //         } else {
-    //             getFactory().abandon_render_time(&node);
-    //         }
-
-    //         node.setDirty(false); // clear dirty flag after rendering
-
-    //         DisplayHandle rootHandle = this->getStageHandle();
-    //         // PreRender EventListeners
-    //         if (node.hasEventListener(EventType::OnPreRender, false))
-    //         {
-    //             auto preRenderEv = std::make_unique<Event>(EventType::OnPreRender, rootHandle);
-    //             preRenderEv->setElapsedTime(this->getElapsedTime());
-    //             preRenderEv->setRelatedTarget(rootHandle);
-    //             eventManager_->dispatchEvent(std::move(preRenderEv), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
-    //         }
-
-    //         // sort children by z-order if needed
-    //         node.sortByZOrder();       
-
-    //         // render children — build a safe snapshot of child keys
-    //         std::vector<std::pair<std::string,std::string>> child_keys;
-    //         const auto& live_children = node.getChildren();
-    //         child_keys.reserve(live_children.size());
-    //         for (const auto& ch : live_children) {
-    //             if (!ch.isValid()) continue;
-    //             child_keys.emplace_back(ch.getName(), ch.getType());
-    //         }
-    //         for (const auto& key : child_keys) 
-    //         {
-    //             DisplayHandle child(key.first, key.second);
-    //             if (!child.isValid()) continue;
-    //             auto* childObj = dynamic_cast<IDisplayObject*>(child.get());
-    //             if (childObj) 
-    //             {
-    //                 // Do not traverse into other Stage subtrees
-    //                 if (dynamic_cast<Stage*>(childObj) && (childObj != activeRoot))
-    //                     continue;
-    //                 // ensure the render target is set correctly before rendering
-    //                 if (texture)
-    //                     SDL_SetRenderTarget(renderer, texture);
-    //                 // Compute focus info BEFORE recursion (child may self-destruct during render)
-    //                 const bool isFocused = child.isValid() && childObj->isKeyboardFocused();
-    //                 const SDL_FRect focusRect = { float(childObj->getX()), float(childObj->getY()), float(childObj->getWidth()), float(childObj->getHeight()) };
-
-    //                 handleRender(*childObj);
-
-    //                 // Render a border if the Box has keyboard focus (use captured rect)
-    //                 if (isFocused)
-    //                 {
-    //                     SDL_Color focusColor = { (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, (Uint8)keyfocus_gray_, 128 }; // Gray color for focus
-    //                     SDL_SetRenderDrawColor(getRenderer(), focusColor.r, focusColor.g, focusColor.b, focusColor.a); // Border color
-    //                     SDL_RenderRect(getRenderer(), &focusRect);
-    //                 }
-    //             }
-    //         }
-
-    //         // OnRender event listener
-    //         if (node.hasEventListener(EventType::OnRender, false))
-    //         {
-    //             auto renderEv = std::make_unique<Event>(EventType::OnRender, rootHandle);
-    //             renderEv->setElapsedTime(this->getElapsedTime());
-    //             renderEv->setRelatedTarget(rootHandle);
-    //             eventManager_->dispatchEvent(std::move(renderEv), DisplayHandle(rootHandle.getName(), rootHandle.getType()));        
-    //         }
-    //     };
-
-    //     SDL_SetRenderTarget(renderer, nullptr);
-
-    //     // Clear the entire window to the border color
-    //     SDL_Color color = getColor();
-    //     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    //     SDL_RenderClear(renderer);
-
-    //     // set the render target to the proper background texture
-    //     if (texture_)
-    //         SDL_SetRenderTarget(renderer, texture_); 
-
-    //     // Call recursive render on the root node (if it exists)
-    //     IDisplayObject* rootObj = dynamic_cast<IDisplayObject*>(rootNode_.get());
-    //     if (rootObj)
-    //     {
-    //         setIsTraversing(true);
-    //         handleRender(*rootObj);
-    //         setIsTraversing(false);
-    //     }
-
-    //     // Call the users registered render function if available. 
-    //     // This is called after the entire scene has been rendered
-    //     // so the user can overlay additional graphics if desired.
-    //     if (fnOnRender)
-    //         fnOnRender();        
-    // } // END: Core::onRender()
-
+    
     void Core::onRender()
     {
         SDL_Renderer* renderer = getRenderer();
@@ -830,7 +716,7 @@ namespace SDOM
 
     void Core::onEvent(Event& event)
     {
-        (void )event; // stop compiler warning
+        (void)event; // stop compiler warning
         
     }
 
