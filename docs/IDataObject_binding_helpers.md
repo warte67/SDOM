@@ -19,11 +19,21 @@ Many SDOM object types perform the same steps during binding registration:
 
 This redesign moves these repeated operations into reusable helpers inside `IDataObject`.
 
+## 1.1 Goals
+
+- Short term: unblock the C API generator by giving every `IDataObject` subclass the same reflection plumbing; Lua and other runtimes will adopt the helpers once the C flow is stable.
+- Transition: existing hand-written `registerBindingsImpl()` logic can continue to call directly into the helpers so rolling adoption does not break legacy modules.
+- Future: once coverage hits 100%, we can retire bespoke registry code paths and gate new modules on the helper-based workflow.
+
 ---
 
-# 2. Required Additions to `IDataObject`
+# 2. Helper API and Usage Patterns
+
+Each helper below lives on `IDataObject` and is designed to be called directly from `registerBindingsImpl()` with no extra boilerplate. For each API, the “Usage” paragraph explains when subclasses should invoke it and what assumptions it makes.
 
 ## 2.1 Access to the correct DataRegistry
+
+*Usage:* call `registry()` for any mutation (type creation, function registration) performed during binding. The helper first consults the thread-local pointer returned by `activeRegistry()`—set by the generator while bindings are emitted—and falls back to the global singleton when invoked elsewhere (tests, tools).
 
 ```cpp
 protected:
@@ -38,9 +48,13 @@ protected:
     }
 ```
 
+> `activeRegistry()` is thread-local; subclasses should not cache the raw pointer because generators may swap registries between phases.
+
 ---
 
 ## 2.2 Create or retrieve a `TypeInfo` entry
+
+*Usage:* invoke once per concrete object type at the top of `registerBindingsImpl()` to guarantee that metadata exists before adding properties or functions. The helper returns a mutable reference to the canonical `TypeInfo` stored in the registry.
 
 ```cpp
 protected:
@@ -69,9 +83,13 @@ protected:
     }
 ```
 
+> `DataRegistry::getMutable()` retrieves the authoritative entry and throws (or asserts) if the type is missing, so callers should only use it immediately after `ensureType()` or `registerType()`.
+
 ---
 
 ## 2.3 Register an opaque C API handle
+
+*Usage:* call once per exported opaque struct. The default implementation emits a single `impl` pointer; if a handle needs richer metadata (extra user data, generation counters), extend the helper before registration or add fields to `ti.properties` inside the call site.
 
 ```cpp
 protected:
@@ -106,6 +124,8 @@ protected:
 
 ## 2.4 Register a callable method with metadata
 
+*Usage:* wrap every exported instance or static method so the generator sees consistent metadata. Parameters are currently inferred elsewhere (the existing reflection still populates `FunctionInfo::param_types`), so this helper focuses on wiring up names, docs, and runtime callables.
+
 ```cpp
 protected:
     template<typename Fn>
@@ -126,6 +146,7 @@ protected:
         fi.c_signature   = cSig;
         fi.doc           = doc;
 
+        // TODO: wire param_types population/opcode marshalling once unified translators land.
         registry().registerFunction(typeName, fi, std::forward<Fn>(fn));
     }
 ```
@@ -133,6 +154,8 @@ protected:
 ---
 
 ## 2.5 Register enumeration values
+
+*Usage:* emit once per enum constant. Because `DataRegistry::registerType()` currently performs a replace-on-duplicate, callers should avoid re-registering the same `(exportName, cppName)` pair during hot reload; future work will add explicit diagnostics.
 
 ```cpp
 protected:
@@ -158,6 +181,8 @@ protected:
 ---
 
 # 3. Example: Updated `Event::registerBindingsImpl()`
+
+The Event object exercises every helper: it first guarantees the base type exists, registers the shared opaque handle, wires the `getType` callable, then bulk-loads the enum catalog. Compared to the previous manual approach (50+ lines of bespoke registry calls), the declarative flow below makes each step explicit through the numbered comments.
 
 ```cpp
 void Event::registerBindingsImpl(const std::string& typeName)
@@ -224,6 +249,14 @@ void Event::registerBindingsImpl(const std::string& typeName)
 - Move enum grouping and module grouping into shared logic  
 - Expand `registerMethod()` with automatic C signature generation  
 - Begin implementing `LUA_BindGenerator` using same structure  
+
+| Step | Owner | Target milestone |
+| --- | --- | --- |
+| Land `IDataObject` helper implementation in runtime (`.hpp/.cpp`) | Core Runtime | Sprint 48 |
+| Migrate high-traffic objects (Event, Frame, Stage, DataRegistry tools) | Framework Team | Sprint 49 |
+| Add shared type translators + enum grouping utilities | Tooling/Bindings | Sprint 50 |
+| Extend `registerMethod()` for auto C sig generation | Tooling/Bindings | Sprint 51 |
+| Bring Lua generator onto helper stack | Scripting Team | Sprint 52 |
 
 ---
 

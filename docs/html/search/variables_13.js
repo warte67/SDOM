@@ -8,9 +8,8 @@ var searchData=
   ['update_5fcalls_5',['update_calls',['../structSDOM_1_1Factory_1_1PerfStats.html#ac4ac2ac5e764eea40a8a712fd04fbc75',1,'SDOM::Factory::PerfStats']]],
   ['update_5ftime_5fns_6',['update_time_ns',['../structSDOM_1_1Factory_1_1PerfStats.html#a3a829961b66d7bff63588e5abad4ee7f',1,'SDOM::Factory::PerfStats']]],
   ['use_5fborder_5f_7',['use_border_',['../classSDOM_1_1TristateButton.html#aad22aeae4ac071b8b160ae515b3debca',1,'SDOM::TristateButton']]],
-  ['usecapture_8',['useCapture',['../classSDOM_1_1Event.html#af5e49b7da66ac7d4c092ddd582524db9',1,'SDOM::Event']]],
+  ['use_5fcapture_8',['use_capture',['../classSDOM_1_1Event.html#afe5931951716e3a5a9f1939a8d9904fb',1,'SDOM::Event']]],
   ['user_9',['User',['../classSDOM_1_1EventType.html#aed0c4427ac3ac52e140f425fdab9452d',1,'SDOM::EventType']]],
-  ['user_5fdata_10',['user_data',['../structSDOM__EventTypeDesc.html#af5cf1df0aeea378a2d9ca62b8e7404e7',1,'SDOM_EventTypeDesc::user_data'],['../structSDOM__EventDesc.html#a3ceb481a0643231a063a94269c997970',1,'SDOM_EventDesc::user_data']]],
-  ['userfontheightspecified_5f_11',['userFontHeightSpecified_',['../classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0',1,'SDOM::Label']]],
-  ['userfontwidthspecified_5f_12',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]]
+  ['userfontheightspecified_5f_10',['userFontHeightSpecified_',['../classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0',1,'SDOM::Label']]],
+  ['userfontwidthspecified_5f_11',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]]
 ];

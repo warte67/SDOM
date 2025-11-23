@@ -155,6 +155,31 @@ std::vector<std::string> extractParameterNames(const FunctionInfo& fn) {
     return names;
 }
 
+bool isCStringReturnType(const std::string& type)
+{
+    const std::string trimmed = trim(type);
+    return trimmed == "const char*" || trimmed == "const char *" || trimmed == "char const*" || trimmed == "char const *";
+}
+
+std::string normalizeTypeToken(std::string type)
+{
+    type = trim(std::move(type));
+    if (type.rfind("const ", 0) == 0) {
+        type = trim(type.substr(6));
+    }
+
+    if (!type.empty() && type.rfind("enum ", 0) == 0) {
+        type = trim(type.substr(5));
+    }
+
+    while (!type.empty() && (type.back() == '&' || type.back() == '*')) {
+        type.pop_back();
+        type = trim(type);
+    }
+
+    return type;
+}
+
 } // namespace
 
 bool CAPI_BindGenerator::generate(const std::unordered_map<std::string, TypeInfo>& types,
@@ -231,7 +256,8 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
     std::cout << "[CAPI_BindGenerator] Generating source: " << filename << '\n';
 
     out << "#include <SDOM/CAPI/SDOM_CAPI_" << module.file_stem << ".h>\n";
-    out << "#include <SDOM/SDOM_DataRegistry.hpp>\n\n";
+    out << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
+    out << "#include <string>\n\n";
 
     if (!moduleHasFunctions(module)) {
         out << "// No callable bindings recorded for this module.\n";
@@ -462,6 +488,8 @@ void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule
             }
 
             const std::string cReturnType = deduceCReturnType(fn);
+            const std::string normalizedReturnType = normalizeTypeToken(cReturnType);
+            const bool returnIsEnum = isEnumReturnType(normalizedReturnType, module);
             const std::string callExpr = "SDOM::CAPI::invokeCallable(\"" + fn.c_name + "\", {})";
 
             if (cReturnType == "void") {
@@ -473,6 +501,24 @@ void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule
                 out << "        return false;\n";
                 out << "    }\n";
                 out << "    return callResult.v.b;\n";
+            } else if (isCStringReturnType(cReturnType)) {
+                out << "    static thread_local std::string s_result;\n";
+                out << "    const auto callResult = " << callExpr << ";\n";
+                out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::CString) {\n";
+                out << "        s_result.clear();\n";
+                out << "        return s_result.c_str();\n";
+                out << "    }\n";
+                out << "    s_result = callResult.s;\n";
+                out << "    return s_result.c_str();\n";
+            } else if (returnIsEnum) {
+                out << "    const auto callResult = " << callExpr << ";\n";
+                out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
+                out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.u);\n";
+                out << "    }\n";
+                out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
+                out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.i);\n";
+                out << "    }\n";
+                out << "    return static_cast<" << normalizedReturnType << ">(0);\n";
             } else {
                 out << "    // TODO: marshal return type '" << cReturnType << "'.\n";
                 out << "    (void)" << callExpr << ";\n";
@@ -522,6 +568,26 @@ void CAPI_BindGenerator::forEachCallableType(
     visit(module.globals);
     visit(module.functions);
     visit(module.aliases);
+}
+
+bool CAPI_BindGenerator::isEnumReturnType(const std::string& normalizedType, const BindModule& module)
+{
+    if (normalizedType.empty()) {
+        return false;
+    }
+
+    for (const TypeInfo* entry : module.enums) {
+        if (!entry) {
+            continue;
+        }
+
+        const std::string export_name = entry->export_name.empty() ? entry->name : entry->export_name;
+        if (export_name == normalizedType) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 } // namespace SDOM

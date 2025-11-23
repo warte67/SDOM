@@ -134,6 +134,16 @@ Public Types</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="memdesc:adca0aa068ac9fc59e78b78c430a92980"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference points for anchoring child edges to a parent.  <a href="#adca0aa068ac9fc59e78b78c430a92980">More...</a><br /></td></tr>
+<tr class="memitem:a3ca11887e945e749dc9dad42fb9cc8e8" id="r_a3ca11887e945e749dc9dad42fb9cc8e8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ca11887e945e749dc9dad42fb9cc8e8">EntryKind</a> { <br />
+&#160;&#160;<a class="el" href="#a3ca11887e945e749dc9dad42fb9cc8e8a497031794414a552435f90151ac3b54b">Object</a>
+, <a class="el" href="#a3ca11887e945e749dc9dad42fb9cc8e8a886ef5dbd655a6c97726d7091c6b173e">Struct</a>
+, <a class="el" href="#a3ca11887e945e749dc9dad42fb9cc8e8acf20423ed48998082c20099488a0917c">Enum</a>
+, <a class="el" href="#a3ca11887e945e749dc9dad42fb9cc8e8a4cc6684df7b4a92b1dec6fce3264fac8">Global</a>
+, <br />
+&#160;&#160;<a class="el" href="#a3ca11887e945e749dc9dad42fb9cc8e8a86408593c34af77fdd90df932f8b5261">Function</a>
+, <a class="el" href="#a3ca11887e945e749dc9dad42fb9cc8e8aeffdb9ce6c5d44df31b89d7069c8e0fb">Alias</a>
+<br />
+ }</td></tr>
 <tr class="memitem:af652715c3e637c795824fa0afedda425" id="r_af652715c3e637c795824fa0afedda425"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af652715c3e637c795824fa0afedda425">ButtonState</a> : int { <br />
 &#160;&#160;<a class="el" href="#af652715c3e637c795824fa0afedda425a3cab03c00dbd11bc3569afa0748013f0">Inactive</a> = 0
 , <a class="el" href="#af652715c3e637c795824fa0afedda425a4d3d769b812b6faa6b76e1a8abaece2d">Active</a>
@@ -367,8 +377,7 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a1ba3fe71c30a46b568259105d73972be" id="r_a1ba3fe71c30a46b568259105d73972be"><td class="memItemLeft" align="right" valign="top">static const std::unordered_map&lt; <a class="el" href="#a176e331c0f2e44c038e10b25684370b5">PanelTileOffset</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ba3fe71c30a46b568259105d73972be">panelTileOffsetToString_</a></td></tr>
 <tr class="memitem:a5121ece23da73f686e3ab61c3fc63339" id="r_a5121ece23da73f686e3ab61c3fc63339"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5121ece23da73f686e3ab61c3fc63339">orientation_to_string</a></td></tr>
 <tr class="memitem:a7569a3c4255eb2a2cddfdf0cdab60c15" id="r_a7569a3c4255eb2a2cddfdf0cdab60c15"><td class="memItemLeft" align="right" valign="top">static const std::map&lt; std::string, <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7569a3c4255eb2a2cddfdf0cdab60c15">string_to_orientation</a></td></tr>
-<tr class="memitem:a01cfe5e89347f5cd7216554b454eae65" id="r_a01cfe5e89347f5cd7216554b454eae65"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="namespaceSDOM_1_1CAPI.html#af3ee6a7790c29c5330598dd148c4e232">SDOM::CAPI::GenericCallable</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a01cfe5e89347f5cd7216554b454eae65">g_callable_map</a></td></tr>
-<tr class="memitem:ae46716553a1dba1a72be2f9e5a7dbb89" id="r_ae46716553a1dba1a72be2f9e5a7dbb89"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae46716553a1dba1a72be2f9e5a7dbb89">g_callable_mutex</a></td></tr>
+<tr class="memitem:a5c6b601c17f70ed77b2ca79a9bea9837" id="r_a5c6b601c17f70ed77b2ca79a9bea9837"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c6b601c17f70ed77b2ca79a9bea9837">kEnumCommentColumn</a> = 52</td></tr>
 <tr class="memitem:af584a39d2e3cf67afac515bca37e91ba" id="r_af584a39d2e3cf67afac515bca37e91ba"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af584a39d2e3cf67afac515bca37e91ba">s_eventtype_id_mutex</a></td></tr>
 <tr class="memitem:aa8b138842446cb2d2cf817552647fe50" id="r_aa8b138842446cb2d2cf817552647fe50"><td class="memItemLeft" align="right" valign="top">static constexpr unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a> = 8</td></tr>
 <tr class="memitem:a46aa961c7fe1079dba58a18e485073df" id="r_a46aa961c7fe1079dba58a18e485073df"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46aa961c7fe1079dba58a18e485073df">SDOM_EVENT_BLOCK_SIZE</a> = (1u &lt;&lt; <a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a>)</td></tr>
@@ -554,6 +563,36 @@ Static Public Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425a4f97e88e22bc8dfe3a6b3962da9a7fca" name="af652715c3e637c795824fa0afedda425a4f97e88e22bc8dfe3a6b3962da9a7fca"></a>Greyed&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39" name="af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39"></a>ButtonState_MAX&#160;</td><td class="fielddoc"><p>Sentinel value for iteration/debug. </p>
 </td></tr>
+</table>
+
+</div>
+</div>
+<a id="a3ca11887e945e749dc9dad42fb9cc8e8" name="a3ca11887e945e749dc9dad42fb9cc8e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ca11887e945e749dc9dad42fb9cc8e8">&#9670;&#160;</a></span>EntryKind</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class SDOM::EntryKind</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3ca11887e945e749dc9dad42fb9cc8e8a497031794414a552435f90151ac3b54b" name="a3ca11887e945e749dc9dad42fb9cc8e8a497031794414a552435f90151ac3b54b"></a>Object&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3ca11887e945e749dc9dad42fb9cc8e8a886ef5dbd655a6c97726d7091c6b173e" name="a3ca11887e945e749dc9dad42fb9cc8e8a886ef5dbd655a6c97726d7091c6b173e"></a>Struct&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3ca11887e945e749dc9dad42fb9cc8e8acf20423ed48998082c20099488a0917c" name="a3ca11887e945e749dc9dad42fb9cc8e8acf20423ed48998082c20099488a0917c"></a>Enum&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3ca11887e945e749dc9dad42fb9cc8e8a4cc6684df7b4a92b1dec6fce3264fac8" name="a3ca11887e945e749dc9dad42fb9cc8e8a4cc6684df7b4a92b1dec6fce3264fac8"></a>Global&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3ca11887e945e749dc9dad42fb9cc8e8a86408593c34af77fdd90df932f8b5261" name="a3ca11887e945e749dc9dad42fb9cc8e8a86408593c34af77fdd90df932f8b5261"></a>Function&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3ca11887e945e749dc9dad42fb9cc8e8aeffdb9ce6c5d44df31b89d7069c8e0fb" name="a3ca11887e945e749dc9dad42fb9cc8e8aeffdb9ce6c5d44df31b89d7069c8e0fb"></a>Alias&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -962,50 +1001,6 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a01cfe5e89347f5cd7216554b454eae65" name="a01cfe5e89347f5cd7216554b454eae65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01cfe5e89347f5cd7216554b454eae65">&#9670;&#160;</a></span>g_callable_map</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;std::string, <a class="el" href="namespaceSDOM_1_1CAPI.html#af3ee6a7790c29c5330598dd148c4e232">SDOM::CAPI::GenericCallable</a>&gt; SDOM::g_callable_map</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae46716553a1dba1a72be2f9e5a7dbb89" name="ae46716553a1dba1a72be2f9e5a7dbb89"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae46716553a1dba1a72be2f9e5a7dbb89">&#9670;&#160;</a></span>g_callable_mutex</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::mutex SDOM::g_callable_mutex</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a358e4470a668bb114bd45f53472bb665" name="a358e4470a668bb114bd45f53472bb665"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a358e4470a668bb114bd45f53472bb665">&#9670;&#160;</a></span>g_core</h2>
 
@@ -1355,6 +1350,28 @@ Static Public Attributes</h2></td></tr>
           <td class="memname">unsigned int SDOM::internal_ttf_len = 455188</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5c6b601c17f70ed77b2ca79a9bea9837" name="a5c6b601c17f70ed77b2ca79a9bea9837"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c6b601c17f70ed77b2ca79a9bea9837">&#9670;&#160;</a></span>kEnumCommentColumn</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t SDOM::kEnumCommentColumn = 52</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1996,7 +2013,7 @@ SDOM_TestOutputConfig</h1>
 <li>include/SDOM/<a class="el" href="SDOM__IRangeControl_8hpp_source.html">SDOM_IRangeControl.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__Texture_8hpp_source.html">SDOM_Texture.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__TTFAsset_8hpp_source.html">SDOM_TTFAsset.hpp</a></li>
-<li>src/<a class="el" href="SDOM__DataRegistry_8cpp.html">SDOM_DataRegistry.cpp</a></li>
+<li>src/<a class="el" href="SDOM__CAPI__BindGenerator_8cpp.html">SDOM_CAPI_BindGenerator.cpp</a></li>
 <li>src/<a class="el" href="SDOM__EventType_8cpp.html">SDOM_EventType.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__font__8x12_8cpp.html">SDOM_internal_font_8x12.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__font__8x8_8cpp.html">SDOM_internal_font_8x8.cpp</a></li>

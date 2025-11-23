@@ -49,6 +49,8 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
+#include <string_view>
+#include <cstdint>
 // #include <SDOM/SDOM_CAPI_Events_runtime.h>
 
 
@@ -347,119 +349,204 @@ namespace SDOM
         return *this;
     }
 
-
     void Event::registerBindingsImpl(const std::string& typeName)
     {
+        // -------------------------------------------------------------------------
+        // Diagnostic / Binding Context
+        // -------------------------------------------------------------------------
+        // Records metadata about the binding operation (source file, typeName, etc.)
         BIND_INFO(typeName, "Event");
 
 
-        // -----------------------------
-        // Register Functions
-        // -----------------------------
-        auto* activeRegistry = IDataObject::activeRegistry();
-        auto lookupTypeInfo = [&](const std::string& name) -> const SDOM::TypeInfo* {
-            if (activeRegistry) {
-                return activeRegistry->lookupType(name);
-            }
-            return SDOM::DataRegistry::instance().lookupType(name);
+        // -------------------------------------------------------------------------
+        // Ensure Primary TypeInfo Exists
+        // -------------------------------------------------------------------------
+        // Creates (or retrieves) the canonical TypeInfo entry for SDOM::Event.
+        // This guarantees the registry is ready before we attach methods, properties,
+        // enum values, or opaque handle metadata.
+        (void)ensureType(typeName,
+                        SDOM::EntryKind::Object,
+                        "SDOM::Event",
+                        "Event",
+                        "SDOM_Event",
+                        "Events",
+                        "SDOM Event object bindings");
+
+
+        // -------------------------------------------------------------------------
+        // Register Opaque C Handle Type (SDOM_Event)
+        // -------------------------------------------------------------------------
+        // Exposes `struct SDOM_Event { void* impl; };` to the C API.  This is the
+        // stable ABI-safe representation of Event instances outside C++.
+        registerOpaqueHandle("SDOM::Event",
+                            "SDOM_Event",
+                            "Event",
+                            "Opaque C handle for SDOM::Event.");
+
+
+        // -------------------------------------------------------------------------
+        // Register Methods (C/C++ Callable Functions)
+        // -------------------------------------------------------------------------
+        // Adds the C-facing function SDOM_GetEventType() and metadata about its
+        // C++ signature, return type, documentation, call wrapper, etc.
+        registerMethod(
+            typeName,
+            "getType",
+            "EventType Event::getType() const",
+            "EventType",
+            "SDOM_GetEventType",
+            "bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type)",
+            "Retrieves the numeric SDOM_EventType id for this event.",
+            [](const Event* evt, EventType::IdType* outType) -> bool {
+                if (!evt || !outType) {
+                    return false;
+                }
+
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                Event* mutableEvent = const_cast<Event*>(evt);
+                EventType& typeRef = mutableEvent->type;
+                *outType = typeRef.getOrAssignId();
+                return true;
+            });
+
+        // Adds the C-facing function SDOM_GetEventTypeName() and metadata about its
+        // C++ signature, return type, documentation, call wrapper, etc.
+        registerMethod(
+            typeName,
+            "getTypeName",
+            "std::string Event::getTypeName() const",
+            "const char*",
+            "SDOM_GetEventTypeName",
+            "const char* SDOM_GetEventTypeName(const SDOM_Event* evt)",
+            "Retrieves the EventType name associated with this event.",
+            [](const Event* evt) -> std::string {
+                if (!evt) {
+                    return {};
+                }
+
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                return evt->type.getName();
+            });
+
+        // Adds the C-facing function SDOM_GetEventPhase() and metadata about its
+        // C++ signature, return type, documentation, call wrapper, etc.
+        registerMethod(
+            typeName,
+            "getPhase",
+            "Event::Phase Event::getPhase() const",
+            "SDOM_EventPhase",
+            "SDOM_GetEventPhase",
+            "SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt)",
+            "Returns the current propagation phase for this event.",
+            [](const Event* evt) -> Event::Phase {
+                if (!evt) {
+                    return Event::Phase::Capture;
+                }
+
+                return evt->getPhase();
+            });
+
+        // Adds the C-facing function SDOM_SetEventPhase() and metadata about its
+        // C++ signature, return type, documentation, call wrapper, etc.
+        registerMethod(
+            typeName,
+            "setPhase",
+            "Event& Event::setPhase(Event::Phase phase)",
+            "bool",
+            "SDOM_SetEventPhase",
+            "bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase)",
+            "Sets the propagation phase for this event.",
+            [](Event* evt, Event::Phase phase) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                evt->setPhase(phase);
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getPhaseString",
+            "std::string Event::getPhaseString() const",
+            "const char*",
+            "SDOM_GetEventPhaseString",
+            "const char* SDOM_GetEventPhaseString(const SDOM_Event* evt)",
+            "Retrieves the textual description of the current dispatch phase.",
+            [](const Event* evt) -> std::string {
+                if (!evt) {
+                    return {};
+                }
+
+                return evt->getPhaseString();
+            });
+
+
+        // -------------------------------------------------------------------------
+        // Register Enum Values for SDOM_EventPhase
+        // -------------------------------------------------------------------------
+        struct PhaseEnumDesc {
+            Phase value;
+            const char* name;
+            const char* doc;
         };
 
-        if (!lookupTypeInfo(typeName))
+        static constexpr PhaseEnumDesc kPhaseEnumValues[] = {
+            { Phase::Capture, "Capture", "Event is traveling from the root down toward the target (capture phase)." },
+            { Phase::Target, "Target", "Event has reached the target object; handlers on the target run here." },
+            { Phase::Bubbling, "Bubbling", "Event is traveling upward from the target back toward the root (bubble phase)." }
+        };
+
+        for (const auto& entry : kPhaseEnumValues)
         {
-            SDOM::TypeInfo eventInfo;
-            eventInfo.name        = typeName;
-            eventInfo.cpp_type_id = "SDOM::Event";
-            eventInfo.file_stem   = "Event";
-            eventInfo.export_name = "SDOM_Event";
-            eventInfo.kind        = SDOM::EntryKind::Object;
-            eventInfo.category    = "Events";
-            eventInfo.doc         = "SDOM Event object bindings";
-            addDataType(typeName, eventInfo);
+            registerEnumValue(
+                "SDOM_EventPhase",
+                "Event",
+                entry.name,
+                static_cast<std::uint32_t>(entry.value),
+                entry.doc,
+                "Event Phase");
         }
 
-
-        SDOM::FunctionInfo getTypeInfo;
-        getTypeInfo.name          = "getType";
-        getTypeInfo.cpp_signature = "EventType Event::getType() const";
-        getTypeInfo.return_type   = "EventType";
-        getTypeInfo.doc           = "Retrieves the numeric SDOM_EventType id for this event.";
-        getTypeInfo.c_name        = "SDOM_GetEventType";
-        getTypeInfo.c_signature   = "bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type)";
-
-        auto getTypeBinding = [](const Event* evt, EventType::IdType* outType) -> bool {
-            if (!evt || !outType) {
-                return false;
-            }
-
-            std::lock_guard<std::mutex> lock(evt->event_mutex_);
-            Event* mutableEvent = const_cast<Event*>(evt);
-            EventType& typeRef = mutableEvent->type;
-            *outType = typeRef.getOrAssignId();
-            return true;
-        };
-
-        addFunction(typeName, std::move(getTypeInfo), getTypeBinding);
-
-        // -----------------------------
-        // Register Event Handle Struct
-        // -----------------------------
-        const std::string eventHandleName = "SDOM_Event";
-        if (!lookupTypeInfo(eventHandleName))
-        {
-            SDOM::TypeInfo eventHandle;
-            eventHandle.name        = eventHandleName;
-            eventHandle.cpp_type_id = eventHandleName;
-            eventHandle.file_stem   = "Event";
-            eventHandle.export_name = eventHandleName;
-            eventHandle.kind        = SDOM::EntryKind::Struct;
-            eventHandle.doc         = "C API opaque handle that wraps an SDOM::Event pointer.";
-
-            SDOM::PropertyInfo implField;
-            implField.name      = "impl";
-            implField.cpp_type  = "SDOM::Event*";
-            implField.read_only = true;
-            implField.doc       = "Pointer to the underlying C++ SDOM::Event instance.";
-            eventHandle.properties.push_back(std::move(implField));
-
-            addDataType(eventHandleName, eventHandle);
-        }
-
-
-        // -----------------------------
-        // Register EventType Enumeration
-        // -----------------------------
-        auto makeEventTypeInfo = [](const EventType& et) {
-            SDOM::TypeInfo ti;
-            ti.name        = std::string("EventType::") + et.getName();
-            ti.cpp_type_id = et.getName();
-            ti.file_stem   = "Event";  // EventType enumeration belongs in the SDOM_CAPI_Event.h header
-            ti.export_name = "SDOM_EventType";
-            ti.kind        = SDOM::EntryKind::Enum;
-            ti.enum_value  = const_cast<EventType&>(et).getOrAssignId();
-            ti.doc         = et.getDoc();
-            ti.category    = et.getCategory();
-
-            auto addBoolProp = [&](std::string_view prop, std::string_view doc) {
-                SDOM::PropertyInfo p;
-                p.name      = std::string(prop);
-                p.cpp_type  = "bool";
-                p.read_only = false;
-                p.doc       = std::string(doc);
-                ti.properties.push_back(std::move(p));
-            };
-            addBoolProp("captures",    "Whether this event type participates in capture.");
-            addBoolProp("bubbles",     "Whether this event type bubbles.");
-            addBoolProp("target_only", "If true, event is target-only.");
-            addBoolProp("global",      "Whether this event type is global.");
-
-            return ti;
-        };
-
+        // -------------------------------------------------------------------------
+        // Register Enum Values for SDOM_EventType
+        // -------------------------------------------------------------------------
+        // Iterates over every EventType instance known to the system, assigns IDs,
+        // registers enum metadata for C bindings and scripting, and attaches
+        // additional boolean properties to describe event behavior (bubbles, etc.)
         for (EventType* et : EventType::getAll())
         {
-            if (!et) continue;
-            addDataType(et->getName(), makeEventTypeInfo(*et));
+            if (!et) {
+                continue;
+            }
+
+            EventType& typeRef = *et;
+            const auto id = typeRef.getOrAssignId();
+
+            registerEnumValue(
+                "SDOM_EventType",
+                "Event",
+                typeRef.getName(),
+                id,
+                typeRef.getDoc(),
+                typeRef.getCategory(),
+                [](SDOM::TypeInfo& ti) {
+                    auto addBoolProp = [&](std::string_view prop, std::string_view doc) {
+                        SDOM::PropertyInfo p;
+                        p.name      = std::string(prop);
+                        p.cpp_type  = "bool";
+                        p.read_only = false;
+                        p.doc       = std::string(doc);
+                        ti.properties.push_back(std::move(p));
+                    };
+
+                    addBoolProp("captures",    "Whether this event type participates in capture.");
+                    addBoolProp("bubbles",     "Whether this event type bubbles.");
+                    addBoolProp("target_only", "If true, event is target-only.");
+                    addBoolProp("global",      "Whether this event type is global.");
+                });
         }
+
     } // END Event::registerBindingsImpl(const std::string& typeName)
 
 

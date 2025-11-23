@@ -58,9 +58,9 @@ namespace SDOM
     public:
 
         enum class Phase {
-            Capture,
-            Target,
-            Bubbling
+            Capture,   ///< Event is traveling from the root *down* toward the target (capture phase).
+            Target,    ///< Event has reached the target object; handlers on the target run here.
+            Bubbling   ///< Event is traveling *upward* from the target back toward the root (bubble phase).
         };    
 
         Event(EventType type = EventType("None"), DisplayHandle target = nullptr, float fElapsedTime = 0.0f);
@@ -80,13 +80,13 @@ namespace SDOM
         // Default accessors 
         // ----------------------
 
-        EventType getType() const;
-        std::string getTypeName() const;
+        EventType getType() const; // ✅
+        std::string getTypeName() const; // ✅
 
-        std::string getPhaseString() const;
+        std::string getPhaseString() const; // ✅
 
-        Phase getPhase() const;
-        Event& setPhase(Phase phase);
+        Phase getPhase() const; // ✅
+        Event& setPhase(Phase phase); // ✅
 
         DisplayHandle getTarget() const;
         Event& setTarget(DisplayHandle newTarget);

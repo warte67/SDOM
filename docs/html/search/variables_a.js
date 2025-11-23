@@ -24,7 +24,5 @@ var searchData=
   ['lt_5fmagenta_21',['LT_MAGENTA',['../classCLR.html#a135aac68c02461081e49ee6a818cfc52',1,'CLR']]],
   ['lt_5forange_22',['LT_ORANGE',['../classCLR.html#a42181ec7c82e659318736fa4eaec68ed',1,'CLR']]],
   ['lt_5fyellow_23',['LT_YELLOW',['../classCLR.html#a8243058df0e40cdb1644ac3bf2636fdd',1,'CLR']]],
-  ['lua_5f_24',['lua_',['../classSDOM_1_1Core.html#aca5fc2d4648fc1889e4b870d866ea399',1,'SDOM::Core']]],
-  ['lua_5fref_25',['lua_ref',['../structSDOM_1_1FunctionInfo.html#a96cb9b3858381ad9a508bf2410fd79e5',1,'SDOM::FunctionInfo']]],
-  ['lua_5fstate_5fptr_26',['lua_state_ptr',['../structSDOM_1_1FunctionInfo.html#a2f1672ee27f442a4578705bcf2d12e46',1,'SDOM::FunctionInfo']]]
+  ['lua_5f_24',['lua_',['../classSDOM_1_1Core.html#aca5fc2d4648fc1889e4b870d866ea399',1,'SDOM::Core']]]
 ];

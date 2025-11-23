@@ -214,6 +214,7 @@ namespace SDOM
         // Lookup / Queries
         // -------------------------------
         const TypeInfo* lookupType(const std::string& name) const;
+        TypeInfo& getMutable(const std::string& name);
 
         std::vector<std::string> listTypes() const;
 

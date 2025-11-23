@@ -676,6 +676,7 @@ Completing this interface sets the stage for the next major milestone:
 **full handle bindings, DisplayObject reflection, and Core integration.**
 
 ## 🚧 **ToDo Today / Carryover**
+- ☐ Adjust CMakeLists.txt to pre-build CAPI bindings before test harness compilation
 - 🔄 Revise `DataRegistry` to properly implement all custom data types and function calls  
 - ☐ Finalize `main.cpp` argument dispatch system  
 - ☐ Continue expanding `main_variant_2.cpp` with callbacks (buttons, sliders, toggles)  

@@ -82,6 +82,16 @@ namespace SDOM {
         return &it->second;
     }
 
+    TypeInfo& DataRegistry::getMutable(const std::string& name)
+    {
+        std::scoped_lock lk(mutex_);
+        auto it = entries_.find(name);
+        if (it == entries_.end()) {
+            throw std::runtime_error("DataRegistry::getMutable missing entry: " + name);
+        }
+        return it->second;
+    }
+
     std::vector<std::string> DataRegistry::listTypes() const
     {
         std::scoped_lock lk(mutex_);

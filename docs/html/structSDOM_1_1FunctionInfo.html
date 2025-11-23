@@ -97,15 +97,10 @@ $(function(){initNavTree('structSDOM_1_1FunctionInfo.html','','structSDOM_1_1Fun
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a1837c7443e3de62d1abe1ac7581a2425" id="r_a1837c7443e3de62d1abe1ac7581a2425"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425">CallableKind</a> : uint8_t { <br />
-&#160;&#160;<a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425a6adf97f83acf6453d4a6a4b1070f3754">None</a> = 0
+<tr class="memitem:a1837c7443e3de62d1abe1ac7581a2425" id="r_a1837c7443e3de62d1abe1ac7581a2425"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425">CallableKind</a> : uint8_t { <a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425a6adf97f83acf6453d4a6a4b1070f3754">None</a> = 0
 , <a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425ac53f6eed2c43a77cd92d9ff0ad7b42da">CFunctionPtr</a>
 , <a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425a2bd811caa0c1cfc62ceb50f742bc0409">CppCallable</a>
-, <a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425a536b11af87c649dc45cd120041d3d958">LuaRef</a>
-, <br />
-&#160;&#160;<a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425a64cfc55cd091cfe6e9436c6bb6123783">PythonRef</a>
 , <a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425a944891aee13275e2de013701c17c4a03">GenericRuntime</a>
-<br />
  }</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -122,8 +117,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aab2672503ff7fe8fcf446b9fbf155bda" id="r_aab2672503ff7fe8fcf446b9fbf155bda"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab2672503ff7fe8fcf446b9fbf155bda">callable</a></td></tr>
 <tr class="memitem:ae5eb389999c918f110c35df71b66d48a" id="r_ae5eb389999c918f110c35df71b66d48a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425">CallableKind</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5eb389999c918f110c35df71b66d48a">callable_kind</a> = <a class="el" href="#a1837c7443e3de62d1abe1ac7581a2425a6adf97f83acf6453d4a6a4b1070f3754">CallableKind::None</a></td></tr>
 <tr class="memitem:a93adc63691d331e2ae0f1d5a1c907877" id="r_a93adc63691d331e2ae0f1d5a1c907877"><td class="memItemLeft" align="right" valign="top">std::uintptr_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93adc63691d331e2ae0f1d5a1c907877">c_function_ptr</a> = 0</td></tr>
-<tr class="memitem:a96cb9b3858381ad9a508bf2410fd79e5" id="r_a96cb9b3858381ad9a508bf2410fd79e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96cb9b3858381ad9a508bf2410fd79e5">lua_ref</a> = 0</td></tr>
-<tr class="memitem:a2f1672ee27f442a4578705bcf2d12e46" id="r_a2f1672ee27f442a4578705bcf2d12e46"><td class="memItemLeft" align="right" valign="top">std::uintptr_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f1672ee27f442a4578705bcf2d12e46">lua_state_ptr</a> = 0</td></tr>
 <tr class="memitem:abcbdbda0319a06936dae1d1ed2fbd2a4" id="r_abcbdbda0319a06936dae1d1ed2fbd2a4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abcbdbda0319a06936dae1d1ed2fbd2a4">runtime_tag</a></td></tr>
 <tr class="memitem:a9433daf510cce8a38d841c001e325ee2" id="r_a9433daf510cce8a38d841c001e325ee2"><td class="memItemLeft" align="right" valign="top">std::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9433daf510cce8a38d841c001e325ee2">runtime_handle</a></td></tr>
 </table>
@@ -151,8 +144,6 @@ Public Attributes</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1837c7443e3de62d1abe1ac7581a2425a6adf97f83acf6453d4a6a4b1070f3754" name="a1837c7443e3de62d1abe1ac7581a2425a6adf97f83acf6453d4a6a4b1070f3754"></a>None&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a1837c7443e3de62d1abe1ac7581a2425ac53f6eed2c43a77cd92d9ff0ad7b42da" name="a1837c7443e3de62d1abe1ac7581a2425ac53f6eed2c43a77cd92d9ff0ad7b42da"></a>CFunctionPtr&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a1837c7443e3de62d1abe1ac7581a2425a2bd811caa0c1cfc62ceb50f742bc0409" name="a1837c7443e3de62d1abe1ac7581a2425a2bd811caa0c1cfc62ceb50f742bc0409"></a>CppCallable&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a1837c7443e3de62d1abe1ac7581a2425a536b11af87c649dc45cd120041d3d958" name="a1837c7443e3de62d1abe1ac7581a2425a536b11af87c649dc45cd120041d3d958"></a>LuaRef&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a1837c7443e3de62d1abe1ac7581a2425a64cfc55cd091cfe6e9436c6bb6123783" name="a1837c7443e3de62d1abe1ac7581a2425a64cfc55cd091cfe6e9436c6bb6123783"></a>PythonRef&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a1837c7443e3de62d1abe1ac7581a2425a944891aee13275e2de013701c17c4a03" name="a1837c7443e3de62d1abe1ac7581a2425a944891aee13275e2de013701c17c4a03"></a>GenericRuntime&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
@@ -279,34 +270,6 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool SDOM::FunctionInfo::is_static = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a96cb9b3858381ad9a508bf2410fd79e5" name="a96cb9b3858381ad9a508bf2410fd79e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96cb9b3858381ad9a508bf2410fd79e5">&#9670;&#160;</a></span>lua_ref</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int SDOM::FunctionInfo::lua_ref = 0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2f1672ee27f442a4578705bcf2d12e46" name="a2f1672ee27f442a4578705bcf2d12e46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f1672ee27f442a4578705bcf2d12e46">&#9670;&#160;</a></span>lua_state_ptr</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::uintptr_t SDOM::FunctionInfo::lua_state_ptr = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">

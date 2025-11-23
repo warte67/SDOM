@@ -55,6 +55,14 @@ var classSDOM =
       [ "Greyed", "classSDOM.html#af652715c3e637c795824fa0afedda425a4f97e88e22bc8dfe3a6b3962da9a7fca", null ],
       [ "ButtonState_MAX", "classSDOM.html#af652715c3e637c795824fa0afedda425aa832b4e1d28490d5c44973c8c2214f39", null ]
     ] ],
+    [ "EntryKind", "classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8", [
+      [ "Object", "classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a497031794414a552435f90151ac3b54b", null ],
+      [ "Struct", "classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a886ef5dbd655a6c97726d7091c6b173e", null ],
+      [ "Enum", "classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8acf20423ed48998082c20099488a0917c", null ],
+      [ "Global", "classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a4cc6684df7b4a92b1dec6fce3264fac8", null ],
+      [ "Function", "classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a86408593c34af77fdd90df932f8b5261", null ],
+      [ "Alias", "classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8aeffdb9ce6c5d44df31b89d7069c8e0fb", null ]
+    ] ],
     [ "ExtendedCharacterIndex", "classSDOM.html#aee303a5ea55cf095657cc513fa582406", [
       [ "ARROW_UP", "classSDOM.html#aee303a5ea55cf095657cc513fa582406a473a87f2ef497976cb251b9eaf730f5a", null ],
       [ "ARROW_DOWN", "classSDOM.html#aee303a5ea55cf095657cc513fa582406a5e4efaead69f4bc7bd19509e25fc3f15", null ],
@@ -178,8 +186,6 @@ var classSDOM =
     [ "button_state_pairs", "classSDOM.html#a479fe3b6d6b7a81bb9d305429c19dd71", null ],
     [ "button_state_to_string", "classSDOM.html#a2ddfe0c3e88fd1b6e58620d2b63e769f", null ],
     [ "ENABLE_ALL_UNIT_TESTS", "classSDOM.html#a901a1efbd00683f1cc1d6620ef153659", null ],
-    [ "g_callable_map", "classSDOM.html#a01cfe5e89347f5cd7216554b454eae65", null ],
-    [ "g_callable_mutex", "classSDOM.html#ae46716553a1dba1a72be2f9e5a7dbb89", null ],
     [ "g_core", "classSDOM.html#a358e4470a668bb114bd45f53472bb665", null ],
     [ "icon_index_to_string", "classSDOM.html#a98ee20e886efe6004f38e0c4b6fdfab1", null ],
     [ "icon_string_to_index", "classSDOM.html#a618334d8d29e89d504144433fd0b6af3", null ],
@@ -201,6 +207,7 @@ var classSDOM =
     [ "internal_ttf", "classSDOM.html#a16d68a857dac2a879169ded0ce2d3c7c", null ],
     [ "internal_ttf_len", "classSDOM.html#a7e5b2bb6de31dba821f656a80404ea6a", null ],
     [ "internal_ttf_len", "classSDOM.html#af894447a8326743da636f323c57c8854", null ],
+    [ "kEnumCommentColumn", "classSDOM.html#a5c6b601c17f70ed77b2ca79a9bea9837", null ],
     [ "maxOutlineThickness", "classSDOM.html#aae891c3cb463a8719fa20816f7ef0ea4", null ],
     [ "orientation_to_string", "classSDOM.html#a5121ece23da73f686e3ab61c3fc63339", null ],
     [ "panelBaseIndexToString_", "classSDOM.html#af0cc30e6979fd8ef2453166a934da51c", null ],

@@ -2,6 +2,7 @@ var hierarchy =
 [
     [ "SDOM::AssetRecord", "structSDOM_1_1AssetRecord.html", null ],
     [ "SDOM::AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", null ],
+    [ "SDOM::IBindGenerator::BindModule", "structSDOM_1_1IBindGenerator_1_1BindModule.html", null ],
     [ "SDOM::Bounds", "structSDOM_1_1Bounds.html", null ],
     [ "SDOM::CAPI::CallArg", "structSDOM_1_1CAPI_1_1CallArg.html", null ],
     [ "SDOM::CAPI::CallResult", "structSDOM_1_1CAPI_1_1CallResult.html", null ],
@@ -21,8 +22,9 @@ var hierarchy =
     [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
     [ "SDOM::FunctionInfo", "structSDOM_1_1FunctionInfo.html", null ],
-    [ "SDOM::IBindingGenerator", "classSDOM_1_1IBindingGenerator.html", [
-      [ "SDOM::CBindingGenerator", "classSDOM_1_1CBindingGenerator.html", null ]
+    [ "SDOM::GeneratorConfig", "structSDOM_1_1GeneratorConfig.html", null ],
+    [ "SDOM::IBindGenerator", "classSDOM_1_1IBindGenerator.html", [
+      [ "SDOM::CAPI_BindGenerator", "classSDOM_1_1CAPI__BindGenerator.html", null ]
     ] ],
     [ "SDOM::IButtonObject", "classSDOM_1_1IButtonObject.html", [
       [ "SDOM::Button", "classSDOM_1_1Button.html", null ],
@@ -34,7 +36,6 @@ var hierarchy =
         [ "SDOM::RadioButton", "classSDOM_1_1RadioButton.html", null ]
       ] ]
     ] ],
-    [ "SDOM::DataRegistry::Impl", "structSDOM_1_1DataRegistry_1_1Impl.html", null ],
     [ "SDOM::IAssetObject::InitStruct", "structSDOM_1_1IAssetObject_1_1InitStruct.html", [
       [ "SDOM::IFontObject::InitStruct", "structSDOM_1_1IFontObject_1_1InitStruct.html", [
         [ "SDOM::BitmapFont::InitStruct", "structSDOM_1_1BitmapFont_1_1InitStruct.html", null ],
@@ -109,10 +110,7 @@ var hierarchy =
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ],
     [ "SDOM", "classSDOM.html", null ],
     [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", null ],
-    [ "SDOM_EventDesc", "structSDOM__EventDesc.html", null ],
-    [ "SDOM_EventHandle_", "structSDOM__EventHandle__.html", null ],
-    [ "SDOM_EventTypeDesc", "structSDOM__EventTypeDesc.html", null ],
-    [ "SDOM_EventTypeHandle_", "structSDOM__EventTypeHandle__.html", null ],
+    [ "SDOM_Event", "structSDOM__Event.html", null ],
     [ "SDOM::Core::TabPriorityComparator", "structSDOM_1_1Core_1_1TabPriorityComparator.html", null ],
     [ "SDOM::UnitTests::TestCase", "structSDOM_1_1UnitTests_1_1TestCase.html", null ],
     [ "SDOM::TypeCreators", "structSDOM_1_1TypeCreators.html", null ],

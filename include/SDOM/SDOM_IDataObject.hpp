@@ -93,6 +93,7 @@ Summary:
 #include <SDOM/SDOM_DataRegistry.hpp>
 #include <algorithm>
 #include <cctype>
+#include <functional>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -216,17 +217,10 @@ namespace SDOM
         void addFunction(const std::string& typeName, const std::string& name, Fn&& fn)
         {
             BIND_LOG("[" << typeName << "] addFunction: " << name);
-            // Prefer active registry (set when Factory/Core call registerBindings)
-            SDOM::DataRegistry* r = IDataObject::activeRegistry();
             SDOM::FunctionInfo meta;
             meta.name = name;
             meta.cpp_signature = name + "(...)";
-            if (r) {
-                r->registerFunction(typeName, meta, std::forward<Fn>(fn));
-            } else {
-                // fallback to global singleton
-                DataRegistry::instance().registerFunction(typeName, meta, std::forward<Fn>(fn));
-            }
+            registry().registerFunction(typeName, meta, std::forward<Fn>(fn));
         }
 
         template<typename Fn>
@@ -245,13 +239,7 @@ namespace SDOM
             }
 
             BIND_LOG("[" << typeName << "] addFunction: " << info.name);
-
-            if (auto* registry = IDataObject::activeRegistry()) {
-                registry->registerFunction(typeName, info, std::forward<Fn>(fn));
-                return;
-            }
-
-            DataRegistry::instance().registerFunction(typeName, info, std::forward<Fn>(fn));
+            registry().registerFunction(typeName, info, std::forward<Fn>(fn));
         }
 
         /**
@@ -265,15 +253,10 @@ namespace SDOM
         void addProperty(const std::string& typeName, const std::string& name, Getter&& getter, Setter&& setter = nullptr)
         {
             BIND_LOG("[" << typeName << "] addProperty: " << name);
-            SDOM::DataRegistry* r = IDataObject::activeRegistry();
             SDOM::PropertyInfo meta;
             meta.name = name;
             meta.cpp_type = "unknown";
-            if (r) {
-                r->registerProperty(typeName, meta, std::forward<Getter>(getter), std::forward<Setter>(setter));
-            } else {
-                DataRegistry::instance().registerProperty(typeName, meta, std::forward<Getter>(getter), std::forward<Setter>(setter));
-            }
+            registry().registerProperty(typeName, meta, std::forward<Getter>(getter), std::forward<Setter>(setter));
         }
 
         /**
@@ -284,14 +267,9 @@ namespace SDOM
         void addDataType(const std::string& typeName, const SDOM::TypeInfo& info)
         {
             BIND_LOG("[" << typeName << "] addDataType: " << info.name);
-            SDOM::DataRegistry* r = IDataObject::activeRegistry();
             SDOM::TypeInfo copy = info;
             if (copy.name.empty()) copy.name = typeName;
-            if (r) {
-                r->registerDataType(copy);
-            } else {
-                DataRegistry::instance().registerDataType(copy);
-            }
+            registry().registerDataType(copy);
         }
 
         /**
@@ -358,6 +336,131 @@ namespace SDOM
 
 
     protected:
+        SDOM::DataRegistry& registry() const
+        {
+            if (auto* active = IDataObject::activeRegistry()) {
+                return *active;
+            }
+            return SDOM::DataRegistry::instance();
+        }
+
+        const SDOM::TypeInfo* lookup(const std::string& name) const
+        {
+            return registry().lookupType(name);
+        }
+
+        SDOM::TypeInfo& ensureType(const std::string& typeName,
+                                   SDOM::EntryKind kind,
+                                   std::string cppType,
+                                   std::string fileStem,
+                                   std::string exportName,
+                                   std::string category,
+                                   std::string doc)
+        {
+            if (lookup(typeName)) {
+                return registry().getMutable(typeName);
+            }
+
+            SDOM::TypeInfo ti;
+            ti.name        = typeName;
+            ti.kind        = kind;
+            ti.cpp_type_id = std::move(cppType);
+            ti.file_stem   = std::move(fileStem);
+            ti.export_name = std::move(exportName);
+            ti.category    = std::move(category);
+            ti.doc         = std::move(doc);
+
+            registry().registerType(ti);
+            return registry().getMutable(typeName);
+        }
+
+        void registerOpaqueHandle(const std::string& cppType,
+                                  const std::string& exportName,
+                                  const std::string& fileStem,
+                                  const std::string& doc)
+        {
+            if (lookup(exportName)) {
+                return;
+            }
+
+            SDOM::TypeInfo ti;
+            ti.name        = exportName;
+            ti.kind        = SDOM::EntryKind::Struct;
+            ti.cpp_type_id = cppType;
+            ti.file_stem   = fileStem;
+            ti.export_name = exportName;
+            ti.doc         = doc;
+
+            SDOM::PropertyInfo implField;
+            implField.name      = "impl";
+            implField.cpp_type  = cppType + "*";
+            implField.read_only = true;
+            implField.doc       = "Opaque pointer to underlying C++ instance.";
+            ti.properties.push_back(std::move(implField));
+
+            registry().registerType(ti);
+        }
+
+        template<typename Fn>
+        void registerMethod(const std::string& typeName,
+                            const std::string& name,
+                            const std::string& cppSig,
+                            const std::string& returnType,
+                            std::string cName,
+                            const std::string& cSig,
+                            const std::string& doc,
+                            Fn&& fn)
+        {
+            if (name.empty()) {
+                BIND_WARN("[" << typeName << "] registerMethod called with empty name; skipping registration");
+                return;
+            }
+
+            if (cName.empty()) {
+                cName = "SDOM_CFN_" + typeName + "_" + name;
+            }
+
+            SDOM::FunctionInfo fi;
+            fi.name          = name;
+            fi.cpp_signature = cppSig;
+            fi.return_type   = returnType;
+            fi.c_name        = std::move(cName);
+            fi.c_signature   = cSig;
+            fi.doc           = doc;
+
+            registry().registerFunction(typeName, fi, std::forward<Fn>(fn));
+        }
+
+        void registerEnumValue(const std::string& exportName,
+                               const std::string& fileStem,
+                               const std::string& cppName,
+                               std::uint32_t value,
+                               const std::string& doc,
+                               const std::string& category = std::string(),
+                               const std::function<void(SDOM::TypeInfo&)>& customize = {})
+        {
+            const std::string typeName = exportName + std::string("::") + cppName;
+            if (lookup(typeName)) {
+                return;
+            }
+
+            SDOM::TypeInfo ti;
+            ti.name        = typeName;
+            ti.kind        = SDOM::EntryKind::Enum;
+            ti.cpp_type_id = cppName;
+            ti.file_stem   = fileStem;
+            ti.export_name = exportName;
+            ti.enum_value  = value;
+            ti.doc         = doc;
+            ti.category    = category;
+
+            if (customize) {
+                customize(ti);
+            }
+
+            registry().registerType(ti);
+        }
+
         std::string name_ = "IDataObject";
 
         inline static std::unordered_set<std::string> s_registered_types_;

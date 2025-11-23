@@ -30,6 +30,8 @@ namespace SDOM
 
         static std::string headerPathFor(const std::string& dir, const std::string& stem);
         static std::string sourcePathFor(const std::string& dir, const std::string& stem);
+
+        static bool isEnumReturnType(const std::string& normalizedType, const BindModule& module);
     };
 
 } // namespace SDOM

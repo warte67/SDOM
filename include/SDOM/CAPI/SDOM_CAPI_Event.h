@@ -1,6 +1,13 @@
 #pragma once
 // Auto-generated SDOM C API module: Event
 
+typedef enum SDOM_EventPhase {
+    /* Event Phase events */
+    SDOM_EventPhase_Capture = 0x0000,               ///< Event is traveling from the root down toward the target (capture phase).
+    SDOM_EventPhase_Target = 0x0001,                ///< Event has reached the target object; handlers on the target run here.
+    SDOM_EventPhase_Bubbling = 0x0002               ///< Event is traveling upward from the target back toward the root (bubble phase).
+} SDOM_EventPhase;
+
 typedef enum SDOM_EventType {
     /* Core events */
     SDOM_EventType_Quit = 0x0001,                   ///< Signals that the application or main stage is closing. Global only.
@@ -78,7 +85,7 @@ typedef enum SDOM_EventType {
 } SDOM_EventType;
 
 typedef struct SDOM_Event {
-    void* impl;                                     ///< Pointer to the underlying C++ SDOM::Event instance.
+    void* impl;                                             ///< Opaque pointer to underlying C++ instance.
 } SDOM_Event;
 
 #ifdef __cplusplus
@@ -87,6 +94,10 @@ extern "C" {
 
 // Callable bindings
 bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type);
+const char* SDOM_GetEventTypeName(const SDOM_Event* evt);
+SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt);
+bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase);
+const char* SDOM_GetEventPhaseString(const SDOM_Event* evt);
 
 #ifdef __cplusplus
 } // extern "C"

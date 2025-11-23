@@ -6,11 +6,11 @@ var searchData=
   ['fail_3',['FAIL',['../SDOM_8hpp.html#ac8d1eaf65528f86b445cf6e45b2d72c9',1,'SDOM.hpp']]],
   ['features_4',['Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md23',1,'🧩 Key Features'],['../md_README.html#autotoc_md44',1,'Features'],['../md_README.html#autotoc_md46',1,'Key Features']]],
   ['fedora_20rhel_20alma_20rocky_5',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md66',1,'']]],
-  ['felapsedtime_6',['fElapsedTime',['../classSDOM_1_1Event.html#ab14d7ed6c4435d42b3aaf592ebb54fda',1,'SDOM::Event']]],
-  ['felapsedtime_5f_7',['fElapsedTime_',['../classSDOM_1_1Core.html#a1c2109933d1186b4aedfa5acc5cd3e6b',1,'SDOM::Core']]],
-  ['fg_8',['fg',['../classCLR.html#a58801944e6eba7afbdce0383856e8abd',1,'CLR']]],
-  ['fg_5fcolor_9',['fg_color',['../classCLR.html#a4756f116c9666f802bc133bcbe89fa7d',1,'CLR']]],
-  ['fg_5frgb_10',['fg_rgb',['../classCLR.html#a5e25f1239cc0c2af86eadb514e340ef4',1,'CLR']]],
+  ['felapsedtime_5f_6',['fElapsedTime_',['../classSDOM_1_1Core.html#a1c2109933d1186b4aedfa5acc5cd3e6b',1,'SDOM::Core']]],
+  ['fg_7',['fg',['../classCLR.html#a58801944e6eba7afbdce0383856e8abd',1,'CLR']]],
+  ['fg_5fcolor_8',['fg_color',['../classCLR.html#a4756f116c9666f802bc133bcbe89fa7d',1,'CLR']]],
+  ['fg_5frgb_9',['fg_rgb',['../classCLR.html#a5e25f1239cc0c2af86eadb514e340ef4',1,'CLR']]],
+  ['file_5fstem_10',['file_stem',['../structSDOM_1_1TypeInfo.html#a6192a718f726b7a68ca31dd1a4efaae9',1,'SDOM::TypeInfo::file_stem'],['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a503f58c19781b918fae5755875afa10d',1,'SDOM::IBindGenerator::BindModule::file_stem']]],
   ['filename_11',['filename',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873',1,'SDOM::IAssetObject::InitStruct']]],
   ['filename_5f_12',['filename_',['../classSDOM_1_1AssetHandle.html#a75387364182cd6804ae611b72ea04758',1,'SDOM::AssetHandle::filename_'],['../classSDOM_1_1IAssetObject.html#add05647990d22252de1ef584ae622ae5',1,'SDOM::IAssetObject::filename_']]],
   ['findassetbyfilename_13',['findAssetByFilename',['../classSDOM_1_1Factory.html#a7c9bd4705f8a020c7d3581c5ed3ff1e9',1,'SDOM::Factory']]],
@@ -70,7 +70,8 @@ var searchData=
   ['fromvariant_67',['fromVariant',['../structSDOM_1_1Variant_1_1ConverterEntry.html#a3eef0d03e0d4d74cfa088595eb838404',1,'SDOM::Variant::ConverterEntry']]],
   ['fullstring_68',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]],
   ['func_69',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]],
-  ['functioninfo_70',['FunctionInfo',['../structSDOM_1_1FunctionInfo.html',1,'SDOM']]],
-  ['functions_71',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Functions',1,'Functions'],['../classSDOM_1_1TristateButton.html#TristateButton_Functions',1,'Functions']]],
-  ['functions_72',['functions',['../structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1',1,'SDOM::TypeInfo']]]
+  ['function_70',['Function',['../classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a86408593c34af77fdd90df932f8b5261',1,'SDOM']]],
+  ['functioninfo_71',['FunctionInfo',['../structSDOM_1_1FunctionInfo.html',1,'SDOM']]],
+  ['functions_72',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Functions',1,'Functions'],['../classSDOM_1_1TristateButton.html#TristateButton_Functions',1,'Functions']]],
+  ['functions_73',['functions',['../structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1',1,'SDOM::TypeInfo::functions'],['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a573c4bd0abc8bf29fd19ae58ee033c7d',1,'SDOM::IBindGenerator::BindModule::functions']]]
 ];

@@ -344,6 +344,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aff602d0cbfeead1a6ddd49c8d4df9360" id="r_aff602d0cbfeead1a6ddd49c8d4df9360"><td class="memTemplParams" colspan="2">template&lt;typename Fn&gt; </td></tr>
 <tr class="memitem:aff602d0cbfeead1a6ddd49c8d4df9360 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aff602d0cbfeead1a6ddd49c8d4df9360">addFunction</a> (const std::string &amp;typeName, const std::string &amp;name, Fn &amp;&amp;fn)</td></tr>
 <tr class="memdesc:aff602d0cbfeead1a6ddd49c8d4df9360"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for adding a function to the registry.  <br /></td></tr>
+<tr class="memitem:a30fbbb43916a500b5cede268bc8c76b9" id="r_a30fbbb43916a500b5cede268bc8c76b9"><td class="memTemplParams" colspan="2">template&lt;typename Fn&gt; </td></tr>
+<tr class="memitem:a30fbbb43916a500b5cede268bc8c76b9 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a30fbbb43916a500b5cede268bc8c76b9">addFunction</a> (const std::string &amp;typeName, <a class="el" href="structSDOM_1_1FunctionInfo.html">SDOM::FunctionInfo</a> info, Fn &amp;&amp;fn)</td></tr>
 <tr class="memitem:a88b1ede2f143d7df9375f8b1ef938126" id="r_a88b1ede2f143d7df9375f8b1ef938126"><td class="memTemplParams" colspan="2">template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </td></tr>
 <tr class="memitem:a88b1ede2f143d7df9375f8b1ef938126 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a88b1ede2f143d7df9375f8b1ef938126">addProperty</a> (const std::string &amp;typeName, const std::string &amp;name, Getter &amp;&amp;getter, Setter &amp;&amp;setter=nullptr)</td></tr>
 <tr class="memdesc:a88b1ede2f143d7df9375f8b1ef938126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for adding a property to the registry.  <br /></td></tr>
@@ -353,7 +355,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a8454e19980fce29cadc94be241ee66f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience for registering EventType-related <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> entries.  <br /></td></tr>
 <tr class="memitem:a817578463d1fa2c2e9e060c09eaa5a5a" id="r_a817578463d1fa2c2e9e060c09eaa5a5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a817578463d1fa2c2e9e060c09eaa5a5a">registerBindings</a> (const std::string &amp;typeName)</td></tr>
 <tr class="memdesc:a817578463d1fa2c2e9e060c09eaa5a5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Public entrypoint to trigger this object's binding registration.  <br /></td></tr>
-<tr class="memitem:aa08b53a4af124ffa6a4bb547f1f8423d" id="r_aa08b53a4af124ffa6a4bb547f1f8423d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aa08b53a4af124ffa6a4bb547f1f8423d">registerBindings</a> (const std::string &amp;typeName, <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;registry)</td></tr>
+<tr class="memitem:aa08b53a4af124ffa6a4bb547f1f8423d" id="r_aa08b53a4af124ffa6a4bb547f1f8423d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aa08b53a4af124ffa6a4bb547f1f8423d">registerBindings</a> (const std::string &amp;typeName, <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;<a class="el" href="classSDOM_1_1IDataObject.html#adb96fab263c40f6294461886cc8c2f20">registry</a>)</td></tr>
 <tr class="memitem:acbee734b61e90b834672ce530f1415aa" id="r_acbee734b61e90b834672ce530f1415aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#acbee734b61e90b834672ce530f1415aa">BIND_INFO</a> (const std::string &amp;typeName, const std::string &amp;typeNameLocal)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -405,6 +407,13 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5efcadd5b147925e0b30da8e51d7e2a8" id="r_a5efcadd5b147925e0b30da8e51d7e2a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5efcadd5b147925e0b30da8e51d7e2a8">registerBindingsImpl</a> (const std::string &amp;typeName) override</td></tr>
 <tr class="memitem:af8c4663c22d0b3d8a8c2a1e5983295b5" id="r_af8c4663c22d0b3d8a8c2a1e5983295b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#af8c4663c22d0b3d8a8c2a1e5983295b5">attachChild_</a> (<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> child, <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> parent, bool useWorld=false, int worldX=0, int worldY=0)</td></tr>
 <tr class="memitem:a9d22b5fd9345bc320ad573f7841517a3" id="r_a9d22b5fd9345bc320ad573f7841517a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDisplayObject.html#a9d22b5fd9345bc320ad573f7841517a3">removeOrphan_</a> (const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;orphan)</td></tr>
+<tr class="memitem:adb96fab263c40f6294461886cc8c2f20" id="r_adb96fab263c40f6294461886cc8c2f20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DataRegistry.html">SDOM::DataRegistry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#adb96fab263c40f6294461886cc8c2f20">registry</a> () const</td></tr>
+<tr class="memitem:afca56a5ad6d91a523bcf65daa5360ba3" id="r_afca56a5ad6d91a523bcf65daa5360ba3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#afca56a5ad6d91a523bcf65daa5360ba3">lookup</a> (const std::string &amp;name) const</td></tr>
+<tr class="memitem:ad222efbf8082d85c7fb136c28ea12ada" id="r_ad222efbf8082d85c7fb136c28ea12ada"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#ad222efbf8082d85c7fb136c28ea12ada">ensureType</a> (const std::string &amp;typeName, SDOM::EntryKind kind, std::string cppType, std::string fileStem, std::string exportName, std::string category, std::string doc)</td></tr>
+<tr class="memitem:a83f774ae4f2529a8c427c0cdce495098" id="r_a83f774ae4f2529a8c427c0cdce495098"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a83f774ae4f2529a8c427c0cdce495098">registerOpaqueHandle</a> (const std::string &amp;cppType, const std::string &amp;exportName, const std::string &amp;fileStem, const std::string &amp;doc)</td></tr>
+<tr class="memitem:a153f846a38f552a2a85afb8332fe8b39" id="r_a153f846a38f552a2a85afb8332fe8b39"><td class="memTemplParams" colspan="2">template&lt;typename Fn&gt; </td></tr>
+<tr class="memitem:a153f846a38f552a2a85afb8332fe8b39 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a153f846a38f552a2a85afb8332fe8b39">registerMethod</a> (const std::string &amp;typeName, const std::string &amp;name, const std::string &amp;cppSig, const std::string &amp;returnType, std::string cName, const std::string &amp;cSig, const std::string &amp;doc, Fn &amp;&amp;fn)</td></tr>
+<tr class="memitem:a429303d04136c25a55faee3b1694ddaf" id="r_a429303d04136c25a55faee3b1694ddaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a429303d04136c25a55faee3b1694ddaf">registerEnumValue</a> (const std::string &amp;exportName, const std::string &amp;fileStem, const std::string &amp;cppName, std::uint32_t value, const std::string &amp;doc, const std::string &amp;category=std::string(), const std::function&lt; void(<a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;)&gt; &amp;customize={})</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-static-methods" class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
@@ -980,7 +989,7 @@ Static Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aff602d0cbfeead1a6ddd49c8d4df9360" name="aff602d0cbfeead1a6ddd49c8d4df9360"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff602d0cbfeead1a6ddd49c8d4df9360">&#9670;&#160;</a></span>addFunction()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aff602d0cbfeead1a6ddd49c8d4df9360">&#9670;&#160;</a></span>addFunction() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1022,6 +1031,42 @@ template&lt;typename Fn&gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a30fbbb43916a500b5cede268bc8c76b9" name="a30fbbb43916a500b5cede268bc8c76b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30fbbb43916a500b5cede268bc8c76b9">&#9670;&#160;</a></span>addFunction() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Fn&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::addFunction </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM_1_1FunctionInfo.html">SDOM::FunctionInfo</a></td>          <td class="paramname"><span class="paramname"><em>info</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Fn &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1294,6 +1339,60 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad222efbf8082d85c7fb136c28ea12ada" name="ad222efbf8082d85c7fb136c28ea12ada"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad222efbf8082d85c7fb136c28ea12ada">&#9670;&#160;</a></span>ensureType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp; SDOM::IDataObject::ensureType </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDOM::EntryKind</td>          <td class="paramname"><span class="paramname"><em>kind</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>cppType</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>fileStem</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>exportName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>category</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>doc</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -3613,6 +3712,31 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
 
 </div>
 </div>
+<a id="afca56a5ad6d91a523bcf65daa5360ba3" name="afca56a5ad6d91a523bcf65daa5360ba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afca56a5ad6d91a523bcf65daa5360ba3">&#9670;&#160;</a></span>lookup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> * SDOM::IDataObject::lookup </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9d360407addf13332471fbbe2b05d452" name="a9d360407addf13332471fbbe2b05d452"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d360407addf13332471fbbe2b05d452">&#9670;&#160;</a></span>moveToBottom()</h2>
 
@@ -4325,6 +4449,185 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classSDOM_1_1IDisplayObject.html#a2c90e8b30042962c89fd543fe32e765c">SDOM::IDisplayObject</a>.</p>
+
+</div>
+</div>
+<a id="a429303d04136c25a55faee3b1694ddaf" name="a429303d04136c25a55faee3b1694ddaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a429303d04136c25a55faee3b1694ddaf">&#9670;&#160;</a></span>registerEnumValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::registerEnumValue </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>exportName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fileStem</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>cppName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::uint32_t</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>category</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::string()</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::function&lt; void(<a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;)&gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>customize</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a153f846a38f552a2a85afb8332fe8b39" name="a153f846a38f552a2a85afb8332fe8b39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a153f846a38f552a2a85afb8332fe8b39">&#9670;&#160;</a></span>registerMethod()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Fn&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::registerMethod </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>cppSig</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>returnType</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>cName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>cSig</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Fn &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>fn</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a83f774ae4f2529a8c427c0cdce495098" name="a83f774ae4f2529a8c427c0cdce495098"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83f774ae4f2529a8c427c0cdce495098">&#9670;&#160;</a></span>registerOpaqueHandle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::registerOpaqueHandle </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>cppType</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>exportName</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fileStem</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adb96fab263c40f6294461886cc8c2f20" name="adb96fab263c40f6294461886cc8c2f20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb96fab263c40f6294461886cc8c2f20">&#9670;&#160;</a></span>registry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1DataRegistry.html">SDOM::DataRegistry</a> &amp; SDOM::IDataObject::registry </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -6440,22 +6743,22 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
 <div class="line">            { LabelAlign::BOTTOM_CENTER ,  <a class="code hl_enumvalue" href="#aa4a5d7801d4403e662e13c66cb5b9ceea3480601794fd3b5473219ae158219fd4">AlignQueue::BOTTOM_CENTER</a>}, </div>
 <div class="line">            { LabelAlign::BOTTOM_RIGHT  ,  <a class="code hl_enumvalue" href="#aa4a5d7801d4403e662e13c66cb5b9ceea341b72aaab1308a3e6667af1e52f5def">AlignQueue::BOTTOM_RIGHT</a> }</div>
 <div class="line">        }</div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea0a22e84ed1c4062d7ac11d80bbed3876"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea0a22e84ed1c4062d7ac11d80bbed3876">SDOM::Label::AlignQueue::MIDDLE_RIGHT</a></div><div class="ttdeci">@ MIDDLE_RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:412</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea1fabf63de5c96c78e2a40805bcdeb73b"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea1fabf63de5c96c78e2a40805bcdeb73b">SDOM::Label::AlignQueue::BOTTOM</a></div><div class="ttdeci">@ BOTTOM</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:422</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea21507b40c80068eda19865706fdc2403"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea21507b40c80068eda19865706fdc2403">SDOM::Label::AlignQueue::RIGHT</a></div><div class="ttdeci">@ RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:419</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea341b72aaab1308a3e6667af1e52f5def"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea341b72aaab1308a3e6667af1e52f5def">SDOM::Label::AlignQueue::BOTTOM_RIGHT</a></div><div class="ttdeci">@ BOTTOM_RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:415</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea3480601794fd3b5473219ae158219fd4"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea3480601794fd3b5473219ae158219fd4">SDOM::Label::AlignQueue::BOTTOM_CENTER</a></div><div class="ttdeci">@ BOTTOM_CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:414</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea43eedd8685eb86592022f8da962e3474"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea43eedd8685eb86592022f8da962e3474">SDOM::Label::AlignQueue::MIDDLE</a></div><div class="ttdeci">@ MIDDLE</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:421</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea5b39c8b553c821e7cddc6da64b5bd2ee"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea5b39c8b553c821e7cddc6da64b5bd2ee">SDOM::Label::AlignQueue::DEFAULT</a></div><div class="ttdeci">@ DEFAULT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:416</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea6705777b712ee811e76fb07162081d63"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea6705777b712ee811e76fb07162081d63">SDOM::Label::AlignQueue::TOP</a></div><div class="ttdeci">@ TOP</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:420</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea684d325a7303f52e64011467ff5c5758"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea684d325a7303f52e64011467ff5c5758">SDOM::Label::AlignQueue::LEFT</a></div><div class="ttdeci">@ LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:417</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea747385047b85ae751f83adb36435a3c1"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea747385047b85ae751f83adb36435a3c1">SDOM::Label::AlignQueue::TOP_LEFT</a></div><div class="ttdeci">@ TOP_LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:407</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea86f1955e79bb2163d3c32a6024f420e6"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea86f1955e79bb2163d3c32a6024f420e6">SDOM::Label::AlignQueue::MIDDLE_CENTER</a></div><div class="ttdeci">@ MIDDLE_CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:411</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea8d81ac82421d1b03da58fccb9174892e"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea8d81ac82421d1b03da58fccb9174892e">SDOM::Label::AlignQueue::BOTTOM_LEFT</a></div><div class="ttdeci">@ BOTTOM_LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:413</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea901d87dedda8db733f5e6d34c4eb5fe0"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea901d87dedda8db733f5e6d34c4eb5fe0">SDOM::Label::AlignQueue::TOP_RIGHT</a></div><div class="ttdeci">@ TOP_RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:409</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea9d4989e254422a15442ed8c59c600f1a"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea9d4989e254422a15442ed8c59c600f1a">SDOM::Label::AlignQueue::MIDDLE_LEFT</a></div><div class="ttdeci">@ MIDDLE_LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:410</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceeac397289ee45877be0cd49811fe245b4e"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceeac397289ee45877be0cd49811fe245b4e">SDOM::Label::AlignQueue::CENTER</a></div><div class="ttdeci">@ CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:418</div></div>
-<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceeae4e8367937db13de78dd9a710df92164"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceeae4e8367937db13de78dd9a710df92164">SDOM::Label::AlignQueue::TOP_CENTER</a></div><div class="ttdeci">@ TOP_CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:408</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea0a22e84ed1c4062d7ac11d80bbed3876"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea0a22e84ed1c4062d7ac11d80bbed3876">SDOM::Label::AlignQueue::MIDDLE_RIGHT</a></div><div class="ttdeci">@ MIDDLE_RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:414</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea1fabf63de5c96c78e2a40805bcdeb73b"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea1fabf63de5c96c78e2a40805bcdeb73b">SDOM::Label::AlignQueue::BOTTOM</a></div><div class="ttdeci">@ BOTTOM</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:424</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea21507b40c80068eda19865706fdc2403"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea21507b40c80068eda19865706fdc2403">SDOM::Label::AlignQueue::RIGHT</a></div><div class="ttdeci">@ RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:421</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea341b72aaab1308a3e6667af1e52f5def"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea341b72aaab1308a3e6667af1e52f5def">SDOM::Label::AlignQueue::BOTTOM_RIGHT</a></div><div class="ttdeci">@ BOTTOM_RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:417</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea3480601794fd3b5473219ae158219fd4"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea3480601794fd3b5473219ae158219fd4">SDOM::Label::AlignQueue::BOTTOM_CENTER</a></div><div class="ttdeci">@ BOTTOM_CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:416</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea43eedd8685eb86592022f8da962e3474"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea43eedd8685eb86592022f8da962e3474">SDOM::Label::AlignQueue::MIDDLE</a></div><div class="ttdeci">@ MIDDLE</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:423</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea5b39c8b553c821e7cddc6da64b5bd2ee"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea5b39c8b553c821e7cddc6da64b5bd2ee">SDOM::Label::AlignQueue::DEFAULT</a></div><div class="ttdeci">@ DEFAULT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:418</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea6705777b712ee811e76fb07162081d63"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea6705777b712ee811e76fb07162081d63">SDOM::Label::AlignQueue::TOP</a></div><div class="ttdeci">@ TOP</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:422</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea684d325a7303f52e64011467ff5c5758"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea684d325a7303f52e64011467ff5c5758">SDOM::Label::AlignQueue::LEFT</a></div><div class="ttdeci">@ LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:419</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea747385047b85ae751f83adb36435a3c1"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea747385047b85ae751f83adb36435a3c1">SDOM::Label::AlignQueue::TOP_LEFT</a></div><div class="ttdeci">@ TOP_LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:409</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea86f1955e79bb2163d3c32a6024f420e6"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea86f1955e79bb2163d3c32a6024f420e6">SDOM::Label::AlignQueue::MIDDLE_CENTER</a></div><div class="ttdeci">@ MIDDLE_CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:413</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea8d81ac82421d1b03da58fccb9174892e"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea8d81ac82421d1b03da58fccb9174892e">SDOM::Label::AlignQueue::BOTTOM_LEFT</a></div><div class="ttdeci">@ BOTTOM_LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:415</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea901d87dedda8db733f5e6d34c4eb5fe0"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea901d87dedda8db733f5e6d34c4eb5fe0">SDOM::Label::AlignQueue::TOP_RIGHT</a></div><div class="ttdeci">@ TOP_RIGHT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:411</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceea9d4989e254422a15442ed8c59c600f1a"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceea9d4989e254422a15442ed8c59c600f1a">SDOM::Label::AlignQueue::MIDDLE_LEFT</a></div><div class="ttdeci">@ MIDDLE_LEFT</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:412</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceeac397289ee45877be0cd49811fe245b4e"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceeac397289ee45877be0cd49811fe245b4e">SDOM::Label::AlignQueue::CENTER</a></div><div class="ttdeci">@ CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:420</div></div>
+<div class="ttc" id="aclassSDOM_1_1Label_html_aa4a5d7801d4403e662e13c66cb5b9ceeae4e8367937db13de78dd9a710df92164"><div class="ttname"><a href="#aa4a5d7801d4403e662e13c66cb5b9ceeae4e8367937db13de78dd9a710df92164">SDOM::Label::AlignQueue::TOP_CENTER</a></div><div class="ttdeci">@ TOP_CENTER</div><div class="ttdef"><b>Definition</b> SDOM_Label.hpp:410</div></div>
 </div><!-- fragment -->
 </div>
 </div>

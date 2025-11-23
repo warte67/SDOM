@@ -4,7 +4,11 @@ var structSDOM_1_1TypeInfo =
     [ "category", "structSDOM_1_1TypeInfo.html#a1e2047f9de4ee959d4a4967678252e09", null ],
     [ "cpp_type_id", "structSDOM_1_1TypeInfo.html#a75ed484c5b0fb3ee5b8ee712378c188b", null ],
     [ "doc", "structSDOM_1_1TypeInfo.html#ae4d52e47f7f7bdb56863a1d3a1b17a63", null ],
+    [ "enum_value", "structSDOM_1_1TypeInfo.html#a59269fc7fd9731ecf55a5e9f32d838aa", null ],
+    [ "export_name", "structSDOM_1_1TypeInfo.html#aef5112a7e37a43580259d6007ec1811e", null ],
+    [ "file_stem", "structSDOM_1_1TypeInfo.html#a6192a718f726b7a68ca31dd1a4efaae9", null ],
     [ "functions", "structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1", null ],
+    [ "kind", "structSDOM_1_1TypeInfo.html#a1ab25f7a95f70283b589139ae86576d0", null ],
     [ "name", "structSDOM_1_1TypeInfo.html#ab1b333f09ea685bb2c608b2a9225e6ef", null ],
     [ "properties", "structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203", null ]
 ];

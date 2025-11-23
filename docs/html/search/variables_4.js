@@ -1,13 +1,17 @@
 var searchData=
 [
-  ['enable_5fall_5funit_5ftests_0',['ENABLE_ALL_UNIT_TESTS',['../classSDOM.html#a901a1efbd00683f1cc1d6620ef153659',1,'SDOM']]],
-  ['enabled_1',['Enabled',['../classSDOM_1_1EventType.html#a70284e72613ea359a0a765208f78a146',1,'SDOM::EventType']]],
-  ['enterframe_2',['EnterFrame',['../classSDOM_1_1EventType.html#ae12d8ce6a2e34d3b8f2fe61b33658d06',1,'SDOM::EventType']]],
-  ['enterfullscreen_3',['EnterFullscreen',['../classSDOM_1_1EventType.html#a3fd1f4d8b557bb12677332be2c554137',1,'SDOM::EventType']]],
-  ['erase_5fline_4',['ERASE_LINE',['../classCLR.html#ae04e27b0aabe54dc5cda889874fdd8a4',1,'CLR']]],
-  ['errors_5',['errors',['../structSDOM_1_1UnitTests_1_1TestCase.html#a251784699012dbaab3b0616d8dc7a964',1,'SDOM::UnitTests::TestCase']]],
-  ['eventmanager_5f_6',['eventManager_',['../classSDOM_1_1Core.html#ad77831344e818f2a29bf14d45e2fd402',1,'SDOM::Core']]],
-  ['eventmutex_5f_7',['eventMutex_',['../classSDOM_1_1Event.html#a297707969285468a9244118aec1e630f',1,'SDOM::Event']]],
-  ['eventtype_8',['eventType',['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740',1,'SDOM::IDisplayObject::ListenerEntry']]],
-  ['exported_9',['exported',['../structSDOM_1_1FunctionInfo.html#aa8c184560b31d6f724f4cdb50114ce64',1,'SDOM::FunctionInfo']]]
+  ['elapsed_5ftime_0',['elapsed_time',['../classSDOM_1_1Event.html#ac1dbfaa4421855c48aef6efc3aa28292',1,'SDOM::Event']]],
+  ['enable_5fall_5funit_5ftests_1',['ENABLE_ALL_UNIT_TESTS',['../classSDOM.html#a901a1efbd00683f1cc1d6620ef153659',1,'SDOM']]],
+  ['enabled_2',['Enabled',['../classSDOM_1_1EventType.html#a70284e72613ea359a0a765208f78a146',1,'SDOM::EventType']]],
+  ['enterframe_3',['EnterFrame',['../classSDOM_1_1EventType.html#ae12d8ce6a2e34d3b8f2fe61b33658d06',1,'SDOM::EventType']]],
+  ['enterfullscreen_4',['EnterFullscreen',['../classSDOM_1_1EventType.html#a3fd1f4d8b557bb12677332be2c554137',1,'SDOM::EventType']]],
+  ['enum_5fvalue_5',['enum_value',['../structSDOM_1_1TypeInfo.html#a59269fc7fd9731ecf55a5e9f32d838aa',1,'SDOM::TypeInfo']]],
+  ['enums_6',['enums',['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a7b335cf5a007e1ba27a8fb7db810b857',1,'SDOM::IBindGenerator::BindModule']]],
+  ['erase_5fline_7',['ERASE_LINE',['../classCLR.html#ae04e27b0aabe54dc5cda889874fdd8a4',1,'CLR']]],
+  ['errors_8',['errors',['../structSDOM_1_1UnitTests_1_1TestCase.html#a251784699012dbaab3b0616d8dc7a964',1,'SDOM::UnitTests::TestCase']]],
+  ['event_5fmutex_5f_9',['event_mutex_',['../classSDOM_1_1Event.html#ac7418e6023fc4d551f2d92a02673dc81',1,'SDOM::Event']]],
+  ['eventmanager_5f_10',['eventManager_',['../classSDOM_1_1Core.html#ad77831344e818f2a29bf14d45e2fd402',1,'SDOM::Core']]],
+  ['eventtype_11',['eventType',['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740',1,'SDOM::IDisplayObject::ListenerEntry']]],
+  ['export_5fname_12',['export_name',['../structSDOM_1_1TypeInfo.html#aef5112a7e37a43580259d6007ec1811e',1,'SDOM::TypeInfo']]],
+  ['exported_13',['exported',['../structSDOM_1_1FunctionInfo.html#aa8c184560b31d6f724f4cdb50114ce64',1,'SDOM::FunctionInfo']]]
 ];
