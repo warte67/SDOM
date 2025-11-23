@@ -611,71 +611,108 @@ SDOM now sees itself — and responds — in real time.
 <a id="november-22-2025"></a>
 <a id="latest-update"></a>
 
-## 🗓️ November 22, 2025 — [Title Placeholder]
+## 🗓️ **November 22, 2025 — Binding the Boundless**
 
-> 💬 *[Brief summary of today’s focus or achievements.]*
+> 💬 *“Reflection is only useful when the mirror finally shows the same face twice.”*
 
-### 🧩 [Subsystem or Feature Group]
-- [Key change or feature accomplished.]
-- [Supporting details, design notes, or rationale.]
+Today SDOM took its first real steps toward a clean, modern, unified binding pipeline.  
+The old generator system has been **dismantled**, the DataRegistry is now being reshaped into a **structured reflection graph**,  
+and the first pass of the **CAPI_BindGenerator** is online and producing real output.
 
-### 🌟 **Summary:**
-_[Short summary of results and next direction.]_
+## 🧩 **Binding & ABI Pipeline Overhaul**
+- Reworked the conceptual model for binding generation using a **two-pass tree architecture**  
+  (Pass 1 → build module tree; Pass 2 → generate files from structured layout)
+- CAPI_BindGenerator now produces **single-file enums** correctly (EventType showcase)
+- Clarified the ABI strategy: public C structs wrap opaque `void*` → `.cpp` casts perform reinterpretation safely
+- Removed old toolchain paths and generator executables to reduce build-time complexity
+- Added generator configuration hooks (`header_dir`, `source_dir`, verbosity)
+- Ensured `generateBindings()` runs **after all SDOM objects register themselves**
+- Fixed `DataRegistry` deadlock by snapshotting generators before running them
+- Established file-grain grouping rules for CAPI:  
+  **module → enums, structs, globals, aliases, function prototypes**
+
+
+## ⭐ **New Focus Area Added**
+- Added specification that **CAPI_BindGenerator must support both enum emission *and* standalone function emission**  
+  This is critical for completing function-level ABI coverage.
+
+
+## 🌟 **Summary**
+The binding system is now taking coherent shape.  
+We are past the “experimental surgery on the living llama” phase.  
+Next steps involve finishing the CAPI generator—especially function marshalling—and beginning Lua binding generation.  
+Once both are stable, SDOM’s reflection model will finally match its runtime behavior.
 
 ## 🚧 **ToDo Today / Carryover**
-
-- ☐ Revise `DataRegistry` to propery implement all custom data types and function calls
+- 🔄 Revise `DataRegistry` to properly implement all custom data types and function calls  
 - ☐ Finalize `main.cpp` argument dispatch system  
 - ☐ Continue expanding `main_variant_2.cpp` with callbacks (buttons, sliders, toggles)  
 - ☐ Validate multi-object relationships across all initialization paths  
 - ☐ Continue isolating and verifying each DisplayObject subtype  
 - ☐ Begin drafting revised docs for asset loading rules & defaults  
-
-- ☐ binding generator redesign
-- ☐ common ABI wrapper
-- ☐ JSON payload system
-- ☐ CAPI cleanup
-- ☐ unit test suite rebuild
-- ☐ Version.hpp → JSON-based versioning pipeline
-- ☐ Clean up SDOM API CMakeLists.txt to remove legacy ABI build paths
+- ☐ Binding generator redesign  
+- ☐ Common ABI wrapper  
+- ✅ JSON payload system  
+- ✅ CAPI cleanup  
+- ☐ Unit test suite rebuild  
+- ☐ `Version.hpp` → JSON-based versioning pipeline  
+- ✅ Clean up SDOM API CMakeLists.txt to remove legacy ABI build paths  
 
 
 #### 🤔 *End of Day Reflection*
-> *"_reflechion quote"*
+> *“Clarity is not a luxury — it is the cheapest optimization.”*
 
 ---
-
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 #### end-of-day
 
 ---
 
-
 ### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
-### 🚧 **JSON Integration**
-- ✅ Reintroduce JSON as a supported serialization format  
-- ☐ Initialize DataRegistry from JSON  
-- ☐ Serialize/deserialize the full DOM tree from JSON  
-  *(Eventually replacing — or complementing — Lua initialization)*
+- ☐ Implement [IDataObject_binding_helpers](IDataObject_binding_helpers) for consistent property/function registration
+- ☐ Expand **CAPI_BindGenerator**  
+  - 🔄 Generate standalone C API functions  
+  - ☐ Generate property accessors (getter/setter stubs)  
+  - 🔄 Proper enum → file grouping  
+- ☐ Begin **LUA_BindGenerator** (phase 1 structure + test emit)
+- ☐ Reintroduce **JSON** as a supported serialization format  
+- ☐ Initialize **DataRegistry** from JSON  
+- ☐ Serialize/deserialize **entire DOM tree** via JSON  
+  *(Eventually complementing or replacing Lua init)*
 
-- ☐ **Core::registerResource()**
-- ☐ Implement C ABI unit-test harness as registry proof-of-concept  
-  - ☐ Convert `SDOM_CLR` to a static singleton inheriting from `IDataObject`  
-  - 🔄 `SDOM_Event` → inherits from `IDataObject`  
-  - ☐ `SDOM_EventType` → inherits from `IDataObject`  
-  - ☐ `SDOM_IButtonObject` → inherits from `IDataObject`  
-  - ☐ `SDOM_IconIndex` → static singleton inherits from `IDataObject`  
-  - ☐ `SDOM_SDL_Utils` → inherits from `IDataObject`  
-  - ☐ `SDOM_UnitTests` → inherits from `IDataObject`  
-- ☐ `SDOM_Utils` → static singleton inherits from `IDataObject`  
-- ☐ `SDOM_Version.hpp.in` → inherits from `IDataObject`  
-- ☐ Surface the `EventType` registry through `Event::registerBindingsImpl()` (IDataObject → Variant descriptors) for the C API  
-- ☐ Prototype **SVG renderer integration** for next-gen asset pipeline.  
-- ☐ Add **Lua phase-2 tests** to validate runtime ↔ registry synchronization.  
-- ☐ Expand **developer wiki** with `DataRegistry` flow diagrams and generator documentation.
-- ☐ Add comments and Doxygen tags for modified scripts (`compile`, `dox`, `gen_version.sh`).  
-- ☐ Begin implementation of the new **EditBox / IME input system**.
+#### 🔧 Registry / ABI Work
+- ☐ Implement `Core::registerResource()`
+- ☐ Build **C ABI unit-test harness** (proof-of-concept)
+  - ☐ `SDOM_CLR` → static singleton (inherits `IDataObject`)
+  - 🔄 `SDOM_Event` → inherits `IDataObject`
+  - ☐ `SDOM_EventType` → inherits `IDataObject`
+  - ☐ `SDOM_IButtonObject` → inherits `IDataObject`
+  - ☐ `SDOM_IconIndex` → static singleton (inherits `IDataObject`)
+  - ☐ `SDOM_SDL_Utils` → inherits `IDataObject`
+  - ☐ `SDOM_UnitTests` → inherits `IDataObject`
+- ☐ `SDOM_Utils` → static singleton
+- ☐ Integrate `SDOM_Version.hpp.in` with new binding pipeline
+- ☐ Surface full **EventType registry** through `Event::registerBindingsImpl()`
+
+#### 🖼️ Rendering / Assets
+- ☐ Prototype **SVG renderer** for next-gen asset pipeline
+
+#### 🧪 Lua Phase 2
+- ☐ Add Lua runtime tests validating registry ↔ live system sync
+
+#### 📘 Documentation / Meta
+- ☐ Expand developer wiki with:
+  - DataRegistry flow diagrams
+  - Binding generator design
+  - ABI wrapper spec
+- ☐ Add Doxygen + comments for updated scripts:
+  - `compile`
+  - `dox`
+  - `gen_version.sh`
+
+#### 📝 UI Components
+- ☐ Begin **EditBox / IME input system** implementation
 
 ---
 
