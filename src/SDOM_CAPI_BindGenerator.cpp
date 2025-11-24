@@ -29,6 +29,8 @@ std::string trim(std::string value) {
     return value;
 }
 
+std::string normalizeTypeToken(std::string type);
+
 std::string sanitizeEnumToken(std::string value) {
     for (char& ch : value) {
         if (std::isalnum(static_cast<unsigned char>(ch)) || ch == '_') {
@@ -125,41 +127,127 @@ std::string extractParamIdentifier(std::string param) {
     return param.substr(start, end - start);
 }
 
-std::vector<std::string> extractParameterNames(const FunctionInfo& fn) {
-    std::vector<std::string> names;
+struct ParameterInfo {
+    std::string name;
+    std::string type;
+};
+
+std::vector<ParameterInfo> extractParameters(const FunctionInfo& fn)
+{
+    std::vector<ParameterInfo> params;
 
     if (fn.c_signature.empty() || fn.c_name.empty()) {
-        return names;
+        return params;
     }
 
     const auto name_pos = fn.c_signature.find(fn.c_name);
     if (name_pos == std::string::npos) {
-        return names;
+        return params;
     }
 
     const auto open_paren = fn.c_signature.find('(', name_pos + fn.c_name.size());
     const auto close_paren = fn.c_signature.rfind(')');
     if (open_paren == std::string::npos || close_paren == std::string::npos || close_paren <= open_paren) {
-        return names;
+        return params;
     }
 
-    const std::string params = fn.c_signature.substr(open_paren + 1, close_paren - open_paren - 1);
-    std::stringstream ss(params);
+    const std::string params_str = fn.c_signature.substr(open_paren + 1, close_paren - open_paren - 1);
+    std::stringstream ss(params_str);
     std::string param;
     while (std::getline(ss, param, ',')) {
-        auto name = extractParamIdentifier(param);
-        if (!name.empty()) {
-            names.push_back(std::move(name));
+        std::string trimmed = trim(param);
+        if (trimmed.empty() || trimmed == "void") {
+            continue;
         }
+
+        const auto name = extractParamIdentifier(trimmed);
+        if (name.empty()) {
+            continue;
+        }
+
+        const std::size_t param_name_pos = trimmed.rfind(name);
+        if (param_name_pos == std::string::npos) {
+            continue;
+        }
+
+        std::string type_part = trim(trimmed.substr(0, param_name_pos));
+        if (type_part.empty()) {
+            continue;
+        }
+
+        params.push_back(ParameterInfo{ name, type_part });
     }
 
-    return names;
+    return params;
 }
 
 bool isCStringReturnType(const std::string& type)
 {
     const std::string trimmed = trim(type);
     return trimmed == "const char*" || trimmed == "const char *" || trimmed == "char const*" || trimmed == "char const *";
+}
+
+bool isCStringType(const std::string& type)
+{
+    if (isCStringReturnType(type)) {
+        return true;
+    }
+
+    const std::string trimmed = trim(type);
+    return trimmed == "char*" || trimmed == "char *";
+}
+
+std::string emitCallArgForParameter(const ParameterInfo& param)
+{
+    const std::string trimmedType = trim(param.type);
+    if (trimmedType.empty()) {
+        return {};
+    }
+
+    if (isCStringType(trimmedType)) {
+        return "SDOM::CAPI::CallArg::makeCString(" + param.name + ")";
+    }
+
+    const bool isPointer = trimmedType.find('*') != std::string::npos;
+    if (isPointer) {
+        const bool isConstPtr = trimmedType.find("const") != std::string::npos;
+        if (isConstPtr) {
+            return "SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(" + param.name + ")))";
+        }
+        return "SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(" + param.name + "))";
+    }
+
+    const std::string normalized = normalizeTypeToken(trimmedType);
+    if (normalized == "bool") {
+        return "SDOM::CAPI::CallArg::makeBool(" + param.name + ")";
+    }
+
+    static const std::unordered_set<std::string> kUnsignedTypes = {
+        "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
+        "uint8_t", "uint16_t", "uint32_t", "uint64_t",
+        "unsigned", "unsigned int", "unsigned long", "unsigned long long",
+        "size_t"
+    };
+
+    if (kUnsignedTypes.count(normalized)) {
+        return "SDOM::CAPI::CallArg::makeUInt(static_cast<std::uint64_t>(" + param.name + "))";
+    }
+
+    static const std::unordered_set<std::string> kSignedTypes = {
+        "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t",
+        "int8_t", "int16_t", "int32_t", "int64_t",
+        "int", "long", "long long"
+    };
+
+    if (kSignedTypes.count(normalized)) {
+        return "SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(" + param.name + "))";
+    }
+
+    if (normalized == "float" || normalized == "double") {
+        return "SDOM::CAPI::CallArg::makeDouble(static_cast<double>(" + param.name + "))";
+    }
+
+    return "SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(" + param.name + "))";
 }
 
 std::string normalizeTypeToken(std::string type)
@@ -262,7 +350,8 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
 
     out << "#include <SDOM/CAPI/SDOM_CAPI_" << module.file_stem << ".h>\n";
     out << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
-    out << "#include <string>\n\n";
+    out << "#include <string>\n";
+    out << "#include <vector>\n\n";
 
     if (!moduleHasFunctions(module)) {
         out << "// No callable bindings recorded for this module.\n";
@@ -525,10 +614,13 @@ void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule
 
             out << fn.c_signature << " {\n";
 
-            const auto paramNames = extractParameterNames(fn);
-            if (!paramNames.empty()) {
-                for (const auto& name : paramNames) {
-                    out << "    (void)" << name << ";\n";
+            const auto params = extractParameters(fn);
+            const bool hasArgs = !params.empty();
+            if (hasArgs) {
+                out << "    std::vector<SDOM::CAPI::CallArg> args;\n";
+                out << "    args.reserve(" << params.size() << ");\n";
+                for (const auto& param : params) {
+                    out << "    args.push_back(" << emitCallArgForParameter(param) << ");\n";
                 }
                 out << '\n';
             }
@@ -536,7 +628,7 @@ void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule
             const std::string cReturnType = deduceCReturnType(fn);
             const std::string normalizedReturnType = normalizeTypeToken(cReturnType);
             const bool returnIsEnum = isEnumReturnType(normalizedReturnType, module);
-            const std::string callExpr = "SDOM::CAPI::invokeCallable(\"" + fn.c_name + "\", {})";
+            const std::string callExpr = "SDOM::CAPI::invokeCallable(\"" + fn.c_name + "\", " + (hasArgs ? std::string("args") : std::string("{}")) + ")";
 
             if (cReturnType == "void") {
                 out << "    (void)" << callExpr << ";\n";

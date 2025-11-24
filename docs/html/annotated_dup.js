@@ -64,6 +64,8 @@ var annotated_dup =
     ] ],
     [ "CLR", "classCLR.html", "classCLR" ],
     [ "SDOM", "classSDOM.html", "classSDOM" ],
+    [ "SDOM_AssetHandle", "structSDOM__AssetHandle.html", "structSDOM__AssetHandle" ],
     [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", "structSDOM__CoreConfig" ],
+    [ "SDOM_DisplayHandle", "structSDOM__DisplayHandle.html", "structSDOM__DisplayHandle" ],
     [ "SDOM_Event", "structSDOM__Event.html", "structSDOM__Event" ]
 ];

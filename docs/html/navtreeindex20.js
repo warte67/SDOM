@@ -1,5 +1,14 @@
 var NAVTREEINDEX20 =
 {
+"classSDOM_1_1IDisplayObject.html#aa1f11950c5bbe98f9a367c5d9887826c":[3,0,0,33,93],
+"classSDOM_1_1IDisplayObject.html#aa2c96c42465ff55163387d98a5a3b4c8":[2,0,0,33,42],
+"classSDOM_1_1IDisplayObject.html#aa2c96c42465ff55163387d98a5a3b4c8":[3,0,0,33,42],
+"classSDOM_1_1IDisplayObject.html#aa4055d0bf5298fea88fe2bfa6a408faf":[2,0,0,33,96],
+"classSDOM_1_1IDisplayObject.html#aa4055d0bf5298fea88fe2bfa6a408faf":[3,0,0,33,96],
+"classSDOM_1_1IDisplayObject.html#aa91811b2838e9f85245f356ba00d3c98":[2,0,0,33,120],
+"classSDOM_1_1IDisplayObject.html#aa91811b2838e9f85245f356ba00d3c98":[3,0,0,33,120],
+"classSDOM_1_1IDisplayObject.html#aacaf489d9b9e00e6905be854dcd3c104":[2,0,0,33,33],
+"classSDOM_1_1IDisplayObject.html#aacaf489d9b9e00e6905be854dcd3c104":[3,0,0,33,33],
 "classSDOM_1_1IDisplayObject.html#aacb83eae3c954d0f9a6a1b28b123ec6e":[2,0,0,33,100],
 "classSDOM_1_1IDisplayObject.html#aacb83eae3c954d0f9a6a1b28b123ec6e":[3,0,0,33,100],
 "classSDOM_1_1IDisplayObject.html#aad60efcd3f8a36bf6690ff3877bbe179":[2,0,0,33,177],
@@ -240,14 +249,5 @@ var NAVTREEINDEX20 =
 "classSDOM_1_1IFontObject.html#acbee734b61e90b834672ce530f1415aa":[3,0,0,35,12],
 "classSDOM_1_1IFontObject.html#acf24a17e1284129dbef77cfc229bba05":[2,0,0,35,69],
 "classSDOM_1_1IFontObject.html#acf24a17e1284129dbef77cfc229bba05":[3,0,0,35,69],
-"classSDOM_1_1IFontObject.html#ad0998244c5f497a5ce11a534d321328d":[2,0,0,35,51],
-"classSDOM_1_1IFontObject.html#ad0998244c5f497a5ce11a534d321328d":[3,0,0,35,51],
-"classSDOM_1_1IFontObject.html#ad0b85cd8eafe1b2f92a03573e0ea80b9":[2,0,0,35,29],
-"classSDOM_1_1IFontObject.html#ad0b85cd8eafe1b2f92a03573e0ea80b9":[3,0,0,35,29],
-"classSDOM_1_1IFontObject.html#ad222efbf8082d85c7fb136c28ea12ada":[2,0,0,35,18],
-"classSDOM_1_1IFontObject.html#ad222efbf8082d85c7fb136c28ea12ada":[3,0,0,35,18],
-"classSDOM_1_1IFontObject.html#ad4b08c2b6c0a32aa964300e500d3d35d":[2,0,0,35,13],
-"classSDOM_1_1IFontObject.html#ad4b08c2b6c0a32aa964300e500d3d35d":[3,0,0,35,13],
-"classSDOM_1_1IFontObject.html#ad930db6ca63068d771c9714a2b6d2037":[2,0,0,35,27],
-"classSDOM_1_1IFontObject.html#ad930db6ca63068d771c9714a2b6d2037":[3,0,0,35,27]
+"classSDOM_1_1IFontObject.html#ad0998244c5f497a5ce11a534d321328d":[2,0,0,35,51]
 };
