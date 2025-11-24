@@ -399,6 +399,70 @@ generated/
 
 # 14. Conclusion
 
+
+## Reviewer Notes — Suggestions, Risks, and Next Steps
+
+Below are review points, concrete suggestions, and recommended next steps to make the design more robust and implementation-ready. These complement the existing architecture and help guide the generator and C API implementation.
+
+1) Handle layout and ABI stability
+- Keep `SDOM_Handle` compact and fixed-size for ABI stability. If fields are added later, prefer a versioned layout (e.g., `SDOM_Handle_v2`) rather than changing the original struct in-place.
+- Document alignment/packing rules and guarantee the convention for the invalid handle value (e.g., `obj == nullptr || object_id == 0` means invalid).
+
+2) Type IDs and method-table indexing
+- Generate a deterministic `ObjectTypeId` enum (uint32_t) early in the generation pipeline and emit a header such as `SDOM_ObjectTypeIds.hpp` so all generated sources can use stable indices.
+- Validate type id at runtime before indexing into `g_SDOM_MethodTables` to avoid out-of-bounds access.
+
+3) Per-type method tables & inheritance
+- Flatten the SUPER chain at generation time so each per-type method table contains inherited entries filled from parents. This avoids repeated lookup logic at runtime and simplifies dispatch.
+- When overrides occur, ensure the child table replaces the parent entry for that slot.
+
+4) Unified dispatchers and fast paths
+- The generator's plan for top-level `SDOM_X` dispatchers is correct and simple. These should check `h.type`, pick the table, validate the function pointer, and call it.
+- Consider emitting optional inline fast-path helpers in headers for hot-call sites where the caller knows the type (e.g., `inline bool SDOM_SetCaption_fast(SDOM_Handle h, ...)`).
+
+5) Error handling
+- Continue to use `SDOM_SetError` / `SDOM_GetError`. Prefer a thread-local last-error buffer to avoid cross-thread races.
+- All C API entry points should return `bool` (or an error sentinel) and set a descriptive error string on failure.
+
+6) Handle lifetime and validity
+- Prefer a hybrid handle that stores both a stable `object_id` and a cached `obj` pointer. Dispatchers should try the cached pointer first; if stale/NULL, resolve via `Factory` using `object_id` and update the cache.
+- This balances performance (fast direct pointer use) and safety (stable ID resolution if pointer expired).
+
+7) Ownership & memory rules
+- Document ownership for `const char*` fields exposed in `SDOM_Handle` (e.g., `name`, `type_str`). Prefer generator-owned string storage lifetime guarantees or require callers to copy strings if they need them beyond the call.
+
+8) Generator architecture & deterministic output
+- Keep the BindGenerator single-pass and deterministic: (1) collect registry, (2) topologically sort types, (3) build method histogram, (4) produce per-type tables, (5) emit global dispatchers.
+- Emit a generator-version header so consumers can detect changes in generated ABI.
+
+9) Lua integration
+- Generate `sol2` bindings that call the unified C API dispatchers. Convert C API `false` + `SDOM_GetError()` into Lua exceptions for clear failure semantics.
+
+10) Incremental rollout / migration plan
+- Start with a minimal subset: emit `SDOM_Handle`, `ObjectTypeIds`, method-table format, and a small set of dispatchers. Keep legacy bindings during migration and run tests exercising both code paths.
+
+11) Performance & thread model
+- Table lookup is O(1). For micro-optimizations, consider caching the method-table pointer inside `SDOM_Handle` at creation time (update atomically on type-reload if supported).
+- Clarify thread-safety expectations for `Factory` and code that mutates method tables or the registry. If dynamic re-generation is supported, swap whole table arrays atomically.
+
+12) Diagnostics & tooling
+- Emit a diagnostics manifest (JSON) with type → methods mapping, function signatures, and inheritance graph for debugging and quick test generation.
+
+13) Edge cases
+- Disallow or disambiguate overloaded function names in the C ABI. Either mangle export names deterministically or reject ambiguous overloads during generation.
+
+14) Mapping to current code
+- Extend `FunctionInfo` as needed to include canonical function ids/signatures. The generator should build canonical function slots and then assemble per-type tables by filling slots from the SUPER chain.
+
+15) Recommended tests
+- Unit tests for: valid handle dispatch, invalid handle failure (with readable error), inheritance fallback (child inherits parent method), and Lua integration tests for error propagation and binding correctness.
+
+If you want, I can now:
+- Produce a concrete generator patch sketch that implements per-type table emission and the unified dispatcher codegen, or
+- Draft the exact `SDOM_Handle` C struct layout and a small set of example generated headers/sources (method table + dispatcher) as a working prototype.
+
+Which of those would you like me to do next?
+
 This document defines the **complete**, **reflection-driven**,  
 **inheritance-aware**, and **fully automated binding system** for SDOM.
 
