@@ -677,7 +677,7 @@ What began as a simple opaque handle is now transforming into a full **language-
 
 ### 🏗 **The Binding “Reverse Compiler”**
 A major architectural breakthrough emerged today:  
-SDOM’s binding system is effectively a **reverse compiler**.
+SDOM’s binding system is effectively a [**reverse compiler**](SDOM_CAPI_Lua_Design_Complete.md).
 
 - Runtime reflection data is treated as the “binary.”
 - BindGenerator performs analysis passes:
