@@ -1,9 +1,13 @@
 // Event_CAPI_UnitTests.cpp
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_DataRegistry.hpp>
 #include <SDOM/SDOM_Factory.hpp>
-#include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_IFontObject.hpp>
+#include <SDOM/SDOM_SpriteSheet.hpp>
+#include <SDOM/SDOM_SubjectBinding.hpp>
+
+#include <algorithm>
 
 namespace SDOM
 {
@@ -33,7 +37,7 @@ namespace SDOM
     {
         // Example: To report an error, use this pattern:
         // errors.push_back("Description of the failure.");
-        // ok = false;
+        // bool done = false;
 
         // TODO: Add test logic here
         // e.g., if (!condition) { errors.push_back("Reason for failure."); ok = false; }
@@ -47,6 +51,94 @@ namespace SDOM
         // return false; // 🔄 re-entrant test
 
     } // END: Event_CAPI_test0(std::vector<std::string>& errors)
+
+
+    // 
+    bool Event_CAPI_test1([[maybe_unused]] std::vector<std::string>& errors)
+    {
+        bool done = true;
+
+        auto types = SDOM::DataRegistry::instance().getMergedTypes();
+        const SDOM::BindingManifest manifest = SDOM::buildBindingManifest(types);
+
+        const auto kindIt = std::find_if(
+            manifest.subject_kinds.begin(),
+            manifest.subject_kinds.end(),
+            [](const SDOM::SubjectKindDescriptor& kind) {
+                return kind.name == "Event";
+            });
+
+        if (kindIt == manifest.subject_kinds.end()) {
+            errors.push_back("Event subject kind descriptor missing from manifest");
+            done = false;
+        } else {
+            if (kindIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
+                errors.push_back("Event subject kind is not mapped to event_router dispatch family");
+                done = false;
+            }
+            if (kindIt->uses_handle) {
+                errors.push_back("Event subject kind should not require SDOM_Handle instances");
+                done = false;
+            }
+        }
+
+        const auto typeIt = std::find_if(
+            manifest.type_bindings.begin(),
+            manifest.type_bindings.end(),
+            [](const SDOM::SubjectTypeDescriptor& desc) {
+                return desc.name == "Event";
+            });
+
+        if (typeIt == manifest.type_bindings.end()) {
+            errors.push_back("Event type descriptor missing from manifest");
+            done = false;
+        } else {
+            if (typeIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
+                errors.push_back("Event type descriptor does not use event_router dispatch");
+                done = false;
+            }
+            if (!typeIt->has_function_exports) {
+                errors.push_back("Event type descriptor should report exported functions");
+                done = false;
+            }
+        }
+
+        static const char* kExpectedFns[] = {
+            "SDOM_GetEventType",
+            "SDOM_GetEventTypeName",
+            "SDOM_GetEventPhase",
+            "SDOM_SetEventPhase",
+            "SDOM_GetEventPhaseString"
+        };
+
+        for (const char* fnName : kExpectedFns) {
+            const auto fnIt = std::find_if(
+                manifest.functions.begin(),
+                manifest.functions.end(),
+                [&](const SDOM::FunctionBindingDescriptor& fn) {
+                    return fn.c_name == fnName;
+                });
+
+            if (fnIt == manifest.functions.end()) {
+                errors.push_back(std::string("Missing Event binding: ") + fnName);
+                done = false;
+                continue;
+            }
+
+            if (fnIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
+                errors.push_back(std::string("Event binding ") + fnName + " is not routed via event_router");
+                done = false;
+            }
+
+            if (fnIt->subject_kind != "Event") {
+                errors.push_back(std::string("Event binding ") + fnName + " has incorrect subject kind");
+                done = false;
+            }
+        }
+
+        return done;
+
+    } // END: Event_CAPI_test1(std::vector<std::string>& errors)
 
 
 
@@ -70,6 +162,7 @@ namespace SDOM
         if (!registered)
         {
             ut.add_test(objName, "Test Scaffold", Event_CAPI_test0);
+            ut.add_test(objName, "Event Manifest", Event_CAPI_test1);
 
             // ut.add_test(objName, "Lua: src/Event_CAPI_UnitTests.lua", Event_CAPI_LUA_Tests, false);
 

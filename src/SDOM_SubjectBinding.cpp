@@ -180,7 +180,8 @@ BindingManifest buildBindingManifest(const std::unordered_map<std::string, TypeI
             return fn.exported && !fn.c_signature.empty();
         });
 
-        if (!hasFunctions && type.kind != EntryKind::Global) {
+        const bool hasSubjectKind = !type.subject_kind.empty();
+        if (!hasFunctions && type.kind != EntryKind::Global && !hasSubjectKind) {
             continue;
         }
 

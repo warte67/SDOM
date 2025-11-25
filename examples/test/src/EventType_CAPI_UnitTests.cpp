@@ -1,10 +1,14 @@
 // EventType_CAPI_UnitTests.cpp
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
-#include <SDOM/SDOM_Factory.hpp>
-#include <SDOM/SDOM_SpriteSheet.hpp>
-#include <SDOM/SDOM_IFontObject.hpp>
+#include <SDOM/SDOM_DataRegistry.hpp>
 #include <SDOM/SDOM_EventType.hpp>
+#include <SDOM/SDOM_Factory.hpp>
+#include <SDOM/SDOM_IFontObject.hpp>
+#include <SDOM/SDOM_SpriteSheet.hpp>
+#include <SDOM/SDOM_SubjectBinding.hpp>
+
+#include <algorithm>
 
 
 
@@ -32,14 +36,83 @@ namespace SDOM
     //   • Keep tests self-contained and deterministic.
     //
     // ============================================================================
+
     bool EventType_CAPI_test0([[maybe_unused]] std::vector<std::string>& errors)
     {
-        // Scaffold test: serves as a template and simple smoke test for the
-        // test module registration. Keep this intact for reference.
-        // To fetch the current frame for multi-frame tests:
+        // Example: To report an error, use this pattern:
+        // errors.push_back("Description of the failure.");
+        // bool done = false;
+
+        // TODO: Add test logic here
+        // e.g., if (!condition) { errors.push_back("Reason for failure."); ok = false; }
+
+        // To fetch the current frame:
         // int current_frame = UnitTests::getInstance().get_frame_counter();
 
+        // Use State Machines when re-entrant tests are required to test SDOM main loop
+
         return true; // ✅ finished this frame
+        // return false; // 🔄 re-entrant test
+
+    } // END: Event_CAPI_test0(std::vector<std::string>& errors)
+
+
+
+    bool EventType_CAPI_test1([[maybe_unused]] std::vector<std::string>& errors)
+    {
+        bool done = true;
+
+        auto types = SDOM::DataRegistry::instance().getMergedTypes();
+        const SDOM::BindingManifest manifest = SDOM::buildBindingManifest(types);
+
+        const auto kindIt = std::find_if(
+            manifest.subject_kinds.begin(),
+            manifest.subject_kinds.end(),
+            [](const SDOM::SubjectKindDescriptor& kind) {
+                return kind.name == "EventType";
+            });
+
+        if (kindIt == manifest.subject_kinds.end()) {
+            errors.push_back("EventType subject kind descriptor missing");
+            done = false;
+        } else {
+            if (kindIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
+                errors.push_back("EventType subject kind not mapped to event_router");
+                done = false;
+            }
+            if (kindIt->uses_handle) {
+                errors.push_back("EventType subject kind should not require handles");
+                done = false;
+            }
+        }
+
+        const auto typeIt = std::find_if(
+            manifest.type_bindings.begin(),
+            manifest.type_bindings.end(),
+            [](const SDOM::SubjectTypeDescriptor& desc) {
+                return desc.name == "EventType";
+            });
+
+        if (typeIt == manifest.type_bindings.end()) {
+            errors.push_back("EventType type descriptor missing");
+            done = false;
+        } else if (typeIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
+            errors.push_back("EventType descriptor exists but is not event_router");
+            done = false;
+        }
+
+        for (const auto& fn : manifest.functions) {
+            if (fn.subject_kind != "EventType") {
+                continue;
+            }
+
+            if (fn.dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
+                errors.push_back("EventType binding '" + fn.c_name + "' is not routed via event_router");
+                done = false;
+            }
+        }
+
+        return done;
     }
 
 
@@ -61,6 +134,7 @@ namespace SDOM
         if (!registered)
         {
             ut.add_test(objName, "Test Scaffold", EventType_CAPI_test0);
+            ut.add_test(objName, "EventType Manifest", EventType_CAPI_test1);
 
             // ut.add_test(objName, "Lua: src/EventType_CAPI_UnitTests.lua", EventType_CAPI_LUA_Tests, false);
 

@@ -13,7 +13,17 @@ namespace SDOM
     class CAPI_BindGenerator : public IBindGenerator 
     {
     public:
+        using IBindGenerator::BindModule;
+
         const char* name() const override { return "CAPI_BindGenerator"; }
+
+        using CustomEmitter = std::function<void(std::ofstream&,
+                                                 const FunctionInfo&,
+                                                 const BindModule&,
+                                                 const SubjectTypeDescriptor*)>;
+
+        static void registerCustomEmitter(const std::string& subjectKind,
+                                          CustomEmitter emitter);
 
         // Unified signature
         bool generate(const std::unordered_map<std::string, TypeInfo>& types,

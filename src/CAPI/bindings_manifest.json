@@ -14,7 +14,7 @@
       "dispatch_family": "method_table",
       "name": "isValid",
       "owner_type": "AssetHandle",
-      "subject_kind": "DisplayObject"
+      "subject_kind": "AssetObject"
     },
     {
       "c_name": "SDOM_GetEventType",
@@ -92,6 +92,116 @@
   ],
   "types": [
     {
+      "cpp_type_id": "SDOM::ScrollBar",
+      "dispatch_family": "method_table",
+      "file_stem": "ScrollBar",
+      "has_function_exports": false,
+      "name": "ScrollBar",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::ProgressBar",
+      "dispatch_family": "method_table",
+      "file_stem": "ProgressBar",
+      "has_function_exports": false,
+      "name": "ProgressBar",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Slider",
+      "dispatch_family": "method_table",
+      "file_stem": "Slider",
+      "has_function_exports": false,
+      "name": "Slider",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::RadioButton",
+      "dispatch_family": "method_table",
+      "file_stem": "RadioButton",
+      "has_function_exports": false,
+      "name": "RadioButton",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::ArrowButton",
+      "dispatch_family": "method_table",
+      "file_stem": "ArrowButton",
+      "has_function_exports": false,
+      "name": "ArrowButton",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Group",
+      "dispatch_family": "method_table",
+      "file_stem": "Group",
+      "has_function_exports": false,
+      "name": "Group",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Button",
+      "dispatch_family": "method_table",
+      "file_stem": "Button",
+      "has_function_exports": false,
+      "name": "Button",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Label",
+      "dispatch_family": "method_table",
+      "file_stem": "Label",
+      "has_function_exports": false,
+      "name": "Label",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Texture",
+      "dispatch_family": "method_table",
+      "file_stem": "Texture",
+      "has_function_exports": false,
+      "name": "Texture",
+      "owns_method_table": true,
+      "subject_kind": "AssetObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Stage",
+      "dispatch_family": "method_table",
+      "file_stem": "Stage",
+      "has_function_exports": false,
+      "name": "Stage",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::TristateButton",
+      "dispatch_family": "method_table",
+      "file_stem": "TristateButton",
+      "has_function_exports": false,
+      "name": "TristateButton",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
       "cpp_type_id": "SDOM::DisplayHandle",
       "dispatch_family": "method_table",
       "file_stem": "Handles",
@@ -108,7 +218,7 @@
       "has_function_exports": true,
       "name": "AssetHandle",
       "owns_method_table": true,
-      "subject_kind": "DisplayObject",
+      "subject_kind": "AssetObject",
       "uses_handle": true
     },
     {
@@ -120,6 +230,36 @@
       "owns_method_table": false,
       "subject_kind": "Event",
       "uses_handle": false
+    },
+    {
+      "cpp_type_id": "SDOM::IconButton",
+      "dispatch_family": "method_table",
+      "file_stem": "IconButton",
+      "has_function_exports": false,
+      "name": "IconButton",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::CheckButton",
+      "dispatch_family": "method_table",
+      "file_stem": "CheckButton",
+      "has_function_exports": false,
+      "name": "CheckButton",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Frame",
+      "dispatch_family": "method_table",
+      "file_stem": "Frame",
+      "has_function_exports": false,
+      "name": "Frame",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
     },
     {
       "cpp_type_id": "SDOM::Core",

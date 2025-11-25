@@ -33,7 +33,7 @@ namespace SDOM
     {
         // Example: To report an error, use this pattern:
         // errors.push_back("Description of the failure.");
-        // ok = false;
+        // bool done = false;
 
         // TODO: Add test logic here
         // e.g., if (!condition) { errors.push_back("Reason for failure."); ok = false; }

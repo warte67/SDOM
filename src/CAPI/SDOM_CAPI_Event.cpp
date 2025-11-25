@@ -1,4 +1,5 @@
 #include <SDOM/CAPI/SDOM_CAPI_Event.h>
+#include <SDOM/SDOM_CAPI.h>
 #include <SDOM/SDOM_DataRegistry.hpp>
 #include <string>
 #include <vector>
@@ -8,6 +9,12 @@ extern "C" {
 #endif
 
 bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventType: subject 'evt' is null");
+        return false;
+    }
+
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
@@ -21,6 +28,12 @@ bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type) {
 }
 
 const char* SDOM_GetEventTypeName(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventTypeName: subject 'evt' is null");
+        return nullptr;
+    }
+
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
@@ -36,6 +49,12 @@ const char* SDOM_GetEventTypeName(const SDOM_Event* evt) {
 }
 
 SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventPhase: subject 'evt' is null");
+        return static_cast<SDOM_EventPhase>(0);
+    }
+
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
@@ -51,6 +70,12 @@ SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt) {
 }
 
 bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventPhase: subject 'evt' is null");
+        return false;
+    }
+
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
     args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
@@ -64,6 +89,12 @@ bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase) {
 }
 
 const char* SDOM_GetEventPhaseString(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventPhaseString: subject 'evt' is null");
+        return nullptr;
+    }
+
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));

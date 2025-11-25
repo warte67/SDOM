@@ -7,6 +7,8 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <utility>
+#include <unordered_map>
 #include <unordered_set>
 
 #include <SDOM/SDOM_CAPI_BindGenerator.hpp>
@@ -181,6 +183,7 @@ std::vector<ParameterInfo> extractParameters(const FunctionInfo& fn)
     return params;
 }
 
+
 bool isCStringReturnType(const std::string& type)
 {
     const std::string trimmed = trim(type);
@@ -248,6 +251,179 @@ std::string emitCallArgForParameter(const ParameterInfo& param)
     }
 
     return "SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(" + param.name + "))";
+}
+
+struct ReturnMetadata {
+    std::string c_type;
+    std::string normalized;
+    bool is_enum = false;
+};
+
+using BindModule = CAPI_BindGenerator::BindModule;
+
+bool moduleDeclaresEnum(const std::string& normalizedType, const BindModule& module)
+{
+    if (normalizedType.empty()) {
+        return false;
+    }
+
+    for (const TypeInfo* entry : module.enums) {
+        if (!entry) {
+            continue;
+        }
+
+        const std::string export_name = entry->export_name.empty() ? entry->name : entry->export_name;
+        if (export_name == normalizedType) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+ReturnMetadata analyzeReturnMetadata(const FunctionInfo& fn, const BindModule& module)
+{
+    ReturnMetadata meta;
+    meta.c_type = deduceCReturnType(fn);
+    meta.normalized = normalizeTypeToken(meta.c_type);
+    meta.is_enum = moduleDeclaresEnum(meta.normalized, module);
+    return meta;
+}
+
+bool isPointerReturnType(const std::string& type)
+{
+    const std::string trimmed = trim(type);
+    return trimmed.find('*') != std::string::npos;
+}
+
+const ParameterInfo* findSubjectParameter(const std::vector<ParameterInfo>& params)
+{
+    for (const auto& param : params) {
+        const std::string trimmed = trim(param.type);
+        if (trimmed.empty()) {
+            continue;
+        }
+
+        if (trimmed.find("SDOM_") == std::string::npos) {
+            continue;
+        }
+
+        if (trimmed.find('*') == std::string::npos) {
+            continue;
+        }
+
+        if (isCStringType(trimmed)) {
+            continue;
+        }
+
+        return &param;
+    }
+
+    return nullptr;
+}
+
+void emitGuardReturn(std::ofstream& out, const ReturnMetadata& meta)
+{
+    const std::string trimmed = trim(meta.c_type);
+
+    if (trimmed == "void") {
+        out << "        return;\n";
+        return;
+    }
+
+    if (trimmed == "bool") {
+        out << "        return false;\n";
+        return;
+    }
+
+    if (isCStringReturnType(trimmed) || isPointerReturnType(trimmed)) {
+        out << "        return nullptr;\n";
+        return;
+    }
+
+    if (meta.is_enum && !meta.normalized.empty()) {
+        out << "        return static_cast<" << meta.normalized << ">(0);\n";
+        return;
+    }
+
+    out << "        return {};\n";
+}
+
+void emitSubjectGuard(std::ofstream& out,
+                      const FunctionInfo& fn,
+                      const ParameterInfo& subjectParam,
+                      const ReturnMetadata& meta)
+{
+    const std::string guardName = subjectParam.name.empty() ? std::string("subject") : subjectParam.name;
+    const std::string fnLabel = fn.c_name.empty() ? fn.name : fn.c_name;
+
+    out << "    if (!" << guardName << ") {\n";
+    out << "        SDOM_SetError(\"" << fnLabel << ": subject '" << guardName << "' is null\");\n";
+    emitGuardReturn(out, meta);
+    out << "    }\n\n";
+}
+
+void emitInvokeCallableCore(std::ofstream& out,
+                            const FunctionInfo& fn,
+                            const std::vector<ParameterInfo>& params,
+                            const ReturnMetadata& meta)
+{
+    const bool hasArgs = !params.empty();
+    if (hasArgs) {
+        out << "    std::vector<SDOM::CAPI::CallArg> args;\n";
+        out << "    args.reserve(" << params.size() << ");\n";
+        for (const auto& param : params) {
+            out << "    args.push_back(" << emitCallArgForParameter(param) << ");\n";
+        }
+        out << '\n';
+    }
+
+    const std::string callTarget = fn.c_name.empty() ? fn.name : fn.c_name;
+    const std::string callExpr = "SDOM::CAPI::invokeCallable(\"" + callTarget + "\", "
+        + (hasArgs ? std::string("args") : std::string("{}")) + ")";
+
+    const std::string trimmedReturn = trim(meta.c_type);
+
+    if (trimmedReturn == "void") {
+        out << "    (void)" << callExpr << ";\n";
+        out << "    return;\n";
+    } else if (trimmedReturn == "bool") {
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {\n";
+        out << "        return false;\n";
+        out << "    }\n";
+        out << "    return callResult.v.b;\n";
+    } else if (isCStringReturnType(trimmedReturn)) {
+        out << "    static thread_local std::string s_result;\n";
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::CString) {\n";
+        out << "        s_result.clear();\n";
+        out << "        return s_result.c_str();\n";
+        out << "    }\n";
+        out << "    s_result = callResult.s;\n";
+        out << "    return s_result.c_str();\n";
+    } else if (meta.is_enum) {
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
+        out << "        return static_cast<" << meta.normalized << ">(callResult.v.u);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
+        out << "        return static_cast<" << meta.normalized << ">(callResult.v.i);\n";
+        out << "    }\n";
+        out << "    return static_cast<" << meta.normalized << ">(0);\n";
+    } else {
+        out << "    // TODO: marshal return type '" << meta.c_type << "'.\n";
+        out << "    (void)" << callExpr << ";\n";
+        out << "    return {}; // placeholder\n";
+    }
+
+    out << "}\n\n";
+}
+
+std::unordered_map<std::string, CAPI_BindGenerator::CustomEmitter>& customEmitterRegistry()
+{
+    static std::unordered_map<std::string, CAPI_BindGenerator::CustomEmitter> registry;
+    return registry;
 }
 
 std::string normalizeTypeToken(std::string type)
@@ -357,6 +533,7 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
     std::cout << "[CAPI_BindGenerator] Generating source: " << filename << '\n';
 
     out << "#include <SDOM/CAPI/SDOM_CAPI_" << module.file_stem << ".h>\n";
+    out << "#include <SDOM/SDOM_CAPI.h>\n";
     out << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
     out << "#include <string>\n";
     out << "#include <vector>\n\n";
@@ -691,18 +868,37 @@ const SubjectTypeDescriptor* CAPI_BindGenerator::descriptorFor(const std::string
     return nullptr;
 }
 
+void CAPI_BindGenerator::registerCustomEmitter(const std::string& subjectKind,
+                                               CustomEmitter emitter)
+{
+    if (subjectKind.empty() || !emitter) {
+        return;
+    }
+
+    customEmitterRegistry()[subjectKind] = std::move(emitter);
+}
+
 void CAPI_BindGenerator::emitMethodTableFunction(std::ofstream& out,
                                                  const FunctionInfo& fn,
                                                  const BindModule& module,
                                                  const SubjectTypeDescriptor* descriptor) const
 {
-    if (!descriptor || !descriptor->owns_method_table) {
+    if (!descriptor) {
         emitLegacyCallableBody(out, fn, module);
         return;
     }
 
-    // TODO: Replace legacy body with method-table dispatch once tables are generated.
-    emitLegacyCallableBody(out, fn, module);
+    const auto params = extractParameters(fn);
+    const auto returnMeta = analyzeReturnMetadata(fn, module);
+
+    out << fn.c_signature << " {\n";
+    out << "    // Dispatch family: method_table (" << descriptor->subject_kind << ")\n";
+
+    if (const ParameterInfo* subject = findSubjectParameter(params)) {
+        emitSubjectGuard(out, fn, *subject, returnMeta);
+    }
+
+    emitInvokeCallableCore(out, fn, params, returnMeta);
 }
 
 void CAPI_BindGenerator::emitSingletonFunction(std::ofstream& out,
@@ -710,9 +906,19 @@ void CAPI_BindGenerator::emitSingletonFunction(std::ofstream& out,
                                                 const BindModule& module,
                                                 const SubjectTypeDescriptor* descriptor) const
 {
-    (void)descriptor;
-    // TODO: Implement singleton-specific dispatch.
-    emitLegacyCallableBody(out, fn, module);
+    const auto params = extractParameters(fn);
+    const auto returnMeta = analyzeReturnMetadata(fn, module);
+
+    out << fn.c_signature << " {\n";
+    if (descriptor) {
+        out << "    // Dispatch family: singleton (" << descriptor->subject_kind << ")\n";
+    }
+
+    if (const ParameterInfo* subject = findSubjectParameter(params)) {
+        emitSubjectGuard(out, fn, *subject, returnMeta);
+    }
+
+    emitInvokeCallableCore(out, fn, params, returnMeta);
 }
 
 void CAPI_BindGenerator::emitEventRouterFunction(std::ofstream& out,
@@ -720,9 +926,19 @@ void CAPI_BindGenerator::emitEventRouterFunction(std::ofstream& out,
                                                  const BindModule& module,
                                                  const SubjectTypeDescriptor* descriptor) const
 {
-    (void)descriptor;
-    // TODO: Implement event router dispatch.
-    emitLegacyCallableBody(out, fn, module);
+    const auto params = extractParameters(fn);
+    const auto returnMeta = analyzeReturnMetadata(fn, module);
+
+    out << fn.c_signature << " {\n";
+    if (descriptor) {
+        out << "    // Dispatch family: event_router (" << descriptor->subject_kind << ")\n";
+    }
+
+    if (const ParameterInfo* subject = findSubjectParameter(params)) {
+        emitSubjectGuard(out, fn, *subject, returnMeta);
+    }
+
+    emitInvokeCallableCore(out, fn, params, returnMeta);
 }
 
 void CAPI_BindGenerator::emitCustomFunction(std::ofstream& out,
@@ -730,8 +946,14 @@ void CAPI_BindGenerator::emitCustomFunction(std::ofstream& out,
                                             const BindModule& module,
                                             const SubjectTypeDescriptor* descriptor) const
 {
-    (void)descriptor;
-    // TODO: Allow custom dispatch families to hook generation.
+    if (descriptor) {
+        auto it = customEmitterRegistry().find(descriptor->subject_kind);
+        if (it != customEmitterRegistry().end() && it->second) {
+            it->second(out, fn, module, descriptor);
+            return;
+        }
+    }
+
     emitLegacyCallableBody(out, fn, module);
 }
 
@@ -742,55 +964,9 @@ void CAPI_BindGenerator::emitLegacyCallableBody(std::ofstream& out,
     out << fn.c_signature << " {\n";
 
     const auto params = extractParameters(fn);
-    const bool hasArgs = !params.empty();
-    if (hasArgs) {
-        out << "    std::vector<SDOM::CAPI::CallArg> args;\n";
-        out << "    args.reserve(" << params.size() << ");\n";
-        for (const auto& param : params) {
-            out << "    args.push_back(" << emitCallArgForParameter(param) << ");\n";
-        }
-        out << '\n';
-    }
+    const auto returnMeta = analyzeReturnMetadata(fn, module);
 
-    const std::string cReturnType = deduceCReturnType(fn);
-    const std::string normalizedReturnType = normalizeTypeToken(cReturnType);
-    const bool returnIsEnum = isEnumReturnType(normalizedReturnType, module);
-    const std::string callExpr = "SDOM::CAPI::invokeCallable(\"" + fn.c_name + "\", " + (hasArgs ? std::string("args") : std::string("{}")) + ")";
-
-    if (cReturnType == "void") {
-        out << "    (void)" << callExpr << ";\n";
-        out << "    return;\n";
-    } else if (cReturnType == "bool") {
-        out << "    const auto callResult = " << callExpr << ";\n";
-        out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {\n";
-        out << "        return false;\n";
-        out << "    }\n";
-        out << "    return callResult.v.b;\n";
-    } else if (isCStringReturnType(cReturnType)) {
-        out << "    static thread_local std::string s_result;\n";
-        out << "    const auto callResult = " << callExpr << ";\n";
-        out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::CString) {\n";
-        out << "        s_result.clear();\n";
-        out << "        return s_result.c_str();\n";
-        out << "    }\n";
-        out << "    s_result = callResult.s;\n";
-        out << "    return s_result.c_str();\n";
-    } else if (returnIsEnum) {
-        out << "    const auto callResult = " << callExpr << ";\n";
-        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
-        out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.u);\n";
-        out << "    }\n";
-        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
-        out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.i);\n";
-        out << "    }\n";
-        out << "    return static_cast<" << normalizedReturnType << ">(0);\n";
-    } else {
-        out << "    // TODO: marshal return type '" << cReturnType << "'.\n";
-        out << "    (void)" << callExpr << ";\n";
-        out << "    return {}; // placeholder\n";
-    }
-
-    out << "}\n\n";
+    emitInvokeCallableCore(out, fn, params, returnMeta);
 }
 
 std::string CAPI_BindGenerator::headerPathFor(const std::string& dir, const std::string& stem)
@@ -830,22 +1006,7 @@ void CAPI_BindGenerator::forEachCallableType(
 
 bool CAPI_BindGenerator::isEnumReturnType(const std::string& normalizedType, const BindModule& module)
 {
-    if (normalizedType.empty()) {
-        return false;
-    }
-
-    for (const TypeInfo* entry : module.enums) {
-        if (!entry) {
-            continue;
-        }
-
-        const std::string export_name = entry->export_name.empty() ? entry->name : entry->export_name;
-        if (export_name == normalizedType) {
-            return true;
-        }
-    }
-
-    return false;
+    return moduleDeclaresEnum(normalizedType, module);
 }
 
 } // namespace SDOM
