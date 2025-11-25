@@ -278,8 +278,13 @@ bool CAPI_BindGenerator::generate(const std::unordered_map<std::string, TypeInfo
 
     const BindModuleMap modules = buildModuleMap(types);
 
-    const BindingManifest manifest = buildBindingManifest(types);
-    emitBindingManifest(manifest);
+    latest_manifest_ = buildBindingManifest(types);
+    type_descriptors_.clear();
+    for (const auto& desc : latest_manifest_.type_bindings) {
+        type_descriptors_.emplace(desc.name, desc);
+    }
+
+    emitBindingManifest(latest_manifest_);
 
     for (const auto& [_, module] : modules) {
         const bool has_functions = moduleHasFunctions(module);
@@ -622,6 +627,8 @@ void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule
     std::unordered_set<std::string> emitted_names;
 
     forEachCallableType(module, [&](const TypeInfo* type) {
+        const SubjectTypeDescriptor* descriptor = type ? descriptorFor(type->name) : nullptr;
+
         for (const auto& fn : type->functions) {
             if (!fn.exported || fn.c_signature.empty()) {
                 continue;
@@ -632,58 +639,35 @@ void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule
                 continue; // Avoid emitting duplicate bodies
             }
 
-            out << fn.c_signature << " {\n";
+            bool handled = false;
 
-            const auto params = extractParameters(fn);
-            const bool hasArgs = !params.empty();
-            if (hasArgs) {
-                out << "    std::vector<SDOM::CAPI::CallArg> args;\n";
-                out << "    args.reserve(" << params.size() << ");\n";
-                for (const auto& param : params) {
-                    out << "    args.push_back(" << emitCallArgForParameter(param) << ");\n";
+            if (descriptor) {
+                switch (descriptor->dispatch_family) {
+                case SubjectDispatchFamily::MethodTable:
+                    emitMethodTableFunction(out, fn, module, descriptor);
+                    handled = true;
+                    break;
+                case SubjectDispatchFamily::Singleton:
+                    emitSingletonFunction(out, fn, module, descriptor);
+                    handled = true;
+                    break;
+                case SubjectDispatchFamily::EventRouter:
+                    emitEventRouterFunction(out, fn, module, descriptor);
+                    handled = true;
+                    break;
+                case SubjectDispatchFamily::Custom:
+                    emitCustomFunction(out, fn, module, descriptor);
+                    handled = true;
+                    break;
+                default:
+                    break;
                 }
-                out << '\n';
             }
 
-            const std::string cReturnType = deduceCReturnType(fn);
-            const std::string normalizedReturnType = normalizeTypeToken(cReturnType);
-            const bool returnIsEnum = isEnumReturnType(normalizedReturnType, module);
-            const std::string callExpr = "SDOM::CAPI::invokeCallable(\"" + fn.c_name + "\", " + (hasArgs ? std::string("args") : std::string("{}")) + ")";
-
-            if (cReturnType == "void") {
-                out << "    (void)" << callExpr << ";\n";
-                out << "    return;\n";
-            } else if (cReturnType == "bool") {
-                out << "    const auto callResult = " << callExpr << ";\n";
-                out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {\n";
-                out << "        return false;\n";
-                out << "    }\n";
-                out << "    return callResult.v.b;\n";
-            } else if (isCStringReturnType(cReturnType)) {
-                out << "    static thread_local std::string s_result;\n";
-                out << "    const auto callResult = " << callExpr << ";\n";
-                out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::CString) {\n";
-                out << "        s_result.clear();\n";
-                out << "        return s_result.c_str();\n";
-                out << "    }\n";
-                out << "    s_result = callResult.s;\n";
-                out << "    return s_result.c_str();\n";
-            } else if (returnIsEnum) {
-                out << "    const auto callResult = " << callExpr << ";\n";
-                out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
-                out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.u);\n";
-                out << "    }\n";
-                out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
-                out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.i);\n";
-                out << "    }\n";
-                out << "    return static_cast<" << normalizedReturnType << ">(0);\n";
-            } else {
-                out << "    // TODO: marshal return type '" << cReturnType << "'.\n";
-                out << "    (void)" << callExpr << ";\n";
-                out << "    return {}; // placeholder\n";
+            if (!handled) {
+                emitLegacyCallableBody(out, fn, module);
             }
 
-            out << "}\n\n";
             wrote_any = true;
         }
     });
@@ -691,6 +675,122 @@ void CAPI_BindGenerator::emitFunctionBodies(std::ofstream& out, const BindModule
     if (!wrote_any) {
         out << "// No callable bindings recorded for this module.\n";
     }
+}
+
+const SubjectTypeDescriptor* CAPI_BindGenerator::descriptorFor(const std::string& typeName) const
+{
+    if (typeName.empty()) {
+        return nullptr;
+    }
+
+    const auto it = type_descriptors_.find(typeName);
+    if (it != type_descriptors_.end()) {
+        return &it->second;
+    }
+
+    return nullptr;
+}
+
+void CAPI_BindGenerator::emitMethodTableFunction(std::ofstream& out,
+                                                 const FunctionInfo& fn,
+                                                 const BindModule& module,
+                                                 const SubjectTypeDescriptor* descriptor) const
+{
+    if (!descriptor || !descriptor->owns_method_table) {
+        emitLegacyCallableBody(out, fn, module);
+        return;
+    }
+
+    // TODO: Replace legacy body with method-table dispatch once tables are generated.
+    emitLegacyCallableBody(out, fn, module);
+}
+
+void CAPI_BindGenerator::emitSingletonFunction(std::ofstream& out,
+                                                const FunctionInfo& fn,
+                                                const BindModule& module,
+                                                const SubjectTypeDescriptor* descriptor) const
+{
+    (void)descriptor;
+    // TODO: Implement singleton-specific dispatch.
+    emitLegacyCallableBody(out, fn, module);
+}
+
+void CAPI_BindGenerator::emitEventRouterFunction(std::ofstream& out,
+                                                 const FunctionInfo& fn,
+                                                 const BindModule& module,
+                                                 const SubjectTypeDescriptor* descriptor) const
+{
+    (void)descriptor;
+    // TODO: Implement event router dispatch.
+    emitLegacyCallableBody(out, fn, module);
+}
+
+void CAPI_BindGenerator::emitCustomFunction(std::ofstream& out,
+                                            const FunctionInfo& fn,
+                                            const BindModule& module,
+                                            const SubjectTypeDescriptor* descriptor) const
+{
+    (void)descriptor;
+    // TODO: Allow custom dispatch families to hook generation.
+    emitLegacyCallableBody(out, fn, module);
+}
+
+void CAPI_BindGenerator::emitLegacyCallableBody(std::ofstream& out,
+                                                const FunctionInfo& fn,
+                                                const BindModule& module) const
+{
+    out << fn.c_signature << " {\n";
+
+    const auto params = extractParameters(fn);
+    const bool hasArgs = !params.empty();
+    if (hasArgs) {
+        out << "    std::vector<SDOM::CAPI::CallArg> args;\n";
+        out << "    args.reserve(" << params.size() << ");\n";
+        for (const auto& param : params) {
+            out << "    args.push_back(" << emitCallArgForParameter(param) << ");\n";
+        }
+        out << '\n';
+    }
+
+    const std::string cReturnType = deduceCReturnType(fn);
+    const std::string normalizedReturnType = normalizeTypeToken(cReturnType);
+    const bool returnIsEnum = isEnumReturnType(normalizedReturnType, module);
+    const std::string callExpr = "SDOM::CAPI::invokeCallable(\"" + fn.c_name + "\", " + (hasArgs ? std::string("args") : std::string("{}")) + ")";
+
+    if (cReturnType == "void") {
+        out << "    (void)" << callExpr << ";\n";
+        out << "    return;\n";
+    } else if (cReturnType == "bool") {
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {\n";
+        out << "        return false;\n";
+        out << "    }\n";
+        out << "    return callResult.v.b;\n";
+    } else if (isCStringReturnType(cReturnType)) {
+        out << "    static thread_local std::string s_result;\n";
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind != SDOM::CAPI::CallArg::Kind::CString) {\n";
+        out << "        s_result.clear();\n";
+        out << "        return s_result.c_str();\n";
+        out << "    }\n";
+        out << "    s_result = callResult.s;\n";
+        out << "    return s_result.c_str();\n";
+    } else if (returnIsEnum) {
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
+        out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.u);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
+        out << "        return static_cast<" << normalizedReturnType << ">(callResult.v.i);\n";
+        out << "    }\n";
+        out << "    return static_cast<" << normalizedReturnType << ">(0);\n";
+    } else {
+        out << "    // TODO: marshal return type '" << cReturnType << "'.\n";
+        out << "    (void)" << callExpr << ";\n";
+        out << "    return {}; // placeholder\n";
+    }
+
+    out << "}\n\n";
 }
 
 std::string CAPI_BindGenerator::headerPathFor(const std::string& dir, const std::string& stem)

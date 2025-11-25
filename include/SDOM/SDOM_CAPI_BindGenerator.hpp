@@ -1,9 +1,11 @@
 #pragma once
 #include <functional>
 #include <iosfwd>
+#include <string>
+#include <unordered_map>
+
 #include <SDOM/SDOM_IBindGenerator.hpp>
 #include <SDOM/SDOM_SubjectBinding.hpp>
-#include <string>
 
 namespace SDOM 
 {
@@ -22,6 +24,27 @@ namespace SDOM
         void generateSource(const BindModule& module);
         void emitBindingManifest(const BindingManifest& manifest) const;
 
+        const SubjectTypeDescriptor* descriptorFor(const std::string& typeName) const;
+        void emitMethodTableFunction(std::ofstream& out,
+                                     const FunctionInfo& fn,
+                                     const BindModule& module,
+                                     const SubjectTypeDescriptor* descriptor) const;
+        void emitSingletonFunction(std::ofstream& out,
+                                   const FunctionInfo& fn,
+                                   const BindModule& module,
+                                   const SubjectTypeDescriptor* descriptor) const;
+        void emitEventRouterFunction(std::ofstream& out,
+                                     const FunctionInfo& fn,
+                                     const BindModule& module,
+                                     const SubjectTypeDescriptor* descriptor) const;
+        void emitCustomFunction(std::ofstream& out,
+                                const FunctionInfo& fn,
+                                const BindModule& module,
+                                const SubjectTypeDescriptor* descriptor) const;
+        void emitLegacyCallableBody(std::ofstream& out,
+                                    const FunctionInfo& fn,
+                                    const BindModule& module) const;
+
         void emitEnums(std::ofstream& out, const BindModule& module) const;
         void emitStructs(std::ofstream& out, const BindModule& module) const;
         void emitFunctionPrototypes(std::ofstream& out, const BindModule& module) const;
@@ -35,6 +58,9 @@ namespace SDOM
         static std::string sourcePathFor(const std::string& dir, const std::string& stem);
 
         static bool isEnumReturnType(const std::string& normalizedType, const BindModule& module);
+
+        BindingManifest latest_manifest_;
+        std::unordered_map<std::string, SubjectTypeDescriptor> type_descriptors_;
     };
 
 } // namespace SDOM
