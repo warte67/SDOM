@@ -39,6 +39,8 @@
 #define __SDOM_SDL_UTILS_HPP__
 
 #include <SDOM/SDOM.hpp>
+#include <json.hpp>
+#include <string>
 
 namespace SDOM
 {
@@ -63,6 +65,11 @@ namespace SDOM
         static SDL_EventType eventTypeFromString(const std::string& str);
 
         static int keyToAscii(SDL_Keycode keycode, SDL_Keymod keymod);
+
+        static nlohmann::json eventToJson(const SDL_Event& evt);
+        static std::string eventToJsonString(const SDL_Event& evt);
+        static bool eventFromJson(const nlohmann::json& json, SDL_Event& out_event);
+        static bool eventFromJsonString(const std::string& json, SDL_Event& out_event);
 
         inline static bool color_equal(const SDL_Color& a, const SDL_Color& b) {
             return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;

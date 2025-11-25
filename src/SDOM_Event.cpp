@@ -170,6 +170,22 @@ namespace SDOM
     SDL_Event Event::getSDL_Event() const           { std::lock_guard<std::mutex> lock(event_mutex_); return sdl_event; }
     Event& Event::setSDL_Event(const SDL_Event& e)  { std::lock_guard<std::mutex> lock(event_mutex_); sdl_event = e; return *this; }
 
+    std::string Event::getSDL_EventJson() const
+    {
+        std::lock_guard<std::mutex> lock(event_mutex_);
+        return SDL_Utils::eventToJsonString(sdl_event);
+    }
+
+    Event& Event::setSDL_EventJson(const std::string& json)
+    {
+        std::lock_guard<std::mutex> lock(event_mutex_);
+        SDL_Event decoded{};
+        if (SDL_Utils::eventFromJsonString(json, decoded)) {
+            sdl_event = decoded;
+        }
+        return *this;
+    }
+
 
     // ------------------------------ //
     // --- JSON Payload Accessors --- //
@@ -633,6 +649,39 @@ namespace SDOM
                 DisplayHandle targetHandle = importDisplayHandleFromC(newTarget);
                 std::lock_guard<std::mutex> lock(evt->event_mutex_);
                 evt->related_target = targetHandle;
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getSDL_EventJson",
+            "std::string Event::getSDL_EventJson() const",
+            "const char*",
+            "SDOM_GetEventSDLJson",
+            "const char* SDOM_GetEventSDLJson(const SDOM_Event* evt)",
+            "Serializes the embedded SDL_Event into a JSON snapshot for interop.",
+            [](const Event* evt) -> std::string {
+                if (!evt) {
+                    return {};
+                }
+
+                return evt->getSDL_EventJson();
+            });
+
+        registerMethod(
+            typeName,
+            "setSDL_EventJson",
+            "Event& Event::setSDL_EventJson(const std::string& json)",
+            "bool",
+            "SDOM_SetEventSDLJson",
+            "bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json)",
+            "Reconstructs the embedded SDL_Event from a JSON snapshot.",
+            [](Event* evt, const char* json) -> bool {
+                if (!evt || !json) {
+                    return false;
+                }
+
+                evt->setSDL_EventJson(json);
                 return true;
             });
 

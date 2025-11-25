@@ -105,6 +105,22 @@
       "subject_kind": "Event"
     },
     {
+      "c_name": "SDOM_GetEventSDLJson",
+      "c_signature": "const char* SDOM_GetEventSDLJson(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getSDL_EventJson",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventSDLJson",
+      "c_signature": "bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json)",
+      "dispatch_family": "event_router",
+      "name": "setSDL_EventJson",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
       "c_name": "SDOM_IsEventPropagationStopped",
       "c_signature": "bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt)",
       "dispatch_family": "event_router",

@@ -106,6 +106,8 @@ bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_t
 bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
 bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
 bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
+const char* SDOM_GetEventSDLJson(const SDOM_Event* evt);
+bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json);
 bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt);
 bool SDOM_StopEventPropagation(SDOM_Event* evt);
 bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt);

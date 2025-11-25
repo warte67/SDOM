@@ -44,6 +44,7 @@
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
 #include <mutex>
+#include <string>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <json.hpp>
 
@@ -111,6 +112,8 @@ namespace SDOM
 
         SDL_Event getSDL_Event() const;
         Event& setSDL_Event(const SDL_Event& sdlEvent);
+        std::string getSDL_EventJson() const;
+        Event& setSDL_EventJson(const std::string& json);
 
         // ----------------------
         // JSON Payload Accessors

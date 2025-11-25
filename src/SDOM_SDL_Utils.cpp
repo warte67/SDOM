@@ -36,7 +36,9 @@
  *
  ******************/
 
- #include <SDOM/SDOM_SDL_Utils.hpp>
+#include <SDOM/SDOM_SDL_Utils.hpp>
+#include <algorithm>
+#include <cstdint>
 
 namespace SDOM
 {
@@ -821,5 +823,70 @@ namespace SDOM
         // Return 0 if the keycode is not found
         return 0;
     } // END SDL_Utils::SDLKeycodeToAscii()
+
+    nlohmann::json SDL_Utils::eventToJson(const SDL_Event& evt)
+    {
+        nlohmann::json json;
+        json["type"] = SDL_Utils::eventTypeToString(static_cast<SDL_EventType>(evt.type));
+
+        auto& bytes = json["bytes"] = nlohmann::json::array();
+        const auto* data = reinterpret_cast<const std::uint8_t*>(&evt);
+        for (std::size_t i = 0; i < sizeof(SDL_Event); ++i) {
+            bytes.push_back(data[i]);
+        }
+
+        json["size"] = static_cast<std::uint32_t>(sizeof(SDL_Event));
+        return json;
+    }
+
+    std::string SDL_Utils::eventToJsonString(const SDL_Event& evt)
+    {
+        return eventToJson(evt).dump();
+    }
+
+    bool SDL_Utils::eventFromJson(const nlohmann::json& json, SDL_Event& out_event)
+    {
+        if (!json.is_object()) {
+            return false;
+        }
+
+        const auto bytesIt = json.find("bytes");
+        if (bytesIt == json.end() || !bytesIt->is_array()) {
+            return false;
+        }
+
+        SDL_Event reconstructed{};
+        const auto& arr = *bytesIt;
+        const std::size_t maxBytes = std::min<std::size_t>(arr.size(), sizeof(SDL_Event));
+        auto* dest = reinterpret_cast<std::uint8_t*>(&reconstructed);
+        for (std::size_t i = 0; i < maxBytes; ++i) {
+            if (!arr[i].is_number_unsigned()) {
+                return false;
+            }
+            dest[i] = static_cast<std::uint8_t>(arr[i].get<std::uint32_t>());
+        }
+
+        const auto typeIt = json.find("type");
+        if (typeIt != json.end() && typeIt->is_string()) {
+            reconstructed.type = SDL_Utils::eventTypeFromString(typeIt->get<std::string>());
+        }
+
+        out_event = reconstructed;
+        return true;
+    }
+
+    bool SDL_Utils::eventFromJsonString(const std::string& json, SDL_Event& out_event)
+    {
+        if (json.empty()) {
+            return false;
+        }
+
+        const auto parsed = nlohmann::json::parse(json, nullptr, false);
+        if (parsed.is_discarded()) {
+            return false;
+        }
+
+        return eventFromJson(parsed, out_event);
+    }
 
 } // namespace SDOM
