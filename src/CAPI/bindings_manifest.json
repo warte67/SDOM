@@ -55,6 +55,54 @@
       "name": "getPhaseString",
       "owner_type": "Event",
       "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventTarget",
+      "c_signature": "bool SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)",
+      "dispatch_family": "event_router",
+      "name": "getTargetHandle",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventTarget",
+      "c_signature": "bool SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)",
+      "dispatch_family": "event_router",
+      "name": "setTargetHandle",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventCurrentTarget",
+      "c_signature": "bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)",
+      "dispatch_family": "event_router",
+      "name": "getCurrentTargetHandle",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventCurrentTarget",
+      "c_signature": "bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)",
+      "dispatch_family": "event_router",
+      "name": "setCurrentTargetHandle",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventRelatedTarget",
+      "c_signature": "bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)",
+      "dispatch_family": "event_router",
+      "name": "getRelatedTargetHandle",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventRelatedTarget",
+      "c_signature": "bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)",
+      "dispatch_family": "event_router",
+      "name": "setRelatedTargetHandle",
+      "owner_type": "Event",
+      "subject_kind": "Event"
     }
   ],
   "manifest_version": 1,

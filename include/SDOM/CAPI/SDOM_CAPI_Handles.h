@@ -2,6 +2,7 @@
 // Auto-generated SDOM C API module: Handles
 
 #include <cstdint> // For uint64_t
+#include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 
 typedef struct SDOM_AssetHandle {
     uint64_t object_id;                             ///< Factory-assigned identifier (0 == invalid). 

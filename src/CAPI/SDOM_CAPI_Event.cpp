@@ -109,6 +109,120 @@ const char* SDOM_GetEventPhaseString(const SDOM_Event* evt) {
     return s_result.c_str();
 }
 
+bool SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventTarget: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_target)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventTarget", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventTarget: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(new_target))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventTarget", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventCurrentTarget: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_target)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventCurrentTarget", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventCurrentTarget: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(new_target))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventCurrentTarget", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventRelatedTarget: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_target)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventRelatedTarget", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventRelatedTarget: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(new_target))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventRelatedTarget", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

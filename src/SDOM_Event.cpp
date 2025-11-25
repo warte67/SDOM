@@ -49,6 +49,8 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Handles.h>
+#include <string>
 #include <string_view>
 #include <cstdint>
 // #include <SDOM/SDOM_CAPI_Events_runtime.h>
@@ -56,6 +58,46 @@
 
 namespace SDOM
 {
+    namespace {
+        struct DisplayHandleScratch {
+            std::string name;
+            std::string type;
+        };
+
+        thread_local DisplayHandleScratch s_eventTargetScratch;
+        thread_local DisplayHandleScratch s_eventCurrentTargetScratch;
+        thread_local DisplayHandleScratch s_eventRelatedTargetScratch;
+
+        bool exportDisplayHandleToC(const DisplayHandle& handle,
+                                    SDOM_DisplayHandle* out,
+                                    DisplayHandleScratch& scratch)
+        {
+            if (!out) {
+                return false;
+            }
+
+            scratch.name = handle.getName();
+            scratch.type = handle.getType();
+
+            out->object_id = 0; // TODO: populate once DisplayHandle exposes stable IDs
+            out->name = scratch.name.c_str();
+            out->type = scratch.type.c_str();
+            return true;
+        }
+
+        DisplayHandle importDisplayHandleFromC(const SDOM_DisplayHandle* in)
+        {
+            if (!in) {
+                return DisplayHandle{};
+            }
+
+            DisplayHandle result;
+            result.setName(in->name ? in->name : "");
+            result.setType(in->type ? in->type : "");
+            return result;
+        }
+    } // namespace
+
     SDOM::Event::Event(EventType type, DisplayHandle target, float fElapsedTime)
         : type(type),
           target(target),
@@ -484,6 +526,114 @@ namespace SDOM
                 }
 
                 return evt->getPhaseString();
+            });
+
+        registerMethod(
+            typeName,
+            "getTargetHandle",
+            "DisplayHandle Event::getTarget() const",
+            "bool",
+            "SDOM_GetEventTarget",
+            "bool SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)",
+            "Copies the event's target DisplayHandle into an SDOM_DisplayHandle snapshot.",
+            [](const Event* evt, SDOM_DisplayHandle* outTarget) -> bool {
+                if (!evt || !outTarget) {
+                    return false;
+                }
+
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                return exportDisplayHandleToC(evt->target, outTarget, s_eventTargetScratch);
+            });
+
+        registerMethod(
+            typeName,
+            "setTargetHandle",
+            "Event& Event::setTarget(DisplayHandle newTarget)",
+            "bool",
+            "SDOM_SetEventTarget",
+            "bool SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)",
+            "Assigns a new DisplayHandle target snapshot to the event.",
+            [](Event* evt, const SDOM_DisplayHandle* newTarget) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                DisplayHandle targetHandle = importDisplayHandleFromC(newTarget);
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                evt->target = targetHandle;
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getCurrentTargetHandle",
+            "DisplayHandle Event::getCurrentTarget() const",
+            "bool",
+            "SDOM_GetEventCurrentTarget",
+            "bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)",
+            "Copies the current dispatch target DisplayHandle into an SDOM_DisplayHandle snapshot.",
+            [](const Event* evt, SDOM_DisplayHandle* outTarget) -> bool {
+                if (!evt || !outTarget) {
+                    return false;
+                }
+
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                return exportDisplayHandleToC(evt->current_target, outTarget, s_eventCurrentTargetScratch);
+            });
+
+        registerMethod(
+            typeName,
+            "setCurrentTargetHandle",
+            "Event& Event::setCurrentTarget(DisplayHandle newCurrentTarget)",
+            "bool",
+            "SDOM_SetEventCurrentTarget",
+            "bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)",
+            "Assigns a new current dispatch target via an SDOM_DisplayHandle snapshot.",
+            [](Event* evt, const SDOM_DisplayHandle* newTarget) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                DisplayHandle targetHandle = importDisplayHandleFromC(newTarget);
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                evt->current_target = targetHandle;
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getRelatedTargetHandle",
+            "DisplayHandle Event::getRelatedTarget() const",
+            "bool",
+            "SDOM_GetEventRelatedTarget",
+            "bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)",
+            "Copies the related target DisplayHandle (if any) into an SDOM_DisplayHandle snapshot.",
+            [](const Event* evt, SDOM_DisplayHandle* outTarget) -> bool {
+                if (!evt || !outTarget) {
+                    return false;
+                }
+
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                return exportDisplayHandleToC(evt->related_target, outTarget, s_eventRelatedTargetScratch);
+            });
+
+        registerMethod(
+            typeName,
+            "setRelatedTargetHandle",
+            "Event& Event::setRelatedTarget(DisplayHandle newRelatedTarget)",
+            "bool",
+            "SDOM_SetEventRelatedTarget",
+            "bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)",
+            "Assigns a new related target DisplayHandle snapshot on the event.",
+            [](Event* evt, const SDOM_DisplayHandle* newTarget) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                DisplayHandle targetHandle = importDisplayHandleFromC(newTarget);
+                std::lock_guard<std::mutex> lock(evt->event_mutex_);
+                evt->related_target = targetHandle;
+                return true;
             });
 
 

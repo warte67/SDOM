@@ -1,6 +1,8 @@
 #pragma once
 // Auto-generated SDOM C API module: Event
 
+#include <SDOM/CAPI/SDOM_CAPI_Handles.h>
+
 typedef enum SDOM_EventPhase {
     /* Event Phase events */
     SDOM_EventPhase_Capture = 0x0000,               ///< Event is traveling from the root down toward the target (capture phase).
@@ -98,6 +100,12 @@ const char* SDOM_GetEventTypeName(const SDOM_Event* evt);
 SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt);
 bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase);
 const char* SDOM_GetEventPhaseString(const SDOM_Event* evt);
+bool SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
+bool SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
+bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
+bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
+bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
+bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
 
 #ifdef __cplusplus
 } // extern "C"

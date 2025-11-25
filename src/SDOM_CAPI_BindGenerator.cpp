@@ -290,6 +290,96 @@ ReturnMetadata analyzeReturnMetadata(const FunctionInfo& fn, const BindModule& m
     return meta;
 }
 
+bool functionMentionsToken(const FunctionInfo& fn, const std::string& token)
+{
+    if (token.empty()) {
+        return false;
+    }
+
+    if (!fn.c_signature.empty() && fn.c_signature.find(token) != std::string::npos) {
+        return true;
+    }
+
+    if (!fn.return_type.empty() && fn.return_type.find(token) != std::string::npos) {
+        return true;
+    }
+
+    for (const auto& param_type : fn.param_types) {
+        if (param_type.find(token) != std::string::npos) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool typeMentionsToken(const TypeInfo* type, const std::string& token)
+{
+    if (!type || token.empty()) {
+        return false;
+    }
+
+    for (const auto& prop : type->properties) {
+        if (prop.cpp_type.find(token) != std::string::npos) {
+            return true;
+        }
+    }
+
+    for (const auto& fn : type->functions) {
+        if (functionMentionsToken(fn, token)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool moduleUsesTypeToken(const BindModule& module, const std::string& token)
+{
+    if (token.empty()) {
+        return false;
+    }
+
+    const auto bucketUsesToken = [&](const std::vector<const TypeInfo*>& bucket) {
+        for (const TypeInfo* type : bucket) {
+            if (typeMentionsToken(type, token)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    return bucketUsesToken(module.objects)
+        || bucketUsesToken(module.structs)
+        || bucketUsesToken(module.globals)
+        || bucketUsesToken(module.functions)
+        || bucketUsesToken(module.aliases);
+}
+
+std::vector<std::string> collectDependencyIncludes(const BindModule& module)
+{
+    struct TokenInclude {
+        const char* token;
+        const char* include_line;
+    };
+
+    static constexpr TokenInclude requirements[] = {
+        { "SDOM_AssetHandle", "#include <SDOM/CAPI/SDOM_CAPI_Handles.h>" },
+        { "SDOM_DisplayHandle", "#include <SDOM/CAPI/SDOM_CAPI_Handles.h>" }
+    };
+
+    std::vector<std::string> includes;
+    for (const auto& requirement : requirements) {
+        if (moduleUsesTypeToken(module, requirement.token)) {
+            if (std::find(includes.begin(), includes.end(), requirement.include_line) == includes.end()) {
+                includes.emplace_back(requirement.include_line);
+            }
+        }
+    }
+
+    return includes;
+}
+
 bool isPointerReturnType(const std::string& type)
 {
     const std::string trimmed = trim(type);
@@ -496,8 +586,19 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
     out << "#pragma once\n";
     out << "// Auto-generated SDOM C API module: " << module.file_stem << "\n\n";
 
+    std::vector<std::string> includes;
     if (moduleNeedsCstdint(module)) {
-        out << "#include <cstdint> // For uint64_t\n\n";
+        includes.emplace_back("#include <cstdint> // For uint64_t");
+    }
+
+    const auto dependencyIncludes = collectDependencyIncludes(module);
+    includes.insert(includes.end(), dependencyIncludes.begin(), dependencyIncludes.end());
+
+    if (!includes.empty()) {
+        for (const auto& include_line : includes) {
+            out << include_line << '\n';
+        }
+        out << '\n';
     }
 
     emitEnums(out, module);
