@@ -34,7 +34,9 @@ The goal is to make SDOM’s internal C++ object model accessible from C, Lua, a
 
 ### 2.1 Primary Goals
 
-- **One universal handle type** (`SDOM_Handle`) used by all C APIs and exposed to Lua.
+- **Handle-backed subjects share one ABI-stable handle type** (`SDOM_Handle`) used anywhere a subject actually exposes a runtime instance (DisplayObject/AssetObject families).
+- **Subject-kind aware dispatch** so Core, Event/EventType, and future custom subjects can publish APIs without being forced into the DisplayObject model.
+- **Language-agnostic binding manifest** that records every type/function/property once so any language generator can consume it.
 - **Per-type method tables** that encode polymorphic behavior without exposing C++ virtual functions.
 - **Unified C API surface** of functions like `bool SDOM_SetCaption(SDOM_Handle h, const char* text);`
 - **Hybrid safety model**: handles carry both an object pointer and a factory-stable object ID.
@@ -146,6 +148,43 @@ BindGenerator reads this table to emit:
 - C enum definitions for the C API
 - Lua enum tables (`SDOM.ObjectType = { Button = 0, Label = 1, ... }`)
 
+### 4.3 Subject Kind Metadata
+
+Object type registration is augmented with a **subject kind** that describes how a type participates in dispatching. Subject kinds capture the notion that not every exported concept is a `DisplayObject`; `Core`, `AssetObject`, `Event`, and future subsystems can define their own calling conventions without fracturing the registry.
+
+```cpp
+enum class SubjectKind : uint32_t {
+    DisplayObject,
+    AssetObject,
+    CoreSingleton,
+    Event,
+    EventType,
+    Custom // extension point, requires a descriptor
+};
+
+struct SubjectKindDescriptor {
+    SubjectKind kind;
+    const char* name;           // e.g. "DisplayObject"
+    bool usesHandle;            // determines whether SDOM_Handle is required
+    const char* dispatchFamily; // e.g. "method_table", "core_singleton", "event_router"
+    uint32_t    methodTableId;  // optional for handle-based kinds
+};
+```
+
+- Built-in kinds (`DisplayObject`, `AssetObject`, `Event`, `EventType`, `CoreSingleton`) are bootstrapped by the runtime.
+- Third-party modules can register **custom subject kinds** by providing a descriptor that explains whether calls need a handle, an enum ID, or something else. The BindGenerator persists that metadata so new language backends don’t require C++ knowledge.
+
+### 4.4 Dispatch Families
+
+Each subject kind maps to a dispatch family:
+
+- **Method-table family**: handle-backed subjects (DisplayObject/AssetObject) that use per-type tables and `SDOM_Handle`.
+- **Singleton family**: Core systems expose functions without a subject pointer, but internally still own a one-entry method table whose instance pointer is always the singleton (ensuring code generation and diagnostics remain uniform).
+- **Event family**: Event/EventType functions operate on event IDs or payload descriptors instead of handles.
+- **Custom families**: defined via descriptors so generators can branch appropriately.
+
+The subject kind is stored per `TypeInfo` entry alongside the object type ID, giving the generator a deterministic signal for how each callable should be emitted in every target language.
+
 ---
 
 ## 5. SDOM_Handle: ABI-Stable Opaque Handle
@@ -234,7 +273,7 @@ The exact pointer validation mechanism is implementation-dependent, but the hybr
 
 ## 7. Per-Type Method Tables
 
-Each object type has a C struct containing function pointers for all methods that type supports, including inherited methods.
+Each **handle-backed** subject type (DisplayObject, AssetObject, or any custom kind marked `usesHandle = true`) has a C struct containing function pointers for all methods that type supports, including inherited methods.
 
 Example for `Button`:
 
@@ -268,13 +307,13 @@ The generator:
    - Missing functions are filled from the nearest parent.
    - Functions not present in the SUPER chain remain `NULL` (or point to a null-stub).
 
-This flattening happens at generation time, not runtime.
+This flattening happens at generation time, not runtime, and applies only to subjects participating in the method-table dispatch family.
 
 ---
 
 ## 8. Global Method Table Registry
 
-BindGenerator emits a global table mapping type IDs to method tables:
+For method-table subjects, the BindGenerator emits a global table mapping type IDs to method tables:
 
 ```cpp
 const void* g_SDOM_MethodTables[SDOM_OBJECT_TYPE_COUNT] = {
@@ -285,7 +324,7 @@ const void* g_SDOM_MethodTables[SDOM_OBJECT_TYPE_COUNT] = {
 };
 ```
 
-Dispatchers use:
+Handle dispatchers use:
 
 ```cpp
 auto* anyTable = g_SDOM_MethodTables[h.type];
@@ -297,7 +336,14 @@ and cast to the correct struct based on the function being implemented.
 
 ## 9. Unified C API Dispatch Layer
 
-For each function identifier in the histogram (e.g. `"SetCaption"`), the generator emits:
+For each function identifier in the histogram (e.g. `"SetCaption"`), the generator inspects the owning **subject kind** and chooses a dispatch template. Examples:
+
+- **Method-table subjects**: require an `SDOM_Handle` (exposed as `void* subject` internally) and route through per-type tables (sample below).
+- **Core singletons**: emit plain `extern "C"` functions that invoke the singleton, no subject argument needed; under the hood the generator still routes through a one-entry method table so diagnostics/overrides behave like any other subject.
+- **Event/EventType subjects**: marshal `SDOM_EventHandle` or event IDs to the existing event router.
+- **Custom subjects**: rely on the custom descriptor to determine arguments, guard rails, and any helper structs.
+
+Regardless of the template, every callable lands in the same naming/diagnostics scheme so other languages can bind consistently.
 
 ### 9.1 C API Signature
 
@@ -487,7 +533,65 @@ Behind the scenes, this calls the C API via the generated sol2 wrappers.
 
 ---
 
-## 12. BindGenerator Workflow (Final)
+## 12. Language-Agnostic Binding Manifest
+
+To keep registration truly "write once, generate everywhere," the BindGenerator persists all reflection data into a deterministic manifest (JSON or flat binary). Every language backend reads the same manifest instead of linking against C++ internals.
+
+### 12.1 Descriptor Layout
+
+The manifest is versioned and contains four primary descriptor arrays:
+
+```json
+{
+    "manifest_version": 2,
+    "subject_kinds": [
+        {"id": 0, "name": "DisplayObject", "dispatch_family": "method_table", "uses_handle": true},
+        {"id": 1, "name": "AssetObject",   "dispatch_family": "method_table", "uses_handle": true},
+        {"id": 2, "name": "Core",           "dispatch_family": "singleton",    "uses_handle": false},
+        {"id": 3, "name": "Event",          "dispatch_family": "event_router", "uses_handle": false}
+    ],
+    "types": [
+        {"id": 12, "cpp_name": "Button", "subject_kind": 0, "enum_name": "SDOM_ObjectType_Button"}
+    ],
+    "functions": [
+        {
+            "name": "SetCaption",
+            "owner_type": 12,
+            "subject_kind": 0,
+            "dispatch_family": "method_table",
+            "parameters": [
+                {"name": "caption", "type": {"token": "const char*", "category": "string"}}
+            ],
+            "return_type": {"token": "bool", "category": "primitive"},
+            "doc": "Sets the visible caption."
+        }
+    ],
+    "properties": [
+        {"name": "Caption", "owner_type": 12, "getter": "GetCaption", "setter": "SetCaption"}
+    ]
+}
+```
+
+Key points:
+
+- **Subject kind IDs** link every descriptor back to the dispatch metadata.
+- **Type tokens** carry both the C representation (`const char*`) and a logical category (`string`, `handle:DisplayObject`, `enum:ObjectType`).
+- **Properties** are sugar over functions so languages with property syntax can project them naturally.
+
+### 12.2 Versioning and Diagnostics
+
+- The manifest has a monotonic `manifest_version` plus fingerprints for the input registry to guarantee reproducible builds.
+- Diagnostics such as missing overrides, deprecated items, or unsafe parameter mixes are emitted as a sibling report file so generators can fail fast without re-implementing static analysis per language.
+
+### 12.3 Consumption Strategy
+
+- The C/Lua generators remain first-party clients of the manifest to dogfood the format.
+- Additional languages (Rust, Zig, Python, etc.) only need to parse the manifest and understand the dispatch families; no private headers are required.
+- Custom subject kinds can ship their own generator plugins that register new `dispatch_family` strings alongside the manifest to keep behavior extensible.
+
+---
+
+## 13. BindGenerator Workflow (Final)
 
 The BindGenerator’s end-to-end pipeline:
 
@@ -543,7 +647,7 @@ The BindGenerator’s end-to-end pipeline:
 
 ---
 
-## 13. Thread Model and Safety Considerations
+## 14. Thread Model and Safety Considerations
 
 - Method tables are **immutable** after generation.
 - Error buffer is **thread-local**.
@@ -553,7 +657,7 @@ The BindGenerator’s end-to-end pipeline:
 
 ---
 
-## 14. Testing Strategy
+## 15. Testing Strategy
 
 Key tests to validate the system:
 
@@ -587,7 +691,7 @@ Key tests to validate the system:
 
 ---
 
-## 15. Summary
+## 16. Summary
 
 This document describes a **robust, reflection-driven binding system** for SDOM:
 
