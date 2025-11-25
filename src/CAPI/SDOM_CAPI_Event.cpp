@@ -416,6 +416,474 @@ bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time) {
     return callResult.v.b;
 }
 
+float SDOM_GetEventMouseX(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventMouseX: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventMouseX", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<float>(callResult.v.d);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<float>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<float>(callResult.v.i);
+    }
+    return static_cast<float>(0);
+}
+
+bool SDOM_SetEventMouseX(SDOM_Event* evt, float x) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventMouseX: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(x)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventMouseX", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+float SDOM_GetEventMouseY(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventMouseY: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventMouseY", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<float>(callResult.v.d);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<float>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<float>(callResult.v.i);
+    }
+    return static_cast<float>(0);
+}
+
+bool SDOM_SetEventMouseY(SDOM_Event* evt, float y) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventMouseY: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(y)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventMouseY", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+float SDOM_GetEventWheelX(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventWheelX: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventWheelX", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<float>(callResult.v.d);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<float>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<float>(callResult.v.i);
+    }
+    return static_cast<float>(0);
+}
+
+bool SDOM_SetEventWheelX(SDOM_Event* evt, float x) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventWheelX: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(x)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventWheelX", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+float SDOM_GetEventWheelY(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventWheelY: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventWheelY", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<float>(callResult.v.d);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<float>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<float>(callResult.v.i);
+    }
+    return static_cast<float>(0);
+}
+
+bool SDOM_SetEventWheelY(SDOM_Event* evt, float y) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventWheelY: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(y)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventWheelY", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+float SDOM_GetEventDragOffsetX(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventDragOffsetX: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventDragOffsetX", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<float>(callResult.v.d);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<float>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<float>(callResult.v.i);
+    }
+    return static_cast<float>(0);
+}
+
+bool SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventDragOffsetX: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(offset_x)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventDragOffsetX", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+float SDOM_GetEventDragOffsetY(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventDragOffsetY: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventDragOffsetY", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<float>(callResult.v.d);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<float>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<float>(callResult.v.i);
+    }
+    return static_cast<float>(0);
+}
+
+bool SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventDragOffsetY: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(offset_y)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventDragOffsetY", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+int SDOM_GetEventClickCount(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventClickCount: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    // TODO: marshal return type 'int'.
+    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventClickCount", args);
+    return {}; // placeholder
+}
+
+bool SDOM_SetEventClickCount(SDOM_Event* evt, int count) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventClickCount: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(count)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventClickCount", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+uint8_t SDOM_GetEventButton(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventButton: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    // TODO: marshal return type 'uint8_t'.
+    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventButton", args);
+    return {}; // placeholder
+}
+
+bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventButton: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeUInt(static_cast<std::uint64_t>(button)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventButton", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+int SDOM_GetEventScanCode(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventScanCode: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    // TODO: marshal return type 'int'.
+    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventScanCode", args);
+    return {}; // placeholder
+}
+
+bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventScanCode: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(scancode)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventScanCode", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+int SDOM_GetEventKeycode(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventKeycode: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    // TODO: marshal return type 'int'.
+    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventKeycode", args);
+    return {}; // placeholder
+}
+
+bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventKeycode: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(keycode)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventKeycode", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+int SDOM_GetEventKeymod(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventKeymod: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    // TODO: marshal return type 'int'.
+    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventKeymod", args);
+    return {}; // placeholder
+}
+
+bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventKeymod: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(keymod)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventKeymod", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+int SDOM_GetEventAsciiCode(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventAsciiCode: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    // TODO: marshal return type 'int'.
+    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventAsciiCode", args);
+    return {}; // placeholder
+}
+
+bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventAsciiCode: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(ascii_code)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventAsciiCode", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

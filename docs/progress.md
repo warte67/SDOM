@@ -762,6 +762,17 @@ _The feedback loop between reflection and automatic code generation is now tight
 The reverse compiler has graduated from experimental tool to a stable subsystem — a mirror through which SDOM can now describe itself with clarity._
 
 ## 🚧 **ToDo Today / Carryover**
+- ☐ Audit all existing `Event` payload writers (mouse, wheel, drag offsets, keyboard metadata, custom fields)  
+  - Group them by semantic category and promote the high-frequency keys to **typed members + CAPI bindings**  
+  - Preserve low-frequency / experimental fields as JSON via `getPayload*` helpers  
+  - Centralize “source-of-truth” comments (units, invariants, producer/consumer expectations)
+- ☐ Draft typed accessor checklist for remaining payload fields  
+  - Identify gaps between current payload usage and the new strongly-typed API  
+  - Ensure future bindings (Lua, C, Rust, etc.) don’t need to parse ad-hoc JSON blobs
+- ☐ (Optional) Script a payload-key discovery pass  
+  - Grep or reflection pass over all `setPayloadValue` / `payload[...]` writes  
+  - Generate a temporary report for accessor promotion planning
+
 - ☐ Adjust `CMakeLists.txt` so the BindGenerator runs **before** the unit test harness is compiled  
 - 🔄 Expand `DataRegistry` to fully support custom subject types and callable metadata  
 - ☐ Finalize argument dispatch layer in `main.cpp`  
@@ -781,6 +792,7 @@ The reverse compiler has graduated from experimental tool to a stable subsystem 
 
 #### 🤔 *End of Day Reflection*
 > _“When the machine speaks in many languages, it must first learn to speak truth to itself.”_
+
 
 
 ---

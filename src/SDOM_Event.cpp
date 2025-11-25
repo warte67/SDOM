@@ -818,6 +818,370 @@ namespace SDOM
             });
 
 
+        // ---------------------------------------------------------------------
+        // Register Mouse Accessors
+        // ---------------------------------------------------------------------
+        auto registerMouseGetter = [&](const char* methodName,
+                                       const char* cppSig,
+                                       const char* cReturn,
+                                       const char* cName,
+                                       const char* cSig,
+                                       const char* doc,
+                                       auto getter) {
+            registerMethod(
+                typeName,
+                methodName,
+                cppSig,
+                cReturn,
+                cName,
+                cSig,
+                doc,
+                getter);
+        };
+
+        auto registerMouseSetter = [&](const char* methodName,
+                                       const char* cppSig,
+                                       const char* cReturn,
+                                       const char* cName,
+                                       const char* cSig,
+                                       const char* doc,
+                                       auto setter) {
+            registerMethod(
+                typeName,
+                methodName,
+                cppSig,
+                cReturn,
+                cName,
+                cSig,
+                doc,
+                setter);
+        };
+
+        registerMouseGetter(
+            "getMouseX",
+            "float Event::getMouseX() const",
+            "float",
+            "SDOM_GetEventMouseX",
+            "float SDOM_GetEventMouseX(const SDOM_Event* evt)",
+            "Retrieves the cached mouse X coordinate for the event.",
+            [](const Event* evt) -> float {
+                return evt ? evt->getMouseX() : 0.0f;
+            });
+
+        registerMouseSetter(
+            "setMouseX",
+            "Event& Event::setMouseX(float x)",
+            "bool",
+            "SDOM_SetEventMouseX",
+            "bool SDOM_SetEventMouseX(SDOM_Event* evt, float x)",
+            "Sets the mouse X coordinate for the event payload.",
+            [](Event* evt, float x) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setMouseX(x);
+                return true;
+            });
+
+        registerMouseGetter(
+            "getMouseY",
+            "float Event::getMouseY() const",
+            "float",
+            "SDOM_GetEventMouseY",
+            "float SDOM_GetEventMouseY(const SDOM_Event* evt)",
+            "Retrieves the cached mouse Y coordinate for the event.",
+            [](const Event* evt) -> float {
+                return evt ? evt->getMouseY() : 0.0f;
+            });
+
+        registerMouseSetter(
+            "setMouseY",
+            "Event& Event::setMouseY(float y)",
+            "bool",
+            "SDOM_SetEventMouseY",
+            "bool SDOM_SetEventMouseY(SDOM_Event* evt, float y)",
+            "Sets the mouse Y coordinate for the event payload.",
+            [](Event* evt, float y) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setMouseY(y);
+                return true;
+            });
+
+        registerMouseGetter(
+            "getWheelX",
+            "float Event::getWheelX() const",
+            "float",
+            "SDOM_GetEventWheelX",
+            "float SDOM_GetEventWheelX(const SDOM_Event* evt)",
+            "Returns the horizontal wheel delta collected for the event.",
+            [](const Event* evt) -> float {
+                return evt ? evt->getWheelX() : 0.0f;
+            });
+
+        registerMouseSetter(
+            "setWheelX",
+            "Event& Event::setWheelX(float x)",
+            "bool",
+            "SDOM_SetEventWheelX",
+            "bool SDOM_SetEventWheelX(SDOM_Event* evt, float x)",
+            "Sets the horizontal wheel delta in the payload.",
+            [](Event* evt, float x) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setWheelX(x);
+                return true;
+            });
+
+        registerMouseGetter(
+            "getWheelY",
+            "float Event::getWheelY() const",
+            "float",
+            "SDOM_GetEventWheelY",
+            "float SDOM_GetEventWheelY(const SDOM_Event* evt)",
+            "Returns the vertical wheel delta collected for the event.",
+            [](const Event* evt) -> float {
+                return evt ? evt->getWheelY() : 0.0f;
+            });
+
+        registerMouseSetter(
+            "setWheelY",
+            "Event& Event::setWheelY(float y)",
+            "bool",
+            "SDOM_SetEventWheelY",
+            "bool SDOM_SetEventWheelY(SDOM_Event* evt, float y)",
+            "Sets the vertical wheel delta in the payload.",
+            [](Event* evt, float y) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setWheelY(y);
+                return true;
+            });
+
+        registerMouseGetter(
+            "getDragOffsetX",
+            "float Event::getDragOffsetX() const",
+            "float",
+            "SDOM_GetEventDragOffsetX",
+            "float SDOM_GetEventDragOffsetX(const SDOM_Event* evt)",
+            "Provides the drag offset (X axis) for drag events.",
+            [](const Event* evt) -> float {
+                return evt ? evt->getDragOffsetX() : 0.0f;
+            });
+
+        registerMouseSetter(
+            "setDragOffsetX",
+            "Event& Event::setDragOffsetX(float offsetX)",
+            "bool",
+            "SDOM_SetEventDragOffsetX",
+            "bool SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x)",
+            "Stores the drag offset (X axis) into the event payload.",
+            [](Event* evt, float offsetX) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setDragOffsetX(offsetX);
+                return true;
+            });
+
+        registerMouseGetter(
+            "getDragOffsetY",
+            "float Event::getDragOffsetY() const",
+            "float",
+            "SDOM_GetEventDragOffsetY",
+            "float SDOM_GetEventDragOffsetY(const SDOM_Event* evt)",
+            "Provides the drag offset (Y axis) for drag events.",
+            [](const Event* evt) -> float {
+                return evt ? evt->getDragOffsetY() : 0.0f;
+            });
+
+        registerMouseSetter(
+            "setDragOffsetY",
+            "Event& Event::setDragOffsetY(float offsetY)",
+            "bool",
+            "SDOM_SetEventDragOffsetY",
+            "bool SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y)",
+            "Stores the drag offset (Y axis) into the event payload.",
+            [](Event* evt, float offsetY) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setDragOffsetY(offsetY);
+                return true;
+            });
+
+        registerMouseGetter(
+            "getClickCount",
+            "int Event::getClickCount() const",
+            "int",
+            "SDOM_GetEventClickCount",
+            "int SDOM_GetEventClickCount(const SDOM_Event* evt)",
+            "Returns the click count (single/double/etc.) stored in the event.",
+            [](const Event* evt) -> int {
+                return evt ? evt->getClickCount() : 0;
+            });
+
+        registerMouseSetter(
+            "setClickCount",
+            "Event& Event::setClickCount(int count)",
+            "bool",
+            "SDOM_SetEventClickCount",
+            "bool SDOM_SetEventClickCount(SDOM_Event* evt, int count)",
+            "Sets the click count metadata for the event payload.",
+            [](Event* evt, int count) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setClickCount(count);
+                return true;
+            });
+
+        registerMouseGetter(
+            "getButton",
+            "uint8_t Event::getButton() const",
+            "uint8_t",
+            "SDOM_GetEventButton",
+            "uint8_t SDOM_GetEventButton(const SDOM_Event* evt)",
+            "Returns the mouse button identifier that triggered the event.",
+            [](const Event* evt) -> std::uint8_t {
+                return evt ? evt->getButton() : 0u;
+            });
+
+        registerMouseSetter(
+            "setButton",
+            "Event& Event::setButton(uint8_t btn)",
+            "bool",
+            "SDOM_SetEventButton",
+            "bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button)",
+            "Sets the mouse button identifier for this event payload.",
+            [](Event* evt, std::uint8_t button) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setButton(button);
+                return true;
+            });
+
+
+        // ---------------------------------------------------------------------
+        // Register Keyboard Accessors
+        // ---------------------------------------------------------------------
+        registerMethod(
+            typeName,
+            "getScanCode",
+            "SDL_Scancode Event::getScanCode() const",
+            "int",
+            "SDOM_GetEventScanCode",
+            "int SDOM_GetEventScanCode(const SDOM_Event* evt)",
+            "Retrieves the SDL scancode associated with the keyboard event.",
+            [](const Event* evt) -> int {
+                return evt ? static_cast<int>(evt->getScanCode()) : 0;
+            });
+
+        registerMethod(
+            typeName,
+            "setScanCode",
+            "Event& Event::setScanCode(SDL_Scancode scancode)",
+            "bool",
+            "SDOM_SetEventScanCode",
+            "bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode)",
+            "Sets the SDL scancode metadata for the keyboard event.",
+            [](Event* evt, int scancode) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setScanCode(static_cast<SDL_Scancode>(scancode));
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getKeycode",
+            "SDL_Keycode Event::getKeycode() const",
+            "int",
+            "SDOM_GetEventKeycode",
+            "int SDOM_GetEventKeycode(const SDOM_Event* evt)",
+            "Retrieves the SDL keycode value stored on the event.",
+            [](const Event* evt) -> int {
+                return evt ? static_cast<int>(evt->getKeycode()) : 0;
+            });
+
+        registerMethod(
+            typeName,
+            "setKeycode",
+            "Event& Event::setKeycode(SDL_Keycode keycode)",
+            "bool",
+            "SDOM_SetEventKeycode",
+            "bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode)",
+            "Sets the SDL keycode value for the event payload.",
+            [](Event* evt, int keycode) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setKeycode(static_cast<SDL_Keycode>(keycode));
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getKeymod",
+            "Uint16 Event::getKeymod() const",
+            "int",
+            "SDOM_GetEventKeymod",
+            "int SDOM_GetEventKeymod(const SDOM_Event* evt)",
+            "Returns the SDL key modifier mask stored on the event.",
+            [](const Event* evt) -> int {
+                return evt ? static_cast<int>(evt->getKeymod()) : 0;
+            });
+
+        registerMethod(
+            typeName,
+            "setKeymod",
+            "Event& Event::setKeymod(Uint16 keymod)",
+            "bool",
+            "SDOM_SetEventKeymod",
+            "bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod)",
+            "Sets the key modifier mask for the keyboard event.",
+            [](Event* evt, int keymod) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setKeymod(static_cast<Uint16>(keymod));
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getAsciiCode",
+            "int Event::getAsciiCode() const",
+            "int",
+            "SDOM_GetEventAsciiCode",
+            "int SDOM_GetEventAsciiCode(const SDOM_Event* evt)",
+            "Returns the translated ASCII code (if available) for the keypress.",
+            [](const Event* evt) -> int {
+                return evt ? evt->getAsciiCode() : 0;
+            });
+
+        registerMethod(
+            typeName,
+            "setAsciiCode",
+            "Event& Event::setAsciiCode(int asciiCode)",
+            "bool",
+            "SDOM_SetEventAsciiCode",
+            "bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code)",
+            "Sets the translated ASCII code for the keyboard event payload.",
+            [](Event* evt, int asciiCode) -> bool {
+                if (!evt) {
+                    return false;
+                }
+                evt->setAsciiCode(asciiCode);
+                return true;
+            });
+
+
         // -------------------------------------------------------------------------
         // Register Enum Values for SDOM_EventPhase
         // -------------------------------------------------------------------------

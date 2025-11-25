@@ -116,6 +116,30 @@ bool SDOM_GetEventUseCapture(const SDOM_Event* evt);
 bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture);
 float SDOM_GetEventElapsedTime(const SDOM_Event* evt);
 bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time);
+float SDOM_GetEventMouseX(const SDOM_Event* evt);
+bool SDOM_SetEventMouseX(SDOM_Event* evt, float x);
+float SDOM_GetEventMouseY(const SDOM_Event* evt);
+bool SDOM_SetEventMouseY(SDOM_Event* evt, float y);
+float SDOM_GetEventWheelX(const SDOM_Event* evt);
+bool SDOM_SetEventWheelX(SDOM_Event* evt, float x);
+float SDOM_GetEventWheelY(const SDOM_Event* evt);
+bool SDOM_SetEventWheelY(SDOM_Event* evt, float y);
+float SDOM_GetEventDragOffsetX(const SDOM_Event* evt);
+bool SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x);
+float SDOM_GetEventDragOffsetY(const SDOM_Event* evt);
+bool SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y);
+int SDOM_GetEventClickCount(const SDOM_Event* evt);
+bool SDOM_SetEventClickCount(SDOM_Event* evt, int count);
+uint8_t SDOM_GetEventButton(const SDOM_Event* evt);
+bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button);
+int SDOM_GetEventScanCode(const SDOM_Event* evt);
+bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode);
+int SDOM_GetEventKeycode(const SDOM_Event* evt);
+bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode);
+int SDOM_GetEventKeymod(const SDOM_Event* evt);
+bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod);
+int SDOM_GetEventAsciiCode(const SDOM_Event* evt);
+bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -183,6 +183,198 @@
       "name": "setElapsedTime",
       "owner_type": "Event",
       "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventMouseX",
+      "c_signature": "float SDOM_GetEventMouseX(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getMouseX",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventMouseX",
+      "c_signature": "bool SDOM_SetEventMouseX(SDOM_Event* evt, float x)",
+      "dispatch_family": "event_router",
+      "name": "setMouseX",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventMouseY",
+      "c_signature": "float SDOM_GetEventMouseY(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getMouseY",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventMouseY",
+      "c_signature": "bool SDOM_SetEventMouseY(SDOM_Event* evt, float y)",
+      "dispatch_family": "event_router",
+      "name": "setMouseY",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventWheelX",
+      "c_signature": "float SDOM_GetEventWheelX(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getWheelX",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventWheelX",
+      "c_signature": "bool SDOM_SetEventWheelX(SDOM_Event* evt, float x)",
+      "dispatch_family": "event_router",
+      "name": "setWheelX",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventWheelY",
+      "c_signature": "float SDOM_GetEventWheelY(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getWheelY",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventWheelY",
+      "c_signature": "bool SDOM_SetEventWheelY(SDOM_Event* evt, float y)",
+      "dispatch_family": "event_router",
+      "name": "setWheelY",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventDragOffsetX",
+      "c_signature": "float SDOM_GetEventDragOffsetX(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getDragOffsetX",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventDragOffsetX",
+      "c_signature": "bool SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x)",
+      "dispatch_family": "event_router",
+      "name": "setDragOffsetX",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventDragOffsetY",
+      "c_signature": "float SDOM_GetEventDragOffsetY(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getDragOffsetY",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventDragOffsetY",
+      "c_signature": "bool SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y)",
+      "dispatch_family": "event_router",
+      "name": "setDragOffsetY",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventClickCount",
+      "c_signature": "int SDOM_GetEventClickCount(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getClickCount",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventClickCount",
+      "c_signature": "bool SDOM_SetEventClickCount(SDOM_Event* evt, int count)",
+      "dispatch_family": "event_router",
+      "name": "setClickCount",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventButton",
+      "c_signature": "uint8_t SDOM_GetEventButton(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getButton",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventButton",
+      "c_signature": "bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button)",
+      "dispatch_family": "event_router",
+      "name": "setButton",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventScanCode",
+      "c_signature": "int SDOM_GetEventScanCode(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getScanCode",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventScanCode",
+      "c_signature": "bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode)",
+      "dispatch_family": "event_router",
+      "name": "setScanCode",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventKeycode",
+      "c_signature": "int SDOM_GetEventKeycode(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getKeycode",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventKeycode",
+      "c_signature": "bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode)",
+      "dispatch_family": "event_router",
+      "name": "setKeycode",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventKeymod",
+      "c_signature": "int SDOM_GetEventKeymod(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getKeymod",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventKeymod",
+      "c_signature": "bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod)",
+      "dispatch_family": "event_router",
+      "name": "setKeymod",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventAsciiCode",
+      "c_signature": "int SDOM_GetEventAsciiCode(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getAsciiCode",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventAsciiCode",
+      "c_signature": "bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code)",
+      "dispatch_family": "event_router",
+      "name": "setAsciiCode",
+      "owner_type": "Event",
+      "subject_kind": "Event"
     }
   ],
   "manifest_version": 1,
