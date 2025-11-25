@@ -2,6 +2,7 @@ var hierarchy =
 [
     [ "SDOM::AssetRecord", "structSDOM_1_1AssetRecord.html", null ],
     [ "SDOM::AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", null ],
+    [ "SDOM::BindingManifest", "structSDOM_1_1BindingManifest.html", null ],
     [ "SDOM::IBindGenerator::BindModule", "structSDOM_1_1IBindGenerator_1_1BindModule.html", null ],
     [ "SDOM::Bounds", "structSDOM_1_1Bounds.html", null ],
     [ "SDOM::CAPI::CallArg", "structSDOM_1_1CAPI_1_1CallArg.html", null ],
@@ -21,6 +22,7 @@ var hierarchy =
     ] ],
     [ "SDOM::Factory", "classSDOM_1_1Factory.html", null ],
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
+    [ "SDOM::FunctionBindingDescriptor", "structSDOM_1_1FunctionBindingDescriptor.html", null ],
     [ "SDOM::FunctionInfo", "structSDOM_1_1FunctionInfo.html", null ],
     [ "SDOM::GeneratorConfig", "structSDOM_1_1GeneratorConfig.html", null ],
     [ "SDOM::IBindGenerator", "classSDOM_1_1IBindGenerator.html", [
@@ -113,6 +115,8 @@ var hierarchy =
     [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", null ],
     [ "SDOM_DisplayHandle", "structSDOM__DisplayHandle.html", null ],
     [ "SDOM_Event", "structSDOM__Event.html", null ],
+    [ "SDOM::SubjectKindDescriptor", "structSDOM_1_1SubjectKindDescriptor.html", null ],
+    [ "SDOM::SubjectTypeDescriptor", "structSDOM_1_1SubjectTypeDescriptor.html", null ],
     [ "SDOM::Core::TabPriorityComparator", "structSDOM_1_1Core_1_1TabPriorityComparator.html", null ],
     [ "SDOM::UnitTests::TestCase", "structSDOM_1_1UnitTests_1_1TestCase.html", null ],
     [ "SDOM::TypeCreators", "structSDOM_1_1TypeCreators.html", null ],

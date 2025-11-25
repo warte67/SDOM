@@ -270,6 +270,16 @@
       "owns_method_table": true,
       "subject_kind": "Core",
       "uses_handle": false
+    },
+    {
+      "cpp_type_id": "SDOM::EventType",
+      "dispatch_family": "event_router",
+      "file_stem": "EventType",
+      "has_function_exports": false,
+      "name": "EventType",
+      "owns_method_table": false,
+      "subject_kind": "EventType",
+      "uses_handle": false
     }
   ]
 }

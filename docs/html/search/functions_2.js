@@ -7,8 +7,9 @@ var searchData=
   ['bind_5finfo_4',['BIND_INFO',['../classSDOM_1_1IDataObject.html#acbee734b61e90b834672ce530f1415aa',1,'SDOM::IDataObject']]],
   ['bitmapfont_5',['BitmapFont',['../classSDOM_1_1BitmapFont.html#a2baf0fde9547c7446d66be4342a0de22',1,'SDOM::BitmapFont']]],
   ['bringtofront_6',['bringToFront',['../classSDOM_1_1IDisplayObject.html#aa0e4ffaea253601310211fdce9b713dd',1,'SDOM::IDisplayObject']]],
-  ['buildmodulemap_7',['buildModuleMap',['../classSDOM_1_1IBindGenerator.html#afbd7f83a9fd3bfb38f805cec44c2a84a',1,'SDOM::IBindGenerator']]],
-  ['button_8',['Button',['../classSDOM_1_1Button.html#a3f5a2b3218690f7fad57cad0874a3be1',1,'SDOM::Button::Button(const InitStruct &amp;init)'],['../classSDOM_1_1Button.html#a8934695a5c881a5988ec0941e17308e6',1,'SDOM::Button::Button()=default']]],
-  ['button_5fstate_5ffrom_5fname_9',['button_state_from_name',['../namespaceSDOM.html#a3a45e0003ad804fd5fefc445f76fe414',1,'SDOM']]],
-  ['button_5fstate_5fname_5ffrom_5findex_10',['button_state_name_from_index',['../namespaceSDOM.html#a4052112dcedd171e968bb3d5d55d16f5',1,'SDOM']]]
+  ['buildbindingmanifest_7',['buildBindingManifest',['../namespaceSDOM.html#ab542d47b3ebab7b75f8395bf3dc79fce',1,'SDOM']]],
+  ['buildmodulemap_8',['buildModuleMap',['../classSDOM_1_1IBindGenerator.html#afbd7f83a9fd3bfb38f805cec44c2a84a',1,'SDOM::IBindGenerator']]],
+  ['button_9',['Button',['../classSDOM_1_1Button.html#a3f5a2b3218690f7fad57cad0874a3be1',1,'SDOM::Button::Button(const InitStruct &amp;init)'],['../classSDOM_1_1Button.html#a8934695a5c881a5988ec0941e17308e6',1,'SDOM::Button::Button()=default']]],
+  ['button_5fstate_5ffrom_5fname_10',['button_state_from_name',['../namespaceSDOM.html#a3a45e0003ad804fd5fefc445f76fe414',1,'SDOM']]],
+  ['button_5fstate_5fname_5ffrom_5findex_11',['button_state_name_from_index',['../namespaceSDOM.html#a4052112dcedd171e968bb3d5d55d16f5',1,'SDOM']]]
 ];

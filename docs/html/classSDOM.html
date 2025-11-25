@@ -307,6 +307,11 @@ Public Types</h2></td></tr>
 <tr class="memitem:a9cb56e905b36976260e5aa56d30ee933" id="r_a9cb56e905b36976260e5aa56d30ee933"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cb56e905b36976260e5aa56d30ee933">Orientation</a> { <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933ac1b5fa03ecdb95d4a45dd1c40b02527f">Horizontal</a>
 , <a class="el" href="#a9cb56e905b36976260e5aa56d30ee933a06ce2a25e5d12c166a36f654dbea6012">Vertical</a>
  }</td></tr>
+<tr class="memitem:a25d005f86d3a9c8856e47a0e538d529d" id="r_a25d005f86d3a9c8856e47a0e538d529d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25d005f86d3a9c8856e47a0e538d529d">SubjectDispatchFamily</a> : std::uint8_t { <a class="el" href="#a25d005f86d3a9c8856e47a0e538d529da02d5c8b04497ba12c8f6889b773d0967">MethodTable</a> = 0
+, <a class="el" href="#a25d005f86d3a9c8856e47a0e538d529da6ff5f73c8b5ebd311406568c8ef50bfd">Singleton</a>
+, <a class="el" href="#a25d005f86d3a9c8856e47a0e538d529dac51fd154a34a62e7230f095c53605e98">EventRouter</a>
+, <a class="el" href="#a25d005f86d3a9c8856e47a0e538d529da90589c47f06eb971d548591f23c285af">Custom</a>
+ }</td></tr>
 <tr class="memitem:adb3cee76d315de64056545773bf0d30c" id="r_adb3cee76d315de64056545773bf0d30c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb3cee76d315de64056545773bf0d30c">VariantType</a> : uint8_t { <br />
 &#160;&#160;<a class="el" href="#adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94">Null</a> = 0
 , <a class="el" href="#adb3cee76d315de64056545773bf0d30cac26f15e86e3de4c398a8273272aba034">Bool</a>
@@ -324,6 +329,10 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr class="memitem:a30b2979959418fcc8421582cd6cb7c08" id="r_a30b2979959418fcc8421582cd6cb7c08"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30b2979959418fcc8421582cd6cb7c08">SUPER</a> = <a class="el" href="classSDOM_1_1IDisplayObject.html">SDOM::IDisplayObject</a></td></tr>
 <tr class="memitem:a30b2979959418fcc8421582cd6cb7c08" id="r_a30b2979959418fcc8421582cd6cb7c08"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30b2979959418fcc8421582cd6cb7c08">SUPER</a> = <a class="el" href="classSDOM_1_1IDisplayObject.html">SDOM::IDisplayObject</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a633ddde079fae40a63d6cf153a7d188b" id="r_a633ddde079fae40a63d6cf153a7d188b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a633ddde079fae40a63d6cf153a7d188b">BindModule</a> = CAPI_BindGenerator::BindModule</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -392,6 +401,28 @@ Static Public Attributes</h2></td></tr>
 <p>[Expanded description of the class, its purpose, and typical use cases.]</p>
 <hr  />
  </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="a633ddde079fae40a63d6cf153a7d188b" name="a633ddde079fae40a63d6cf153a7d188b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a633ddde079fae40a63d6cf153a7d188b">&#9670;&#160;</a></span>BindModule</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">using SDOM::BindModule = CAPI_BindGenerator::BindModule</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a30b2979959418fcc8421582cd6cb7c08" name="a30b2979959418fcc8421582cd6cb7c08"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a30b2979959418fcc8421582cd6cb7c08">&#9670;&#160;</a></span>SUPER <span class="overload">[1/2]</span></h2>
 
@@ -832,6 +863,34 @@ Static Public Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="a176e331c0f2e44c038e10b25684370b5a98e5a1c44509157ebcaf46c515c78875" name="a176e331c0f2e44c038e10b25684370b5a98e5a1c44509157ebcaf46c515c78875"></a>BottomLeft&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a176e331c0f2e44c038e10b25684370b5abf7d9c8ad2f89a37cf5378b5fec0b420" name="a176e331c0f2e44c038e10b25684370b5abf7d9c8ad2f89a37cf5378b5fec0b420"></a>BottomCenter&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a176e331c0f2e44c038e10b25684370b5a9146bfc669fddc88db2c4d89297d0e9a" name="a176e331c0f2e44c038e10b25684370b5a9146bfc669fddc88db2c4d89297d0e9a"></a>BottomRight&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="a25d005f86d3a9c8856e47a0e538d529d" name="a25d005f86d3a9c8856e47a0e538d529d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25d005f86d3a9c8856e47a0e538d529d">&#9670;&#160;</a></span>SubjectDispatchFamily</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class SDOM::SubjectDispatchFamily : std::uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a25d005f86d3a9c8856e47a0e538d529da02d5c8b04497ba12c8f6889b773d0967" name="a25d005f86d3a9c8856e47a0e538d529da02d5c8b04497ba12c8f6889b773d0967"></a>MethodTable&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a25d005f86d3a9c8856e47a0e538d529da6ff5f73c8b5ebd311406568c8ef50bfd" name="a25d005f86d3a9c8856e47a0e538d529da6ff5f73c8b5ebd311406568c8ef50bfd"></a>Singleton&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a25d005f86d3a9c8856e47a0e538d529dac51fd154a34a62e7230f095c53605e98" name="a25d005f86d3a9c8856e47a0e538d529dac51fd154a34a62e7230f095c53605e98"></a>EventRouter&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a25d005f86d3a9c8856e47a0e538d529da90589c47f06eb971d548591f23c285af" name="a25d005f86d3a9c8856e47a0e538d529da90589c47f06eb971d548591f23c285af"></a>Custom&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -2005,6 +2064,8 @@ SDOM_TestOutputConfig</h1>
 <li>include/SDOM/<a class="el" href="SDOM__CheckButton_8hpp_source.html">SDOM_CheckButton.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__Label_8hpp_source.html">SDOM_Label.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__RadioButton_8hpp_source.html">SDOM_RadioButton.hpp</a></li>
+<li>src/<a class="el" href="SDOM__CAPI__BindGenerator_8cpp.html">SDOM_CAPI_BindGenerator.cpp</a></li>
+<li>src/<a class="el" href="SDOM__SubjectBinding_8cpp.html">SDOM_SubjectBinding.cpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM_8hpp_source.html">SDOM.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__IButtonObject_8hpp_source.html">SDOM_IButtonObject.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__IconIndex_8hpp_source.html">SDOM_IconIndex.hpp</a></li>
@@ -2013,7 +2074,6 @@ SDOM_TestOutputConfig</h1>
 <li>include/SDOM/<a class="el" href="SDOM__IRangeControl_8hpp_source.html">SDOM_IRangeControl.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__Texture_8hpp_source.html">SDOM_Texture.hpp</a></li>
 <li>include/SDOM/<a class="el" href="SDOM__TTFAsset_8hpp_source.html">SDOM_TTFAsset.hpp</a></li>
-<li>src/<a class="el" href="SDOM__CAPI__BindGenerator_8cpp.html">SDOM_CAPI_BindGenerator.cpp</a></li>
 <li>src/<a class="el" href="SDOM__EventType_8cpp.html">SDOM_EventType.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__font__8x12_8cpp.html">SDOM_internal_font_8x12.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__font__8x8_8cpp.html">SDOM_internal_font_8x8.cpp</a></li>

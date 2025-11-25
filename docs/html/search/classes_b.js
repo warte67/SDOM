@@ -9,5 +9,7 @@ var searchData=
   ['sdom_5fevent_6',['SDOM_Event',['../structSDOM__Event.html',1,'']]],
   ['slider_7',['Slider',['../classSDOM_1_1Slider.html',1,'SDOM']]],
   ['spritesheet_8',['SpriteSheet',['../classSDOM_1_1SpriteSheet.html',1,'SDOM']]],
-  ['stage_9',['Stage',['../classSDOM_1_1Stage.html',1,'SDOM']]]
+  ['stage_9',['Stage',['../classSDOM_1_1Stage.html',1,'SDOM']]],
+  ['subjectkinddescriptor_10',['SubjectKindDescriptor',['../structSDOM_1_1SubjectKindDescriptor.html',1,'SDOM']]],
+  ['subjecttypedescriptor_11',['SubjectTypeDescriptor',['../structSDOM_1_1SubjectTypeDescriptor.html',1,'SDOM']]]
 ];

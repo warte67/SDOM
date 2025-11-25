@@ -56,9 +56,8 @@ namespace SDOM
     // 
     bool Event_CAPI_test1([[maybe_unused]] std::vector<std::string>& errors)
     {
-        bool done = true;
 
-        auto types = SDOM::DataRegistry::instance().getMergedTypes();
+        auto types = SDOM::Core::getInstance().getDataRegistry().getMergedTypes();
         const SDOM::BindingManifest manifest = SDOM::buildBindingManifest(types);
 
         const auto kindIt = std::find_if(
@@ -70,15 +69,12 @@ namespace SDOM
 
         if (kindIt == manifest.subject_kinds.end()) {
             errors.push_back("Event subject kind descriptor missing from manifest");
-            done = false;
         } else {
             if (kindIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
                 errors.push_back("Event subject kind is not mapped to event_router dispatch family");
-                done = false;
             }
             if (kindIt->uses_handle) {
                 errors.push_back("Event subject kind should not require SDOM_Handle instances");
-                done = false;
             }
         }
 
@@ -91,15 +87,12 @@ namespace SDOM
 
         if (typeIt == manifest.type_bindings.end()) {
             errors.push_back("Event type descriptor missing from manifest");
-            done = false;
         } else {
             if (typeIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
                 errors.push_back("Event type descriptor does not use event_router dispatch");
-                done = false;
             }
             if (!typeIt->has_function_exports) {
                 errors.push_back("Event type descriptor should report exported functions");
-                done = false;
             }
         }
 
@@ -121,22 +114,19 @@ namespace SDOM
 
             if (fnIt == manifest.functions.end()) {
                 errors.push_back(std::string("Missing Event binding: ") + fnName);
-                done = false;
                 continue;
             }
 
             if (fnIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
                 errors.push_back(std::string("Event binding ") + fnName + " is not routed via event_router");
-                done = false;
             }
 
             if (fnIt->subject_kind != "Event") {
                 errors.push_back(std::string("Event binding ") + fnName + " has incorrect subject kind");
-                done = false;
             }
         }
 
-        return done;
+        return true;
 
     } // END: Event_CAPI_test1(std::vector<std::string>& errors)
 

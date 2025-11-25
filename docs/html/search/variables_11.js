@@ -57,5 +57,8 @@ var searchData=
   ['stringtopanelbaseindex_5f_54',['stringToPanelBaseIndex_',['../classSDOM.html#a8c2b307c7eb25af276a81bd930409deb',1,'SDOM']]],
   ['stringtopaneltileoffset_5f_55',['stringToPanelTileOffset_',['../classSDOM.html#adeb30b52dfdaf61815eb609cc8e208d8',1,'SDOM']]],
   ['structs_56',['structs',['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a6a25c7dde94381d0db0af7d289ee3f3d',1,'SDOM::IBindGenerator::BindModule']]],
-  ['style_57',['style',['../structSDOM_1_1Label_1_1LabelToken.html#a0782c88e2178985e8a9417c06c3188f1',1,'SDOM::Label::LabelToken::style'],['../structSDOM_1_1Label_1_1PhraseToken.html#aeb95a25a60bb24a223b08b45439352e6',1,'SDOM::Label::PhraseToken::style']]]
+  ['style_57',['style',['../structSDOM_1_1Label_1_1LabelToken.html#a0782c88e2178985e8a9417c06c3188f1',1,'SDOM::Label::LabelToken::style'],['../structSDOM_1_1Label_1_1PhraseToken.html#aeb95a25a60bb24a223b08b45439352e6',1,'SDOM::Label::PhraseToken::style']]],
+  ['subject_5fkind_58',['subject_kind',['../structSDOM_1_1TypeInfo.html#afbeed0f75abdfe2dc67a619a96873f3a',1,'SDOM::TypeInfo::subject_kind'],['../structSDOM_1_1SubjectTypeDescriptor.html#a6dbf67516afaaf26cbdb1a561fd40d65',1,'SDOM::SubjectTypeDescriptor::subject_kind'],['../structSDOM_1_1FunctionBindingDescriptor.html#ad822a129122c9bf1682da72bd1c4d463',1,'SDOM::FunctionBindingDescriptor::subject_kind']]],
+  ['subject_5fkinds_59',['subject_kinds',['../structSDOM_1_1BindingManifest.html#ab70e1938de975422c5329dbe84c5124d',1,'SDOM::BindingManifest']]],
+  ['subject_5fuses_5fhandle_60',['subject_uses_handle',['../structSDOM_1_1TypeInfo.html#ab27fc86671aedd8d8692f5dc95e72c2d',1,'SDOM::TypeInfo']]]
 ];

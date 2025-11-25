@@ -21,5 +21,6 @@ var searchData=
   ['copy_18',['Copy',['../classSDOM_1_1Variant.html#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea',1,'SDOM::Variant']]],
   ['count_19',['Count',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ae93f994f01c537c4e2f7d8528c3eb5e9',1,'SDOM::EventType']]],
   ['cppcallable_20',['CppCallable',['../structSDOM_1_1FunctionInfo.html#a1837c7443e3de62d1abe1ac7581a2425a2bd811caa0c1cfc62ceb50f742bc0409',1,'SDOM::FunctionInfo']]],
-  ['cstring_21',['CString',['../structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55aa87842d43de0d6fb7d0aef9c7801982c',1,'SDOM::CAPI::CallArg']]]
+  ['cstring_21',['CString',['../structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55aa87842d43de0d6fb7d0aef9c7801982c',1,'SDOM::CAPI::CallArg']]],
+  ['custom_22',['Custom',['../classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da90589c47f06eb971d548591f23c285af',1,'SDOM']]]
 ];

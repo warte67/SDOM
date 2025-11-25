@@ -104,11 +104,19 @@ Inheritance diagram for SDOM::CAPI_BindGenerator:</div>
   </map>
 </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a23464bbe0c734c7bfed2e36848cea5f3" id="r_a23464bbe0c734c7bfed2e36848cea5f3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23464bbe0c734c7bfed2e36848cea5f3">CustomEmitter</a></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f3f8bd0ea7a9676d0d9d2e5e908b90a" id="r_a1f3f8bd0ea7a9676d0d9d2e5e908b90a"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f3f8bd0ea7a9676d0d9d2e5e908b90a">name</a> () const override</td></tr>
 <tr class="memitem:ace257f826729d59fbb83381eadd56972" id="r_ace257f826729d59fbb83381eadd56972"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace257f826729d59fbb83381eadd56972">generate</a> (const std::unordered_map&lt; std::string, <a class="el" href="structSDOM_1_1TypeInfo.html">TypeInfo</a> &gt; &amp;types, const <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;registry) override</td></tr>
 <tr class="memitem:a9612e7a67df150e54bea3fb8a6f86077" id="r_a9612e7a67df150e54bea3fb8a6f86077"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IBindGenerator.html#a9612e7a67df150e54bea3fb8a6f86077">setOutputDirs</a> (const std::string &amp;headerDir, const std::string &amp;sourceDir)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab85dd047f4aab6714b1aae577c928a37" id="r_ab85dd047f4aab6714b1aae577c928a37"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab85dd047f4aab6714b1aae577c928a37">registerCustomEmitter</a> (const std::string &amp;subjectKind, <a class="el" href="#a23464bbe0c734c7bfed2e36848cea5f3">CustomEmitter</a> emitter)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-types" class="groupheader"><a id="pro-types" name="pro-types"></a>
 Protected Types</h2></td></tr>
@@ -145,6 +153,27 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="a23464bbe0c734c7bfed2e36848cea5f3" name="a23464bbe0c734c7bfed2e36848cea5f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23464bbe0c734c7bfed2e36848cea5f3">&#9670;&#160;</a></span>CustomEmitter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a23464bbe0c734c7bfed2e36848cea5f3">SDOM::CAPI_BindGenerator::CustomEmitter</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> std::function&lt;void(std::ofstream&amp;,</div>
+<div class="line">                                                 <span class="keyword">const</span> <a class="code hl_struct" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a>&amp;,</div>
+<div class="line">                                                 <span class="keyword">const</span> <a class="code hl_struct" href="structSDOM_1_1IBindGenerator_1_1BindModule.html">BindModule</a>&amp;,</div>
+<div class="line">                                                 <span class="keyword">const</span> <a class="code hl_struct" href="structSDOM_1_1SubjectTypeDescriptor.html">SubjectTypeDescriptor</a>*)&gt;</div>
+<div class="ttc" id="astructSDOM_1_1FunctionInfo_html"><div class="ttname"><a href="structSDOM_1_1FunctionInfo.html">SDOM::FunctionInfo</a></div><div class="ttdef"><b>Definition</b> SDOM_DataRegistry.hpp:39</div></div>
+<div class="ttc" id="astructSDOM_1_1IBindGenerator_1_1BindModule_html"><div class="ttname"><a href="structSDOM_1_1IBindGenerator_1_1BindModule.html">SDOM::IBindGenerator::BindModule</a></div><div class="ttdef"><b>Definition</b> SDOM_IBindGenerator.hpp:31</div></div>
+<div class="ttc" id="astructSDOM_1_1SubjectTypeDescriptor_html"><div class="ttname"><a href="structSDOM_1_1SubjectTypeDescriptor.html">SDOM::SubjectTypeDescriptor</a></div><div class="ttdef"><b>Definition</b> SDOM_SubjectBinding.hpp:27</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
@@ -253,6 +282,35 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classSDOM_1_1IBindGenerator.html#acbeb274823375979c0e0e01d554bbffb">SDOM::IBindGenerator</a>.</p>
+
+</div>
+</div>
+<a id="ab85dd047f4aab6714b1aae577c928a37" name="ab85dd047f4aab6714b1aae577c928a37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab85dd047f4aab6714b1aae577c928a37">&#9670;&#160;</a></span>registerCustomEmitter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::CAPI_BindGenerator::registerCustomEmitter </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>subjectKind</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a23464bbe0c734c7bfed2e36848cea5f3">CustomEmitter</a></td>          <td class="paramname"><span class="paramname"><em>emitter</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

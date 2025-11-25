@@ -62,9 +62,10 @@ var searchData=
   ['shade_5flight_59',['SHADE_LIGHT',['../classSDOM.html#aee303a5ea55cf095657cc513fa582406a05b7d94feeae483438e49091816bcaa2',1,'SDOM']]],
   ['shade_5fmedium_60',['SHADE_MEDIUM',['../classSDOM.html#aee303a5ea55cf095657cc513fa582406ab277edeca1b4c8f8adae7472845e693f',1,'SDOM']]],
   ['shade_5fsolid_61',['SHADE_SOLID',['../classSDOM.html#aee303a5ea55cf095657cc513fa582406a65e3e12fd83523bdee8a9599612d5fb1',1,'SDOM']]],
-  ['slider_5ftick_62',['Slider_Tick',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba8a58284252775e96a88c14cd5973ac37',1,'SDOM']]],
-  ['space_63',['Space',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429ad511f8439ecde36647437fbba67a4394',1,'SDOM::Label']]],
-  ['string_64',['String',['../classSDOM.html#adb3cee76d315de64056545773bf0d30ca27118326006d3829667a400ad23d5d98',1,'SDOM']]],
-  ['struct_65',['Struct',['../classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a886ef5dbd655a6c97726d7091c6b173e',1,'SDOM']]],
-  ['sum_66',['Sum',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30aa0ec87054b5e5b7847d0d8780a01a3d5',1,'SDOM::EventType']]]
+  ['singleton_62',['Singleton',['../classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da6ff5f73c8b5ebd311406568c8ef50bfd',1,'SDOM']]],
+  ['slider_5ftick_63',['Slider_Tick',['../classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba8a58284252775e96a88c14cd5973ac37',1,'SDOM']]],
+  ['space_64',['Space',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429ad511f8439ecde36647437fbba67a4394',1,'SDOM::Label']]],
+  ['string_65',['String',['../classSDOM.html#adb3cee76d315de64056545773bf0d30ca27118326006d3829667a400ad23d5d98',1,'SDOM']]],
+  ['struct_66',['Struct',['../classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a886ef5dbd655a6c97726d7091c6b173e',1,'SDOM']]],
+  ['sum_67',['Sum',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30aa0ec87054b5e5b7847d0d8780a01a3d5',1,'SDOM::EventType']]]
 ];

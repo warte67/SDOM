@@ -1,8 +1,8 @@
 var searchData=
 [
   ['c_5ffunction_5fptr_0',['c_function_ptr',['../structSDOM_1_1FunctionInfo.html#a93adc63691d331e2ae0f1d5a1c907877',1,'SDOM::FunctionInfo']]],
-  ['c_5fname_1',['c_name',['../structSDOM_1_1FunctionInfo.html#a0c1036e12658b2e4a231aff43f2aee63',1,'SDOM::FunctionInfo']]],
-  ['c_5fsignature_2',['c_signature',['../structSDOM_1_1FunctionInfo.html#a813c27c783584cad38e4a84934ea9d39',1,'SDOM::FunctionInfo']]],
+  ['c_5fname_1',['c_name',['../structSDOM_1_1FunctionInfo.html#a0c1036e12658b2e4a231aff43f2aee63',1,'SDOM::FunctionInfo::c_name'],['../structSDOM_1_1FunctionBindingDescriptor.html#ac2a560aa43fa3b5c50e62fa080a43326',1,'SDOM::FunctionBindingDescriptor::c_name']]],
+  ['c_5fsignature_2',['c_signature',['../structSDOM_1_1FunctionInfo.html#a813c27c783584cad38e4a84934ea9d39',1,'SDOM::FunctionInfo::c_signature'],['../structSDOM_1_1FunctionBindingDescriptor.html#a59f5d8ac94c0fc98d46af52afd5effde',1,'SDOM::FunctionBindingDescriptor::c_signature']]],
   ['cached_5frenderer_5f_3',['cached_renderer_',['../classSDOM_1_1IPanelObject.html#a3a23cb828e6c0716b9d443ae6165b098',1,'SDOM::IPanelObject::cached_renderer_'],['../classSDOM_1_1IRangeControl.html#a0c3585dcbbc23d84a2658c068a7b198d',1,'SDOM::IRangeControl::cached_renderer_'],['../classSDOM_1_1Label.html#aedbedd4f820dfc06b91624722ad4006c',1,'SDOM::Label::cached_renderer_']]],
   ['cachedtexture_5f_4',['cachedTexture_',['../classSDOM_1_1IPanelObject.html#a122a423e83004b61d76c35fae172e4fe',1,'SDOM::IPanelObject::cachedTexture_'],['../classSDOM_1_1IRangeControl.html#ac1f34d41307fe000db535d9864504aed',1,'SDOM::IRangeControl::cachedTexture_'],['../classSDOM_1_1Label.html#ab632f26d3d9631d937cb1cd2b7933025',1,'SDOM::Label::cachedTexture_']]],
   ['callable_5',['callable',['../structSDOM_1_1FunctionInfo.html#aab2672503ff7fe8fcf446b9fbf155bda',1,'SDOM::FunctionInfo']]],
@@ -24,7 +24,7 @@ var searchData=
   ['core_21',['Core',['../classSDOM_1_1AssetHandle.html#a3f4058eb772531ffeb00b58ffb8287c2',1,'SDOM::AssetHandle::Core'],['../classSDOM_1_1IFontObject.html#a41dc94c0c6b829f8e43561f2105a19ba',1,'SDOM::IFontObject::Core'],['../classSDOM_1_1Label.html#a9d9595e04e3bd70c9d8b2ce589ccf6de',1,'SDOM::Label::Core'],['../classSDOM_1_1SpriteSheet.html#abc59587f33d400af3e064d992c884a05',1,'SDOM::SpriteSheet::Core'],['../classSDOM_1_1Texture.html#a356c05437c222106e30a6671dccd81c4',1,'SDOM::Texture::Core'],['../classSDOM_1_1TTFAsset.html#a9d682d344065b959e4fa646ed3e3fb92',1,'SDOM::TTFAsset::Core']]],
   ['cpp_5fsignature_22',['cpp_signature',['../structSDOM_1_1FunctionInfo.html#aa7ebcb3acdb0e9fa5ac69c4ba83b9097',1,'SDOM::FunctionInfo']]],
   ['cpp_5ftype_23',['cpp_type',['../structSDOM_1_1PropertyInfo.html#a1bd89f4911be19eb7c2e68fe72871b47',1,'SDOM::PropertyInfo']]],
-  ['cpp_5ftype_5fid_24',['cpp_type_id',['../structSDOM_1_1TypeInfo.html#a75ed484c5b0fb3ee5b8ee712378c188b',1,'SDOM::TypeInfo']]],
+  ['cpp_5ftype_5fid_24',['cpp_type_id',['../structSDOM_1_1TypeInfo.html#a75ed484c5b0fb3ee5b8ee712378c188b',1,'SDOM::TypeInfo::cpp_type_id'],['../structSDOM_1_1SubjectTypeDescriptor.html#ad2df14eb6d50d0df6214c35813c1a0f3',1,'SDOM::SubjectTypeDescriptor::cpp_type_id']]],
   ['current_5fheight_25',['current_height',['../classSDOM_1_1Label.html#a4778ce83b69e7385231d7de16ed00e7a',1,'SDOM::Label']]],
   ['current_5fheight_5f_26',['current_height_',['../classSDOM_1_1IPanelObject.html#a007c71a5edc3897d8bac8197b600f753',1,'SDOM::IPanelObject::current_height_'],['../classSDOM_1_1IRangeControl.html#a0e088ce8795a3ab67ce833a136a37835',1,'SDOM::IRangeControl::current_height_']]],
   ['current_5fphase_27',['current_phase',['../classSDOM_1_1Event.html#a1104d10db863e09afeda4b6bed690732',1,'SDOM::Event']]],

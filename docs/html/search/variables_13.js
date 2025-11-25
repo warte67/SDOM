@@ -11,5 +11,6 @@ var searchData=
   ['use_5fcapture_8',['use_capture',['../classSDOM_1_1Event.html#afe5931951716e3a5a9f1939a8d9904fb',1,'SDOM::Event']]],
   ['user_9',['User',['../classSDOM_1_1EventType.html#aed0c4427ac3ac52e140f425fdab9452d',1,'SDOM::EventType']]],
   ['userfontheightspecified_5f_10',['userFontHeightSpecified_',['../classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0',1,'SDOM::Label']]],
-  ['userfontwidthspecified_5f_11',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]]
+  ['userfontwidthspecified_5f_11',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]],
+  ['uses_5fhandle_12',['uses_handle',['../structSDOM_1_1SubjectKindDescriptor.html#a2d659edfcc8f2afbc8734c50fe723792',1,'SDOM::SubjectKindDescriptor::uses_handle'],['../structSDOM_1_1SubjectTypeDescriptor.html#a814fa37836f75ee9cb1609b76591e8eb',1,'SDOM::SubjectTypeDescriptor::uses_handle']]]
 ];

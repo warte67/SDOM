@@ -42,6 +42,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_Slider.cpp", "SDOM__Slider_8cpp.html", null ],
     [ "SDOM_SpriteSheet.cpp", "SDOM__SpriteSheet_8cpp.html", null ],
     [ "SDOM_Stage.cpp", "SDOM__Stage_8cpp.html", null ],
+    [ "SDOM_SubjectBinding.cpp", "SDOM__SubjectBinding_8cpp.html", "SDOM__SubjectBinding_8cpp" ],
     [ "SDOM_Texture.cpp", "SDOM__Texture_8cpp.html", null ],
     [ "SDOM_TristateButton.cpp", "SDOM__TristateButton_8cpp.html", null ],
     [ "SDOM_TruetypeFont.cpp", "SDOM__TruetypeFont_8cpp.html", null ],

@@ -21,5 +21,8 @@ var searchData=
   ['outlinecolor_5f_18',['outlineColor_',['../classSDOM_1_1IDisplayObject.html#ad5253b0e2b8136bb9efcd3cecc00274a',1,'SDOM::IDisplayObject']]],
   ['outlinetextures_19',['outlineTextures',['../classSDOM_1_1BitmapFont.html#ac5daec82ca3c63925431282b24b5d428',1,'SDOM::BitmapFont']]],
   ['outlinethickness_20',['outlineThickness',['../structSDOM_1_1FontStyle.html#a82c6a0b4d8d53624d6953f9355850f24',1,'SDOM::FontStyle::outlineThickness'],['../structSDOM_1_1Label_1_1InitStruct.html#ac6c8dcf69bb4389557dd56bd81e039b8',1,'SDOM::Label::InitStruct::outlineThickness']]],
-  ['overwrite_21',['overwrite',['../structSDOM_1_1GeneratorConfig.html#a03d31450efa1d712800688395e557b6d',1,'SDOM::GeneratorConfig']]]
+  ['overwrite_21',['overwrite',['../structSDOM_1_1GeneratorConfig.html#a03d31450efa1d712800688395e557b6d',1,'SDOM::GeneratorConfig']]],
+  ['owner_22',['owner',['../structSDOM_1_1FunctionBindingDescriptor.html#a5a173abf9e650ab0efb5aaf9b6da0b03',1,'SDOM::FunctionBindingDescriptor']]],
+  ['owner_5ftype_5fname_23',['owner_type_name',['../structSDOM_1_1FunctionBindingDescriptor.html#a6d96ee75337615572c4c2c95f9d57c98',1,'SDOM::FunctionBindingDescriptor']]],
+  ['owns_5fmethod_5ftable_24',['owns_method_table',['../structSDOM_1_1SubjectKindDescriptor.html#a774b13178b31209fe02816de8937f6f3',1,'SDOM::SubjectKindDescriptor::owns_method_table'],['../structSDOM_1_1SubjectTypeDescriptor.html#ad4994db2b1703ef677e5356d8d4858cd',1,'SDOM::SubjectTypeDescriptor::owns_method_table']]]
 ];

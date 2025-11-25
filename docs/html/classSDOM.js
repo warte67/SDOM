@@ -1,5 +1,6 @@
 var classSDOM =
 [
+    [ "BindModule", "classSDOM.html#a633ddde079fae40a63d6cf153a7d188b", null ],
     [ "SUPER", "classSDOM.html#a30b2979959418fcc8421582cd6cb7c08", null ],
     [ "SUPER", "classSDOM.html#a30b2979959418fcc8421582cd6cb7c08", null ],
     [ "AnchorPoint", "classSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [
@@ -169,6 +170,12 @@ var classSDOM =
       [ "BottomLeft", "classSDOM.html#a176e331c0f2e44c038e10b25684370b5a98e5a1c44509157ebcaf46c515c78875", null ],
       [ "BottomCenter", "classSDOM.html#a176e331c0f2e44c038e10b25684370b5abf7d9c8ad2f89a37cf5378b5fec0b420", null ],
       [ "BottomRight", "classSDOM.html#a176e331c0f2e44c038e10b25684370b5a9146bfc669fddc88db2c4d89297d0e9a", null ]
+    ] ],
+    [ "SubjectDispatchFamily", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529d", [
+      [ "MethodTable", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da02d5c8b04497ba12c8f6889b773d0967", null ],
+      [ "Singleton", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da6ff5f73c8b5ebd311406568c8ef50bfd", null ],
+      [ "EventRouter", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529dac51fd154a34a62e7230f095c53605e98", null ],
+      [ "Custom", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da90589c47f06eb971d548591f23c285af", null ]
     ] ],
     [ "VariantType", "classSDOM.html#adb3cee76d315de64056545773bf0d30c", [
       [ "Null", "classSDOM.html#adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94", null ],

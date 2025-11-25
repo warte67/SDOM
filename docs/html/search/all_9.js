@@ -10,7 +10,7 @@ var searchData=
   ['fg_7',['fg',['../classCLR.html#a58801944e6eba7afbdce0383856e8abd',1,'CLR']]],
   ['fg_5fcolor_8',['fg_color',['../classCLR.html#a4756f116c9666f802bc133bcbe89fa7d',1,'CLR']]],
   ['fg_5frgb_9',['fg_rgb',['../classCLR.html#a5e25f1239cc0c2af86eadb514e340ef4',1,'CLR']]],
-  ['file_5fstem_10',['file_stem',['../structSDOM_1_1TypeInfo.html#a6192a718f726b7a68ca31dd1a4efaae9',1,'SDOM::TypeInfo::file_stem'],['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a503f58c19781b918fae5755875afa10d',1,'SDOM::IBindGenerator::BindModule::file_stem']]],
+  ['file_5fstem_10',['file_stem',['../structSDOM_1_1TypeInfo.html#a6192a718f726b7a68ca31dd1a4efaae9',1,'SDOM::TypeInfo::file_stem'],['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a503f58c19781b918fae5755875afa10d',1,'SDOM::IBindGenerator::BindModule::file_stem'],['../structSDOM_1_1SubjectTypeDescriptor.html#a2bf16915f6b63104b19bf8ff5a614a33',1,'SDOM::SubjectTypeDescriptor::file_stem']]],
   ['filename_11',['filename',['../structSDOM_1_1IAssetObject_1_1InitStruct.html#acb48179c035bc7ae27d4e445fd793873',1,'SDOM::IAssetObject::InitStruct']]],
   ['filename_5f_12',['filename_',['../classSDOM_1_1AssetHandle.html#a75387364182cd6804ae611b72ea04758',1,'SDOM::AssetHandle::filename_'],['../classSDOM_1_1IAssetObject.html#add05647990d22252de1ef584ae622ae5',1,'SDOM::IAssetObject::filename_']]],
   ['findassetbyfilename_13',['findAssetByFilename',['../classSDOM_1_1Factory.html#a7c9bd4705f8a020c7d3581c5ed3ff1e9',1,'SDOM::Factory']]],
@@ -71,7 +71,9 @@ var searchData=
   ['fullstring_68',['fullString',['../classSDOM_1_1Version.html#a3fa3d1c0234d115455efbd8925735bd6',1,'SDOM::Version']]],
   ['func_69',['func',['../structSDOM_1_1UnitTests_1_1TestCase.html#a1470c77b3486505d7f07a4b09d3f7186',1,'SDOM::UnitTests::TestCase']]],
   ['function_70',['Function',['../classSDOM.html#a3ca11887e945e749dc9dad42fb9cc8e8a86408593c34af77fdd90df932f8b5261',1,'SDOM']]],
-  ['functioninfo_71',['FunctionInfo',['../structSDOM_1_1FunctionInfo.html',1,'SDOM']]],
-  ['functions_72',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Functions',1,'Functions'],['../classSDOM_1_1TristateButton.html#TristateButton_Functions',1,'Functions']]],
-  ['functions_73',['functions',['../structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1',1,'SDOM::TypeInfo::functions'],['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a573c4bd0abc8bf29fd19ae58ee033c7d',1,'SDOM::IBindGenerator::BindModule::functions']]]
+  ['function_71',['function',['../structSDOM_1_1FunctionBindingDescriptor.html#a9d73b75b08a8fb9f22328d646cafffcf',1,'SDOM::FunctionBindingDescriptor']]],
+  ['functionbindingdescriptor_72',['FunctionBindingDescriptor',['../structSDOM_1_1FunctionBindingDescriptor.html',1,'SDOM']]],
+  ['functioninfo_73',['FunctionInfo',['../structSDOM_1_1FunctionInfo.html',1,'SDOM']]],
+  ['functions_74',['Functions',['../classSDOM_1_1ArrowButton.html#ArrowButton_Functions',1,'Functions'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Functions',1,'Functions'],['../classSDOM_1_1Button.html#Button_Functions',1,'Functions'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Functions',1,'Functions'],['../classSDOM_1_1TristateButton.html#TristateButton_Functions',1,'Functions']]],
+  ['functions_75',['functions',['../structSDOM_1_1TypeInfo.html#a553564049bd9d9221750fed8d24be4a1',1,'SDOM::TypeInfo::functions'],['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a573c4bd0abc8bf29fd19ae58ee033c7d',1,'SDOM::IBindGenerator::BindModule::functions'],['../structSDOM_1_1BindingManifest.html#a17ee26b147332b9c0248fdedc5b6bb01',1,'SDOM::BindingManifest::functions']]]
 ];

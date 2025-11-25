@@ -60,9 +60,8 @@ namespace SDOM
 
     bool EventType_CAPI_test1([[maybe_unused]] std::vector<std::string>& errors)
     {
-        bool done = true;
 
-        auto types = SDOM::DataRegistry::instance().getMergedTypes();
+        auto types = SDOM::Core::getInstance().getDataRegistry().getMergedTypes();
         const SDOM::BindingManifest manifest = SDOM::buildBindingManifest(types);
 
         const auto kindIt = std::find_if(
@@ -74,15 +73,12 @@ namespace SDOM
 
         if (kindIt == manifest.subject_kinds.end()) {
             errors.push_back("EventType subject kind descriptor missing");
-            done = false;
         } else {
             if (kindIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
                 errors.push_back("EventType subject kind not mapped to event_router");
-                done = false;
             }
             if (kindIt->uses_handle) {
                 errors.push_back("EventType subject kind should not require handles");
-                done = false;
             }
         }
 
@@ -95,10 +91,8 @@ namespace SDOM
 
         if (typeIt == manifest.type_bindings.end()) {
             errors.push_back("EventType type descriptor missing");
-            done = false;
         } else if (typeIt->dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
             errors.push_back("EventType descriptor exists but is not event_router");
-            done = false;
         }
 
         for (const auto& fn : manifest.functions) {
@@ -108,11 +102,10 @@ namespace SDOM
 
             if (fn.dispatch_family != SDOM::SubjectDispatchFamily::EventRouter) {
                 errors.push_back("EventType binding '" + fn.c_name + "' is not routed via event_router");
-                done = false;
             }
         }
 
-        return done;
+        return true;
     }
 
 

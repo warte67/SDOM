@@ -103,6 +103,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aef5112a7e37a43580259d6007ec1811e" id="r_aef5112a7e37a43580259d6007ec1811e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef5112a7e37a43580259d6007ec1811e">export_name</a></td></tr>
 <tr class="memitem:a75ed484c5b0fb3ee5b8ee712378c188b" id="r_a75ed484c5b0fb3ee5b8ee712378c188b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75ed484c5b0fb3ee5b8ee712378c188b">cpp_type_id</a></td></tr>
 <tr class="memitem:a59269fc7fd9731ecf55a5e9f32d838aa" id="r_a59269fc7fd9731ecf55a5e9f32d838aa"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a59269fc7fd9731ecf55a5e9f32d838aa">enum_value</a></td></tr>
+<tr class="memitem:afbeed0f75abdfe2dc67a619a96873f3a" id="r_afbeed0f75abdfe2dc67a619a96873f3a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afbeed0f75abdfe2dc67a619a96873f3a">subject_kind</a></td></tr>
+<tr class="memitem:a7cb3865def1e1a1047c03b2daabe6c95" id="r_a7cb3865def1e1a1047c03b2daabe6c95"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7cb3865def1e1a1047c03b2daabe6c95">dispatch_family_override</a></td></tr>
+<tr class="memitem:ab27fc86671aedd8d8692f5dc95e72c2d" id="r_ab27fc86671aedd8d8692f5dc95e72c2d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab27fc86671aedd8d8692f5dc95e72c2d">subject_uses_handle</a> = true</td></tr>
+<tr class="memitem:ac100370e3600607b0039c73b495ef26a" id="r_ac100370e3600607b0039c73b495ef26a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac100370e3600607b0039c73b495ef26a">has_handle_override</a> = false</td></tr>
 <tr class="memitem:a14248af57c4a8816c02c783009568203" id="r_a14248af57c4a8816c02c783009568203"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structSDOM_1_1PropertyInfo.html">PropertyInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14248af57c4a8816c02c783009568203">properties</a></td></tr>
 <tr class="memitem:a553564049bd9d9221750fed8d24be4a1" id="r_a553564049bd9d9221750fed8d24be4a1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structSDOM_1_1FunctionInfo.html">FunctionInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a553564049bd9d9221750fed8d24be4a1">functions</a></td></tr>
 <tr class="memitem:a961e44baf50d45450cab6f0dc8d003d3" id="r_a961e44baf50d45450cab6f0dc8d003d3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a961e44baf50d45450cab6f0dc8d003d3">bases</a></td></tr>
@@ -146,6 +150,20 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::string SDOM::TypeInfo::cpp_type_id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7cb3865def1e1a1047c03b2daabe6c95" name="a7cb3865def1e1a1047c03b2daabe6c95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cb3865def1e1a1047c03b2daabe6c95">&#9670;&#160;</a></span>dispatch_family_override</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::TypeInfo::dispatch_family_override</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -222,6 +240,20 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ac100370e3600607b0039c73b495ef26a" name="ac100370e3600607b0039c73b495ef26a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac100370e3600607b0039c73b495ef26a">&#9670;&#160;</a></span>has_handle_override</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::TypeInfo::has_handle_override = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1ab25f7a95f70283b589139ae86576d0" name="a1ab25f7a95f70283b589139ae86576d0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1ab25f7a95f70283b589139ae86576d0">&#9670;&#160;</a></span>kind</h2>
 
@@ -258,6 +290,34 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::vector&lt;<a class="el" href="structSDOM_1_1PropertyInfo.html">PropertyInfo</a>&gt; SDOM::TypeInfo::properties</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afbeed0f75abdfe2dc67a619a96873f3a" name="afbeed0f75abdfe2dc67a619a96873f3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbeed0f75abdfe2dc67a619a96873f3a">&#9670;&#160;</a></span>subject_kind</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::TypeInfo::subject_kind</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab27fc86671aedd8d8692f5dc95e72c2d" name="ab27fc86671aedd8d8692f5dc95e72c2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab27fc86671aedd8d8692f5dc95e72c2d">&#9670;&#160;</a></span>subject_uses_handle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::TypeInfo::subject_uses_handle = true</td>
         </tr>
       </table>
 </div><div class="memdoc">

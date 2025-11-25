@@ -5,6 +5,7 @@ var searchData=
   ['load_2',['load',['../classSDOM_1_1IAssetObject.html#a492405f47c225d4aee913dcaecd1afc9',1,'SDOM::IAssetObject']]],
   ['lookup_3',['lookup',['../classSDOM_1_1IDataObject.html#afca56a5ad6d91a523bcf65daa5360ba3',1,'SDOM::IDataObject']]],
   ['lookupcallable_4',['lookupCallable',['../namespaceSDOM_1_1CAPI.html#a31693ced154d66361ff757a930bc0491',1,'SDOM::CAPI']]],
-  ['lookuptype_5',['lookupType',['../classSDOM_1_1DataRegistry.html#a351e4fb1851500ef070ed605a65e270a',1,'SDOM::DataRegistry']]],
-  ['luarefvalue_6',['LuaRefValue',['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#a293828363e7d1e072c1bff02aa34afaf',1,'SDOM::VariantStorage::LuaRefValue::LuaRefValue()=default'],['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#a0b3c2430263d1367cfc896e03cfdf9a0',1,'SDOM::VariantStorage::LuaRefValue::LuaRefValue(const sol::object &amp;o)']]]
+  ['lookupsubjectkinddescriptor_5',['lookupSubjectKindDescriptor',['../namespaceSDOM.html#a6aa1a205b94b72d947311646c623c295',1,'SDOM']]],
+  ['lookuptype_6',['lookupType',['../classSDOM_1_1DataRegistry.html#a351e4fb1851500ef070ed605a65e270a',1,'SDOM::DataRegistry']]],
+  ['luarefvalue_7',['LuaRefValue',['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#a293828363e7d1e072c1bff02aa34afaf',1,'SDOM::VariantStorage::LuaRefValue::LuaRefValue()=default'],['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#a0b3c2430263d1367cfc896e03cfdf9a0',1,'SDOM::VariantStorage::LuaRefValue::LuaRefValue(const sol::object &amp;o)']]]
 ];

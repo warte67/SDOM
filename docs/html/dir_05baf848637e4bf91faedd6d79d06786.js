@@ -41,6 +41,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_Slider.hpp", "SDOM__Slider_8hpp.html", "SDOM__Slider_8hpp" ],
     [ "SDOM_SpriteSheet.hpp", "SDOM__SpriteSheet_8hpp.html", "SDOM__SpriteSheet_8hpp" ],
     [ "SDOM_Stage.hpp", "SDOM__Stage_8hpp.html", "SDOM__Stage_8hpp" ],
+    [ "SDOM_SubjectBinding.hpp", "SDOM__SubjectBinding_8hpp.html", "SDOM__SubjectBinding_8hpp" ],
     [ "SDOM_Texture.hpp", "SDOM__Texture_8hpp.html", "SDOM__Texture_8hpp" ],
     [ "SDOM_TristateButton.hpp", "SDOM__TristateButton_8hpp.html", "SDOM__TristateButton_8hpp" ],
     [ "SDOM_TruetypeFont.hpp", "SDOM__TruetypeFont_8hpp.html", "SDOM__TruetypeFont_8hpp" ],
