@@ -364,13 +364,18 @@ namespace SDOM
         // Creates (or retrieves) the canonical TypeInfo entry for SDOM::Event.
         // This guarantees the registry is ready before we attach methods, properties,
         // enum values, or opaque handle metadata.
-        (void)ensureType(typeName,
-                        SDOM::EntryKind::Object,
-                        "SDOM::Event",
-                        "Event",
-                        "SDOM_Event",
-                        "Events",
-                        "SDOM Event object bindings");
+        SDOM::TypeInfo& typeInfo = ensureType(typeName,
+                SDOM::EntryKind::Object,
+                "SDOM::Event",
+                "Event",
+                "SDOM_Event",
+                "Events",
+                "SDOM Event object bindings");
+
+        typeInfo.subject_kind = "Event";
+        typeInfo.subject_uses_handle = false;
+        typeInfo.has_handle_override = true;
+        typeInfo.dispatch_family_override = "event_router";
 
 
         // -------------------------------------------------------------------------

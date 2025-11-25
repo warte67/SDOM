@@ -96,6 +96,12 @@ namespace SDOM
         std::string cpp_type_id;
         std::optional<std::uint32_t> enum_value; // Optional integral value for enum entries
 
+        // Subject binding metadata
+        std::string subject_kind;                 // e.g., DisplayObject, Event, Core
+        std::string dispatch_family_override;     // optional override label (method_table, singleton, ...)
+        bool subject_uses_handle = true;          // hint for whether SDOM_Handle is required for dispatch
+        bool has_handle_override = false;         // track whether subject_uses_handle was explicitly set
+
         // signatures
         std::vector<PropertyInfo> properties;
         std::vector<FunctionInfo> functions;

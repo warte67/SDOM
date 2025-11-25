@@ -1664,7 +1664,19 @@ namespace SDOM
     {
         SUPER::registerBindingsImpl(typeName);
         BIND_INFO(typeName, "Core");
-        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+
+        SDOM::TypeInfo& typeInfo = ensureType(typeName,
+                                              SDOM::EntryKind::Global,
+                                              "SDOM::Core",
+                                              "Core",
+                                              "SDOM_Core",
+                                              "Core",
+                                              "Core singleton bindings");
+
+        typeInfo.subject_kind = "Core";
+        typeInfo.subject_uses_handle = false;
+        typeInfo.has_handle_override = true;
+        typeInfo.dispatch_family_override = "singleton";
     }    
 
 

@@ -278,6 +278,9 @@ bool CAPI_BindGenerator::generate(const std::unordered_map<std::string, TypeInfo
 
     const BindModuleMap modules = buildModuleMap(types);
 
+    const BindingManifest manifest = buildBindingManifest(types);
+    emitBindingManifest(manifest);
+
     for (const auto& [_, module] : modules) {
         const bool has_functions = moduleHasFunctions(module);
         const bool has_header_content = !module.empty() || has_functions;
@@ -367,6 +370,23 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
     out << "#ifdef __cplusplus\n";
     out << "} // extern \"C\"\n";
     out << "#endif\n";
+}
+
+void CAPI_BindGenerator::emitBindingManifest(const BindingManifest& manifest) const
+{
+    if (source_dir_.empty()) {
+        return;
+    }
+
+    const std::string path = source_dir_ + "/bindings_manifest.json";
+    std::ofstream out(path);
+    if (!out) {
+        std::cerr << "[CAPI_BindGenerator] Failed to write binding manifest: " << path << '\n';
+        return;
+    }
+
+    out << manifestToJson(manifest, 2) << '\n';
+    std::cout << "[CAPI_BindGenerator] Wrote binding manifest: " << path << '\n';
 }
 
 bool CAPI_BindGenerator::moduleNeedsCstdint(const BindModule& module)

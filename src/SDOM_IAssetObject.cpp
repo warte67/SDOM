@@ -74,7 +74,22 @@ namespace SDOM
     {
         SUPER::registerBindingsImpl(typeName);
         BIND_INFO(typeName, "IAssetObject");
-        // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
+
+        const std::string cppType = "SDOM::" + typeName;
+        const std::string fileStem = typeName;
+        const std::string exportName = "SDOM_" + typeName;
+        SDOM::TypeInfo& typeInfo = ensureType(typeName,
+                                              SDOM::EntryKind::Object,
+                                              cppType,
+                                              fileStem,
+                                              exportName,
+                                              "AssetObjects",
+                                              typeName + " asset bindings");
+
+        typeInfo.subject_kind = "AssetObject";
+        typeInfo.subject_uses_handle = true;
+        typeInfo.has_handle_override = false;
+        typeInfo.dispatch_family_override = "method_table";
     }    
 
 } // namespace SDOM

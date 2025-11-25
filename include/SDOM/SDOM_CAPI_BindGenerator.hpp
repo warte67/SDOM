@@ -2,6 +2,7 @@
 #include <functional>
 #include <iosfwd>
 #include <SDOM/SDOM_IBindGenerator.hpp>
+#include <SDOM/SDOM_SubjectBinding.hpp>
 #include <string>
 
 namespace SDOM 
@@ -19,6 +20,7 @@ namespace SDOM
     private:
         void generateHeader(const BindModule& module);
         void generateSource(const BindModule& module);
+        void emitBindingManifest(const BindingManifest& manifest) const;
 
         void emitEnums(std::ofstream& out, const BindModule& module) const;
         void emitStructs(std::ofstream& out, const BindModule& module) const;

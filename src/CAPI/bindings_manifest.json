@@ -1,0 +1,135 @@
+{
+  "functions": [
+    {
+      "c_name": "SDOM_DisplayHandle_IsValid",
+      "c_signature": "bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "isValid",
+      "owner_type": "DisplayHandle",
+      "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_AssetHandle_IsValid",
+      "c_signature": "bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "isValid",
+      "owner_type": "AssetHandle",
+      "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_GetEventType",
+      "c_signature": "bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type)",
+      "dispatch_family": "event_router",
+      "name": "getType",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventTypeName",
+      "c_signature": "const char* SDOM_GetEventTypeName(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getTypeName",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventPhase",
+      "c_signature": "SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getPhase",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventPhase",
+      "c_signature": "bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase)",
+      "dispatch_family": "event_router",
+      "name": "setPhase",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventPhaseString",
+      "c_signature": "const char* SDOM_GetEventPhaseString(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getPhaseString",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    }
+  ],
+  "manifest_version": 1,
+  "subject_kinds": [
+    {
+      "dispatch_family": "event_router",
+      "name": "Event",
+      "owns_method_table": false,
+      "uses_handle": false
+    },
+    {
+      "dispatch_family": "event_router",
+      "name": "EventType",
+      "owns_method_table": false,
+      "uses_handle": false
+    },
+    {
+      "dispatch_family": "singleton",
+      "name": "Core",
+      "owns_method_table": true,
+      "uses_handle": false
+    },
+    {
+      "dispatch_family": "method_table",
+      "name": "AssetObject",
+      "owns_method_table": true,
+      "uses_handle": true
+    },
+    {
+      "dispatch_family": "method_table",
+      "name": "DisplayObject",
+      "owns_method_table": true,
+      "uses_handle": true
+    }
+  ],
+  "types": [
+    {
+      "cpp_type_id": "SDOM::DisplayHandle",
+      "dispatch_family": "method_table",
+      "file_stem": "Handles",
+      "has_function_exports": true,
+      "name": "DisplayHandle",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::AssetHandle",
+      "dispatch_family": "method_table",
+      "file_stem": "Handles",
+      "has_function_exports": true,
+      "name": "AssetHandle",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Event",
+      "dispatch_family": "event_router",
+      "file_stem": "Event",
+      "has_function_exports": true,
+      "name": "Event",
+      "owns_method_table": false,
+      "subject_kind": "Event",
+      "uses_handle": false
+    },
+    {
+      "cpp_type_id": "SDOM::Core",
+      "dispatch_family": "singleton",
+      "file_stem": "Core",
+      "has_function_exports": false,
+      "name": "Core",
+      "owns_method_table": true,
+      "subject_kind": "Core",
+      "uses_handle": false
+    }
+  ]
+}
