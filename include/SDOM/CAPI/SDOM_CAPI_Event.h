@@ -106,6 +106,14 @@ bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_t
 bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
 bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
 bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
+bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt);
+bool SDOM_StopEventPropagation(SDOM_Event* evt);
+bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt);
+bool SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable);
+bool SDOM_GetEventUseCapture(const SDOM_Event* evt);
+bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture);
+float SDOM_GetEventElapsedTime(const SDOM_Event* evt);
+bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time);
 
 #ifdef __cplusplus
 } // extern "C"

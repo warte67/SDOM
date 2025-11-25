@@ -103,6 +103,70 @@
       "name": "setRelatedTargetHandle",
       "owner_type": "Event",
       "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_IsEventPropagationStopped",
+      "c_signature": "bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "isPropagationStopped",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_StopEventPropagation",
+      "c_signature": "bool SDOM_StopEventPropagation(SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "stopPropagation",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_IsEventDefaultBehaviorDisabled",
+      "c_signature": "bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "isDefaultBehaviorDisabled",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventDisableDefaultBehavior",
+      "c_signature": "bool SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable)",
+      "dispatch_family": "event_router",
+      "name": "setDisableDefaultBehavior",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventUseCapture",
+      "c_signature": "bool SDOM_GetEventUseCapture(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getUseCapture",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventUseCapture",
+      "c_signature": "bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture)",
+      "dispatch_family": "event_router",
+      "name": "setUseCapture",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_GetEventElapsedTime",
+      "c_signature": "float SDOM_GetEventElapsedTime(const SDOM_Event* evt)",
+      "dispatch_family": "event_router",
+      "name": "getElapsedTime",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventElapsedTime",
+      "c_signature": "bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time)",
+      "dispatch_family": "event_router",
+      "name": "setElapsedTime",
+      "owner_type": "Event",
+      "subject_kind": "Event"
     }
   ],
   "manifest_version": 1,

@@ -223,6 +223,159 @@ bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_t
     return callResult.v.b;
 }
 
+bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_IsEventPropagationStopped: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IsEventPropagationStopped", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_StopEventPropagation(SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_StopEventPropagation: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_StopEventPropagation", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_IsEventDefaultBehaviorDisabled: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IsEventDefaultBehaviorDisabled", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventDisableDefaultBehavior: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeBool(disable));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventDisableDefaultBehavior", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetEventUseCapture(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventUseCapture: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventUseCapture", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventUseCapture: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeBool(use_capture));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventUseCapture", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+float SDOM_GetEventElapsedTime(const SDOM_Event* evt) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventElapsedTime: subject 'evt' is null");
+        return {};
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventElapsedTime", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<float>(callResult.v.d);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<float>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<float>(callResult.v.i);
+    }
+    return static_cast<float>(0);
+}
+
+bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventElapsedTime: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(elapsed_time)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventElapsedTime", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

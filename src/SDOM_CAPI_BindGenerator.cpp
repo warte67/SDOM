@@ -492,6 +492,18 @@ void emitInvokeCallableCore(std::ofstream& out,
         out << "    }\n";
         out << "    s_result = callResult.s;\n";
         out << "    return s_result.c_str();\n";
+    } else if (trimmedReturn == "float" || trimmedReturn == "double") {
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {\n";
+        out << "        return static_cast<" << trimmedReturn << ">(callResult.v.d);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
+        out << "        return static_cast<" << trimmedReturn << ">(callResult.v.u);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
+        out << "        return static_cast<" << trimmedReturn << ">(callResult.v.i);\n";
+        out << "    }\n";
+        out << "    return static_cast<" << trimmedReturn << ">(0);\n";
     } else if (meta.is_enum) {
         out << "    const auto callResult = " << callExpr << ";\n";
         out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";

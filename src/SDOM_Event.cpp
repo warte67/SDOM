@@ -636,6 +636,138 @@ namespace SDOM
                 return true;
             });
 
+        registerMethod(
+            typeName,
+            "isPropagationStopped",
+            "bool Event::isPropagationStopped() const",
+            "bool",
+            "SDOM_IsEventPropagationStopped",
+            "bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt)",
+            "Returns true if propagation has been stopped for this event.",
+            [](const Event* evt) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                return evt->isPropagationStopped();
+            });
+
+        registerMethod(
+            typeName,
+            "stopPropagation",
+            "Event& Event::stopPropagation()",
+            "bool",
+            "SDOM_StopEventPropagation",
+            "bool SDOM_StopEventPropagation(SDOM_Event* evt)",
+            "Stops event propagation (capture/bubble) for this event instance.",
+            [](Event* evt) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                evt->stopPropagation();
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "isDefaultBehaviorDisabled",
+            "bool Event::isDefaultBehaviorDisabled() const",
+            "bool",
+            "SDOM_IsEventDefaultBehaviorDisabled",
+            "bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt)",
+            "Returns true if the event's default behavior has been disabled.",
+            [](const Event* evt) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                return evt->isDefaultBehaviorDisabled();
+            });
+
+        registerMethod(
+            typeName,
+            "setDisableDefaultBehavior",
+            "Event& Event::setDisableDefaultBehavior(bool disable)",
+            "bool",
+            "SDOM_SetEventDisableDefaultBehavior",
+            "bool SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable)",
+            "Enables or disables the event's default behavior.",
+            [](Event* evt, bool disable) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                evt->setDisableDefaultBehavior(disable);
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getUseCapture",
+            "bool Event::getUseCapture() const",
+            "bool",
+            "SDOM_GetEventUseCapture",
+            "bool SDOM_GetEventUseCapture(const SDOM_Event* evt)",
+            "Returns whether this event is currently using capture semantics.",
+            [](const Event* evt) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                return evt->getUseCapture();
+            });
+
+        registerMethod(
+            typeName,
+            "setUseCapture",
+            "Event& Event::setUseCapture(bool useCapture)",
+            "bool",
+            "SDOM_SetEventUseCapture",
+            "bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture)",
+            "Sets whether this event should use capture semantics during dispatch.",
+            [](Event* evt, bool useCapture) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                evt->setUseCapture(useCapture);
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "getElapsedTime",
+            "float Event::getElapsedTime() const",
+            "float",
+            "SDOM_GetEventElapsedTime",
+            "float SDOM_GetEventElapsedTime(const SDOM_Event* evt)",
+            "Retrieves the elapsed time associated with this event in seconds.",
+            [](const Event* evt) -> float {
+                if (!evt) {
+                    return 0.0f;
+                }
+
+                return evt->getElapsedTime();
+            });
+
+        registerMethod(
+            typeName,
+            "setElapsedTime",
+            "Event& Event::setElapsedTime(float elapsedTime)",
+            "bool",
+            "SDOM_SetEventElapsedTime",
+            "bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time)",
+            "Sets the elapsed time (in seconds) for this event instance.",
+            [](Event* evt, float elapsedTime) -> bool {
+                if (!evt) {
+                    return false;
+                }
+
+                evt->setElapsedTime(elapsedTime);
+                return true;
+            });
+
 
         // -------------------------------------------------------------------------
         // Register Enum Values for SDOM_EventPhase
