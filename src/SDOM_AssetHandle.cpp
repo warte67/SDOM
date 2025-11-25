@@ -72,13 +72,18 @@ namespace SDOM
         SUPER::registerBindingsImpl(typeName);
         BIND_INFO(typeName, "AssetHandle");
 
-        (void)ensureType(typeName,
-                         SDOM::EntryKind::Object,
-                         "SDOM::AssetHandle",
-                         "Handles",
-                         "SDOM_AssetHandle",
-                         "Handles",
-                         "Lightweight proxy used to reference asset objects by name/type.");
+        SDOM::TypeInfo& typeInfo = ensureType(typeName,
+                 SDOM::EntryKind::Object,
+                 "SDOM::AssetHandle",
+                 "Handles",
+                 "SDOM_AssetHandle",
+                 "Handles",
+                 "Lightweight proxy used to reference asset objects by name/type.");
+
+        typeInfo.subject_kind = "AssetObject";
+        typeInfo.subject_uses_handle = true;
+        typeInfo.has_handle_override = false;
+        typeInfo.dispatch_family_override = "method_table";
 
         const std::string exportName = "SDOM_AssetHandle";
         if (!lookup(exportName)) {
