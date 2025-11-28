@@ -16,7 +16,7 @@ var searchData=
   ['vcpkg_20visual_20studio_20cmake_20integration_13',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md71',1,'']]],
   ['verbose_14',['verbose',['../structSDOM_1_1GeneratorConfig.html#a204fde6a9dd41146900a3cd88516d322',1,'SDOM::GeneratorConfig']]],
   ['verbose_5ftest_5foutput_15',['VERBOSE_TEST_OUTPUT',['../classSDOM.html#aae2a66a6c54d731022cfdc409fff8b12',1,'SDOM']]],
-  ['version_16',['Version',['../classSDOM_1_1Version.html',1,'SDOM::Version'],['../classSDOM_1_1Version.html#a6e669c887def9d4a246e2a72ffd830f9',1,'SDOM::Version::Version()']]],
+  ['version_16',['Version',['../classSDOM_1_1Version.html',1,'SDOM::Version'],['../classSDOM_1_1Version.html#a8af1252da85eed53bea40200666ad743',1,'SDOM::Version::Version()']]],
   ['version_5f_17',['version_',['../classSDOM_1_1Core.html#aed4d42d616382744c5959be88b916f0e',1,'SDOM::Core']]],
   ['vertical_18',['Vertical',['../classSDOM.html#a9cb56e905b36976260e5aa56d30ee933a06ce2a25e5d12c166a36f654dbea6012',1,'SDOM']]],
   ['visible_19',['Visible',['../classSDOM_1_1EventType.html#a5298b4fe92c491f0c6c7661d902ac35e',1,'SDOM::EventType']]],

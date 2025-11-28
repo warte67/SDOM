@@ -139,6 +139,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac1322795a6d9f477847d8fc2ec71f667" id="r_ac1322795a6d9f477847d8fc2ec71f667"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1322795a6d9f477847d8fc2ec71f667">setElapsedTime</a> (float elapsedTime)</td></tr>
 <tr class="memitem:aa44b8e4a79ea6edf96716a2a0141d74c" id="r_aa44b8e4a79ea6edf96716a2a0141d74c"><td class="memItemLeft" align="right" valign="top">SDL_Event&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa44b8e4a79ea6edf96716a2a0141d74c">getSDL_Event</a> () const</td></tr>
 <tr class="memitem:ac3898acc6d9921a91a68445abe6b9a59" id="r_ac3898acc6d9921a91a68445abe6b9a59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3898acc6d9921a91a68445abe6b9a59">setSDL_Event</a> (const SDL_Event &amp;sdlEvent)</td></tr>
+<tr class="memitem:a6731ccfa9f6955a24456b18e0ca65d50" id="r_a6731ccfa9f6955a24456b18e0ca65d50"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6731ccfa9f6955a24456b18e0ca65d50">getSDL_EventJson</a> () const</td></tr>
+<tr class="memitem:af4e7139fb32bafa5c4ba888ba2df8d75" id="r_af4e7139fb32bafa5c4ba888ba2df8d75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4e7139fb32bafa5c4ba888ba2df8d75">setSDL_EventJson</a> (const std::string &amp;json)</td></tr>
 <tr class="memitem:af46d691049e6e8827bf60a33c0421cab" id="r_af46d691049e6e8827bf60a33c0421cab"><td class="memItemLeft" align="right" valign="top">const nlohmann::json &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af46d691049e6e8827bf60a33c0421cab">getPayload</a> () const</td></tr>
 <tr class="memitem:a471798a39788a9c33677f007c8dc00c9" id="r_a471798a39788a9c33677f007c8dc00c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a471798a39788a9c33677f007c8dc00c9">setPayload</a> (const nlohmann::json &amp;j)</td></tr>
 <tr class="memitem:ad471be369769db35b00e06178976618e" id="r_ad471be369769db35b00e06178976618e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad471be369769db35b00e06178976618e">setPayloadString</a> (const std::string &amp;jsonStr)</td></tr>
@@ -1000,6 +1002,23 @@ template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">SDL_Event SDOM::Event::getSDL_Event </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6731ccfa9f6955a24456b18e0ca65d50" name="a6731ccfa9f6955a24456b18e0ca65d50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6731ccfa9f6955a24456b18e0ca65d50">&#9670;&#160;</a></span>getSDL_EventJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::Event::getSDL_EventJson </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -1899,6 +1918,23 @@ template&lt;typename T&gt; </div>
           <td class="memname"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp; SDOM::Event::setSDL_Event </td>
           <td>(</td>
           <td class="paramtype">const SDL_Event &amp;</td>          <td class="paramname"><span class="paramname"><em>sdlEvent</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af4e7139fb32bafa5c4ba888ba2df8d75" name="af4e7139fb32bafa5c4ba888ba2df8d75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4e7139fb32bafa5c4ba888ba2df8d75">&#9670;&#160;</a></span>setSDL_EventJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp; SDOM::Event::setSDL_EventJson </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

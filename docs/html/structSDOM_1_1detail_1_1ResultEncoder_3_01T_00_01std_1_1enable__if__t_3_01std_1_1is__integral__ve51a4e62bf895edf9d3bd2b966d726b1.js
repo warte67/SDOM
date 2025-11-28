@@ -1,0 +1,4 @@
+var structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__integral__ve51a4e62bf895edf9d3bd2b966d726b1 =
+[
+    [ "encode", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__integral__ve51a4e62bf895edf9d3bd2b966d726b1.html#a05c09f9bb08c0edd9a126ca77c49e21f", null ]
+];

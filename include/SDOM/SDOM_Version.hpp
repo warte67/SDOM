@@ -8,27 +8,31 @@
 
 #define SDOM_VERSION_MAJOR 0
 #define SDOM_VERSION_MINOR 5
-#define SDOM_VERSION_PATCH 244
+#define SDOM_VERSION_PATCH 245
 #define SDOM_VERSION_CODENAME "early pre-alpha"
-#define SDOM_VERSION_BUILD "2025-11-25_14:14:53_b6ff3521"
+#define SDOM_VERSION_BUILD "2025-11-28_13:55:25_ab1ba234"
 
 // Additional build metadata
-#define SDOM_VERSION_BUILD_DATE "2025-11-25_14:14:53"
-#define SDOM_VERSION_COMMIT "b6ff3521"
+#define SDOM_VERSION_BUILD_DATE "2025-11-28_13:55:25"
+#define SDOM_VERSION_COMMIT "ab1ba234"
 #define SDOM_BUILD_BRANCH "master"
 #define SDOM_BUILD_COMPILER "g++ (GCC) 15.2.1 20251112"
 #define SDOM_BUILD_PLATFORM "Linux-x86_64"
 
 #include <string>
 #include <cstdio>
-#include <sol/sol.hpp>
+#include <SDOM/SDOM_IDataObject.hpp>
 
 namespace SDOM {
 
-class Version {
+class Version : public IDataObject {
+    using SUPER = IDataObject;
 public:
-    Version(sol::state_view lua) { registerLuaBindings(lua); }
-    ~Version() = default;
+    Version() = default;
+    ~Version() override = default;
+
+    bool onInit() override { return true; }
+    void onQuit() override {}
 
     // ----------------------------------------------------------
     //  C++ accessors
@@ -68,32 +72,172 @@ public:
     std::string getCompiler() const { return SDOM_BUILD_COMPILER; }
     std::string getPlatform() const { return SDOM_BUILD_PLATFORM; }
 
-    // ----------------------------------------------------------
-    //  Lua exposure
-    // ----------------------------------------------------------
-    void registerLuaBindings(sol::state_view lua) {
-        sol::table t = lua.create_table_with(
-            "major", getMajor(),
-            "minor", getMinor(),
-            "patch", getPatch(),
-            "codename", getCodename(),
-            "build", getBuild(),
-            "build_date", getBuildDate(),
-            "commit", getCommit(),
-            "branch", getBranch(),
-            "compiler", getCompiler(),
-            "platform", getPlatform()
-        );
+protected:
+    void registerBindingsImpl(const std::string& typeName) override {
+        SUPER::registerBindingsImpl(typeName);
+        BIND_INFO(typeName, "Version");
 
-        t.set_function("toString", [&]() { return toString(); });
-        t.set_function("fullString", [&]() { return fullString(); });
+        SDOM::TypeInfo& typeInfo = ensureType(typeName,
+                                             SDOM::EntryKind::Global,
+                                             "SDOM::Version",
+                                             "Version",
+                                             "SDOM_Version",
+                                             "System",
+                                             "Build/version metadata");
 
-        // Allow colon syntax (e.g., Version:toString())
-        sol::table meta = lua.create_table();
-        meta["__index"] = t;
-        t[sol::metatable_key] = meta;
+        typeInfo.subject_kind = "Version";
+        typeInfo.subject_uses_handle = false;
+        typeInfo.has_handle_override = true;
+        typeInfo.dispatch_family_override = "singleton";
 
-        lua["Version"] = t;
+        registerOpaqueHandle("SDOM::Version",
+                             "SDOM_Version",
+                             "Version",
+                             "Opaque C handle for SDOM::Version singleton data.");
+
+        registerMethod(
+            typeName,
+            "toString",
+            "std::string Version::toString() const",
+            "const char*",
+            "SDOM_GetVersionString",
+            "const char* SDOM_GetVersionString(void)",
+            "Returns the compact semantic version (e.g., v0.5.244).",
+            [this]() -> std::string {
+                return toString();
+            });
+
+        registerMethod(
+            typeName,
+            "fullString",
+            "std::string Version::fullString() const",
+            "const char*",
+            "SDOM_GetVersionFullString",
+            "const char* SDOM_GetVersionFullString(void)",
+            "Returns the verbose build string with codename and metadata.",
+            [this]() -> std::string {
+                return fullString();
+            });
+
+        registerMethod(
+            typeName,
+            "getMajor",
+            "int Version::getMajor() const",
+            "int",
+            "SDOM_GetVersionMajor",
+            "int SDOM_GetVersionMajor(void)",
+            "Returns the major semantic version number.",
+            [this]() -> int {
+                return getMajor();
+            });
+
+        registerMethod(
+            typeName,
+            "getMinor",
+            "int Version::getMinor() const",
+            "int",
+            "SDOM_GetVersionMinor",
+            "int SDOM_GetVersionMinor(void)",
+            "Returns the minor semantic version number.",
+            [this]() -> int {
+                return getMinor();
+            });
+
+        registerMethod(
+            typeName,
+            "getPatch",
+            "int Version::getPatch() const",
+            "int",
+            "SDOM_GetVersionPatch",
+            "int SDOM_GetVersionPatch(void)",
+            "Returns the patch/build counter for the current release.",
+            [this]() -> int {
+                return getPatch();
+            });
+
+        registerMethod(
+            typeName,
+            "getCodename",
+            "std::string Version::getCodename() const",
+            "const char*",
+            "SDOM_GetVersionCodename",
+            "const char* SDOM_GetVersionCodename(void)",
+            "Returns the codename associated with this build.",
+            [this]() -> std::string {
+                return getCodename();
+            });
+
+        registerMethod(
+            typeName,
+            "getBuild",
+            "std::string Version::getBuild() const",
+            "const char*",
+            "SDOM_GetVersionBuild",
+            "const char* SDOM_GetVersionBuild(void)",
+            "Returns the unique build identifier (timestamp + commit).",
+            [this]() -> std::string {
+                return getBuild();
+            });
+
+        registerMethod(
+            typeName,
+            "getBuildDate",
+            "std::string Version::getBuildDate() const",
+            "const char*",
+            "SDOM_GetVersionBuildDate",
+            "const char* SDOM_GetVersionBuildDate(void)",
+            "Returns the UTC build timestamp for this binary.",
+            [this]() -> std::string {
+                return getBuildDate();
+            });
+
+        registerMethod(
+            typeName,
+            "getCommit",
+            "std::string Version::getCommit() const",
+            "const char*",
+            "SDOM_GetVersionCommit",
+            "const char* SDOM_GetVersionCommit(void)",
+            "Returns the git commit hash used for this build.",
+            [this]() -> std::string {
+                return getCommit();
+            });
+
+        registerMethod(
+            typeName,
+            "getBranch",
+            "std::string Version::getBranch() const",
+            "const char*",
+            "SDOM_GetVersionBranch",
+            "const char* SDOM_GetVersionBranch(void)",
+            "Returns the git branch name captured during build.",
+            [this]() -> std::string {
+                return getBranch();
+            });
+
+        registerMethod(
+            typeName,
+            "getCompiler",
+            "std::string Version::getCompiler() const",
+            "const char*",
+            "SDOM_GetVersionCompiler",
+            "const char* SDOM_GetVersionCompiler(void)",
+            "Returns the compiler string used to produce this build.",
+            [this]() -> std::string {
+                return getCompiler();
+            });
+
+        registerMethod(
+            typeName,
+            "getPlatform",
+            "std::string Version::getPlatform() const",
+            "const char*",
+            "SDOM_GetVersionPlatform",
+            "const char* SDOM_GetVersionPlatform(void)",
+            "Returns the platform triplet captured during build.",
+            [this]() -> std::string {
+                return getPlatform();
+            });
     }
 };
 

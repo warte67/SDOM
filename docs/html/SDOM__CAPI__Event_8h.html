@@ -92,7 +92,8 @@ $(function(){initNavTree('SDOM__CAPI__Event_8h.html','',''); });
   <div class="headertitle"><div class="title">SDOM_CAPI_Event.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
+<div class="textblock"><code>#include &lt;<a class="el" href="SDOM__CAPI__Handles_8h_source.html">SDOM/CAPI/SDOM_CAPI_Handles.h</a>&gt;</code><br />
+</div>
 <p><a href="SDOM__CAPI__Event_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -189,6 +190,46 @@ Functions</h2></td></tr>
 <tr class="memitem:a25fa431f2646594203c2e19cb5058ba6" id="r_a25fa431f2646594203c2e19cb5058ba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#afdbccfd0be6549d89bbaaa2c409694f2">SDOM_EventPhase</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25fa431f2646594203c2e19cb5058ba6">SDOM_GetEventPhase</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
 <tr class="memitem:aaa2df11469e75841338f627e794e201c" id="r_aaa2df11469e75841338f627e794e201c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa2df11469e75841338f627e794e201c">SDOM_SetEventPhase</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="#afdbccfd0be6549d89bbaaa2c409694f2">SDOM_EventPhase</a> phase)</td></tr>
 <tr class="memitem:a0450534e561f83a987b2ea102c3ea076" id="r_a0450534e561f83a987b2ea102c3ea076"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0450534e561f83a987b2ea102c3ea076">SDOM_GetEventPhaseString</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a8267c7e12fe589d5ddfe0dadadc8d3ee" id="r_a8267c7e12fe589d5ddfe0dadadc8d3ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8267c7e12fe589d5ddfe0dadadc8d3ee">SDOM_GetEventTarget</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_target)</td></tr>
+<tr class="memitem:a07a22081be95381a332a2c5d689e7e1b" id="r_a07a22081be95381a332a2c5d689e7e1b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07a22081be95381a332a2c5d689e7e1b">SDOM_SetEventTarget</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *new_target)</td></tr>
+<tr class="memitem:ad19331a1b584170cb44a2430c7c16a2a" id="r_ad19331a1b584170cb44a2430c7c16a2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad19331a1b584170cb44a2430c7c16a2a">SDOM_GetEventCurrentTarget</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_target)</td></tr>
+<tr class="memitem:a81c511c705d94f5788f1fa0e3cc70b8f" id="r_a81c511c705d94f5788f1fa0e3cc70b8f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81c511c705d94f5788f1fa0e3cc70b8f">SDOM_SetEventCurrentTarget</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *new_target)</td></tr>
+<tr class="memitem:ae76b57f7fc15323e1fda29b1c542c6fc" id="r_ae76b57f7fc15323e1fda29b1c542c6fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae76b57f7fc15323e1fda29b1c542c6fc">SDOM_GetEventRelatedTarget</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_target)</td></tr>
+<tr class="memitem:af8686c0117ca11b76e50bfce80e7a182" id="r_af8686c0117ca11b76e50bfce80e7a182"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8686c0117ca11b76e50bfce80e7a182">SDOM_SetEventRelatedTarget</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *new_target)</td></tr>
+<tr class="memitem:a3635e9c4bfee94479fdc7ba1265b4d58" id="r_a3635e9c4bfee94479fdc7ba1265b4d58"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3635e9c4bfee94479fdc7ba1265b4d58">SDOM_GetEventSDLJson</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a3913dab2345d762025ef15570da264d3" id="r_a3913dab2345d762025ef15570da264d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3913dab2345d762025ef15570da264d3">SDOM_SetEventSDLJson</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const char *json)</td></tr>
+<tr class="memitem:ab6ff2cfd472381df1b9842d56832b31c" id="r_ab6ff2cfd472381df1b9842d56832b31c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6ff2cfd472381df1b9842d56832b31c">SDOM_IsEventPropagationStopped</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ae9028ae7103e5461854d0568d79cbb56" id="r_ae9028ae7103e5461854d0568d79cbb56"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9028ae7103e5461854d0568d79cbb56">SDOM_StopEventPropagation</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ab142bd36bdf8a47f243d987e35a78268" id="r_ab142bd36bdf8a47f243d987e35a78268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab142bd36bdf8a47f243d987e35a78268">SDOM_IsEventDefaultBehaviorDisabled</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a7c655665a9e099e812756bc78d5af52d" id="r_a7c655665a9e099e812756bc78d5af52d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c655665a9e099e812756bc78d5af52d">SDOM_SetEventDisableDefaultBehavior</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, bool disable)</td></tr>
+<tr class="memitem:aa5a14f9605c86665311e49f621e9e5ab" id="r_aa5a14f9605c86665311e49f621e9e5ab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5a14f9605c86665311e49f621e9e5ab">SDOM_GetEventUseCapture</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ad4a1bbea2452731cd96aa7cf8c668de7" id="r_ad4a1bbea2452731cd96aa7cf8c668de7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4a1bbea2452731cd96aa7cf8c668de7">SDOM_SetEventUseCapture</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, bool use_capture)</td></tr>
+<tr class="memitem:a476d335d58d99fee28af851ff3015e06" id="r_a476d335d58d99fee28af851ff3015e06"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a476d335d58d99fee28af851ff3015e06">SDOM_GetEventElapsedTime</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ae54219ba9ca3964585cabc7604e7c991" id="r_ae54219ba9ca3964585cabc7604e7c991"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae54219ba9ca3964585cabc7604e7c991">SDOM_SetEventElapsedTime</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float elapsed_time)</td></tr>
+<tr class="memitem:ad11da0b41f35370fd538596bfd2500a1" id="r_ad11da0b41f35370fd538596bfd2500a1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad11da0b41f35370fd538596bfd2500a1">SDOM_GetEventMouseX</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ab6d0447c1734fad76daa4bb0e1f856c1" id="r_ab6d0447c1734fad76daa4bb0e1f856c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6d0447c1734fad76daa4bb0e1f856c1">SDOM_SetEventMouseX</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float x)</td></tr>
+<tr class="memitem:ab1f7255be1beaf9561d2eaf6d53f912c" id="r_ab1f7255be1beaf9561d2eaf6d53f912c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1f7255be1beaf9561d2eaf6d53f912c">SDOM_GetEventMouseY</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a104a8cf61236da695befe74de3370a72" id="r_a104a8cf61236da695befe74de3370a72"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a104a8cf61236da695befe74de3370a72">SDOM_SetEventMouseY</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float y)</td></tr>
+<tr class="memitem:ae321417a6fcac11f4d0bd4b4458bf2a2" id="r_ae321417a6fcac11f4d0bd4b4458bf2a2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae321417a6fcac11f4d0bd4b4458bf2a2">SDOM_GetEventWheelX</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a9eac4f302817d0dff7afb9089de763ef" id="r_a9eac4f302817d0dff7afb9089de763ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9eac4f302817d0dff7afb9089de763ef">SDOM_SetEventWheelX</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float x)</td></tr>
+<tr class="memitem:a1115ad5e45a3dee2566437ba26caf406" id="r_a1115ad5e45a3dee2566437ba26caf406"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1115ad5e45a3dee2566437ba26caf406">SDOM_GetEventWheelY</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ac05a7deb669ddeca3c4059dabfdebb6b" id="r_ac05a7deb669ddeca3c4059dabfdebb6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac05a7deb669ddeca3c4059dabfdebb6b">SDOM_SetEventWheelY</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float y)</td></tr>
+<tr class="memitem:adcb034628d5ed3e59eca310db89bca18" id="r_adcb034628d5ed3e59eca310db89bca18"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcb034628d5ed3e59eca310db89bca18">SDOM_GetEventDragOffsetX</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ad85d93f0b27aea48d3c0f76e67e59603" id="r_ad85d93f0b27aea48d3c0f76e67e59603"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad85d93f0b27aea48d3c0f76e67e59603">SDOM_SetEventDragOffsetX</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float offset_x)</td></tr>
+<tr class="memitem:abf11ab0f9092dc9d59dbcde9c151f756" id="r_abf11ab0f9092dc9d59dbcde9c151f756"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf11ab0f9092dc9d59dbcde9c151f756">SDOM_GetEventDragOffsetY</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a242bca7cce883b07ed23b4f520d0deeb" id="r_a242bca7cce883b07ed23b4f520d0deeb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a242bca7cce883b07ed23b4f520d0deeb">SDOM_SetEventDragOffsetY</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float offset_y)</td></tr>
+<tr class="memitem:abe669fdebfd2074423a59294d1c8b1c4" id="r_abe669fdebfd2074423a59294d1c8b1c4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe669fdebfd2074423a59294d1c8b1c4">SDOM_GetEventClickCount</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:aea215d27bf8b51bdb0d4d1dafbf6c9e7" id="r_aea215d27bf8b51bdb0d4d1dafbf6c9e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea215d27bf8b51bdb0d4d1dafbf6c9e7">SDOM_SetEventClickCount</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int count)</td></tr>
+<tr class="memitem:ad7eb35e5b9f43547fa935fa501d88b90" id="r_ad7eb35e5b9f43547fa935fa501d88b90"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7eb35e5b9f43547fa935fa501d88b90">SDOM_GetEventButton</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:aa019d4c52d85387dbf0a7302abb4811a" id="r_aa019d4c52d85387dbf0a7302abb4811a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa019d4c52d85387dbf0a7302abb4811a">SDOM_SetEventButton</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, uint8_t button)</td></tr>
+<tr class="memitem:ab0c6e7e7c7d73a132b24a4b9747a00cf" id="r_ab0c6e7e7c7d73a132b24a4b9747a00cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0c6e7e7c7d73a132b24a4b9747a00cf">SDOM_GetEventScanCode</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a55b65abc1610790305d68d0722cf96e7" id="r_a55b65abc1610790305d68d0722cf96e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55b65abc1610790305d68d0722cf96e7">SDOM_SetEventScanCode</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int scancode)</td></tr>
+<tr class="memitem:a77b455f90698f5d5ab914a6d7af234ec" id="r_a77b455f90698f5d5ab914a6d7af234ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77b455f90698f5d5ab914a6d7af234ec">SDOM_GetEventKeycode</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:af12d4cf5eb6c0f6f5be582ca1dcaa03d" id="r_af12d4cf5eb6c0f6f5be582ca1dcaa03d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af12d4cf5eb6c0f6f5be582ca1dcaa03d">SDOM_SetEventKeycode</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int keycode)</td></tr>
+<tr class="memitem:ace863d2c7e3f7a339de22ab3f4be33d6" id="r_ace863d2c7e3f7a339de22ab3f4be33d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace863d2c7e3f7a339de22ab3f4be33d6">SDOM_GetEventKeymod</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:af7d7106a5b0739bb4f2c44d6bcc4513d" id="r_af7d7106a5b0739bb4f2c44d6bcc4513d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7d7106a5b0739bb4f2c44d6bcc4513d">SDOM_SetEventKeymod</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int keymod)</td></tr>
+<tr class="memitem:a92e0dabf27044d346a8198bf196a61fd" id="r_a92e0dabf27044d346a8198bf196a61fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92e0dabf27044d346a8198bf196a61fd">SDOM_GetEventAsciiCode</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a5ecf3b914c94ae0bdf35c7b3bd7a8125" id="r_a5ecf3b914c94ae0bdf35c7b3bd7a8125"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ecf3b914c94ae0bdf35c7b3bd7a8125">SDOM_SetEventAsciiCode</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int ascii_code)</td></tr>
 </table>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
 <a id="a8589ebadd340f188999e16007a7f453f" name="a8589ebadd340f188999e16007a7f453f"></a>
@@ -381,6 +422,197 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a92e0dabf27044d346a8198bf196a61fd" name="a92e0dabf27044d346a8198bf196a61fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92e0dabf27044d346a8198bf196a61fd">&#9670;&#160;</a></span>SDOM_GetEventAsciiCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM_GetEventAsciiCode </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad7eb35e5b9f43547fa935fa501d88b90" name="ad7eb35e5b9f43547fa935fa501d88b90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7eb35e5b9f43547fa935fa501d88b90">&#9670;&#160;</a></span>SDOM_GetEventButton()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t SDOM_GetEventButton </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abe669fdebfd2074423a59294d1c8b1c4" name="abe669fdebfd2074423a59294d1c8b1c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe669fdebfd2074423a59294d1c8b1c4">&#9670;&#160;</a></span>SDOM_GetEventClickCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM_GetEventClickCount </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad19331a1b584170cb44a2430c7c16a2a" name="ad19331a1b584170cb44a2430c7c16a2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad19331a1b584170cb44a2430c7c16a2a">&#9670;&#160;</a></span>SDOM_GetEventCurrentTarget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_GetEventCurrentTarget </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_target</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adcb034628d5ed3e59eca310db89bca18" name="adcb034628d5ed3e59eca310db89bca18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcb034628d5ed3e59eca310db89bca18">&#9670;&#160;</a></span>SDOM_GetEventDragOffsetX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM_GetEventDragOffsetX </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abf11ab0f9092dc9d59dbcde9c151f756" name="abf11ab0f9092dc9d59dbcde9c151f756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf11ab0f9092dc9d59dbcde9c151f756">&#9670;&#160;</a></span>SDOM_GetEventDragOffsetY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM_GetEventDragOffsetY </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a476d335d58d99fee28af851ff3015e06" name="a476d335d58d99fee28af851ff3015e06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a476d335d58d99fee28af851ff3015e06">&#9670;&#160;</a></span>SDOM_GetEventElapsedTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM_GetEventElapsedTime </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a77b455f90698f5d5ab914a6d7af234ec" name="a77b455f90698f5d5ab914a6d7af234ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77b455f90698f5d5ab914a6d7af234ec">&#9670;&#160;</a></span>SDOM_GetEventKeycode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM_GetEventKeycode </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ace863d2c7e3f7a339de22ab3f4be33d6" name="ace863d2c7e3f7a339de22ab3f4be33d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace863d2c7e3f7a339de22ab3f4be33d6">&#9670;&#160;</a></span>SDOM_GetEventKeymod()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM_GetEventKeymod </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad11da0b41f35370fd538596bfd2500a1" name="ad11da0b41f35370fd538596bfd2500a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad11da0b41f35370fd538596bfd2500a1">&#9670;&#160;</a></span>SDOM_GetEventMouseX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM_GetEventMouseX </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab1f7255be1beaf9561d2eaf6d53f912c" name="ab1f7255be1beaf9561d2eaf6d53f912c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1f7255be1beaf9561d2eaf6d53f912c">&#9670;&#160;</a></span>SDOM_GetEventMouseY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM_GetEventMouseY </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a25fa431f2646594203c2e19cb5058ba6" name="a25fa431f2646594203c2e19cb5058ba6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25fa431f2646594203c2e19cb5058ba6">&#9670;&#160;</a></span>SDOM_GetEventPhase()</h2>
 
@@ -409,6 +641,82 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae76b57f7fc15323e1fda29b1c542c6fc" name="ae76b57f7fc15323e1fda29b1c542c6fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae76b57f7fc15323e1fda29b1c542c6fc">&#9670;&#160;</a></span>SDOM_GetEventRelatedTarget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_GetEventRelatedTarget </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_target</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab0c6e7e7c7d73a132b24a4b9747a00cf" name="ab0c6e7e7c7d73a132b24a4b9747a00cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0c6e7e7c7d73a132b24a4b9747a00cf">&#9670;&#160;</a></span>SDOM_GetEventScanCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM_GetEventScanCode </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3635e9c4bfee94479fdc7ba1265b4d58" name="a3635e9c4bfee94479fdc7ba1265b4d58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3635e9c4bfee94479fdc7ba1265b4d58">&#9670;&#160;</a></span>SDOM_GetEventSDLJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM_GetEventSDLJson </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8267c7e12fe589d5ddfe0dadadc8d3ee" name="a8267c7e12fe589d5ddfe0dadadc8d3ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8267c7e12fe589d5ddfe0dadadc8d3ee">&#9670;&#160;</a></span>SDOM_GetEventTarget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_GetEventTarget </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_target</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -453,6 +761,343 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aa5a14f9605c86665311e49f621e9e5ab" name="aa5a14f9605c86665311e49f621e9e5ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5a14f9605c86665311e49f621e9e5ab">&#9670;&#160;</a></span>SDOM_GetEventUseCapture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_GetEventUseCapture </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae321417a6fcac11f4d0bd4b4458bf2a2" name="ae321417a6fcac11f4d0bd4b4458bf2a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae321417a6fcac11f4d0bd4b4458bf2a2">&#9670;&#160;</a></span>SDOM_GetEventWheelX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM_GetEventWheelX </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1115ad5e45a3dee2566437ba26caf406" name="a1115ad5e45a3dee2566437ba26caf406"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1115ad5e45a3dee2566437ba26caf406">&#9670;&#160;</a></span>SDOM_GetEventWheelY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM_GetEventWheelY </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab142bd36bdf8a47f243d987e35a78268" name="ab142bd36bdf8a47f243d987e35a78268"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab142bd36bdf8a47f243d987e35a78268">&#9670;&#160;</a></span>SDOM_IsEventDefaultBehaviorDisabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_IsEventDefaultBehaviorDisabled </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6ff2cfd472381df1b9842d56832b31c" name="ab6ff2cfd472381df1b9842d56832b31c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6ff2cfd472381df1b9842d56832b31c">&#9670;&#160;</a></span>SDOM_IsEventPropagationStopped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_IsEventPropagationStopped </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5ecf3b914c94ae0bdf35c7b3bd7a8125" name="a5ecf3b914c94ae0bdf35c7b3bd7a8125"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ecf3b914c94ae0bdf35c7b3bd7a8125">&#9670;&#160;</a></span>SDOM_SetEventAsciiCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventAsciiCode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>ascii_code</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa019d4c52d85387dbf0a7302abb4811a" name="aa019d4c52d85387dbf0a7302abb4811a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa019d4c52d85387dbf0a7302abb4811a">&#9670;&#160;</a></span>SDOM_SetEventButton()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventButton </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>button</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea215d27bf8b51bdb0d4d1dafbf6c9e7" name="aea215d27bf8b51bdb0d4d1dafbf6c9e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea215d27bf8b51bdb0d4d1dafbf6c9e7">&#9670;&#160;</a></span>SDOM_SetEventClickCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventClickCount </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>count</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a81c511c705d94f5788f1fa0e3cc70b8f" name="a81c511c705d94f5788f1fa0e3cc70b8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81c511c705d94f5788f1fa0e3cc70b8f">&#9670;&#160;</a></span>SDOM_SetEventCurrentTarget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventCurrentTarget </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>new_target</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7c655665a9e099e812756bc78d5af52d" name="a7c655665a9e099e812756bc78d5af52d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c655665a9e099e812756bc78d5af52d">&#9670;&#160;</a></span>SDOM_SetEventDisableDefaultBehavior()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventDisableDefaultBehavior </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>disable</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad85d93f0b27aea48d3c0f76e67e59603" name="ad85d93f0b27aea48d3c0f76e67e59603"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad85d93f0b27aea48d3c0f76e67e59603">&#9670;&#160;</a></span>SDOM_SetEventDragOffsetX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventDragOffsetX </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>offset_x</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a242bca7cce883b07ed23b4f520d0deeb" name="a242bca7cce883b07ed23b4f520d0deeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a242bca7cce883b07ed23b4f520d0deeb">&#9670;&#160;</a></span>SDOM_SetEventDragOffsetY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventDragOffsetY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>offset_y</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae54219ba9ca3964585cabc7604e7c991" name="ae54219ba9ca3964585cabc7604e7c991"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae54219ba9ca3964585cabc7604e7c991">&#9670;&#160;</a></span>SDOM_SetEventElapsedTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventElapsedTime </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>elapsed_time</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af12d4cf5eb6c0f6f5be582ca1dcaa03d" name="af12d4cf5eb6c0f6f5be582ca1dcaa03d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af12d4cf5eb6c0f6f5be582ca1dcaa03d">&#9670;&#160;</a></span>SDOM_SetEventKeycode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventKeycode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>keycode</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7d7106a5b0739bb4f2c44d6bcc4513d" name="af7d7106a5b0739bb4f2c44d6bcc4513d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7d7106a5b0739bb4f2c44d6bcc4513d">&#9670;&#160;</a></span>SDOM_SetEventKeymod()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventKeymod </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>keymod</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6d0447c1734fad76daa4bb0e1f856c1" name="ab6d0447c1734fad76daa4bb0e1f856c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6d0447c1734fad76daa4bb0e1f856c1">&#9670;&#160;</a></span>SDOM_SetEventMouseX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventMouseX </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>x</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a104a8cf61236da695befe74de3370a72" name="a104a8cf61236da695befe74de3370a72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a104a8cf61236da695befe74de3370a72">&#9670;&#160;</a></span>SDOM_SetEventMouseY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventMouseY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aaa2df11469e75841338f627e794e201c" name="aaa2df11469e75841338f627e794e201c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa2df11469e75841338f627e794e201c">&#9670;&#160;</a></span>SDOM_SetEventPhase()</h2>
 
@@ -468,6 +1113,170 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="#afdbccfd0be6549d89bbaaa2c409694f2">SDOM_EventPhase</a></td>          <td class="paramname"><span class="paramname"><em>phase</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8686c0117ca11b76e50bfce80e7a182" name="af8686c0117ca11b76e50bfce80e7a182"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8686c0117ca11b76e50bfce80e7a182">&#9670;&#160;</a></span>SDOM_SetEventRelatedTarget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventRelatedTarget </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>new_target</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a55b65abc1610790305d68d0722cf96e7" name="a55b65abc1610790305d68d0722cf96e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55b65abc1610790305d68d0722cf96e7">&#9670;&#160;</a></span>SDOM_SetEventScanCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventScanCode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>scancode</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3913dab2345d762025ef15570da264d3" name="a3913dab2345d762025ef15570da264d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3913dab2345d762025ef15570da264d3">&#9670;&#160;</a></span>SDOM_SetEventSDLJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventSDLJson </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>json</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a07a22081be95381a332a2c5d689e7e1b" name="a07a22081be95381a332a2c5d689e7e1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07a22081be95381a332a2c5d689e7e1b">&#9670;&#160;</a></span>SDOM_SetEventTarget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventTarget </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>new_target</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad4a1bbea2452731cd96aa7cf8c668de7" name="ad4a1bbea2452731cd96aa7cf8c668de7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4a1bbea2452731cd96aa7cf8c668de7">&#9670;&#160;</a></span>SDOM_SetEventUseCapture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventUseCapture </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>use_capture</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9eac4f302817d0dff7afb9089de763ef" name="a9eac4f302817d0dff7afb9089de763ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9eac4f302817d0dff7afb9089de763ef">&#9670;&#160;</a></span>SDOM_SetEventWheelX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventWheelX </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>x</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac05a7deb669ddeca3c4059dabfdebb6b" name="ac05a7deb669ddeca3c4059dabfdebb6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac05a7deb669ddeca3c4059dabfdebb6b">&#9670;&#160;</a></span>SDOM_SetEventWheelY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventWheelY </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9028ae7103e5461854d0568d79cbb56" name="ae9028ae7103e5461854d0568d79cbb56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9028ae7103e5461854d0568d79cbb56">&#9670;&#160;</a></span>SDOM_StopEventPropagation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_StopEventPropagation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

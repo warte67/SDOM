@@ -1,0 +1,4 @@
+var structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__pointer__v_3_0bcc2d81470c332f78bdeb9eb20dc1b1c =
+[
+    [ "decode", "structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__pointer__v_3_0bcc2d81470c332f78bdeb9eb20dc1b1c.html#ae6912192115bbecb64d6538adaeed4e4", null ]
+];

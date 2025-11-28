@@ -1,6 +1,7 @@
 var namespaceSDOM =
 [
     [ "CAPI", "namespaceSDOM_1_1CAPI.html", "namespaceSDOM_1_1CAPI" ],
+    [ "detail", "namespaceSDOM_1_1detail.html", "namespaceSDOM_1_1detail" ],
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
     [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
     [ "ArrowButton", "classSDOM_1_1ArrowButton.html", "classSDOM_1_1ArrowButton" ],

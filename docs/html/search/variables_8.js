@@ -16,7 +16,7 @@ var searchData=
   ['iconspritesheet_5f_13',['iconSpriteSheet_',['../classSDOM_1_1IconButton.html#a63b5628f394df8a131955bb648299d6e',1,'SDOM::IconButton']]],
   ['id_14',['id',['../structSDOM_1_1DisplayRecord.html#a6e04d04b25efdd56aff80bf2e298fe30',1,'SDOM::DisplayRecord::id'],['../structSDOM_1_1AssetRecord.html#a1fcff546f990ca2fd40e8ed9a8e5e443',1,'SDOM::AssetRecord::id']]],
   ['ignorerealinput_5f_15',['ignoreRealInput_',['../classSDOM_1_1Core.html#ac9301f1d4d8d6ff34b8faef59d275218',1,'SDOM::Core']]],
-  ['impl_16',['impl',['../structSDOM__Event.html#a03a7ef4cd9aeeaf46e94adebef2d7ef5',1,'SDOM_Event']]],
+  ['impl_16',['impl',['../structSDOM__Event.html#a03a7ef4cd9aeeaf46e94adebef2d7ef5',1,'SDOM_Event::impl'],['../structSDOM__Version.html#a3d81338f2efd8bf6a60904effb2cf10e',1,'SDOM_Version::impl']]],
   ['internal_5ffont_5f8x12_17',['internal_font_8x12',['../classSDOM.html#a741648c577a9dfe5d8443f05fbca85b3',1,'SDOM']]],
   ['internal_5ffont_5f8x12_5flen_18',['internal_font_8x12_len',['../classSDOM.html#a4a62d5928379cbb6a599c07a2e7c723a',1,'SDOM::internal_font_8x12_len'],['../classSDOM.html#a5b1c10f9617784e892e61fa68e408794',1,'SDOM::internal_font_8x12_len']]],
   ['internal_5ffont_5f8x8_19',['internal_font_8x8',['../classSDOM.html#a10e7912572f5b466b93653264db3b712',1,'SDOM']]],

@@ -1,20 +1,100 @@
 {
   "functions": [
     {
-      "c_name": "SDOM_DisplayHandle_IsValid",
-      "c_signature": "bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)",
-      "dispatch_family": "method_table",
-      "name": "isValid",
-      "owner_type": "DisplayHandle",
-      "subject_kind": "DisplayObject"
+      "c_name": "SDOM_GetVersionString",
+      "c_signature": "const char* SDOM_GetVersionString(void)",
+      "dispatch_family": "singleton",
+      "name": "toString",
+      "owner_type": "Version",
+      "subject_kind": "Version"
     },
     {
-      "c_name": "SDOM_AssetHandle_IsValid",
-      "c_signature": "bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)",
-      "dispatch_family": "method_table",
-      "name": "isValid",
-      "owner_type": "AssetHandle",
-      "subject_kind": "AssetObject"
+      "c_name": "SDOM_GetVersionFullString",
+      "c_signature": "const char* SDOM_GetVersionFullString(void)",
+      "dispatch_family": "singleton",
+      "name": "fullString",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionMajor",
+      "c_signature": "int SDOM_GetVersionMajor(void)",
+      "dispatch_family": "singleton",
+      "name": "getMajor",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionMinor",
+      "c_signature": "int SDOM_GetVersionMinor(void)",
+      "dispatch_family": "singleton",
+      "name": "getMinor",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionPatch",
+      "c_signature": "int SDOM_GetVersionPatch(void)",
+      "dispatch_family": "singleton",
+      "name": "getPatch",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionCodename",
+      "c_signature": "const char* SDOM_GetVersionCodename(void)",
+      "dispatch_family": "singleton",
+      "name": "getCodename",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionBuild",
+      "c_signature": "const char* SDOM_GetVersionBuild(void)",
+      "dispatch_family": "singleton",
+      "name": "getBuild",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionBuildDate",
+      "c_signature": "const char* SDOM_GetVersionBuildDate(void)",
+      "dispatch_family": "singleton",
+      "name": "getBuildDate",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionCommit",
+      "c_signature": "const char* SDOM_GetVersionCommit(void)",
+      "dispatch_family": "singleton",
+      "name": "getCommit",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionBranch",
+      "c_signature": "const char* SDOM_GetVersionBranch(void)",
+      "dispatch_family": "singleton",
+      "name": "getBranch",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionCompiler",
+      "c_signature": "const char* SDOM_GetVersionCompiler(void)",
+      "dispatch_family": "singleton",
+      "name": "getCompiler",
+      "owner_type": "Version",
+      "subject_kind": "Version"
+    },
+    {
+      "c_name": "SDOM_GetVersionPlatform",
+      "c_signature": "const char* SDOM_GetVersionPlatform(void)",
+      "dispatch_family": "singleton",
+      "name": "getPlatform",
+      "owner_type": "Version",
+      "subject_kind": "Version"
     },
     {
       "c_name": "SDOM_GetEventType",
@@ -375,6 +455,22 @@
       "name": "setAsciiCode",
       "owner_type": "Event",
       "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_AssetHandle_IsValid",
+      "c_signature": "bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "isValid",
+      "owner_type": "AssetHandle",
+      "subject_kind": "AssetObject"
+    },
+    {
+      "c_name": "SDOM_DisplayHandle_IsValid",
+      "c_signature": "bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "isValid",
+      "owner_type": "DisplayHandle",
+      "subject_kind": "DisplayObject"
     }
   ],
   "manifest_version": 1,
@@ -522,14 +618,24 @@
       "uses_handle": true
     },
     {
-      "cpp_type_id": "SDOM::DisplayHandle",
-      "dispatch_family": "method_table",
-      "file_stem": "Handles",
+      "cpp_type_id": "SDOM::Version",
+      "dispatch_family": "singleton",
+      "file_stem": "Version",
       "has_function_exports": true,
-      "name": "DisplayHandle",
-      "owns_method_table": true,
-      "subject_kind": "DisplayObject",
-      "uses_handle": true
+      "name": "Version",
+      "owns_method_table": false,
+      "subject_kind": "Version",
+      "uses_handle": false
+    },
+    {
+      "cpp_type_id": "SDOM::Event",
+      "dispatch_family": "event_router",
+      "file_stem": "Event",
+      "has_function_exports": true,
+      "name": "Event",
+      "owns_method_table": false,
+      "subject_kind": "Event",
+      "uses_handle": false
     },
     {
       "cpp_type_id": "SDOM::AssetHandle",
@@ -542,14 +648,14 @@
       "uses_handle": true
     },
     {
-      "cpp_type_id": "SDOM::Event",
-      "dispatch_family": "event_router",
-      "file_stem": "Event",
+      "cpp_type_id": "SDOM::DisplayHandle",
+      "dispatch_family": "method_table",
+      "file_stem": "Handles",
       "has_function_exports": true,
-      "name": "Event",
-      "owns_method_table": false,
-      "subject_kind": "Event",
-      "uses_handle": false
+      "name": "DisplayHandle",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
     },
     {
       "cpp_type_id": "SDOM::IconButton",

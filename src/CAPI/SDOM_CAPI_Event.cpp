@@ -685,9 +685,17 @@ int SDOM_GetEventClickCount(const SDOM_Event* evt) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
 
-    // TODO: marshal return type 'int'.
-    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventClickCount", args);
-    return {}; // placeholder
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventClickCount", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<int>(callResult.v.i);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<int>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<int>(callResult.v.d);
+    }
+    return static_cast<int>(0);
 }
 
 bool SDOM_SetEventClickCount(SDOM_Event* evt, int count) {
@@ -720,9 +728,19 @@ uint8_t SDOM_GetEventButton(const SDOM_Event* evt) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
 
-    // TODO: marshal return type 'uint8_t'.
-    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventButton", args);
-    return {}; // placeholder
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventButton", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<uint8_t>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        const auto value = callResult.v.i < 0 ? std::int64_t{0} : callResult.v.i;
+        return static_cast<uint8_t>(value);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        const auto value = callResult.v.d < 0.0 ? 0.0 : callResult.v.d;
+        return static_cast<uint8_t>(value);
+    }
+    return static_cast<uint8_t>(0);
 }
 
 bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button) {
@@ -755,9 +773,17 @@ int SDOM_GetEventScanCode(const SDOM_Event* evt) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
 
-    // TODO: marshal return type 'int'.
-    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventScanCode", args);
-    return {}; // placeholder
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventScanCode", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<int>(callResult.v.i);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<int>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<int>(callResult.v.d);
+    }
+    return static_cast<int>(0);
 }
 
 bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode) {
@@ -790,9 +816,17 @@ int SDOM_GetEventKeycode(const SDOM_Event* evt) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
 
-    // TODO: marshal return type 'int'.
-    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventKeycode", args);
-    return {}; // placeholder
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventKeycode", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<int>(callResult.v.i);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<int>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<int>(callResult.v.d);
+    }
+    return static_cast<int>(0);
 }
 
 bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode) {
@@ -825,9 +859,17 @@ int SDOM_GetEventKeymod(const SDOM_Event* evt) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
 
-    // TODO: marshal return type 'int'.
-    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventKeymod", args);
-    return {}; // placeholder
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventKeymod", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<int>(callResult.v.i);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<int>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<int>(callResult.v.d);
+    }
+    return static_cast<int>(0);
 }
 
 bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod) {
@@ -860,9 +902,17 @@ int SDOM_GetEventAsciiCode(const SDOM_Event* evt) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
 
-    // TODO: marshal return type 'int'.
-    (void)SDOM::CAPI::invokeCallable("SDOM_GetEventAsciiCode", args);
-    return {}; // placeholder
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventAsciiCode", args);
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
+        return static_cast<int>(callResult.v.i);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
+        return static_cast<int>(callResult.v.u);
+    }
+    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
+        return static_cast<int>(callResult.v.d);
+    }
+    return static_cast<int>(0);
 }
 
 bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code) {

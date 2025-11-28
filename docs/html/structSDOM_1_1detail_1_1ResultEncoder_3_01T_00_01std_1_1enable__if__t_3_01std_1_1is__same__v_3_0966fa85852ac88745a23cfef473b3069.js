@@ -1,0 +1,4 @@
+var structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__same__v_3_0966fa85852ac88745a23cfef473b3069 =
+[
+    [ "encode", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__same__v_3_0966fa85852ac88745a23cfef473b3069.html#a0427ca4aa0c1ea053e5340072271590d", null ]
+];

@@ -31,7 +31,8 @@ namespace SDOM
 
         factory_ = new Factory();
         eventManager_ = new EventManager();
-        version_ = new Version(lua_);  // Use JSON for versioning instead of Lua
+        version_ = new Version();
+        version_->registerBindings("Version", getDataRegistry());
 
         // // Expose CLR constants and helpers to Lua through a single helper
         // // so updates to CLR are reflected in embedded Lua states.

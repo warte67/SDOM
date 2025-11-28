@@ -26,6 +26,7 @@ static void print_help(const char* exe)
               << "  --help                Show this message and exit\n"
               << "  --version             Print SDOM version information\n"
               << "  --stop_after_tests    Run unit tests then exit\n"
+              << "  --stop-after-tests    Alias for --stop_after_tests\n"
               << "  --lua_file <file>     Lua config (Variant 1)\n"
               << "  --config <file>       Alias for --lua_file\n"
               << "\n"

@@ -36,6 +36,8 @@ namespace SDOM
          */
         virtual bool onUnitTest(int frame) = 0;
 
+        virtual ~IUnitTest() = default;
+
         // Optionally add logging/display methods here
         // ...
 

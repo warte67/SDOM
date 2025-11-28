@@ -8,6 +8,7 @@
 
 #include <array>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -146,6 +147,7 @@ bool Main_UnitTests()
     done &= DataRegistry_UnitTests();
     done &= Variant_UnitTests();
     done &= FrontEnd_UnitTests();
+    done &= Version_UnitTests();
 
     return done;
 }
@@ -158,8 +160,20 @@ bool Main_UnitTests()
 
 int SDOM_main_variant_2(int argc, char** argv)
 {
+    bool stopAfterTests = false;
+    for (int i = 1; i < argc; ++i)
+    {
+        if (!argv[i])
+            continue;
+        const std::string arg = argv[i];
+        if (arg == "--stop_after_tests" || arg == "--stop-after-tests")
+            stopAfterTests = true;
+    }
+
     // headless / no-lua startup for fast unit testing
     SDOM::Core& core = getCore();
+    core.setStopAfterUnitTests(stopAfterTests);
+    std::cout << "[SDOM] " << core.getVersionFullString() << std::endl;
     Factory& factory = core.getFactory();
 
     // Configure Core with windows size, pixel size, etc.

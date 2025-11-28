@@ -11,11 +11,336 @@
 #include <cstdint>
 #include <optional>
 #include <memory>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 
 namespace SDOM 
 {
+
+    namespace CAPI {
+
+        struct CallArg {
+            enum class Kind : std::uint8_t { None = 0, Int, UInt, Double, Bool, CString, Ptr };
+
+            Kind kind = Kind::None;
+
+            union {
+                std::int64_t   i;
+                std::uint64_t  u;
+                double         d;
+                bool           b;
+                void*          p;
+            } v{};
+
+            std::string s;
+
+            CallArg() noexcept = default;
+
+            static CallArg makeInt(std::int64_t x)      { CallArg a; a.kind = Kind::Int;    a.v.i = x; return a; }
+            static CallArg makeUInt(std::uint64_t x)    { CallArg a; a.kind = Kind::UInt;   a.v.u = x; return a; }
+            static CallArg makeDouble(double x)         { CallArg a; a.kind = Kind::Double; a.v.d = x; return a; }
+            static CallArg makeBool(bool x)             { CallArg a; a.kind = Kind::Bool;   a.v.b = x; return a; }
+            static CallArg makeCString(const char* str) { CallArg a; a.kind = Kind::CString; if (str) a.s = str; return a; }
+            static CallArg makePtr(void* p)             { CallArg a; a.kind = Kind::Ptr;    a.v.p = p; return a; }
+        };
+
+        struct CallResult {
+            CallArg::Kind kind = CallArg::Kind::None;
+
+            union {
+                std::int64_t   i;
+                std::uint64_t  u;
+                double         d;
+                bool           b;
+                void*          p;
+            } v{};
+
+            std::string s;
+
+            static CallResult Void()                     { return {}; }
+            static CallResult FromInt(std::int64_t x)    { CallResult r; r.kind = CallArg::Kind::Int;    r.v.i = x; return r; }
+            static CallResult FromUInt(std::uint64_t x)  { CallResult r; r.kind = CallArg::Kind::UInt;   r.v.u = x; return r; }
+            static CallResult FromDouble(double x)       { CallResult r; r.kind = CallArg::Kind::Double; r.v.d = x; return r; }
+            static CallResult FromBool(bool x)           { CallResult r; r.kind = CallArg::Kind::Bool;   r.v.b = x; return r; }
+            static CallResult FromPtr(void* p)           { CallResult r; r.kind = CallArg::Kind::Ptr;    r.v.p = p; return r; }
+            static CallResult FromString(std::string s)  { CallResult r; r.kind = CallArg::Kind::CString; r.s = std::move(s); return r; }
+        };
+
+        using GenericCallable = std::function<CallResult(const std::vector<CallArg>&)>;
+
+        bool registerCallable(const std::string& name, GenericCallable fn);
+        std::optional<GenericCallable> lookupCallable(const std::string& name);
+        CallResult invokeCallable(const std::string& name, const std::vector<CallArg>& args);
+
+    } // namespace CAPI
+
+    namespace detail {
+
+        template<typename...>
+        inline constexpr bool always_false_v = false;
+
+        template<typename T>
+        struct RemoveCVRef {
+            using type = std::remove_cv_t<std::remove_reference_t<T>>;
+        };
+
+        template<typename T>
+        using RemoveCVRefT = typename RemoveCVRef<T>::type;
+
+        template<typename Fn>
+        struct FunctionTraits;
+
+        template<typename R, typename... Args>
+        struct FunctionTraits<R(*)(Args...)> {
+            using ReturnType = R;
+            using ArgsTuple = std::tuple<Args...>;
+            static constexpr std::size_t Arity = sizeof...(Args);
+        };
+
+        template<typename C, typename R, typename... Args>
+        struct FunctionTraits<R(C::*)(Args...)> : FunctionTraits<R(*)(Args...)> {};
+
+        template<typename C, typename R, typename... Args>
+        struct FunctionTraits<R(C::*)(Args...) const> : FunctionTraits<R(*)(Args...)> {};
+
+        template<typename C, typename R, typename... Args>
+        struct FunctionTraits<R(C::*)(Args...) volatile> : FunctionTraits<R(*)(Args...)> {};
+
+        template<typename C, typename R, typename... Args>
+        struct FunctionTraits<R(C::*)(Args...) const volatile> : FunctionTraits<R(*)(Args...)> {};
+
+        template<typename Fn>
+        struct FunctionTraits : FunctionTraits<decltype(&Fn::operator())> {};
+
+        template<typename T, typename Enable = void>
+        struct ArgDecoder {
+            static T decode(const CAPI::CallArg&) {
+                static_assert(always_false_v<T>, "Unsupported parameter type for CAPI dispatcher");
+                return {};
+            }
+        };
+
+        template<typename T>
+        struct ArgDecoder<T, std::enable_if_t<std::is_same_v<RemoveCVRefT<T>, bool>>> {
+            static bool decode(const CAPI::CallArg& arg) {
+                if (arg.kind == CAPI::CallArg::Kind::Bool) return arg.v.b;
+                if (arg.kind == CAPI::CallArg::Kind::Int) return arg.v.i != 0;
+                if (arg.kind == CAPI::CallArg::Kind::UInt) return arg.v.u != 0;
+                if (arg.kind == CAPI::CallArg::Kind::Double) return arg.v.d != 0.0;
+                return false;
+            }
+        };
+
+        template<typename T>
+        struct ArgDecoder<T, std::enable_if_t<std::is_integral_v<RemoveCVRefT<T>> &&
+                                             !std::is_same_v<RemoveCVRefT<T>, bool> &&
+                                             std::is_signed_v<RemoveCVRefT<T>>>> {
+            static RemoveCVRefT<T> decode(const CAPI::CallArg& arg) {
+                if (arg.kind == CAPI::CallArg::Kind::Int) return static_cast<RemoveCVRefT<T>>(arg.v.i);
+                if (arg.kind == CAPI::CallArg::Kind::UInt) return static_cast<RemoveCVRefT<T>>(arg.v.u);
+                if (arg.kind == CAPI::CallArg::Kind::Double) return static_cast<RemoveCVRefT<T>>(arg.v.d);
+                return {};
+            }
+        };
+
+        template<typename T>
+        struct ArgDecoder<T, std::enable_if_t<std::is_integral_v<RemoveCVRefT<T>> &&
+                                             !std::is_same_v<RemoveCVRefT<T>, bool> &&
+                                             std::is_unsigned_v<RemoveCVRefT<T>>>> {
+            static RemoveCVRefT<T> decode(const CAPI::CallArg& arg) {
+                if (arg.kind == CAPI::CallArg::Kind::UInt) return static_cast<RemoveCVRefT<T>>(arg.v.u);
+                if (arg.kind == CAPI::CallArg::Kind::Int) {
+                    const auto value = arg.v.i < 0 ? std::int64_t{0} : arg.v.i;
+                    return static_cast<RemoveCVRefT<T>>(value);
+                }
+                if (arg.kind == CAPI::CallArg::Kind::Double) {
+                    const auto value = arg.v.d < 0.0 ? 0.0 : arg.v.d;
+                    return static_cast<RemoveCVRefT<T>>(value);
+                }
+                return {};
+            }
+        };
+
+        template<typename T>
+        struct ArgDecoder<T, std::enable_if_t<std::is_floating_point_v<RemoveCVRefT<T>>>> {
+            static RemoveCVRefT<T> decode(const CAPI::CallArg& arg) {
+                if (arg.kind == CAPI::CallArg::Kind::Double) return static_cast<RemoveCVRefT<T>>(arg.v.d);
+                if (arg.kind == CAPI::CallArg::Kind::UInt) return static_cast<RemoveCVRefT<T>>(arg.v.u);
+                if (arg.kind == CAPI::CallArg::Kind::Int) return static_cast<RemoveCVRefT<T>>(arg.v.i);
+                return {};
+            }
+        };
+
+        template<typename T>
+        struct ArgDecoder<T, std::enable_if_t<std::is_enum_v<RemoveCVRefT<T>>>> {
+            static RemoveCVRefT<T> decode(const CAPI::CallArg& arg) {
+                using Underlying = std::underlying_type_t<RemoveCVRefT<T>>;
+                return static_cast<RemoveCVRefT<T>>(ArgDecoder<Underlying>::decode(arg));
+            }
+        };
+
+        template<typename T>
+        struct ArgDecoder<T, std::enable_if_t<std::is_pointer_v<RemoveCVRefT<T>> &&
+                                             !std::is_same_v<std::remove_cv_t<std::remove_pointer_t<RemoveCVRefT<T>>>, char>>> {
+            static RemoveCVRefT<T> decode(const CAPI::CallArg& arg) {
+                if (arg.kind != CAPI::CallArg::Kind::Ptr) {
+                    return nullptr;
+                }
+                return reinterpret_cast<RemoveCVRefT<T>>(arg.v.p);
+            }
+        };
+
+        template<>
+        struct ArgDecoder<const char*, void> {
+            static const char* decode(const CAPI::CallArg& arg) {
+                if (arg.kind == CAPI::CallArg::Kind::CString) return arg.s.c_str();
+                if (arg.kind == CAPI::CallArg::Kind::Ptr) return static_cast<const char*>(arg.v.p);
+                return nullptr;
+            }
+        };
+
+        template<>
+        struct ArgDecoder<char*, void> {
+            static char* decode(const CAPI::CallArg& arg) {
+                if (arg.kind == CAPI::CallArg::Kind::Ptr) return static_cast<char*>(arg.v.p);
+                if (arg.kind == CAPI::CallArg::Kind::CString) return const_cast<char*>(arg.s.c_str());
+                return nullptr;
+            }
+        };
+
+        template<>
+        struct ArgDecoder<std::string, void> {
+            static std::string decode(const CAPI::CallArg& arg) {
+                if (arg.kind == CAPI::CallArg::Kind::CString) return arg.s;
+                if (arg.kind == CAPI::CallArg::Kind::Ptr && arg.v.p) return std::string(static_cast<const char*>(arg.v.p));
+                return {};
+            }
+        };
+
+        template<typename T, typename Enable = void>
+        struct ResultEncoder {
+            static CAPI::CallResult encode(const T&) {
+                static_assert(always_false_v<T>, "Unsupported return type for CAPI dispatcher");
+                return CAPI::CallResult::Void();
+            }
+        };
+
+        template<>
+        struct ResultEncoder<void, void> {
+            static CAPI::CallResult encode() {
+                return CAPI::CallResult::Void();
+            }
+        };
+
+        template<typename T>
+        struct ResultEncoder<T, std::enable_if_t<std::is_same_v<RemoveCVRefT<T>, bool>>> {
+            static CAPI::CallResult encode(bool value) {
+                return CAPI::CallResult::FromBool(value);
+            }
+        };
+
+        template<typename T>
+        struct ResultEncoder<T, std::enable_if_t<std::is_integral_v<RemoveCVRefT<T>> &&
+                                                 !std::is_same_v<RemoveCVRefT<T>, bool> &&
+                                                 std::is_signed_v<RemoveCVRefT<T>>>> {
+            static CAPI::CallResult encode(RemoveCVRefT<T> value) {
+                return CAPI::CallResult::FromInt(static_cast<std::int64_t>(value));
+            }
+        };
+
+        template<typename T>
+        struct ResultEncoder<T, std::enable_if_t<std::is_integral_v<RemoveCVRefT<T>> &&
+                                                 !std::is_same_v<RemoveCVRefT<T>, bool> &&
+                                                 std::is_unsigned_v<RemoveCVRefT<T>>>> {
+            static CAPI::CallResult encode(RemoveCVRefT<T> value) {
+                return CAPI::CallResult::FromUInt(static_cast<std::uint64_t>(value));
+            }
+        };
+
+        template<typename T>
+        struct ResultEncoder<T, std::enable_if_t<std::is_enum_v<RemoveCVRefT<T>>>> {
+            static CAPI::CallResult encode(RemoveCVRefT<T> value) {
+                using Underlying = std::underlying_type_t<RemoveCVRefT<T>>;
+                return ResultEncoder<Underlying>::encode(static_cast<Underlying>(value));
+            }
+        };
+
+        template<typename T>
+        struct ResultEncoder<T, std::enable_if_t<std::is_floating_point_v<RemoveCVRefT<T>>>> {
+            static CAPI::CallResult encode(RemoveCVRefT<T> value) {
+                return CAPI::CallResult::FromDouble(static_cast<double>(value));
+            }
+        };
+
+        template<typename T>
+        struct ResultEncoder<T, std::enable_if_t<std::is_pointer_v<RemoveCVRefT<T>> &&
+                                                 !std::is_same_v<std::remove_cv_t<std::remove_pointer_t<RemoveCVRefT<T>>>, char>>> {
+            static CAPI::CallResult encode(RemoveCVRefT<T> value) {
+                return CAPI::CallResult::FromPtr(const_cast<void*>(reinterpret_cast<const void*>(value)));
+            }
+        };
+
+        template<>
+        struct ResultEncoder<const char*, void> {
+            static CAPI::CallResult encode(const char* value) {
+                if (!value) {
+                    return CAPI::CallResult::FromPtr(nullptr);
+                }
+                return CAPI::CallResult::FromString(value);
+            }
+        };
+
+        template<>
+        struct ResultEncoder<char*, void> {
+            static CAPI::CallResult encode(const char* value) {
+                return ResultEncoder<const char*>::encode(value);
+            }
+        };
+
+        template<>
+        struct ResultEncoder<std::string, void> {
+            static CAPI::CallResult encode(std::string value) {
+                return CAPI::CallResult::FromString(std::move(value));
+            }
+        };
+
+        template<typename Return, typename Fn, typename ArgsTuple, std::size_t... I>
+        CAPI::CallResult invokeCallableImpl(Fn& fn,
+                                            const std::vector<CAPI::CallArg>& args,
+                                            std::index_sequence<I...>)
+        {
+            if constexpr (std::is_void_v<Return>) {
+                fn(ArgDecoder<std::tuple_element_t<I, ArgsTuple>>::decode(args[I])...);
+                return ResultEncoder<void>::encode();
+            } else {
+                Return value = fn(ArgDecoder<std::tuple_element_t<I, ArgsTuple>>::decode(args[I])...);
+                return ResultEncoder<Return>::encode(value);
+            }
+        }
+
+        template<typename Fn>
+        inline CAPI::GenericCallable makeGenericCallable(Fn&& fn)
+        {
+            using FnDecay = std::decay_t<Fn>;
+            using Traits = FunctionTraits<FnDecay>;
+            using ArgsTuple = typename Traits::ArgsTuple;
+            using Return = typename Traits::ReturnType;
+
+            constexpr std::size_t Arity = Traits::Arity;
+
+            auto callableStorage = std::make_shared<FnDecay>(std::forward<Fn>(fn));
+
+            return [callableStorage](const std::vector<CAPI::CallArg>& args) -> CAPI::CallResult {
+                if (args.size() != Arity) {
+                    return CAPI::CallResult::Void();
+                }
+                auto& callable = *callableStorage;
+                return invokeCallableImpl<Return, FnDecay, ArgsTuple>(callable, args, std::make_index_sequence<Arity>{});
+            };
+        }
+
+    } // namespace detail
 
     // Forward declaration
     class IBindGenerator;
@@ -169,8 +494,13 @@ namespace SDOM
         {
             std::scoped_lock lk(mutex_);
             FunctionInfo m = meta;
-            m.callable = std::make_any<std::decay_t<Fn>>(std::forward<Fn>(fn));
+            using FnStorage = std::decay_t<Fn>;
+            m.callable = std::make_any<FnStorage>(std::forward<Fn>(fn));
             m.callable_kind = FunctionInfo::CallableKind::CppCallable;
+
+            if (auto* storedCallable = std::any_cast<FnStorage>(&m.callable)) {
+                registerGenericCallableLocked(typeName, m, *storedCallable);
+            }
             entries_[typeName].functions.push_back(std::move(m));
         }
 
@@ -189,6 +519,9 @@ namespace SDOM
                 m.c_name = "SDOM_CFN_" + typeName + "_" + m.name;
             }
 
+            if (fp) {
+                registerGenericCallableLocked(typeName, m, fp);
+            }
             entries_[typeName].functions.push_back(std::move(m));
         }
 
@@ -245,68 +578,59 @@ namespace SDOM
         mutable std::mutex mutex_;
         std::unordered_map<std::string, TypeInfo> entries_;
         std::vector<GeneratorConfig> generators_;
+
+        template<typename FnStorage>
+        void registerGenericCallableLocked(const std::string& typeName,
+                                           FunctionInfo& info,
+                                           FnStorage& fn);
+        static bool shouldAutoWire(const FunctionInfo& info);
+        static std::string ensureDispatchName(const std::string& typeName, FunctionInfo& info);
     };
 
 } // namespace SDOM
 
-// ===========================================================================
-// Runtime dispatcher API for generic ABI function calls
-// ===========================================================================
-namespace SDOM { namespace CAPI {
+namespace SDOM {
 
-    struct CallArg {
-        enum class Kind : uint8_t { None=0, Int, UInt, Double, Bool, CString, Ptr };
+inline bool DataRegistry::shouldAutoWire(const FunctionInfo& info)
+{
+    return info.exported && !info.name.empty();
+}
 
-        Kind kind = Kind::None;
+inline std::string DataRegistry::ensureDispatchName(const std::string& typeName,
+                                                    FunctionInfo& info)
+{
+    if (!info.c_name.empty()) {
+        return info.c_name;
+    }
 
-        union {
-            std::int64_t   i;
-            std::uint64_t  u;
-            double         d;
-            bool           b;
-            void*          p;
-        } v{};
+    if (typeName.empty() || info.name.empty()) {
+        return {};
+    }
 
-        std::string s; // for strings
+    info.c_name = "SDOM_CFN_" + typeName + "_" + info.name;
+    return info.c_name;
+}
 
-        CallArg() noexcept = default;
+template<typename FnStorage>
+inline void DataRegistry::registerGenericCallableLocked(const std::string& typeName,
+                                                        FunctionInfo& info,
+                                                        FnStorage& fn)
+{
+    if (!shouldAutoWire(info)) {
+        return;
+    }
 
-        static CallArg makeInt(std::int64_t x)      { CallArg a; a.kind=Kind::Int;    a.v.i=x; return a; }
-        static CallArg makeUInt(std::uint64_t x)    { CallArg a; a.kind=Kind::UInt;   a.v.u=x; return a; }
-        static CallArg makeDouble(double x)         { CallArg a; a.kind=Kind::Double; a.v.d=x; return a; }
-        static CallArg makeBool(bool x)             { CallArg a; a.kind=Kind::Bool;   a.v.b=x; return a; }
-        static CallArg makeCString(const char* s)   { CallArg a; a.kind=Kind::CString; if(s) a.s=s; return a; }
-        static CallArg makePtr(void* p)             { CallArg a; a.kind=Kind::Ptr;    a.v.p=p; return a; }
-    };
+    const std::string dispatchName = ensureDispatchName(typeName, info);
+    if (dispatchName.empty()) {
+        return;
+    }
 
-    struct CallResult {
-        CallArg::Kind kind = CallArg::Kind::None;
+    auto generic = detail::makeGenericCallable(fn);
+    CAPI::registerCallable(dispatchName, std::move(generic));
+    info.callable_kind = FunctionInfo::CallableKind::GenericRuntime;
+    info.runtime_tag = "c_dispatch";
+}
 
-        union {
-            std::int64_t   i;
-            std::uint64_t  u;
-            double         d;
-            bool           b;
-            void*          p;
-        } v{};
-
-        std::string s;
-
-        static CallResult Void()                     { return {}; }
-        static CallResult FromInt(std::int64_t x)    { CallResult r; r.kind=CallArg::Kind::Int;    r.v.i=x; return r; }
-        static CallResult FromUInt(std::uint64_t x)  { CallResult r; r.kind=CallArg::Kind::UInt;   r.v.u=x; return r; }
-        static CallResult FromDouble(double x)       { CallResult r; r.kind=CallArg::Kind::Double; r.v.d=x; return r; }
-        static CallResult FromBool(bool x)           { CallResult r; r.kind=CallArg::Kind::Bool;   r.v.b=x; return r; }
-        static CallResult FromPtr(void* p)           { CallResult r; r.kind=CallArg::Kind::Ptr;    r.v.p=p; return r; }
-        static CallResult FromString(std::string s)  { CallResult r; r.kind=CallArg::Kind::CString; r.s=std::move(s); return r; }
-    };
-
-    using GenericCallable = std::function<CallResult(const std::vector<CallArg>&)>;
-
-    bool registerCallable(const std::string& name, GenericCallable fn);
-    std::optional<GenericCallable> lookupCallable(const std::string& name);
-    CallResult invokeCallable(const std::string& name, const std::vector<CallArg>& args);
-
-}} // namespace SDOM::CAPI
+} // namespace SDOM
 
 #endif // __SDOM_DATAREGISTRY_HPP__

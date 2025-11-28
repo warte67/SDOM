@@ -194,6 +194,7 @@ namespace SDOM
     {
         
     public:
+        virtual ~IDataObject() = default;
         // ---- Lifecycle ----
         virtual bool onInit() = 0;
         virtual void onQuit() = 0;

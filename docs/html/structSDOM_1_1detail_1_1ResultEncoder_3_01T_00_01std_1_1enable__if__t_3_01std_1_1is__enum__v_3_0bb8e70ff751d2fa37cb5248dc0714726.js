@@ -1,0 +1,4 @@
+var structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__enum__v_3_0bb8e70ff751d2fa37cb5248dc0714726 =
+[
+    [ "encode", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__enum__v_3_0bb8e70ff751d2fa37cb5248dc0714726.html#af20ae2e926cdaae4c46df4316ab9fea2", null ]
+];

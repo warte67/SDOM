@@ -31,5 +31,6 @@ namespace SDOM
     bool Variant_UnitTests();
 
     bool FrontEnd_UnitTests();
+    bool Version_UnitTests();
     
 }

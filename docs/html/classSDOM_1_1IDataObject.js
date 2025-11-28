@@ -1,5 +1,6 @@
 var classSDOM_1_1IDataObject =
 [
+    [ "~IDataObject", "classSDOM_1_1IDataObject.html#a1b7bf47a40cf0161117cda7fde2096aa", null ],
     [ "activeRegistry", "classSDOM_1_1IDataObject.html#a290db93bef651c53f48ec32156a8753c", null ],
     [ "addDataType", "classSDOM_1_1IDataObject.html#a5ada6dbc0bac9f59ea2988498008f049", null ],
     [ "addEventType", "classSDOM_1_1IDataObject.html#a8454e19980fce29cadc94be241ee66f9", null ],

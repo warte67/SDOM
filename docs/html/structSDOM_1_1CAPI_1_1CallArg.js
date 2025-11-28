@@ -1,17 +1,17 @@
 var structSDOM_1_1CAPI_1_1CallArg =
 [
-    [ "Kind", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55", [
-      [ "None", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55a6adf97f83acf6453d4a6a4b1070f3754", null ],
-      [ "Int", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55a1686a6c336b71b36d77354cea19a8b52", null ],
-      [ "UInt", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55a0b1291eded63143ac04709711274785a", null ],
-      [ "Double", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55ad909d38d705ce75386dd86e611a82f5b", null ],
-      [ "Bool", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55ac26f15e86e3de4c398a8273272aba034", null ],
-      [ "CString", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55aa87842d43de0d6fb7d0aef9c7801982c", null ],
-      [ "Ptr", "structSDOM_1_1CAPI_1_1CallArg.html#a9af787e8ce6c3267f3f2eb935d0fcc55a165d3d525f6d0cbd55e42cc3058cafcc", null ]
+    [ "Kind", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364af", [
+      [ "None", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afa6adf97f83acf6453d4a6a4b1070f3754", null ],
+      [ "Int", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afa1686a6c336b71b36d77354cea19a8b52", null ],
+      [ "UInt", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afa0b1291eded63143ac04709711274785a", null ],
+      [ "Double", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afad909d38d705ce75386dd86e611a82f5b", null ],
+      [ "Bool", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afac26f15e86e3de4c398a8273272aba034", null ],
+      [ "CString", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afaa87842d43de0d6fb7d0aef9c7801982c", null ],
+      [ "Ptr", "structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afa165d3d525f6d0cbd55e42cc3058cafcc", null ]
     ] ],
     [ "CallArg", "structSDOM_1_1CAPI_1_1CallArg.html#ad7134748ecd96ffc4494b79c0bcd29d0", null ],
     [ "makeBool", "structSDOM_1_1CAPI_1_1CallArg.html#ae867b3a7ee794ed47ceca21847c80b4d", null ],
-    [ "makeCString", "structSDOM_1_1CAPI_1_1CallArg.html#af34983113fceda5f968db1ead90a9b5f", null ],
+    [ "makeCString", "structSDOM_1_1CAPI_1_1CallArg.html#af982a0bbb5365604ef3b10778a3247b5", null ],
     [ "makeDouble", "structSDOM_1_1CAPI_1_1CallArg.html#a003754659e50bd648903c4023a75c614", null ],
     [ "makeInt", "structSDOM_1_1CAPI_1_1CallArg.html#a66a91f7b259666409d5f52102c071af1", null ],
     [ "makePtr", "structSDOM_1_1CAPI_1_1CallArg.html#a0925f6a80791578f234d7a78795b817e", null ],

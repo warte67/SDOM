@@ -1,5 +1,15 @@
 var hierarchy =
 [
+    [ "SDOM::detail::ArgDecoder&lt; T, Enable &gt;", "structSDOM_1_1detail_1_1ArgDecoder.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; char *, void &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01char_01_5_00_01void_01_4.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; const char *, void &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01const_01char_01_5_00_01void_01_4.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; std::string, void &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01std_1_1string_00_01void_01_4.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; T, std::enable_if_t&lt; std::is_enum_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__enum__v_3_01Re25b900f36a6a9bec9be0161723375714.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; T, std::enable_if_t&lt; std::is_floating_point_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__floating__poin7e375246d30478f3ea5f43b8d22c6cb6.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; T, std::enable_if_t&lt; std::is_integral_v&lt; RemoveCVRefT&lt; T &gt; &gt; &amp;&amp;!std::is_same_v&lt; RemoveCVRefT&lt; T &gt;, bool &gt; &amp;&amp;std::is_signed_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__integral__v_3_ff46cc38faea70db7665325d021330b7.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; T, std::enable_if_t&lt; std::is_integral_v&lt; RemoveCVRefT&lt; T &gt; &gt; &amp;&amp;!std::is_same_v&lt; RemoveCVRefT&lt; T &gt;, bool &gt; &amp;&amp;std::is_unsigned_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__integral__v_3_d05b7bf2923fab6ad9d4be195e19b5f6.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; T, std::enable_if_t&lt; std::is_pointer_v&lt; RemoveCVRefT&lt; T &gt; &gt; &amp;&amp;!std::is_same_v&lt; std::remove_cv_t&lt; std::remove_pointer_t&lt; RemoveCVRefT&lt; T &gt; &gt; &gt;, char &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__pointer__v_3_0bcc2d81470c332f78bdeb9eb20dc1b1c.html", null ],
+    [ "SDOM::detail::ArgDecoder&lt; T, std::enable_if_t&lt; std::is_same_v&lt; RemoveCVRefT&lt; T &gt;, bool &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ArgDecoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__same__v_3_01Re84a76f089e475b64e810e2d552f08a9c.html", null ],
     [ "SDOM::AssetRecord", "structSDOM_1_1AssetRecord.html", null ],
     [ "SDOM::AssetTypeCreators", "structSDOM_1_1AssetTypeCreators.html", null ],
     [ "SDOM::BindingManifest", "structSDOM_1_1BindingManifest.html", null ],
@@ -24,6 +34,13 @@ var hierarchy =
     [ "SDOM::FontStyle", "structSDOM_1_1FontStyle.html", null ],
     [ "SDOM::FunctionBindingDescriptor", "structSDOM_1_1FunctionBindingDescriptor.html", null ],
     [ "SDOM::FunctionInfo", "structSDOM_1_1FunctionInfo.html", null ],
+    [ "SDOM::detail::FunctionTraits&lt; Fn &gt;", "structSDOM_1_1detail_1_1FunctionTraits.html", null ],
+    [ "SDOM::detail::FunctionTraits&lt; R(*)(Args...)&gt;", "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html", [
+      [ "SDOM::detail::FunctionTraits< R(C::*)(Args...) const >", "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_01const_01_4.html", null ],
+      [ "SDOM::detail::FunctionTraits< R(C::*)(Args...) const volatile >", "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_01const_01volatile_01_4.html", null ],
+      [ "SDOM::detail::FunctionTraits< R(C::*)(Args...) volatile >", "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_01volatile_01_4.html", null ],
+      [ "SDOM::detail::FunctionTraits< R(C::*)(Args...)>", "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_4.html", null ]
+    ] ],
     [ "SDOM::GeneratorConfig", "structSDOM_1_1GeneratorConfig.html", null ],
     [ "SDOM::IBindGenerator", "classSDOM_1_1IBindGenerator.html", [
       [ "SDOM::CAPI_BindGenerator", "classSDOM_1_1CAPI__BindGenerator.html", null ]
@@ -100,7 +117,8 @@ var hierarchy =
           [ "SDOM::Label", "classSDOM_1_1Label.html", null ],
           [ "SDOM::Stage", "classSDOM_1_1Stage.html", null ],
           [ "SDOM::TristateButton", "classSDOM_1_1TristateButton.html", null ]
-        ] ]
+        ] ],
+        [ "SDOM::Version", "classSDOM_1_1Version.html", null ]
       ] ]
     ] ],
     [ "SDOM::Label::LabelToken", "structSDOM_1_1Label_1_1LabelToken.html", null ],
@@ -109,12 +127,25 @@ var hierarchy =
     [ "SDOM::Factory::PerfStats", "structSDOM_1_1Factory_1_1PerfStats.html", null ],
     [ "SDOM::Label::PhraseToken", "structSDOM_1_1Label_1_1PhraseToken.html", null ],
     [ "SDOM::PropertyInfo", "structSDOM_1_1PropertyInfo.html", null ],
+    [ "SDOM::detail::RemoveCVRef&lt; T &gt;", "structSDOM_1_1detail_1_1RemoveCVRef.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; T, Enable &gt;", "structSDOM_1_1detail_1_1ResultEncoder.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; char *, void &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01char_01_5_00_01void_01_4.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; const char *, void &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01const_01char_01_5_00_01void_01_4.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; std::string, void &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01std_1_1string_00_01void_01_4.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; T, std::enable_if_t&lt; std::is_enum_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__enum__v_3_0bb8e70ff751d2fa37cb5248dc0714726.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; T, std::enable_if_t&lt; std::is_floating_point_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__floating__pc9d10033630bf450603d299c3c362c20.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; T, std::enable_if_t&lt; std::is_integral_v&lt; RemoveCVRefT&lt; T &gt; &gt; &amp;&amp;!std::is_same_v&lt; RemoveCVRefT&lt; T &gt;, bool &gt; &amp;&amp;std::is_signed_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__integral__va4355f646d7e7c7f6e747454a087e832.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; T, std::enable_if_t&lt; std::is_integral_v&lt; RemoveCVRefT&lt; T &gt; &gt; &amp;&amp;!std::is_same_v&lt; RemoveCVRefT&lt; T &gt;, bool &gt; &amp;&amp;std::is_unsigned_v&lt; RemoveCVRefT&lt; T &gt; &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__integral__ve51a4e62bf895edf9d3bd2b966d726b1.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; T, std::enable_if_t&lt; std::is_pointer_v&lt; RemoveCVRefT&lt; T &gt; &gt; &amp;&amp;!std::is_same_v&lt; std::remove_cv_t&lt; std::remove_pointer_t&lt; RemoveCVRefT&lt; T &gt; &gt; &gt;, char &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__pointer__v_25f1a49e957c0d3c8bcdcf2df65d6820.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; T, std::enable_if_t&lt; std::is_same_v&lt; RemoveCVRefT&lt; T &gt;, bool &gt; &gt; &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__same__v_3_0966fa85852ac88745a23cfef473b3069.html", null ],
+    [ "SDOM::detail::ResultEncoder&lt; void, void &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01void_00_01void_01_4.html", null ],
     [ "SDOM::SDL_Utils", "classSDOM_1_1SDL__Utils.html", null ],
     [ "SDOM", "classSDOM.html", null ],
     [ "SDOM_AssetHandle", "structSDOM__AssetHandle.html", null ],
     [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", null ],
     [ "SDOM_DisplayHandle", "structSDOM__DisplayHandle.html", null ],
     [ "SDOM_Event", "structSDOM__Event.html", null ],
+    [ "SDOM_Version", "structSDOM__Version.html", null ],
     [ "SDOM::SubjectKindDescriptor", "structSDOM_1_1SubjectKindDescriptor.html", null ],
     [ "SDOM::SubjectTypeDescriptor", "structSDOM_1_1SubjectTypeDescriptor.html", null ],
     [ "SDOM::Core::TabPriorityComparator", "structSDOM_1_1Core_1_1TabPriorityComparator.html", null ],
@@ -126,6 +157,5 @@ var hierarchy =
     [ "SDOM::VariantHash", "structSDOM_1_1VariantHash.html", null ],
     [ "SDOM::Variant::VariantRegistry", "structSDOM_1_1Variant_1_1VariantRegistry.html", null ],
     [ "SDOM::VariantStorage", "structSDOM_1_1VariantStorage.html", null ],
-    [ "SDOM::Variant::VariantView", "classSDOM_1_1Variant_1_1VariantView.html", null ],
-    [ "SDOM::Version", "classSDOM_1_1Version.html", null ]
+    [ "SDOM::Variant::VariantView", "classSDOM_1_1Variant_1_1VariantView.html", null ]
 ];

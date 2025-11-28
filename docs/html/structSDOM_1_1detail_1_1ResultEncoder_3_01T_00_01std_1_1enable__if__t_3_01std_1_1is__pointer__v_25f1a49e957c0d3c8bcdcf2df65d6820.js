@@ -1,0 +1,4 @@
+var structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__pointer__v_25f1a49e957c0d3c8bcdcf2df65d6820 =
+[
+    [ "encode", "structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__pointer__v_25f1a49e957c0d3c8bcdcf2df65d6820.html#acc3481615fdd348c5de25d911aca0ca7", null ]
+];

@@ -32,6 +32,8 @@ std::string trim(std::string value) {
 }
 
 std::string normalizeTypeToken(std::string type);
+bool isUnsignedIntegralToken(const std::string& token);
+bool isSignedIntegralToken(const std::string& token);
 
 std::string sanitizeEnumToken(std::string value) {
     for (char& ch : value) {
@@ -225,24 +227,11 @@ std::string emitCallArgForParameter(const ParameterInfo& param)
         return "SDOM::CAPI::CallArg::makeBool(" + param.name + ")";
     }
 
-    static const std::unordered_set<std::string> kUnsignedTypes = {
-        "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
-        "uint8_t", "uint16_t", "uint32_t", "uint64_t",
-        "unsigned", "unsigned int", "unsigned long", "unsigned long long",
-        "size_t"
-    };
-
-    if (kUnsignedTypes.count(normalized)) {
+    if (isUnsignedIntegralToken(normalized)) {
         return "SDOM::CAPI::CallArg::makeUInt(static_cast<std::uint64_t>(" + param.name + "))";
     }
 
-    static const std::unordered_set<std::string> kSignedTypes = {
-        "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t",
-        "int8_t", "int16_t", "int32_t", "int64_t",
-        "int", "long", "long long"
-    };
-
-    if (kSignedTypes.count(normalized)) {
+    if (isSignedIntegralToken(normalized)) {
         return "SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(" + param.name + "))";
     }
 
@@ -299,7 +288,6 @@ bool functionMentionsToken(const FunctionInfo& fn, const std::string& token)
     if (!fn.c_signature.empty() && fn.c_signature.find(token) != std::string::npos) {
         return true;
     }
-
     if (!fn.return_type.empty() && fn.return_type.find(token) != std::string::npos) {
         return true;
     }
@@ -513,6 +501,32 @@ void emitInvokeCallableCore(std::ofstream& out,
         out << "        return static_cast<" << meta.normalized << ">(callResult.v.i);\n";
         out << "    }\n";
         out << "    return static_cast<" << meta.normalized << ">(0);\n";
+    } else if (isSignedIntegralToken(meta.normalized)) {
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
+        out << "        return static_cast<" << trimmedReturn << ">(callResult.v.i);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
+        out << "        return static_cast<" << trimmedReturn << ">(callResult.v.u);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {\n";
+        out << "        return static_cast<" << trimmedReturn << ">(callResult.v.d);\n";
+        out << "    }\n";
+        out << "    return static_cast<" << trimmedReturn << ">(0);\n";
+    } else if (isUnsignedIntegralToken(meta.normalized)) {
+        out << "    const auto callResult = " << callExpr << ";\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {\n";
+        out << "        return static_cast<" << trimmedReturn << ">(callResult.v.u);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
+        out << "        const auto value = callResult.v.i < 0 ? std::int64_t{0} : callResult.v.i;\n";
+        out << "        return static_cast<" << trimmedReturn << ">(value);\n";
+        out << "    }\n";
+        out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {\n";
+        out << "        const auto value = callResult.v.d < 0.0 ? 0.0 : callResult.v.d;\n";
+        out << "        return static_cast<" << trimmedReturn << ">(value);\n";
+        out << "    }\n";
+        out << "    return static_cast<" << trimmedReturn << ">(0);\n";
     } else {
         out << "    // TODO: marshal return type '" << meta.c_type << "'.\n";
         out << "    (void)" << callExpr << ";\n";
@@ -545,6 +559,27 @@ std::string normalizeTypeToken(std::string type)
     }
 
     return type;
+}
+
+bool isUnsignedIntegralToken(const std::string& token)
+{
+    static const std::unordered_set<std::string> kUnsignedTypes = {
+        "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t",
+        "uint8_t", "uint16_t", "uint32_t", "uint64_t",
+        "unsigned", "unsigned int", "unsigned long", "unsigned long long",
+        "unsigned short", "size_t", "std::size_t"
+    };
+    return kUnsignedTypes.count(token) > 0;
+}
+
+bool isSignedIntegralToken(const std::string& token)
+{
+    static const std::unordered_set<std::string> kSignedTypes = {
+        "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t",
+        "int8_t", "int16_t", "int32_t", "int64_t",
+        "int", "long", "long long", "short"
+    };
+    return kSignedTypes.count(token) > 0;
 }
 
 } // namespace
