@@ -92,8 +92,174 @@ $(function(){initNavTree('SDOM__CAPI__Core_8h.html','',''); });
   <div class="headertitle"><div class="title">SDOM_CAPI_Core.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
+<div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;SDL3/SDL.h&gt;</code><br />
+</div>
 <p><a href="SDOM__CAPI__Core_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:SDOM_5FCoreConfig" id="r_SDOM_5FCoreConfig"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a0be006070fd2926559dec26d5c7f1c4d" id="r_a0be006070fd2926559dec26d5c7f1c4d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0be006070fd2926559dec26d5c7f1c4d">SDOM_CORECONFIG_DEFAULT</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a493c9fe0c56546730b7eb4031b15d8c2" id="r_a493c9fe0c56546730b7eb4031b15d8c2"><td class="memItemLeft" align="right" valign="top">typedef struct SDOM_CoreConfig&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a493c9fe0c56546730b7eb4031b15d8c2">SDOM_CoreConfig</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ace710e7380be895820f89c5d7d9655ca" id="r_ace710e7380be895820f89c5d7d9655ca"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError</a> (void)</td></tr>
+<tr class="memitem:af7c39bd04810fbbc819dee24bdab67cd" id="r_af7c39bd04810fbbc819dee24bdab67cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7c39bd04810fbbc819dee24bdab67cd">SDOM_SetError</a> (const char *message)</td></tr>
+<tr class="memitem:a5f09c270f3e70b498b51dd81b758ba3d" id="r_a5f09c270f3e70b498b51dd81b758ba3d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f09c270f3e70b498b51dd81b758ba3d">SDOM_Init</a> (uint64_t init_flags)</td></tr>
+<tr class="memitem:adcadeeb392588977ba734bf562da8ce0" id="r_adcadeeb392588977ba734bf562da8ce0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcadeeb392588977ba734bf562da8ce0">SDOM_Configure</a> (const <a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *cfg)</td></tr>
+<tr class="memitem:afcb4329f051cfd28d14d97342a5852ff" id="r_afcb4329f051cfd28d14d97342a5852ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcb4329f051cfd28d14d97342a5852ff">SDOM_GetCoreConfig</a> (<a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *out_cfg)</td></tr>
+<tr class="memitem:a1a77a718f1e1aae22754c99ab3a33103" id="r_a1a77a718f1e1aae22754c99ab3a33103"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a77a718f1e1aae22754c99ab3a33103">SDOM_Quit</a> (void)</td></tr>
+</table>
+<a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="a0be006070fd2926559dec26d5c7f1c4d" name="a0be006070fd2926559dec26d5c7f1c4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0be006070fd2926559dec26d5c7f1c4d">&#9670;&#160;</a></span>SDOM_CORECONFIG_DEFAULT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SDOM_CORECONFIG_DEFAULT</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    { \</div>
+<div class="line">    800.0f, 600.0f, \</div>
+<div class="line">    2.0f, 2.0f, \</div>
+<div class="line">    1, 0, \</div>
+<div class="line">    SDL_LOGICAL_PRESENTATION_LETTERBOX, \</div>
+<div class="line">    SDL_WINDOW_RESIZABLE, \</div>
+<div class="line">    SDL_PIXELFORMAT_RGBA8888, \</div>
+<div class="line">    { 32, 32, 32, 255 } \</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="a493c9fe0c56546730b7eb4031b15d8c2" name="a493c9fe0c56546730b7eb4031b15d8c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a493c9fe0c56546730b7eb4031b15d8c2">&#9670;&#160;</a></span>SDOM_CoreConfig</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct SDOM_CoreConfig SDOM_CoreConfig</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="adcadeeb392588977ba734bf562da8ce0" name="adcadeeb392588977ba734bf562da8ce0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcadeeb392588977ba734bf562da8ce0">&#9670;&#160;</a></span>SDOM_Configure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Configure </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *</td>          <td class="paramname"><span class="paramname"><em>cfg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afcb4329f051cfd28d14d97342a5852ff" name="afcb4329f051cfd28d14d97342a5852ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcb4329f051cfd28d14d97342a5852ff">&#9670;&#160;</a></span>SDOM_GetCoreConfig()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_GetCoreConfig </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *</td>          <td class="paramname"><span class="paramname"><em>out_cfg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ace710e7380be895820f89c5d7d9655ca" name="ace710e7380be895820f89c5d7d9655ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace710e7380be895820f89c5d7d9655ca">&#9670;&#160;</a></span>SDOM_GetError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM_GetError </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5f09c270f3e70b498b51dd81b758ba3d" name="a5f09c270f3e70b498b51dd81b758ba3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f09c270f3e70b498b51dd81b758ba3d">&#9670;&#160;</a></span>SDOM_Init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Init </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t</td>          <td class="paramname"><span class="paramname"><em>init_flags</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1a77a718f1e1aae22754c99ab3a33103" name="a1a77a718f1e1aae22754c99ab3a33103"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a77a718f1e1aae22754c99ab3a33103">&#9670;&#160;</a></span>SDOM_Quit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM_Quit </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7c39bd04810fbbc819dee24bdab67cd" name="af7c39bd04810fbbc819dee24bdab67cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7c39bd04810fbbc819dee24bdab67cd">&#9670;&#160;</a></span>SDOM_SetError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetError </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

@@ -1,5 +1,15 @@
 var namespaceSDOM =
 [
+    [ "CoreAPI", "namespaceSDOM_1_1CoreAPI.html", [
+      [ "configure", "namespaceSDOM_1_1CoreAPI.html#a1d3869decd430890ade4c1c5edda94d8", null ],
+      [ "getCoreConfig", "namespaceSDOM_1_1CoreAPI.html#a44002fdb39cae2bbb639ab0582ae035f", null ],
+      [ "getErrorCString", "namespaceSDOM_1_1CoreAPI.html#a3e1fe46f7930acc5dca71513e98d6347", null ],
+      [ "getErrorString", "namespaceSDOM_1_1CoreAPI.html#ae6e942f922e56755b3e4ea3679b40806", null ],
+      [ "init", "namespaceSDOM_1_1CoreAPI.html#adca06271adec531ec75c3472e624a4ad", null ],
+      [ "quit", "namespaceSDOM_1_1CoreAPI.html#adb010e8aa7c39036b7d35cde1ee8be01", null ],
+      [ "registerBindings", "namespaceSDOM_1_1CoreAPI.html#a609781c480267a562cb9966014febbdd", null ],
+      [ "setErrorMessage", "namespaceSDOM_1_1CoreAPI.html#afada90905db85b6ed9781acd9a0a3ea5", null ]
+    ] ],
     [ "CAPI", "namespaceSDOM_1_1CAPI.html", "namespaceSDOM_1_1CAPI" ],
     [ "detail", "namespaceSDOM_1_1detail.html", "namespaceSDOM_1_1detail" ],
     [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],

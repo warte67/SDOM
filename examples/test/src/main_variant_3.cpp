@@ -9,7 +9,8 @@
  */
 
 #include <iostream>
-#include <SDOM/SDOM_CAPI.h>
+#include <SDOM/CAPI/SDOM_CAPI_Core.h>
+#include <SDOM/CAPI/SDOM_CAPI_Version.h>
 
 /* ---------------------------------------------------------------------------
    Variant 3 entry point (C API mode)
@@ -19,40 +20,45 @@ int SDOM_main_variant_3(int argc, char** argv)
     (void)argc;
     (void)argv;
 
-    bool ok = true;
+    // Reminder: once we formalize startup docs, describe how Variant 3 maps to SDOM_Init/Configure.
 
-    // -----------------------------------------
-    // Initialize SDOM runtime
-    // -----------------------------------------
-    if (!SDOM_Init())
+    // SDOM_Init() initializes the engine using default configuration values, so the engine is immediately ready.
+    // SDOM_Configure() allows you to override any of those defaults at any time.
+
+    // This is different from SDL, where Init does nothing to configure windows or rendering.
+    // SDOM is structured as a higher-level engine with safe defaults and immediate usability.    
+
+    if (!SDOM_Init(0))
     {
-        std::cerr << "[SDOM] ERROR: SDOM_Init() failed.\n";
+        const char* apiError = SDOM_GetError();
+        std::cerr << "[Variant 3] ERROR: SDOM_Init(0) failed. "
+                  << (apiError ? apiError : "(no error message)")
+                  << std::endl;
         return 1;
     }
 
-    // -----------------------------------------
-    // Get current config, modify some defaults
-    // -----------------------------------------
-    SDOM_CoreConfig cfg;
-    SDOM_GetCoreConfig(&cfg);
+    SDOM_CoreConfig cfg{};
+    if (SDOM_GetCoreConfig(&cfg))
+    {
+        cfg.windowWidth  = 1280.0f;
+        cfg.windowHeight = 960.0f;
+        cfg.pixelWidth   = 1.0f;
+        cfg.pixelHeight  = 1.0f;
+        (void)SDOM_Configure(&cfg);
+    }
+    else
+    {
+        std::cerr << "[Variant 3] WARNING: SDOM_GetCoreConfig failed; continuing with defaults." << std::endl;
+    }
 
-    cfg.windowWidth  = 1280.0f;
-    cfg.windowHeight = 960.0f;
-    cfg.pixelWidth   = 1.0f;
-    cfg.pixelHeight  = 1.0f;
+    const char* fullVersion = SDOM_GetVersionFullString();
+    if (!fullVersion) {
+        fullVersion = "(unknown version)";
+    }
 
-    // Apply configuration
-    SDOM_Configure(&cfg);
+    std::cout << "[Variant 3] SDOM " << fullVersion << std::endl;
 
-    // -----------------------------------------
-    // Run main loop (no scene loaded)
-    // -----------------------------------------
-    // bool ok = SDOM_Run();  // not yet ready
-
-    // -----------------------------------------
-    // Clean up the runtime
-    // -----------------------------------------
     SDOM_Quit();
 
-    return ok ? 0 : 1;
+    return 0;
 }

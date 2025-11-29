@@ -924,7 +924,7 @@ int main(int argc, char** argv)
 
 int main(int argc, char** argv) 
 {
-    SDOM_Init();
+    SDOM_Init(0);
 
     SDOM_CoreConfig cfg;
     SDOM_GetCoreConfig(&cfg);

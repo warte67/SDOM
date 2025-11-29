@@ -634,12 +634,27 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
     out << "// Auto-generated SDOM C API module: " << module.file_stem << "\n\n";
 
     std::vector<std::string> includes;
+    const auto addInclude = [&](const std::string& line) {
+        if (line.empty()) {
+            return;
+        }
+        if (std::find(includes.begin(), includes.end(), line) == includes.end()) {
+            includes.emplace_back(line);
+        }
+    };
+
+    addInclude("#include <stdbool.h>");
     if (moduleNeedsCstdint(module)) {
-        includes.emplace_back("#include <cstdint> // For uint64_t");
+        addInclude("#include <stdint.h>");
+    }
+    if (module.file_stem == "Core") {
+        addInclude("#include <SDL3/SDL.h>");
     }
 
     const auto dependencyIncludes = collectDependencyIncludes(module);
-    includes.insert(includes.end(), dependencyIncludes.begin(), dependencyIncludes.end());
+    for (const auto& include_line : dependencyIncludes) {
+        addInclude(include_line);
+    }
 
     if (!includes.empty()) {
         for (const auto& include_line : includes) {
@@ -649,6 +664,30 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
     }
 
     emitEnums(out, module);
+
+    if (module.file_stem == "Core") {
+        out << "\ntypedef struct SDOM_CoreConfig {\n";
+        out << "    float windowWidth;\n";
+        out << "    float windowHeight;\n";
+        out << "    float pixelWidth;\n";
+        out << "    float pixelHeight;\n";
+        out << "    int preserveAspectRatio;\n";
+        out << "    int allowTextureResize;\n";
+        out << "    SDL_RendererLogicalPresentation rendererLogicalPresentation;\n";
+        out << "    SDL_WindowFlags windowFlags;\n";
+        out << "    SDL_PixelFormat pixelFormat;\n";
+        out << "    SDL_Color color;\n";
+        out << "} SDOM_CoreConfig;\n\n";
+        out << "#define SDOM_CORECONFIG_DEFAULT  { \\\n";
+        out << "    800.0f, 600.0f, \\\n";
+        out << "    2.0f, 2.0f, \\\n";
+        out << "    1, 0, \\\n";
+        out << "    SDL_LOGICAL_PRESENTATION_LETTERBOX, \\\n";
+        out << "    SDL_WINDOW_RESIZABLE, \\\n";
+        out << "    SDL_PIXELFORMAT_RGBA8888, \\\n";
+        out << "    { 32, 32, 32, 255 } \\\n";
+        out << "}\n\n";
+    }
 
     emitStructs(out, module);
 
@@ -681,7 +720,7 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
     std::cout << "[CAPI_BindGenerator] Generating source: " << filename << '\n';
 
     out << "#include <SDOM/CAPI/SDOM_CAPI_" << module.file_stem << ".h>\n";
-    out << "#include <SDOM/SDOM_CAPI.h>\n";
+    out << "#include <SDOM/CAPI/SDOM_CAPI_Core.h>\n";
     out << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
     out << "#include <string>\n";
     out << "#include <vector>\n\n";

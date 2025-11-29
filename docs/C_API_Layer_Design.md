@@ -50,7 +50,8 @@ SDL_Quit();
 ### SDOM Equivalent
 
 ```c
-SDOM_Init();
+const uint64_t init_flags = 0; // reserved for future SDL-style options
+SDOM_Init(init_flags);
 
 CoreConfig init = {0};
 init.title = "SDOM Window Title";
@@ -74,8 +75,9 @@ SDOM_Quit(); // optional
 ### Initialization and Shutdown
 
 ```cpp
-extern "C" int SDOM_Init() {
-    return Core::getInstance().onInit() ? 0 : -1;
+extern "C" bool SDOM_Init(uint64_t init_flags) {
+    (void)init_flags; // placeholder until flags are honored inside Core
+    return Core::getInstance().onInit();
 }
 
 extern "C" void SDOM_Quit() {
@@ -125,7 +127,7 @@ These are simply forward declarations — C users only ever receive pointers or 
 
 ```rust
 extern "C" {
-    fn SDOM_Init() -> i32;
+    fn SDOM_Init(init_flags: u64) -> bool;
     fn SDOM_Quit();
     fn SDOM_CreateWindow(init: CoreConfig) -> DisplayHandle;
     fn SDOM_DestroyWindow(handle: DisplayHandle);
@@ -142,7 +144,10 @@ pub struct SDOMWindow {
 impl SDOMWindow {
     pub fn new(cfg: CoreConfig) -> SDOMWindow {
         unsafe {
-            SDOM_Init();
+            let init_flags: u64 = 0;
+            if !SDOM_Init(init_flags) {
+                panic!("SDOM_Init failed");
+            }
             let handle = SDOM_CreateWindow(cfg);
             SDOMWindow { handle }
         }
@@ -182,7 +187,7 @@ All exported symbols should use the **`SDOM_`** prefix for clarity and namespace
 Example API surface:
 
 ```c
-SDOM_Init
+SDOM_Init (uint64_t init_flags)
 SDOM_Quit
 SDOM_CreateWindow
 SDOM_DestroyWindow
@@ -259,7 +264,8 @@ bool fnOnUnitTest(int frame);  // optional
 void fnOnWindowResize();       // optional
 
 int main(int argc, char** argv) {
-    SDOM_Init();
+    const uint64_t init_flags = 0;
+    SDOM_Init(init_flags);
 
     // Create window as before
     CoreConfig init = {0};

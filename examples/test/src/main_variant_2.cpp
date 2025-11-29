@@ -15,7 +15,6 @@
 #include <vector>
 
 #include <SDOM/SDOM.hpp>
-#include <SDOM/SDOM_CAPI.h>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Event.hpp>

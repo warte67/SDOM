@@ -1,6 +1,8 @@
 #pragma once
 // Auto-generated SDOM C API module: Version
 
+#include <stdbool.h>
+
 typedef struct SDOM_Version {
     void* impl;                                     ///< Opaque pointer to underlying C++ instance.
 } SDOM_Version;

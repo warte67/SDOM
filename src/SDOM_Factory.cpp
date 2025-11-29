@@ -30,6 +30,7 @@
 #include <SDOM/SDOM_Slider.hpp>
 #include <SDOM/SDOM_ProgressBar.hpp>
 #include <SDOM/SDOM_ScrollBar.hpp>
+#include <cstdlib>
 
 namespace SDOM
 {
@@ -47,6 +48,8 @@ namespace SDOM
         if (initialized_) {
             return true;
         }
+
+        const bool headlessBindingGen = (std::getenv("SDOM_GENERATE_BINDINGS") != nullptr);
                                     // // --- Lua UserType Registration --- //
                                     // Core& core = getCore();
 
@@ -152,27 +155,31 @@ namespace SDOM
                 TruetypeFont::CreateFromInitStruct,
                 TruetypeFont::CreateFromJson
             });
-            // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
-            if (!getAssetObjectPtr("internal_ttf_asset")) {
-                TTFAsset::InitStruct ttf_init;
-                ttf_init.name = "internal_ttf_asset";     // internal registry key
-                ttf_init.type = TTFAsset::TypeName;     // concrete type name
-                ttf_init.filename = "internal_ttf";      // internal ttf filename
-                ttf_init.is_internal = true;             // is internal
-                ttf_init.internal_font_size = 10;         // member name in InitStruct
-                AssetHandle ttfFontAsset = createAssetObject("TTFAsset", ttf_init);
-                (void)ttfFontAsset;
+
+            if (!headlessBindingGen) {
+                // Create an internal TTFAsset for the default TrueType font (do not register under the same public name)
+                if (!getAssetObjectPtr("internal_ttf_asset")) {
+                    TTFAsset::InitStruct ttf_init;
+                    ttf_init.name = "internal_ttf_asset";     // internal registry key
+                    ttf_init.type = TTFAsset::TypeName;     // concrete type name
+                    ttf_init.filename = "internal_ttf";      // internal ttf filename
+                    ttf_init.is_internal = true;             // is internal
+                    ttf_init.internal_font_size = 10;         // member name in InitStruct
+                    AssetHandle ttfFontAsset = createAssetObject("TTFAsset", ttf_init);
+                    (void)ttfFontAsset;
+                }
+
+                // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
+                if (!getAssetObjectPtr("internal_ttf")) {
+                    TruetypeFont::InitStruct ttInit;
+                    ttInit.name = "internal_ttf";           // public registry key expected by Label
+                    ttInit.type = TruetypeFont::TypeName;
+                    ttInit.filename = "internal_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
+
+                    AssetHandle defaultTTFont = createAssetObject(TruetypeFont::TypeName, ttInit);
+                    (void)defaultTTFont;
+                }
             }
-
-            // Create a public truetype font asset named "default_ttf" which references the internal TTFAsset
-            if (!getAssetObjectPtr("internal_ttf")) {
-                TruetypeFont::InitStruct ttInit;
-                ttInit.name = "internal_ttf";           // public registry key expected by Label
-                ttInit.type = TruetypeFont::TypeName;
-                ttInit.filename = "internal_ttf_asset";      // filename used by TruetypeFont to find the TTFAsset
-
-                AssetHandle defaultTTFont = createAssetObject(TruetypeFont::TypeName, ttInit);
-            }            
         }
 
         // register the SpriteSheet asset
@@ -181,7 +188,7 @@ namespace SDOM
             SpriteSheet::CreateFromJson
         });
         // Also ensure there is a SpriteSheet wrapper for the internal icon texture
-        {
+        if (!headlessBindingGen) {
             auto ensureSpriteSheet = [&](const std::string& spriteSheetName, const std::string& textureFilename, int spriteW, int spriteH) {
                 if (!getAssetObjectPtr(spriteSheetName)) {
                     SpriteSheet::InitStruct ssInit;
@@ -206,33 +213,36 @@ namespace SDOM
                 BitmapFont::CreateFromInitStruct,
                 BitmapFont::CreateFromJson
             });
-            // Create the default 8x8 bitmap font asset if it doesn't exist.
-            if (!getAssetObjectPtr("internal_font_8x8")) {
-                BitmapFont::InitStruct init;
-                init.name = "internal_font_8x8";      // registry key == filename
-                init.type = BitmapFont::TypeName;   // concrete type name
-                init.filename = "internal_font_8x8";  // underlying texture filename
-                init.is_internal = true;             // is an internal resource
-                init.fontSize = 8;                  // member name in InitStruct
-                init.font_width = 8;                 // font_width for this resource
-                init.font_height = 8;                // font_height for this resource            
-                AssetHandle bmpFont = createAssetObject("BitmapFont", init);
-                (void)bmpFont;
-            }
-            if (!getAssetObjectPtr("internal_font_8x12")) {
-                BitmapFont::InitStruct init;
-                init.name = "internal_font_8x12";     // registry key == filename
-                init.type = BitmapFont::TypeName;   // concrete type name
-                init.filename = "internal_font_8x12"; // underlying texture filename
-                init.is_internal = true;             // is an internal resource
-                // Set both BitmapFont-specific fontSize and the base IFontObject's
-                // fontSize_ so the inherited constructor sees the correct value.
-                init.fontSize = 12;                 // BitmapFont::InitStruct field
-                init.font_size = 12;                // IFontObject::InitStruct field used by base ctor
-                init.font_width = 8;                 // font_width for this resource
-                init.font_height = 12;               // font_height for this resource
-                AssetHandle bmpFont = createAssetObject("BitmapFont", init);
-                (void)bmpFont;
+
+            if (!headlessBindingGen) {
+                // Create the default 8x8 bitmap font asset if it doesn't exist.
+                if (!getAssetObjectPtr("internal_font_8x8")) {
+                    BitmapFont::InitStruct init;
+                    init.name = "internal_font_8x8";      // registry key == filename
+                    init.type = BitmapFont::TypeName;   // concrete type name
+                    init.filename = "internal_font_8x8";  // underlying texture filename
+                    init.is_internal = true;             // is an internal resource
+                    init.fontSize = 8;                  // member name in InitStruct
+                    init.font_width = 8;                 // font_width for this resource
+                    init.font_height = 8;                // font_height for this resource            
+                    AssetHandle bmpFont = createAssetObject("BitmapFont", init);
+                    (void)bmpFont;
+                }
+                if (!getAssetObjectPtr("internal_font_8x12")) {
+                    BitmapFont::InitStruct init;
+                    init.name = "internal_font_8x12";     // registry key == filename
+                    init.type = BitmapFont::TypeName;   // concrete type name
+                    init.filename = "internal_font_8x12"; // underlying texture filename
+                    init.is_internal = true;             // is an internal resource
+                    // Set both BitmapFont-specific fontSize and the base IFontObject's
+                    // fontSize_ so the inherited constructor sees the correct value.
+                    init.fontSize = 12;                 // BitmapFont::InitStruct field
+                    init.font_size = 12;                // IFontObject::InitStruct field used by base ctor
+                    init.font_width = 8;                 // font_width for this resource
+                    init.font_height = 12;               // font_height for this resource
+                    AssetHandle bmpFont = createAssetObject("BitmapFont", init);
+                    (void)bmpFont;
+                }
             }
         }
 
@@ -311,16 +321,17 @@ namespace SDOM
             ScrollBar::CreateFromJson
         });
 
-        // Add the CAPI_BindGenerator to the DataRegistry
+#if defined(SDOM_ENABLE_RUNTIME_BINDING_EXPORT)
+        // Add the CAPI_BindGenerator to the DataRegistry for runtime regeneration
         data_registry_.addGenerator(
             std::make_unique<CAPI_BindGenerator>(),
             "../../include/SDOM/CAPI",
             "../../src/CAPI",
-            true,   // overwrite existing
-            true    // verbose output
+            true,
+            true
         );
-        // Now generate all bindings (CAPI, Lua, etc.)
-        data_registry_.generateBindings();        
+        data_registry_.generateBindings();
+#endif
 
         // return initialized state
         initialized_ = true;

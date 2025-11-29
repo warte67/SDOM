@@ -3,7 +3,7 @@ var dir_f6d468b0a292691c8e04baa75dfb6fb5 =
     [ "SDOM_CAPI_ArrowButton.h", "SDOM__CAPI__ArrowButton_8h.html", null ],
     [ "SDOM_CAPI_Button.h", "SDOM__CAPI__Button_8h.html", null ],
     [ "SDOM_CAPI_CheckButton.h", "SDOM__CAPI__CheckButton_8h.html", null ],
-    [ "SDOM_CAPI_Core.h", "SDOM__CAPI__Core_8h.html", null ],
+    [ "SDOM_CAPI_Core.h", "SDOM__CAPI__Core_8h.html", "SDOM__CAPI__Core_8h" ],
     [ "SDOM_CAPI_Event.h", "SDOM__CAPI__Event_8h.html", "SDOM__CAPI__Event_8h" ],
     [ "SDOM_CAPI_EventType.h", "SDOM__CAPI__EventType_8h.html", null ],
     [ "SDOM_CAPI_Frame.h", "SDOM__CAPI__Frame_8h.html", null ],

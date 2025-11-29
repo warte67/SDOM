@@ -8,6 +8,7 @@ list(APPEND CMAKE_PREFIX_PATH "$ENV{HOME}/.local" "/usr/local")
 
 # Option to enable generation of Lua dispatch wrappers in generated C API
 option(SDOM_ENABLE_LUA_BINDINGS "Enable generation of Lua dispatch prototypes/wrappers in generated C API" ON)
+option(SDOM_ENABLE_RUNTIME_BINDING_EXPORT "Allow Factory to regenerate bindings at runtime" OFF)
 
 # Option to treat warnings as errors for SDOM targets
 option(SDOM_ENABLE_WERROR "Treat compiler warnings as errors for SDOM targets" OFF)
@@ -135,7 +136,19 @@ include_directories(/usr/include/lua5.4)
 # ======================================================
 #  Source Files
 # ======================================================
-file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE SDOM_ALL_SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+
+set(SDOM_GENERATED_CAPI_HEADER "${PROJECT_SOURCE_DIR}/include/SDOM/CAPI/SDOM_CAPI_Core.h")
+set(SDOM_GENERATED_CAPI_SOURCE "${PROJECT_SOURCE_DIR}/src/CAPI/SDOM_CAPI_Core.cpp")
+
+file(GLOB SDOM_CAPI_SOURCES "${PROJECT_SOURCE_DIR}/src/CAPI/*.cpp")
+list(REMOVE_ITEM SDOM_CAPI_SOURCES ${SDOM_GENERATED_CAPI_SOURCE})
+
+set(SDOM_CORE_SOURCES ${SDOM_ALL_SOURCES})
+list(REMOVE_ITEM SDOM_CORE_SOURCES ${SDOM_GENERATED_CAPI_SOURCE})
+foreach(capi_src ${SDOM_CAPI_SOURCES})
+    list(REMOVE_ITEM SDOM_CORE_SOURCES ${capi_src})
+endforeach()
 
 # ======================================================
 # nlohmann::json (header-only)
@@ -147,16 +160,28 @@ target_include_directories(nlohmann_json INTERFACE
 )
 
 # ======================================================
+#  Core Object Library (shared between SDOM + generators)
+# ======================================================
+add_library(sdom_core_obj OBJECT ${SDOM_CORE_SOURCES})
+
+if(SDOM_ENABLE_LUA_BINDINGS)
+    target_compile_definitions(sdom_core_obj PRIVATE SDOM_ENABLE_LUA_BINDINGS=1)
+else()
+    target_compile_definitions(sdom_core_obj PRIVATE SDOM_ENABLE_LUA_BINDINGS=0)
+endif()
+
+if(SDOM_ENABLE_RUNTIME_BINDING_EXPORT)
+    target_compile_definitions(sdom_core_obj PRIVATE SDOM_ENABLE_RUNTIME_BINDING_EXPORT=1)
+endif()
+
+# ======================================================
 #  Build Library
 # ======================================================
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
-
-# Propagate Lua bindings option as a compile-time definition for consumers
-if(SDOM_ENABLE_LUA_BINDINGS)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE SDOM_ENABLE_LUA_BINDINGS=1)
-else()
-    target_compile_definitions(${PROJECT_NAME} PRIVATE SDOM_ENABLE_LUA_BINDINGS=0)
-endif()
+add_library(${PROJECT_NAME} STATIC
+    $<TARGET_OBJECTS:sdom_core_obj>
+    ${SDOM_GENERATED_CAPI_SOURCE}
+    ${SDOM_CAPI_SOURCES}
+)
 
 # Ensure the version generator runs before compilation (if you re-enable generate_version)
 if(TARGET generate_version)
@@ -173,6 +198,40 @@ target_link_libraries(${PROJECT_NAME}
         sdom_warnings
         sdom_sanitizers
 )
+
+# ======================================================
+#  Binding Generator Utility
+# ======================================================
+add_executable(sdom_generate_bindings
+    tools/sdom_generate_bindings.cpp
+    $<TARGET_OBJECTS:sdom_core_obj>
+)
+
+target_link_libraries(sdom_generate_bindings
+    PRIVATE
+        SDL3::SDL3
+        SDL3_image::SDL3_image
+        SDL3_ttf::SDL3_ttf
+        $<$<BOOL:${SDL3_mixer_FOUND}>:SDL3_mixer::SDL3_mixer>
+        ${LUA_LIB}
+        sdom_warnings
+        sdom_sanitizers
+)
+
+set(SDOM_CAPI_HEADER_DIR "${PROJECT_SOURCE_DIR}/include/SDOM/CAPI")
+set(SDOM_CAPI_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src/CAPI")
+
+add_custom_target(generate_sdom_capi ALL
+    COMMAND sdom_generate_bindings
+            --header-dir "${SDOM_CAPI_HEADER_DIR}"
+            --source-dir "${SDOM_CAPI_SOURCE_DIR}"
+            --verbose
+    DEPENDS sdom_generate_bindings
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Generating SDOM C API bindings"
+)
+
+add_dependencies(${PROJECT_NAME} generate_sdom_capi)
 
 # ======================================================
 #  Output and Install

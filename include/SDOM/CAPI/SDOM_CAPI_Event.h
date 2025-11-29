@@ -1,6 +1,7 @@
 #pragma once
 // Auto-generated SDOM C API module: Event
 
+#include <stdbool.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 
 typedef enum SDOM_EventPhase {

@@ -1,5 +1,5 @@
 #include <SDOM/CAPI/SDOM_CAPI_Event.h>
-#include <SDOM/SDOM_CAPI.h>
+#include <SDOM/CAPI/SDOM_CAPI_Core.h>
 #include <SDOM/SDOM_DataRegistry.hpp>
 #include <string>
 #include <vector>

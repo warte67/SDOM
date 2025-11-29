@@ -171,6 +171,7 @@ var classSDOM_1_1Core =
     [ "setWindowWidth", "classSDOM_1_1Core.html#a9bc8db11c9b4a3a598dba4ea829fb037", null ],
     [ "shutdown", "classSDOM_1_1Core.html#a3eb47381d98dccfada12c03878ce8909", null ],
     [ "shutdown_SDL", "classSDOM_1_1Core.html#a8f382e585062517dcd5bbe70ef99be42", null ],
+    [ "CoreAPI::registerBindings", "classSDOM_1_1Core.html#a6116bb4ebdae9ae8c99112e7ce549143", null ],
     [ "bIsRunning_", "classSDOM_1_1Core.html#a6f8d6b43bb8e32d4e9066c540704e52e", null ],
     [ "color_", "classSDOM_1_1Core.html#ad5a2ec41cb8b9cd89a35c7da241859dd", null ],
     [ "config_", "classSDOM_1_1Core.html#a42b346098e78f5896c80d7a75b54e2a9", null ],

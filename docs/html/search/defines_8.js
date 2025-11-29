@@ -3,7 +3,7 @@ var searchData=
   ['sdom_5fbuild_5fbranch_0',['SDOM_BUILD_BRANCH',['../SDOM__Version_8hpp.html#a7bb72858b0717673a427013c1c288a5b',1,'SDOM_Version.hpp']]],
   ['sdom_5fbuild_5fcompiler_1',['SDOM_BUILD_COMPILER',['../SDOM__Version_8hpp.html#a9aa8ff848d62592ab4d3fad6ecad899e',1,'SDOM_Version.hpp']]],
   ['sdom_5fbuild_5fplatform_2',['SDOM_BUILD_PLATFORM',['../SDOM__Version_8hpp.html#acf76033e2637ab5d3886171efd5fce79',1,'SDOM_Version.hpp']]],
-  ['sdom_5fcoreconfig_5fdefault_3',['SDOM_CORECONFIG_DEFAULT',['../SDOM__CAPI_8h.html#a0be006070fd2926559dec26d5c7f1c4d',1,'SDOM_CAPI.h']]],
+  ['sdom_5fcoreconfig_5fdefault_3',['SDOM_CORECONFIG_DEFAULT',['../SDOM__CAPI__Core_8h.html#a0be006070fd2926559dec26d5c7f1c4d',1,'SDOM_CAPI_Core.h']]],
   ['sdom_5fhas_5fsdl_5fmixer_4',['SDOM_HAS_SDL_MIXER',['../SDOM_8hpp.html#ad17ba5add84d725eb025b97aa9d5d453',1,'SDOM.hpp']]],
   ['sdom_5fvariant_5fhpp_5',['SDOM_VARIANT_HPP',['../SDOM__Variant_8hpp.html#a7b56b4cb6b314fac92d3921887a3cd80',1,'SDOM_Variant.hpp']]],
   ['sdom_5fverbose_5fbinding_5flog_6',['SDOM_VERBOSE_BINDING_LOG',['../SDOM__IDataObject_8hpp.html#aa01c9fa55a9a0ceb7656025e78e0dccc',1,'SDOM_IDataObject.hpp']]],

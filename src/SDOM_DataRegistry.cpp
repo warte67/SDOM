@@ -182,23 +182,33 @@ namespace SDOM {
     namespace SDOM { namespace CAPI {
 
     namespace {
-        std::unordered_map<std::string, GenericCallable> g_callables;
-        std::mutex g_mutex;
+        std::unordered_map<std::string, GenericCallable>& callableMap()
+        {
+            static std::unordered_map<std::string, GenericCallable> map;
+            return map;
+        }
+
+        std::mutex& callableMutex()
+        {
+            static std::mutex mtx;
+            return mtx;
+        }
     }
 
     bool registerCallable(const std::string& name, GenericCallable fn)
     {
         if (!fn) return false;
-        std::scoped_lock lk(g_mutex);
-        g_callables[name] = std::move(fn);
+        std::scoped_lock lk(callableMutex());
+        callableMap()[name] = std::move(fn);
         return true;
     }
 
     std::optional<GenericCallable> lookupCallable(const std::string& name)
     {
-        std::scoped_lock lk(g_mutex);
-        auto it = g_callables.find(name);
-        if (it == g_callables.end())
+        std::scoped_lock lk(callableMutex());
+        auto& map = callableMap();
+        auto it = map.find(name);
+        if (it == map.end())
             return std::nullopt;
         return it->second;
     }

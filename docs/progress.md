@@ -796,105 +796,127 @@ Today was one of those days.
 
 <a id="november-28-2025"></a>
 <a id="latest-update"></a>
-
-## 🗓️ November 28, 2025 — The Day SDOM Asked ‘Why?’ and Then Generated the Answer Twice. 
+## 🗓️ November 28, 2025 — The Day SDOM Asked ‘Why?’ and Then Generated the Answer Twice.
 > 💬 *“Every engine speaks twice — once in what it does, and once in what it believes about itself.”*
 
-Today SDOM tightened its grip on **meaningful structure**: the difference between ad-hoc payload keys and fully typed event metadata, the difference between legacy binding pathways and a modern, reflection-driven pipeline, and the difference between *generated output* and the *source of truth* that creates it.  A day of clarity, consolidation, and forward motion.
+Today SDOM tightened its grip on **meaningful structure**: the difference between ad-hoc payload keys and strongly typed event metadata, the difference between legacy binding pathways and a modern, reflection-driven pipeline, and the difference between generated output and the source of truth that creates it.  
+A day of clarity, consolidation, and forward motion.
 
 ---
 
 ### 🧩 Event System & Typed Payloads
-- **Advanced the migration from JSON-style payloads to strongly-typed event fields**  
-  Consolidated mouse, wheel, and keyboard metadata into predictable, ABI-friendly structures.  
-  This simplifies CAPI, reduces room for error, and prepares Lua/Rust bindings for clean future integrations.
+- Advanced the migration from JSON-style payloads to strongly typed event fields  
+  Consolidated mouse, wheel, and keyboard metadata into ABI-stable structures.  
+  Future bindings (C, Lua, Rust) now inherit clarity instead of chaos.
 
-- **Established semantic categories for all event payload producers**  
-  Mouse offsets, drag deltas, key modifiers, text input, click locations, wheel deltas —  
-  each now has a clear conceptual home and eventual accessor strategy.
+- Established semantic categories for all event payload producers  
+  Mouse offsets, drag deltas, click origins, wheel motion, modifier keys—  
+  each assigned a stable semantic home.
 
-- **Introduced the first wave of typed accessor improvements**  
-  No more ad-hoc keys in the hot path.  
-  No more relying on downstream JSON parsing.  
-  The engine now moves toward declarative, structured, reflection-aware payloads.
+- Introduced the first wave of typed accessor improvements  
+  Eliminated ad-hoc JSON blobs in the hot path.  
+  Moved toward declarative, reflection-friendly payload definitions.
 
 ---
 
 ### 🧩 Build System & Codegen Pipeline
-- **Refined the order-of-operations in CMake**  
-  Ensured the BindGenerator executes *before* the unit test harness is compiled.  
-  This keeps generated headers stable, prevents stale CAPI interfaces,  
-  and ensures the test suite measures the real engine, not outdated artifacts.
+- Refined codegen ordering in CMake  
+  Ensured BindGenerator runs *before* the unit test harness, stabilizing  
+  generated headers and preventing stale CAPI surfaces.
 
-- **Cleaned up legacy ABI generator paths**  
-  Removed unused scripts and stale CMake entries — fewer moving parts, fewer failure modes.
+- Retired legacy ABI generators  
+  Reduced entropy, reduced confusion, reduced failure surface.
 
-- **Stabilized multi-stage codegen rules**  
-  Solidified the understanding that SDOM uses:  
-  - Layer C = source templates  
-  - Layer B = generated generators  
-  - Layer A = final API output  
-  Only Layer C is edited. All downstream layers regenerate deterministically.
+- Solidified multi-stage generation hierarchy  
+  SDOM now cleanly distinguishes:  
+    • Layer C — template files (source of truth)  
+    • Layer B — generated generators  
+    • Layer A — final CAPI and bindings  
+  Only Layer C is edited; all others flow deterministically.
 
 ---
 
 ### 🧩 Core / Front-End Workflows
-- Finalized arguments and dispatch flow in `main.cpp` (ongoing polishing continues)  
-- Expanded `main_variant_2.cpp` to support more interactive UI elements  
-  (buttons, sliders, toggles, callback hooks)
-- Verified relationships between parent/child `DisplayObject` initializers  
-- Continued to evaluate initialization invariants across factories, handles, and UUID propagation
+- Finalized argument dispatch in `main.cpp`  
+- Expanded `main_variant_2.cpp` interactive UI components  
+- Improved initialization invariants across factories and handle systems  
+- Continued validating parent/child relationships throughout the display tree
 
 ---
 
-### 🌟 **Summary:**
-SDOM continues its march from “working engine” to “formal system.”  
-Typed events, deterministic bindings, generator ordering, and structured metadata  
-all contribute toward a future where:
+### 🧩 C API Front-End Autogeneration Begins
+A major milestone: **SDOM now auto-generates the front-facing C API**  
+directly from reflection metadata.
 
-- C API is stable  
-- Lua bindings are elegant  
-- Rust bindings will be trivial  
-- and the reflection system becomes the true heart of the architecture.
+#### Core API Callables Automatically Generated
+```cpp
+const char* SDOM_GetError(void);  
+bool SDOM_SetError(const char* message);  
+bool SDOM_Init(uint64_t init_flags);  
+bool SDOM_Configure(const SDOM_CoreConfig* cfg);  
+bool SDOM_GetCoreConfig(SDOM_CoreConfig* out_cfg);  
+void SDOM_Quit(void);
+```
+
+#### Version API Callables Fully Reflected & Generated
+```cpp
+const char* SDOM_GetVersionString(void);  
+const char* SDOM_GetVersionFullString(void);  
+int SDOM_GetVersionMajor(void);  
+int SDOM_GetVersionMinor(void);  
+int SDOM_GetVersionPatch(void);  
+const char* SDOM_GetVersionCodename(void);
+const char* SDOM_GetVersionBuild(void);  
+const char* SDOM_GetVersionBuildDate(void);
+const char* SDOM_GetVersionCommit(void);  
+const char* SDOM_GetVersionBranch(void);  
+const char* SDOM_GetVersionCompiler(void); 
+const char* SDOM_GetVersionPlatform(void);
+```
+
+---
+
+### 🌟 Summary
+SDOM continues its march from “working engine” to “formal system.”  
+Typed events, deterministic bindings, and the birth of the auto-generated CAPI  
+lay the foundation for a future where:
+
+- the C API is stable and expressive  
+- Lua bindings become elegant and effortless  
+- Rust bindings become trivial  
+- and SDOM’s reflection engine becomes the authoritative, canonical truth
 
 Each layer grows more predictable — and therefore, more powerful.
 
 ---
 
-#### 🤔 *End of Day Reflection*
-> *"Teleology is when the code stops asking **what** it does and starts asking **why you wrote it that way**.”*
+### 🤔 End of Day Reflection
+*“Teleology is when the code stops asking **what** it does and starts asking **why you wrote it that way**.”*
 
 ---
 
-## 🚧 **ToDo Today / Carryover**
-- ☐ Audit all existing `Event` payload writers (mouse, wheel, drag offsets, keyboard metadata, custom fields)  
-  - Group them by semantic category and promote the high-frequency keys to **typed members + CAPI bindings**  
-  - Preserve low-frequency / experimental fields as JSON via `getPayload*` helpers  
-  - Centralize “source-of-truth” comments (units, invariants, producer/consumer expectations)
-- ☐ Draft typed accessor checklist for remaining payload fields  
-  - Identify gaps between current payload usage and the new strongly-typed API  
-  - Ensure future bindings (Lua, C, Rust, etc.) don’t need to parse ad-hoc JSON blobs
-- ☐ (Optional) Script a payload-key discovery pass  
-  - Grep or reflection pass over all `setPayloadValue` / `payload[...]` writes  
-  - Generate a temporary report for accessor promotion planning
+## 🚧 ToDo Today / Carryover
+- ☐ Audit all existing `Event` payload writers  
+- ☐ Typed accessor checklist for remaining payload fields  
+- ☐ Optional: Script a payload-key discovery pass  
+- 🔄 Expand DataRegistry metadata  
+- ☐ Finalize argument dispatch layer  
+- ☐ Expand UI components  
+- ☐ Validate initialization invariants  
+- ☐ Update asset loading documentation  
+- 🔄 Continue binding generator redesign  
+- 🔄 Add common ABI wrapper layer  
+- 🔄 Expand unit test coverage  
 
-- ☐ Adjust `CMakeLists.txt` so the BindGenerator runs **before** the unit test harness is compiled  
-- 🔄 Expand `DataRegistry` to fully support custom subject types and callable metadata  
-- ☐ Finalize argument dispatch layer in `main.cpp`  
-- ☐ Continue expanding `main_variant_2.cpp` with interactive callbacks (buttons, sliders, toggles)  
-- ☐ Validate multi-object relationships across all initialization paths  
-- ☐ Continue isolating and verifying each `DisplayObject` subtype  
-- ☐ Draft updated docs for asset loading rules, defaults, and failure cases  
-- ☐ Binding generator redesign (dispatch-family templates, subject-kinds)  
-- ☐ Common ABI wrapper layer  
-- ✅ JSON payload accessors & typed-event improvements (mouse, keyboard, wheel)  
-- ✅ CAPI cleanup & legacy-path removal  
-- ☐ Unit test suite expansion + multi-family binding tests  
-- ☐ Transition `Version.hpp` to JSON-based version pipeline  
-- ✅ Clean up SDOM API CMakeLists to remove legacy ABI generator paths  
+Completed:
+- ✅ JSON payload accessors & typed-event improvements  
+- ✅ CAPI cleanup & removal of legacy paths  
+- ✅ SDOM API CMake cleanup
+- ✅ Ensure BindGenerator always runs prior to tests  
+- ✅ Transition Version.hpp to JSON pipeline  
+
 
 ---
-
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 #### end-of-day
@@ -903,12 +925,12 @@ Each layer grows more predictable — and therefore, more powerful.
 
 ### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
 - ☐ Implement [IDataObject_binding_helpers](IDataObject_binding_helpers) for consistent property/function registration
-- ☐ Expand **CAPI_BindGenerator**  
+- 🔄 Expand **CAPI_BindGenerator**  
   - 🔄 Generate standalone C API functions  
-  - ☐ Generate property accessors (getter/setter stubs)  
+  - 🔄 Generate property accessors (getter/setter stubs)  
   - 🔄 Proper enum → file grouping  
-- ☐ Begin **LUA_BindGenerator** (phase 1 structure + test emit)
-- ☐ Reintroduce **JSON** as a supported serialization format  
+- ✅ Begin **LUA_BindGenerator** (phase 1 structure + test emit)
+- ✅ Reintroduce **JSON** as a supported serialization format  
 - ☐ Initialize **DataRegistry** from JSON  
 - ☐ Serialize/deserialize **entire DOM tree** via JSON  
   *(Eventually complementing or replacing Lua init)*

@@ -471,6 +471,54 @@
       "name": "isValid",
       "owner_type": "DisplayHandle",
       "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_GetError",
+      "c_signature": "const char* SDOM_GetError(void)",
+      "dispatch_family": "singleton",
+      "name": "GetError",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetError",
+      "c_signature": "bool SDOM_SetError(const char* message)",
+      "dispatch_family": "singleton",
+      "name": "SetError",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Init",
+      "c_signature": "bool SDOM_Init(uint64_t init_flags)",
+      "dispatch_family": "singleton",
+      "name": "Init",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Configure",
+      "c_signature": "bool SDOM_Configure(const SDOM_CoreConfig* cfg)",
+      "dispatch_family": "singleton",
+      "name": "Configure",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetCoreConfig",
+      "c_signature": "bool SDOM_GetCoreConfig(SDOM_CoreConfig* out_cfg)",
+      "dispatch_family": "singleton",
+      "name": "GetCoreConfig",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Quit",
+      "c_signature": "void SDOM_Quit(void)",
+      "dispatch_family": "singleton",
+      "name": "Quit",
+      "owner_type": "Core",
+      "subject_kind": "Core"
     }
   ],
   "manifest_version": 1,
@@ -588,16 +636,6 @@
       "uses_handle": true
     },
     {
-      "cpp_type_id": "SDOM::Texture",
-      "dispatch_family": "method_table",
-      "file_stem": "Texture",
-      "has_function_exports": false,
-      "name": "Texture",
-      "owns_method_table": true,
-      "subject_kind": "AssetObject",
-      "uses_handle": true
-    },
-    {
       "cpp_type_id": "SDOM::Stage",
       "dispatch_family": "method_table",
       "file_stem": "Stage",
@@ -691,7 +729,7 @@
       "cpp_type_id": "SDOM::Core",
       "dispatch_family": "singleton",
       "file_stem": "Core",
-      "has_function_exports": false,
+      "has_function_exports": true,
       "name": "Core",
       "owns_method_table": true,
       "subject_kind": "Core",

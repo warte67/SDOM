@@ -32,6 +32,10 @@ namespace SDOM
     class UnitTests;
     class Version;
 
+    namespace CoreAPI {
+        void registerBindings(Core& core, const std::string& typeName);
+    }
+
     /**
      * @class Core
      * @brief The central singleton framework object for SDOM.
@@ -39,6 +43,8 @@ namespace SDOM
     class Core final : public IDataObject
     {
         using SUPER = IDataObject;
+
+        friend void CoreAPI::registerBindings(Core& core, const std::string& typeName);
 
     public:
         // --- Configuration Struct --- //

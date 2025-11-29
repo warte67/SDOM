@@ -353,6 +353,10 @@ Protected Attributes</h2></td></tr>
 Static Protected Attributes</h2></td></tr>
 <tr class="memitem:af05003dfae81bf63b89c8bd1f57fd0d3" id="r_af05003dfae81bf63b89c8bd1f57fd0d3"><td class="memItemLeft" align="right" valign="top">static std::unordered_set&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#af05003dfae81bf63b89c8bd1f57fd0d3">s_registered_types_</a></td></tr>
 <tr class="memitem:a8ae6a7a1fb166dfbc74a36d9bc87b9df" id="r_a8ae6a7a1fb166dfbc74a36d9bc87b9df"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a8ae6a7a1fb166dfbc74a36d9bc87b9df">s_active_registry_</a> = nullptr</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a6116bb4ebdae9ae8c99112e7ce549143" id="r_a6116bb4ebdae9ae8c99112e7ce549143"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6116bb4ebdae9ae8c99112e7ce549143">CoreAPI::registerBindings</a> (<a class="el" href="#ac744dddddb1db5c516a7f43e66c4f6ea">Core</a> &amp;core, const std::string &amp;typeName)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The central singleton framework object for <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a>. </p>
@@ -3121,7 +3125,7 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
 </div><div class="memdoc">
 
 <p>Public entrypoint to trigger this object's binding registration. </p>
-<p>This is the polymorphic root. Derived classes may safely call <span class="tt"><a class="el" href="classSDOM_1_1IDataObject.html#a817578463d1fa2c2e9e060c09eaa5a5a" title="Public entrypoint to trigger this object&#39;s binding registration.">registerBindings()</a></span> without knowing the concrete type. </p>
+<p>This is the polymorphic root. Derived classes may safely call <span class="tt"><a class="el" href="#a6116bb4ebdae9ae8c99112e7ce549143">registerBindings()</a></span> without knowing the concrete type. </p>
 
 </div>
 </div>
@@ -4071,6 +4075,36 @@ template&lt;typename Fn&gt; </div>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-related-members" id="doc-related-members"></a><h2 id="header-doc-related-members" class="groupheader">Friends And Related Symbol Documentation</h2>
+<a id="a6116bb4ebdae9ae8c99112e7ce549143" name="a6116bb4ebdae9ae8c99112e7ce549143"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6116bb4ebdae9ae8c99112e7ce549143">&#9670;&#160;</a></span>CoreAPI::registerBindings</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="namespaceSDOM_1_1CoreAPI.html#a609781c480267a562cb9966014febbdd">CoreAPI::registerBindings</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ac744dddddb1db5c516a7f43e66c4f6ea">Core</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>core</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>typeName</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

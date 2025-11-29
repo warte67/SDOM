@@ -6,6 +6,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Version.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_CoreAPI.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
@@ -1678,6 +1679,8 @@ namespace SDOM
         typeInfo.subject_uses_handle = false;
         typeInfo.has_handle_override = true;
         typeInfo.dispatch_family_override = "singleton";
+
+        CoreAPI::registerBindings(*this, typeName);
     }    
 
 

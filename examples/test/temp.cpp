@@ -1,4 +1,4 @@
-SDOM_Init(/*SDL_InitFlags*/);  // this also calls SDL_Init()
+SDOM_Init(0 /*SDL_InitFlags*/);  // this also calls SDL_Init()
 
 bool is_running = true;
 while (is_running)
@@ -38,7 +38,7 @@ void onQuit();
 
 int main()
 {
-    SDOM_Init(/*SDL_InitFlags*/);  // this also calls SDL_Init()
+    SDOM_Init(0 /*SDL_InitFlags*/);  // this also calls SDL_Init()
 
     SDOM_RegisterOnUpdate(fnOnUpdate);
     SDOM_RegisterOnRender(fnOnRender);

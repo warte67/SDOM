@@ -1,7 +1,8 @@
 #pragma once
 // Auto-generated SDOM C API module: Handles
 
-#include <cstdint> // For uint64_t
+#include <stdbool.h>
+#include <stdint.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 
 typedef struct SDOM_AssetHandle {

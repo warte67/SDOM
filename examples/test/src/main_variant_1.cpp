@@ -16,7 +16,6 @@
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_IUnitTest.hpp>
-#include <SDOM/SDOM_CAPI.h>
 
 #include "Box.hpp"
 #include "UnitTests.hpp"
