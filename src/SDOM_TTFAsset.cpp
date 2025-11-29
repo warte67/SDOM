@@ -4,6 +4,23 @@
 
 #include <SDOM/SDOM_TTFAsset.hpp>
 #include <unordered_set>
+#include <SDOM/SDOM_PathRegistry.hpp>
+
+namespace
+{
+    inline std::string resolveFontFilename(const std::string& filename)
+    {
+        if (filename.empty()) {
+            return filename;
+        }
+        auto& registry = SDOM::PathRegistry::get();
+        std::string resolved = registry.resolve(filename, SDOM::PathType::Fonts);
+        if (!resolved.empty()) {
+            return resolved;
+        }
+        return filename;
+    }
+}
 
 namespace SDOM
 {
@@ -63,10 +80,11 @@ namespace SDOM
         else
         // Load TTF font from file
         {
-            ttf_font_ = TTF_OpenFont(filename_.c_str(), internalFontSize_);
+            const std::string resolvedFilename = resolveFontFilename(filename_);
+            ttf_font_ = TTF_OpenFont(resolvedFilename.c_str(), internalFontSize_);
             if (!ttf_font_)
             {
-                ERROR("Failed to open TTF font: " + std::string(SDL_GetError()));
+                ERROR("Failed to open TTF font: " + resolvedFilename + " - " + std::string(SDL_GetError()));
                 return;
             }
             isLoaded_ = true; // Mark as created

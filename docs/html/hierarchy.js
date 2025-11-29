@@ -124,6 +124,7 @@ var hierarchy =
     [ "SDOM::Label::LabelToken", "structSDOM_1_1Label_1_1LabelToken.html", null ],
     [ "SDOM::IDisplayObject::ListenerEntry", "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html", null ],
     [ "SDOM::VariantStorage::LuaRefValue", "structSDOM_1_1VariantStorage_1_1LuaRefValue.html", null ],
+    [ "SDOM::PathRegistry", "classSDOM_1_1PathRegistry.html", null ],
     [ "SDOM::Factory::PerfStats", "structSDOM_1_1Factory_1_1PerfStats.html", null ],
     [ "SDOM::Label::PhraseToken", "structSDOM_1_1Label_1_1PhraseToken.html", null ],
     [ "SDOM::PropertyInfo", "structSDOM_1_1PropertyInfo.html", null ],

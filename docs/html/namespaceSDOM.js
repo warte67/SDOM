@@ -52,6 +52,7 @@ var namespaceSDOM =
     [ "IRangeControl_scaffold", "classSDOM_1_1IRangeControl__scaffold.html", "classSDOM_1_1IRangeControl__scaffold" ],
     [ "IUnitTest", "classSDOM_1_1IUnitTest.html", "classSDOM_1_1IUnitTest" ],
     [ "Label", "classSDOM_1_1Label.html", "classSDOM_1_1Label" ],
+    [ "PathRegistry", "classSDOM_1_1PathRegistry.html", "classSDOM_1_1PathRegistry" ],
     [ "ProgressBar", "classSDOM_1_1ProgressBar.html", "classSDOM_1_1ProgressBar" ],
     [ "RadioButton", "classSDOM_1_1RadioButton.html", "classSDOM_1_1RadioButton" ],
     [ "ScrollBar", "classSDOM_1_1ScrollBar.html", "classSDOM_1_1ScrollBar" ],

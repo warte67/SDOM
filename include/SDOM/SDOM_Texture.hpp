@@ -47,7 +47,7 @@ namespace SDOM
                 name     = TypeName;   // registry key
                 type     = TypeName;   // concrete type
                 filename = TypeName;   // default resource identifier
-                is_internal = true;    // inherited from IAssetObject
+                is_internal = false;   // overridden when referencing embedded assets
             }
 
             // JSON loader (correct signature!)

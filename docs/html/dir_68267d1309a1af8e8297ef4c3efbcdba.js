@@ -35,6 +35,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_IRangeControl.cpp", "SDOM__IRangeControl_8cpp.html", null ],
     [ "SDOM_IRangeControl_scaffold.cpp", "SDOM__IRangeControl__scaffold_8cpp.html", null ],
     [ "SDOM_Label.cpp", "SDOM__Label_8cpp.html", "SDOM__Label_8cpp" ],
+    [ "SDOM_PathRegistry.cpp", "SDOM__PathRegistry_8cpp.html", null ],
     [ "SDOM_ProgressBar.cpp", "SDOM__ProgressBar_8cpp.html", null ],
     [ "SDOM_RadioButton.cpp", "SDOM__RadioButton_8cpp.html", null ],
     [ "SDOM_ScrollBar.cpp", "SDOM__ScrollBar_8cpp.html", null ],

@@ -6,6 +6,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Version.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_PathRegistry.hpp>
 #include <SDOM/SDOM_CoreAPI.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
@@ -25,6 +26,9 @@ namespace SDOM
 
     Core::Core() : IDataObject()
     {
+        // Initialize the path registry early so path overrides are available
+        // before any assets, Lua scripts, or configs are loaded.
+        (void)PathRegistry::get();
 
         // // Open base libraries plus package and io so embedded scripts can use
         // // `require`/`package` and basic I/O if desired by examples.

@@ -65,11 +65,11 @@ local assets_dir = current_dir .. "assets/"
 local config = {
     resources = 
     {
-        { name = "VarelaRound16", type = "TruetypeFont", filename = assets_dir .. "VarelaRound.ttf", font_size = 16 },
-        { name = "VarelaRound32", type = "TruetypeFont", filename = assets_dir .. "VarelaRound.ttf", font_size = 32 },
-        { name = "external_font_8x8",  type = "BitmapFont",  filename = assets_dir .. "font_8x8.png",  font_width = 8,  font_height = 8 },
-        { name = "external_font_8x12", type = "BitmapFont",  filename = assets_dir .. "font_8x12.png", font_width = 8,  font_height = 12 },
-        { name = "external_icon_8x8",  type = "SpriteSheet", filename = assets_dir .. "icon_8x8.png",  sprite_width = 8, sprite_height = 8 }
+        { name = "VarelaRound16", type = "TruetypeFont", filename = "VarelaRound.ttf", font_size = 16 },
+        { name = "VarelaRound32", type = "TruetypeFont", filename = "VarelaRound.ttf", font_size = 32 },
+        { name = "external_font_8x8",  type = "BitmapFont",  filename = "font_8x8.png",  font_width = 8,  font_height = 8 },
+        { name = "external_font_8x12", type = "BitmapFont",  filename = "font_8x12.png", font_width = 8,  font_height = 12 },
+        { name = "external_icon_8x8",  type = "SpriteSheet", filename = "icon_8x8.png",  sprite_width = 8, sprite_height = 8 }
     },
     windowWidth = 1200,
     windowHeight = 800,

@@ -743,8 +743,10 @@ namespace SDOM
                         ERROR("Factory::createAsset(init): load() failed for asset: " + init.name);
                     }
                 }
+            } catch(const std::exception& ex) {
+                ERROR(std::string("Factory::createAsset(init): load() threw for asset: ") + init.name + " reason: " + ex.what());
             } catch(...) {
-                ERROR("Factory::createAsset(init): load() threw for asset: " + init.name);
+                ERROR("Factory::createAsset(init): load() threw for asset: " + init.name + " (unknown cause)");
             }
 
             try {

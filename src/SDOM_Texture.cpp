@@ -5,7 +5,29 @@
 #include <SDOM/SDOM_Texture.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_PathRegistry.hpp>
 
+
+namespace
+{
+    inline bool isInternalTextureName(const std::string& name)
+    {
+        return name.rfind("internal_", 0) == 0;
+    }
+
+    inline std::string resolveTextureFilename(const std::string& filename)
+    {
+        if (filename.empty()) {
+            return filename;
+        }
+        auto& registry = SDOM::PathRegistry::get();
+        std::string resolved = registry.resolve(filename, SDOM::PathType::Images);
+        if (!resolved.empty()) {
+            return resolved;
+        }
+        return filename;
+    }
+}
 
 namespace SDOM
 {
@@ -44,6 +66,13 @@ namespace SDOM
 
         SDL_Renderer* renderer = getRenderer();
         if (!renderer) { ERROR("No valid SDL_Renderer available in Core instance."); return; }
+
+        // Resolve filename through PathRegistry unless this is one of the embedded assets.
+        std::string resolvedFilename = filename_;
+        const bool treatAsInternal = isInternal() || isInternalTextureName(filename_);
+        if (!treatAsInternal) {
+            resolvedFilename = resolveTextureFilename(filename_);
+        }
 
         // If Factory already has an object for this filename -> reuse it
     IAssetObject* existing = getFactory().getAssetObjectPtr(filename_);
@@ -107,8 +136,8 @@ namespace SDOM
         }        
         else
         {
-            texture_ = IMG_LoadTexture(renderer, filename_.c_str());
-            if (!texture_) { ERROR("Failed to load texture from file: " + filename_ + " - " + std::string(SDL_GetError())); return; }
+            texture_ = IMG_LoadTexture(renderer, resolvedFilename.c_str());
+            if (!texture_) { ERROR("Failed to load texture from file: " + resolvedFilename + " - " + std::string(SDL_GetError())); return; }
             SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
         }
 

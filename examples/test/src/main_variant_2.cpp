@@ -198,21 +198,21 @@ int SDOM_main_variant_2(int argc, char** argv)
     TruetypeFont::InitStruct varela16;
     varela16.name = "VarelaRound16";
     varela16.type = "TruetypeFont";
-    varela16.filename = "./assets/VarelaRound.ttf";
+    varela16.filename = "VarelaRound.ttf";
     varela16.font_size = 16;
     AssetHandle varela16_handle = factory.createAssetObject("TruetypeFont", varela16);
 
     TruetypeFont::InitStruct varela32;
     varela32.name = "VarelaRound32";
     varela32.type = "TruetypeFont";
-    varela32.filename = "./assets/VarelaRound.ttf";
+    varela32.filename = "VarelaRound.ttf";
     varela32.font_size = 32;
     AssetHandle varela32_handle = factory.createAssetObject("TruetypeFont", varela32);
 
     BitmapFont::InitStruct external_font_8x8;
     external_font_8x8.name = "external_font_8x8";
     external_font_8x8.type = "BitmapFont";
-    external_font_8x8.filename = "./assets/font_8x8.png";
+    external_font_8x8.filename = "font_8x8.png";
     external_font_8x8.font_width = 8;
     external_font_8x8.font_height = 8;
     AssetHandle externalFont8x8_handle = factory.createAssetObject("BitmapFont", external_font_8x8);
@@ -220,7 +220,7 @@ int SDOM_main_variant_2(int argc, char** argv)
     BitmapFont::InitStruct external_font_8x12;
     external_font_8x12.name = "external_font_8x12";
     external_font_8x12.type = "BitmapFont";
-    external_font_8x12.filename = "./assets/font_8x12.png";
+    external_font_8x12.filename = "font_8x12.png";
     external_font_8x12.font_width = 8;
     external_font_8x12.font_height = 12;
     AssetHandle externalFont8x12_handle = factory.createAssetObject("BitmapFont", external_font_8x12);
@@ -228,7 +228,7 @@ int SDOM_main_variant_2(int argc, char** argv)
     SpriteSheet::InitStruct external_icon_8x8;
     external_icon_8x8.name = "external_icon_8x8";
     external_icon_8x8.type = "SpriteSheet";
-    external_icon_8x8.filename = "./assets/icon_8x8.png";
+    external_icon_8x8.filename = "icon_8x8.png";
     external_icon_8x8.spriteWidth = 8;
     external_icon_8x8.spriteHeight = 8;
     AssetHandle externalIcon8x8_handle =

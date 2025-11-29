@@ -21,7 +21,7 @@ namespace SDOM
             std::string name     = TypeName;   // default registry key
             std::string type     = TypeName;   // asset type name
             std::string filename = "";         // backing file or virtual identifier
-            bool is_internal     = true;       // legacy: was "isInternal"
+            bool is_internal     = false;      // legacy: was "isInternal"
 
             // ------------------------------------------------------------
             // JSON deserializer — correct signature & inheritance-ready

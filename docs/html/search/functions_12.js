@@ -49,10 +49,11 @@ var searchData=
   ['requestconfigapply_46',['requestConfigApply',['../classSDOM_1_1Core.html#a8b40ef89479ab2ba2e4e1c53ac641257',1,'SDOM::Core']]],
   ['reset_47',['reset',['../classSDOM_1_1AssetHandle.html#afbb31544072ef034b836e3ab016e1394',1,'SDOM::AssetHandle::reset()'],['../classSDOM_1_1DisplayHandle.html#a63394b0a525ce4c587a5fb64b4b447f6',1,'SDOM::DisplayHandle::reset()']]],
   ['reset_5fperformance_5fstats_48',['reset_performance_stats',['../classSDOM_1_1Factory.html#ab979a1c520bb6b6026d88f809bb9a030',1,'SDOM::Factory']]],
-  ['restore_5fcursor_49',['restore_cursor',['../classCLR.html#a40dab47633e088162b9d8a54913a6a59',1,'CLR']]],
-  ['run_50',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
-  ['run_5fall_51',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
-  ['run_5fevent_5fbehavior_5ftest_52',['run_event_behavior_test',['../classSDOM_1_1UnitTests.html#a5a59c4514887f6d2fd41c057fb1f50f8',1,'SDOM::UnitTests']]],
-  ['run_5flua_5ftests_53',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],
-  ['run_5fsingle_5ftest_54',['run_single_test',['../classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b',1,'SDOM::UnitTests']]]
+  ['resolve_49',['resolve',['../classSDOM_1_1PathRegistry.html#a691e25a34a2a03053026fec22407f802',1,'SDOM::PathRegistry']]],
+  ['restore_5fcursor_50',['restore_cursor',['../classCLR.html#a40dab47633e088162b9d8a54913a6a59',1,'CLR']]],
+  ['run_51',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
+  ['run_5fall_52',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
+  ['run_5fevent_5fbehavior_5ftest_53',['run_event_behavior_test',['../classSDOM_1_1UnitTests.html#a5a59c4514887f6d2fd41c057fb1f50f8',1,'SDOM::UnitTests']]],
+  ['run_5flua_5ftests_54',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],
+  ['run_5fsingle_5ftest_55',['run_single_test',['../classSDOM_1_1UnitTests.html#ac2daaf0a528d0f4b6c3e8e924ead197b',1,'SDOM::UnitTests']]]
 ];

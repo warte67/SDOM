@@ -171,6 +171,16 @@ var classSDOM =
       [ "BottomCenter", "classSDOM.html#a176e331c0f2e44c038e10b25684370b5abf7d9c8ad2f89a37cf5378b5fec0b420", null ],
       [ "BottomRight", "classSDOM.html#a176e331c0f2e44c038e10b25684370b5a9146bfc669fddc88db2c4d89297d0e9a", null ]
     ] ],
+    [ "PathType", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102", [
+      [ "Fonts", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102a59c4ad3f3cb3d812d68fab7a354d4a63", null ],
+      [ "Images", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102afff0d600f8a0b5e19e88bfb821dd1157", null ],
+      [ "Lua", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102a0ae9478a1db9d1e2c48efa49eac1c7c6", null ],
+      [ "Themes", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102a83915d1254927f41241e8630890bec6e", null ],
+      [ "EngineConfig", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102ade3b0fd6c885e1b13b9fd3425788fa40", null ],
+      [ "VersionConfig", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102a8e63ac546e9a944293cee519f89e2a8f", null ],
+      [ "CacheDir", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102a27971f01616bf3a63faae5ab3937b519", null ],
+      [ "UserSettings", "classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102acd25e4e0bc2955eff2ba656e95cc5b9a", null ]
+    ] ],
     [ "SubjectDispatchFamily", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529d", [
       [ "MethodTable", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da02d5c8b04497ba12c8f6889b773d0967", null ],
       [ "Singleton", "classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da6ff5f73c8b5ebd311406568c8ef50bfd", null ],

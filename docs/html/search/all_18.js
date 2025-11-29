@@ -20,5 +20,7 @@ var searchData=
   ['user_17',['User',['../classSDOM_1_1EventType.html#aed0c4427ac3ac52e140f425fdab9452d',1,'SDOM::EventType']]],
   ['userfontheightspecified_5f_18',['userFontHeightSpecified_',['../classSDOM_1_1Label.html#a985d979b48032813395c132af252e5f0',1,'SDOM::Label']]],
   ['userfontwidthspecified_5f_19',['userFontWidthSpecified_',['../classSDOM_1_1Label.html#a9211e371b24e39b7bfa0dfdc223217dd',1,'SDOM::Label']]],
-  ['uses_5fhandle_20',['uses_handle',['../structSDOM_1_1SubjectKindDescriptor.html#a2d659edfcc8f2afbc8734c50fe723792',1,'SDOM::SubjectKindDescriptor::uses_handle'],['../structSDOM_1_1SubjectTypeDescriptor.html#a814fa37836f75ee9cb1609b76591e8eb',1,'SDOM::SubjectTypeDescriptor::uses_handle']]]
+  ['usersettings_20',['UserSettings',['../classSDOM.html#a0e2ee5abaa4ebd0d913a75da9604e102acd25e4e0bc2955eff2ba656e95cc5b9a',1,'SDOM']]],
+  ['usersettingspath_21',['userSettingsPath',['../classSDOM_1_1PathRegistry.html#a07714147712511ca1f80413a50222e76',1,'SDOM::PathRegistry']]],
+  ['uses_5fhandle_22',['uses_handle',['../structSDOM_1_1SubjectKindDescriptor.html#a2d659edfcc8f2afbc8734c50fe723792',1,'SDOM::SubjectKindDescriptor::uses_handle'],['../structSDOM_1_1SubjectTypeDescriptor.html#a814fa37836f75ee9cb1609b76591e8eb',1,'SDOM::SubjectTypeDescriptor::uses_handle']]]
 ];

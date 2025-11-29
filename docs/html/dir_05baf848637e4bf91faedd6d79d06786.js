@@ -34,6 +34,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_IRangeControl_scaffold.hpp", "SDOM__IRangeControl__scaffold_8hpp.html", "SDOM__IRangeControl__scaffold_8hpp" ],
     [ "SDOM_IUnitTest.hpp", "SDOM__IUnitTest_8hpp.html", "SDOM__IUnitTest_8hpp" ],
     [ "SDOM_Label.hpp", "SDOM__Label_8hpp.html", "SDOM__Label_8hpp" ],
+    [ "SDOM_PathRegistry.hpp", "SDOM__PathRegistry_8hpp.html", "SDOM__PathRegistry_8hpp" ],
     [ "SDOM_ProgressBar.hpp", "SDOM__ProgressBar_8hpp.html", "SDOM__ProgressBar_8hpp" ],
     [ "SDOM_RadioButton.hpp", "SDOM__RadioButton_8hpp.html", "SDOM__RadioButton_8hpp" ],
     [ "SDOM_ScrollBar.hpp", "SDOM__ScrollBar_8hpp.html", "SDOM__ScrollBar_8hpp" ],

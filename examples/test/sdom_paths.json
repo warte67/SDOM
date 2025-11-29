@@ -1,0 +1,31 @@
+{
+    "assets": {
+        "fonts": [
+            "/home/jay/Documents/GitHub/SDOM/examples/test/assets/fonts",
+            "/usr/local/share/sdom/fonts"
+        ],
+        "images": [
+            "/home/jay/Documents/GitHub/SDOM/examples/test/assets/images",
+            "/home/jay/Documents/GitHub/SDOM/examples/test/assets",
+            "/usr/local/share/sdom/images"
+        ],
+        "lua": [
+            "/home/jay/Documents/GitHub/SDOM/examples/test",
+            "/home/jay/Documents/GitHub/SDOM/examples/test/lua",
+            "/home/jay/Documents/GitHub/SDOM/examples/test/assets/lua",
+            "/usr/local/share/sdom/lua"
+        ],
+        "themes": [
+            "/home/jay/Documents/GitHub/SDOM/examples/test/assets/themes",
+            "/usr/local/share/sdom/themes"
+        ]
+    },
+    "config": {
+        "engine": "/home/jay/Documents/GitHub/SDOM/examples/test/config/engine.json",
+        "version": "/home/jay/Documents/GitHub/SDOM/examples/test/config/version.json"
+    },
+    "runtime": {
+        "cache": "/home/jay/.cache/sdom",
+        "settings": "/home/jay/.config/sdom/user.json"
+    }
+}
