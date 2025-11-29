@@ -445,13 +445,15 @@ namespace SDOM
 
 
         // reconfigure the SDL resources based on what is being changed
-        bool windowWidth_changed = (config_.windowWidth != config.windowWidth);
-        bool windowHeight_changed = (config_.windowHeight != config.windowHeight);
-        bool windowFlags_changed = (config_.windowFlags != config.windowFlags);
-        bool rendererLogicalPresentation_changed = (config_.rendererLogicalPresentation != config.rendererLogicalPresentation);
-        bool pixelWidth_changed = (config_.pixelWidth != config.pixelWidth);
-        bool pixelHeight_changed = (config_.pixelHeight != config.pixelHeight);
-        bool pixelFormat_changed = (config_.pixelFormat != config.pixelFormat);
+        const CoreConfig previousConfig = config_;
+
+        bool windowWidth_changed = (previousConfig.windowWidth != config.windowWidth);
+        bool windowHeight_changed = (previousConfig.windowHeight != config.windowHeight);
+        bool windowFlags_changed = (previousConfig.windowFlags != config.windowFlags);
+        bool rendererLogicalPresentation_changed = (previousConfig.rendererLogicalPresentation != config.rendererLogicalPresentation);
+        bool pixelWidth_changed = (previousConfig.pixelWidth != config.pixelWidth);
+        bool pixelHeight_changed = (previousConfig.pixelHeight != config.pixelHeight);
+        bool pixelFormat_changed = (previousConfig.pixelFormat != config.pixelFormat);
 
         // compute each recreation flag independently (clearer and no
         // accidental masking of combined changes)
@@ -460,22 +462,16 @@ namespace SDOM
         bool recreate_texture = recreate_window || rendererLogicalPresentation_changed || pixelWidth_changed || pixelHeight_changed || pixelFormat_changed;
     
         // update config_
-        if (!sdlStarted_)
-        {
-            config_.windowWidth = config.windowWidth;
-            config_.windowHeight = config.windowHeight;
-            config_.windowFlags = config.windowFlags;
-            config_.rendererVSync = config.rendererVSync;
-            config_.rendererLogicalPresentation = config.rendererLogicalPresentation;
-            config_.pixelWidth = config.pixelWidth;
-            config_.pixelHeight = config.pixelHeight;
-            config_.pixelFormat = config.pixelFormat;
-            config_.preserveAspectRatio = config.preserveAspectRatio;
-            config_.allowTextureResize = config.allowTextureResize;
-        }
-        // Color does not require SDL resource recreation; always adopt latest.
-        // This allows Lua configs or runtime updates to immediately affect the
-        // window clear (letterbox) color without a full reconfigure cycle.
+        config_.windowWidth = config.windowWidth;
+        config_.windowHeight = config.windowHeight;
+        config_.windowFlags = config.windowFlags;
+        config_.rendererVSync = config.rendererVSync;
+        config_.rendererLogicalPresentation = config.rendererLogicalPresentation;
+        config_.pixelWidth = config.pixelWidth;
+        config_.pixelHeight = config.pixelHeight;
+        config_.pixelFormat = config.pixelFormat;
+        config_.preserveAspectRatio = config.preserveAspectRatio;
+        config_.allowTextureResize = config.allowTextureResize;
         config_.color = config.color;
 
         // -- initialize or reconfigure SDL resources as needed -- //

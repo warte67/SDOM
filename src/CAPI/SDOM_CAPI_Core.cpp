@@ -82,6 +82,41 @@ bool SDOM_GetCoreConfig(SDOM_CoreConfig* out_cfg) {
     return callResult.v.b;
 }
 
+bool SDOM_SetStopAfterUnitTests(bool stop) {
+    // Dispatch family: singleton (Core)
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makeBool(stop));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetStopAfterUnitTests", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_LoadDomFromJsonFile(const char* filename) {
+    // Dispatch family: singleton (Core)
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makeCString(filename));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_LoadDomFromJsonFile", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Run(void) {
+    // Dispatch family: singleton (Core)
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Run", {});
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 void SDOM_Quit(void) {
     // Dispatch family: singleton (Core)
     (void)SDOM::CAPI::invokeCallable("SDOM_Quit", {});

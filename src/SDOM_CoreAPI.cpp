@@ -117,6 +117,37 @@ public:
                 return makeBoolResult(CoreAPI::getCoreConfig(cfg));
             });
 
+        SDOM::CAPI::registerCallable("SDOM_SetStopAfterUnitTests",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                bool stop = false;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::Bool) {
+                        stop = args[0].v.b;
+                    } else if (args[0].kind == CallArg::Kind::UInt) {
+                        stop = (args[0].v.u != 0);
+                    }
+                }
+                return makeBoolResult(CoreAPI::setStopAfterUnitTests(stop));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_LoadDomFromJsonFile",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* filename = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) {
+                        filename = args[0].s.c_str();
+                    } else if (args[0].kind == CallArg::Kind::Ptr) {
+                        filename = static_cast<const char*>(args[0].v.p);
+                    }
+                }
+                return makeBoolResult(CoreAPI::loadDomFromJsonFile(filename));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_Run",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::run());
+            });
+
         SDOM::CAPI::registerCallable("SDOM_Quit",
             [](const std::vector<CallArg>&) -> CallResult {
                 CoreAPI::quit();
@@ -231,6 +262,65 @@ bool getCoreConfig(SDOM_CoreConfig* out_cfg)
     }
 }
 
+bool setStopAfterUnitTests(bool stop)
+{
+    try {
+        SDOM::Core::getInstance().setStopAfterUnitTests(stop);
+        return true;
+    } catch (const SDOM::Exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_SetStopAfterUnitTests unknown error");
+        return false;
+    }
+}
+
+bool loadDomFromJsonFile(const char* filename)
+{
+    if (!filename) {
+        setErrorMessage("SDOM_LoadDomFromJsonFile: filename is null");
+        return false;
+    }
+
+    try {
+        SDOM::Core& core = SDOM::Core::getInstance();
+        if (core.loadProjectFromJsonFile(filename)) {
+            return true;
+        }
+        setErrorMessage("SDOM_LoadDomFromJsonFile: Core::loadProjectFromJsonFile returned false");
+        return false;
+    } catch (const SDOM::Exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_LoadDomFromJsonFile unknown error");
+        return false;
+    }
+}
+
+bool run()
+{
+    try {
+        return SDOM::Core::getInstance().run();
+    } catch (const SDOM::Exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_Run unknown error");
+        return false;
+    }
+}
+
 void quit()
 {
     try {
@@ -300,6 +390,42 @@ void registerBindings(Core& core, const std::string& typeName)
         "Copies the active Core configuration into out_cfg.",
         [](SDOM_CoreConfig* out_cfg) -> bool {
             return CoreAPI::getCoreConfig(out_cfg);
+        });
+
+    core.registerMethod(
+        typeName,
+        "SetStopAfterUnitTests",
+        "bool Core::capiSetStopAfterUnitTests(bool stop)",
+        "bool",
+        "SDOM_SetStopAfterUnitTests",
+        "bool SDOM_SetStopAfterUnitTests(bool stop)",
+        "Instructs the Core main loop to exit automatically after unit tests complete.",
+        [](bool stop) -> bool {
+            return CoreAPI::setStopAfterUnitTests(stop);
+        });
+
+    core.registerMethod(
+        typeName,
+        "LoadDomFromJsonFile",
+        "bool Core::capiLoadDomFromJsonFile(const char* filename)",
+        "bool",
+        "SDOM_LoadDomFromJsonFile",
+        "bool SDOM_LoadDomFromJsonFile(const char* filename)",
+        "Loads Core configuration, resources, and DOM hierarchy from the provided JSON document.",
+        [](const char* filename) -> bool {
+            return CoreAPI::loadDomFromJsonFile(filename);
+        });
+
+    core.registerMethod(
+        typeName,
+        "Run",
+        "bool Core::capiRun()",
+        "bool",
+        "SDOM_Run",
+        "bool SDOM_Run(void)",
+        "Enters the Core main loop until quit or stop-after-tests is triggered.",
+        []() -> bool {
+            return CoreAPI::run();
         });
 
     core.registerMethod(

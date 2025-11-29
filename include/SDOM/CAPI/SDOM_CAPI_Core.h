@@ -38,6 +38,9 @@ bool SDOM_SetError(const char* message);
 bool SDOM_Init(uint64_t init_flags);
 bool SDOM_Configure(const SDOM_CoreConfig* cfg);
 bool SDOM_GetCoreConfig(SDOM_CoreConfig* out_cfg);
+bool SDOM_SetStopAfterUnitTests(bool stop);
+bool SDOM_LoadDomFromJsonFile(const char* filename);
+bool SDOM_Run(void);
 void SDOM_Quit(void);
 
 #ifdef __cplusplus

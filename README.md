@@ -4,8 +4,8 @@
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.251 (early pre-alpha)**  
-**Build Date:** 2025-11-29_11:20:31  
+**SDOM 0.5.252 (early pre-alpha)**  
+**Build Date:** 2025-11-29_11:42:54  
 **Platform:** Linux-x86_64  
 **Compiler:** g++ (GCC) 15.2.1 20251112
 <!-- END_VERSION_BLOCK -->

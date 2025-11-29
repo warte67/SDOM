@@ -513,6 +513,30 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_SetStopAfterUnitTests",
+      "c_signature": "bool SDOM_SetStopAfterUnitTests(bool stop)",
+      "dispatch_family": "singleton",
+      "name": "SetStopAfterUnitTests",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_LoadDomFromJsonFile",
+      "c_signature": "bool SDOM_LoadDomFromJsonFile(const char* filename)",
+      "dispatch_family": "singleton",
+      "name": "LoadDomFromJsonFile",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Run",
+      "c_signature": "bool SDOM_Run(void)",
+      "dispatch_family": "singleton",
+      "name": "Run",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_Quit",
       "c_signature": "void SDOM_Quit(void)",
       "dispatch_family": "singleton",
