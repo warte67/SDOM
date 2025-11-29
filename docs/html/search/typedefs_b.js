@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['varianttodynamicfn_0',['VariantToDynamicFn',['../classSDOM_1_1Variant.html#a0a5a723ed4ac2b16489588e7a565fb5e',1,'SDOM::Variant']]]
+  ['type_0',['type',['../structSDOM_1_1detail_1_1RemoveCVRef.html#a460aa62c930cd639e7c8407fd1fd5d01',1,'SDOM::detail::RemoveCVRef']]]
 ];

@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classSDOM_1_1ArrowButton.html#a7f5754bdccbd440ab6083fead1daa7cf":[2,0,0,5,189],
 "classSDOM_1_1ArrowButton.html#a7f5754bdccbd440ab6083fead1daa7cf":[3,0,0,4,189],
 "classSDOM_1_1ArrowButton.html#a801eb23ae1a8205b5c1c32e07000afe0":[2,0,0,5,156],
 "classSDOM_1_1ArrowButton.html#a801eb23ae1a8205b5c1c32e07000afe0":[3,0,0,4,156],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classSDOM_1_1AssetHandle.html#a0419eeead0c43abf7112046e9fe01eaf":[2,0,0,6,26],
 "classSDOM_1_1AssetHandle.html#a0419eeead0c43abf7112046e9fe01eaf":[3,0,0,5,26],
 "classSDOM_1_1AssetHandle.html#a04257920fce9afdbcf5b9db9be24f738":[2,0,0,6,14],
-"classSDOM_1_1AssetHandle.html#a04257920fce9afdbcf5b9db9be24f738":[3,0,0,5,14],
-"classSDOM_1_1AssetHandle.html#a04af6e3e38f8a8cbed5893f285d728b5":[2,0,0,6,21]
+"classSDOM_1_1AssetHandle.html#a04257920fce9afdbcf5b9db9be24f738":[3,0,0,5,14]
 };

@@ -26,6 +26,7 @@ namespace SDOM
     class EventManager;
     class Stage;
     class IDisplayObject;
+#include <json.hpp>
     class DisplayHandle;
     class IAssetObject;
     class AssetHandle;
@@ -121,6 +122,11 @@ namespace SDOM
         void registerOnRender(std::function<void()> fn) { fnOnRender = fn; }
         void registerOnUnitTest(std::function<bool()> fn) { fnOnUnitTest = fn; }
         void registerOnWindowResize(std::function<void(int, int)> fn) { fnOnWindowResize = fn; }
+        bool configureFromJson(const nlohmann::json& doc);
+        bool preloadResourcesFromJson(const nlohmann::json& doc);
+        DisplayHandle buildDomFromJson(const nlohmann::json& doc);
+        bool loadProjectFromJson(const nlohmann::json& doc);
+        bool loadProjectFromJsonFile(const std::string& path);
 
         // --- Lua Registration Internal Helpers --- //
         void _fnOnInit(std::function<bool()> fn) { fnOnInit = fn; }

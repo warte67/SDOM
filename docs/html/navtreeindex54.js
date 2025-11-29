@@ -1,5 +1,16 @@
 var NAVTREEINDEX54 =
 {
+"structSDOM_1_1Slider_1_1InitStruct.html#a675f603f2dbbb2b4bb7132a0e813997d":[2,0,0,48,0,26],
+"structSDOM_1_1Slider_1_1InitStruct.html#a675f603f2dbbb2b4bb7132a0e813997d":[3,0,0,47,0,26],
+"structSDOM_1_1Slider_1_1InitStruct.html#a6907692b7ad49b726bdcdd2ac462823f":[2,0,0,48,0,31],
+"structSDOM_1_1Slider_1_1InitStruct.html#a6907692b7ad49b726bdcdd2ac462823f":[3,0,0,47,0,31],
+"structSDOM_1_1Slider_1_1InitStruct.html#a730842294901f76f21d0911dc91c0e4c":[2,0,0,48,0,16],
+"structSDOM_1_1Slider_1_1InitStruct.html#a730842294901f76f21d0911dc91c0e4c":[3,0,0,47,0,16],
+"structSDOM_1_1Slider_1_1InitStruct.html#a784a22f4ce8342d6276d9d61205ae242":[2,0,0,48,0,34],
+"structSDOM_1_1Slider_1_1InitStruct.html#a784a22f4ce8342d6276d9d61205ae242":[3,0,0,47,0,34],
+"structSDOM_1_1Slider_1_1InitStruct.html#a92373452be5adab3989429b268481a81":[2,0,0,48,0,1],
+"structSDOM_1_1Slider_1_1InitStruct.html#a92373452be5adab3989429b268481a81":[3,0,0,47,0,1],
+"structSDOM_1_1Slider_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[2,0,0,48,0,10],
 "structSDOM_1_1Slider_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[3,0,0,47,0,10],
 "structSDOM_1_1Slider_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[2,0,0,48,0,32],
 "structSDOM_1_1Slider_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[3,0,0,47,0,32],
@@ -238,16 +249,5 @@ var NAVTREEINDEX54 =
 "structSDOM_1_1TristateButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[2,0,0,56,0,33],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[3,0,0,55,0,33],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#ac4c1f5183ade02442e63b2839d93f71b":[2,0,0,56,0,34],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#ac4c1f5183ade02442e63b2839d93f71b":[3,0,0,55,0,34],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[2,0,0,56,0,24],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[3,0,0,55,0,24],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#acaa22d991cbb8c75bfc92475cb8b7251":[2,0,0,56,0,27],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#acaa22d991cbb8c75bfc92475cb8b7251":[3,0,0,55,0,27],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#acb078ce214d93c8f94eadb20c6479eae":[2,0,0,56,0,0],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#acb078ce214d93c8f94eadb20c6479eae":[3,0,0,55,0,0],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#acda95a896651eee200d55e80ea104150":[2,0,0,56,0,25],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#acda95a896651eee200d55e80ea104150":[3,0,0,55,0,25],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745":[2,0,0,56,0,10],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745":[3,0,0,55,0,10],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2":[2,0,0,56,0,5]
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ac4c1f5183ade02442e63b2839d93f71b":[3,0,0,55,0,34]
 };

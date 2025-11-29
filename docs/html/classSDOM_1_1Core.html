@@ -136,6 +136,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad06a2e372107715e5e3f8e865893d9a0" id="r_ad06a2e372107715e5e3f8e865893d9a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad06a2e372107715e5e3f8e865893d9a0">registerOnRender</a> (std::function&lt; void()&gt; fn)</td></tr>
 <tr class="memitem:a9c3241b0fe11b049828e4a04a8a541b0" id="r_a9c3241b0fe11b049828e4a04a8a541b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c3241b0fe11b049828e4a04a8a541b0">registerOnUnitTest</a> (std::function&lt; bool()&gt; fn)</td></tr>
 <tr class="memitem:ade16c7d2ec6378ca518fb2d6399cb4a8" id="r_ade16c7d2ec6378ca518fb2d6399cb4a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade16c7d2ec6378ca518fb2d6399cb4a8">registerOnWindowResize</a> (std::function&lt; void(int, int)&gt; fn)</td></tr>
+<tr class="memitem:a8573adff276e103bd3e7526cccfb1f8b" id="r_a8573adff276e103bd3e7526cccfb1f8b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8573adff276e103bd3e7526cccfb1f8b">configureFromJson</a> (const nlohmann::json &amp;doc)</td></tr>
+<tr class="memitem:a81a9ef00aff73b39706b0da0fc9e00eb" id="r_a81a9ef00aff73b39706b0da0fc9e00eb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81a9ef00aff73b39706b0da0fc9e00eb">preloadResourcesFromJson</a> (const nlohmann::json &amp;doc)</td></tr>
+<tr class="memitem:aef4861ae1753028c3891159639e5002d" id="r_aef4861ae1753028c3891159639e5002d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef4861ae1753028c3891159639e5002d">buildDomFromJson</a> (const nlohmann::json &amp;doc)</td></tr>
+<tr class="memitem:ad7a1a39f9939df7994df9c00927c2234" id="r_ad7a1a39f9939df7994df9c00927c2234"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7a1a39f9939df7994df9c00927c2234">loadProjectFromJson</a> (const nlohmann::json &amp;doc)</td></tr>
+<tr class="memitem:a43844d37e01f0aa1545fe434214fc464" id="r_a43844d37e01f0aa1545fe434214fc464"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a43844d37e01f0aa1545fe434214fc464">loadProjectFromJsonFile</a> (const std::string &amp;path)</td></tr>
 <tr class="memitem:ab18739abc82b547183ce80aea9ebb0e3" id="r_ab18739abc82b547183ce80aea9ebb0e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab18739abc82b547183ce80aea9ebb0e3">_fnOnInit</a> (std::function&lt; bool()&gt; fn)</td></tr>
 <tr class="memitem:a15f4a0ab1e086b4fb2b16a8744d82f9d" id="r_a15f4a0ab1e086b4fb2b16a8744d82f9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15f4a0ab1e086b4fb2b16a8744d82f9d">_fnOnQuit</a> (std::function&lt; void()&gt; fn)</td></tr>
 <tr class="memitem:addbbc3ca2d034789a278cb8759552276" id="r_addbbc3ca2d034789a278cb8759552276"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#addbbc3ca2d034789a278cb8759552276">_fnOnUpdate</a> (std::function&lt; void(float)&gt; fn)</td></tr>
@@ -1137,6 +1142,23 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
 
 </div>
 </div>
+<a id="aef4861ae1753028c3891159639e5002d" name="aef4861ae1753028c3891159639e5002d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef4861ae1753028c3891159639e5002d">&#9670;&#160;</a></span>buildDomFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> SDOM::Core::buildDomFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7e41223dfde99d19607b1108df9bdef8" name="a7e41223dfde99d19607b1108df9bdef8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7e41223dfde99d19607b1108df9bdef8">&#9670;&#160;</a></span>clearFactory()</h2>
 
@@ -1215,6 +1237,23 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
           <td class="memname">void SDOM::Core::configure </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structSDOM_1_1Core_1_1CoreConfig.html">CoreConfig</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>config</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8573adff276e103bd3e7526cccfb1f8b" name="a8573adff276e103bd3e7526cccfb1f8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8573adff276e103bd3e7526cccfb1f8b">&#9670;&#160;</a></span>configureFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Core::configureFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -2743,6 +2782,40 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
 
 </div>
 </div>
+<a id="ad7a1a39f9939df7994df9c00927c2234" name="ad7a1a39f9939df7994df9c00927c2234"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7a1a39f9939df7994df9c00927c2234">&#9670;&#160;</a></span>loadProjectFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Core::loadProjectFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a43844d37e01f0aa1545fe434214fc464" name="a43844d37e01f0aa1545fe434214fc464"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43844d37e01f0aa1545fe434214fc464">&#9670;&#160;</a></span>loadProjectFromJsonFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Core::loadProjectFromJsonFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="afca56a5ad6d91a523bcf65daa5360ba3" name="afca56a5ad6d91a523bcf65daa5360ba3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afca56a5ad6d91a523bcf65daa5360ba3">&#9670;&#160;</a></span>lookup()</h2>
 
@@ -2970,6 +3043,23 @@ template&lt;typename Getter, typename Setter = std::nullptr_t&gt; </div>
 <span class="mlabels"><span class="mlabel delete">delete</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a81a9ef00aff73b39706b0da0fc9e00eb" name="a81a9ef00aff73b39706b0da0fc9e00eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81a9ef00aff73b39706b0da0fc9e00eb">&#9670;&#160;</a></span>preloadResourcesFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Core::preloadResourcesFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>doc</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

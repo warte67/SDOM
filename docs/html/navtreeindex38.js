@@ -1,5 +1,16 @@
 var NAVTREEINDEX38 =
 {
+"classSDOM_1_1ScrollBar.html#aff4057454b6d7cb9a282c9d3b00a4777":[2,0,0,46,87],
+"classSDOM_1_1ScrollBar.html#aff4057454b6d7cb9a282c9d3b00a4777":[3,0,0,45,87],
+"classSDOM_1_1ScrollBar.html#aff602d0cbfeead1a6ddd49c8d4df9360":[2,0,0,46,12],
+"classSDOM_1_1ScrollBar.html#aff602d0cbfeead1a6ddd49c8d4df9360":[3,0,0,45,12],
+"classSDOM_1_1ScrollBar.html#affc34595a0f3e17e51801c130caa30ab":[2,0,0,46,148],
+"classSDOM_1_1ScrollBar.html#affc34595a0f3e17e51801c130caa30ab":[3,0,0,45,148],
+"classSDOM_1_1Slider.html":[2,0,0,48],
+"classSDOM_1_1Slider.html":[3,0,0,47],
+"classSDOM_1_1Slider.html#a00bdfbfffb5b05a106ffdcdd79b251eb":[2,0,0,48,49],
+"classSDOM_1_1Slider.html#a00bdfbfffb5b05a106ffdcdd79b251eb":[3,0,0,47,49],
+"classSDOM_1_1Slider.html#a02fb8c2adc34588df0db386e4c843c10":[2,0,0,48,206],
 "classSDOM_1_1Slider.html#a02fb8c2adc34588df0db386e4c843c10":[3,0,0,47,206],
 "classSDOM_1_1Slider.html#a03a5da8e4fb4caeca373c300e843c094":[2,0,0,48,167],
 "classSDOM_1_1Slider.html#a03a5da8e4fb4caeca373c300e843c094":[3,0,0,47,167],
@@ -238,16 +249,5 @@ var NAVTREEINDEX38 =
 "classSDOM_1_1Slider.html#a82ec9aa6b4ce34ec03e01f9cd002a1be":[2,0,0,48,177],
 "classSDOM_1_1Slider.html#a82ec9aa6b4ce34ec03e01f9cd002a1be":[3,0,0,47,177],
 "classSDOM_1_1Slider.html#a83f54c1f027dad7c7cf98cad72ee9955":[2,0,0,48,124],
-"classSDOM_1_1Slider.html#a83f54c1f027dad7c7cf98cad72ee9955":[3,0,0,47,124],
-"classSDOM_1_1Slider.html#a83f774ae4f2529a8c427c0cdce495098":[2,0,0,48,120],
-"classSDOM_1_1Slider.html#a83f774ae4f2529a8c427c0cdce495098":[3,0,0,47,120],
-"classSDOM_1_1Slider.html#a83f83220bae7a3ac3582c0a797d727cb":[2,0,0,48,220],
-"classSDOM_1_1Slider.html#a83f83220bae7a3ac3582c0a797d727cb":[3,0,0,47,220],
-"classSDOM_1_1Slider.html#a8453e36ea5bffdbb6c57da841db2e5ab":[2,0,0,48,161],
-"classSDOM_1_1Slider.html#a8453e36ea5bffdbb6c57da841db2e5ab":[3,0,0,47,161],
-"classSDOM_1_1Slider.html#a8454e19980fce29cadc94be241ee66f9":[2,0,0,48,11],
-"classSDOM_1_1Slider.html#a8454e19980fce29cadc94be241ee66f9":[3,0,0,47,11],
-"classSDOM_1_1Slider.html#a8461dfd00c65f3d57478ea97d386f26d":[2,0,0,48,75],
-"classSDOM_1_1Slider.html#a8461dfd00c65f3d57478ea97d386f26d":[3,0,0,47,75],
-"classSDOM_1_1Slider.html#a8468537ed2a4e40c33821f5ea66771ed":[2,0,0,48,133]
+"classSDOM_1_1Slider.html#a83f54c1f027dad7c7cf98cad72ee9955":[3,0,0,47,124]
 };

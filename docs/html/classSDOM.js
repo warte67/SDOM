@@ -1,6 +1,7 @@
 var classSDOM =
 [
     [ "BindModule", "classSDOM.html#a633ddde079fae40a63d6cf153a7d188b", null ],
+    [ "NodeLookup", "classSDOM.html#a21aa687fbb55944d78ee91b36a7610ee", null ],
     [ "SUPER", "classSDOM.html#a30b2979959418fcc8421582cd6cb7c08", null ],
     [ "SUPER", "classSDOM.html#a30b2979959418fcc8421582cd6cb7c08", null ],
     [ "AnchorPoint", "classSDOM.html#adca0aa068ac9fc59e78b78c430a92980", [

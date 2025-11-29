@@ -758,6 +758,75 @@ namespace SDOM
         return AssetHandle(); // invalid
     }
 
+    AssetHandle Factory::createAssetObjectFromJson(const std::string& typeName, const nlohmann::json& j)
+    {
+        auto it = assetCreators_.find(typeName);
+        if (it == assetCreators_.end() || !it->second.fromJson)
+        {
+            WARNING(std::string("Factory::createAssetObjectFromJson: no JSON creator registered for type '") + typeName + "'");
+            return AssetHandle();
+        }
+
+        auto asset = it->second.fromJson(j);
+        if (!asset)
+        {
+            WARNING(std::string("Factory::createAssetObjectFromJson: JSON creator returned null for type '") + typeName + "'");
+            return AssetHandle();
+        }
+
+        const std::string name = asset->getName();
+        if (name.empty())
+        {
+            ERROR(std::string("Factory::createAssetObjectFromJson: asset type '") + typeName + "' did not supply a name");
+            return AssetHandle();
+        }
+
+        if (auto existing = assetObjects_.find(name); existing != assetObjects_.end())
+        {
+            return AssetHandle(name, existing->second->type,
+                existing->second->obj ? existing->second->obj->getFilename() : std::string{});
+        }
+
+        asset->setType(typeName);
+        std::shared_ptr<IAssetObject> sharedAsset = std::move(asset);
+        assetObjects_[name] = std::make_unique<AssetRecord>(sharedAsset, typeName, 0);
+        auto& entry = assetObjects_[name];
+        if (entry && entry->obj)
+        {
+            entry->obj->startup();
+            if (!entry->obj->isLoaded())
+            {
+                try
+                {
+                    if (!entry->obj->load())
+                    {
+                        ERROR(std::string("Factory::createAssetObjectFromJson: load() failed for asset '") + name + "'");
+                    }
+                }
+                catch (const std::exception& ex)
+                {
+                    ERROR(std::string("Factory::createAssetObjectFromJson: load() threw for asset '") + name + "': " + ex.what());
+                }
+                catch (...)
+                {
+                    ERROR(std::string("Factory::createAssetObjectFromJson: load() threw for asset '") + name + "' (unknown cause)");
+                }
+            }
+        }
+
+        try
+        {
+            registerAssetObject(name, AssetHandle(name, typeName,
+                entry && entry->obj ? entry->obj->getFilename() : std::string{}));
+        }
+        catch (...)
+        {
+        }
+
+        const std::string filename = (entry && entry->obj) ? entry->obj->getFilename() : std::string{};
+        return AssetHandle(name, typeName, filename);
+    }
+
 
 
     void Factory::addDisplayObject(const std::string& name, 

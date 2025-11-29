@@ -22,3 +22,6 @@ int SDOM_main_variant_2(int argc, char** argv);
 // Variant 3 — C API bootstrap mode (SDOM_Init / SDOM_Configure)
 int SDOM_main_variant_3(int argc, char** argv);
 
+// Variant 4 — JSON config loader (builds DOM from config.json)
+int SDOM_main_variant_4(int argc, char** argv);
+

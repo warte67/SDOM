@@ -20,7 +20,7 @@ static void print_help(const char* exe)
 {
     std::cout << "Usage: " << (exe ? exe : "sdom_app") << " [options]\n\n"
               << "SDOM Startup Options:\n"
-              << "  --variant N           Select startup variant (1 = Lua, 2 = C++/JSON, 3 = C-API)\n"
+              << "  --variant N           Select startup variant (1 = Lua, 2 = C++/JSON, 3 = C-API, 4 = JSON config)\n"
               << "  --list-variants       Show all available variants\n\n"
               << "Common Options:\n"
               << "  --help                Show this message and exit\n"
@@ -28,7 +28,7 @@ static void print_help(const char* exe)
               << "  --stop_after_tests    Run unit tests then exit\n"
               << "  --stop-after-tests    Alias for --stop_after_tests\n"
               << "  --lua_file <file>     Lua config (Variant 1)\n"
-              << "  --config <file>       Alias for --lua_file\n"
+              << "  --config <file>       Lua config (Variant 1) / JSON config (Variant 4)\n"
               << "\n"
               << "Example:\n"
               << "  " << exe << " --variant 2\n"
@@ -45,6 +45,7 @@ static void print_variants()
         "  1  Lua-driven mode (uses sol2 and lua/config.lua)\n"
         "  2  C++ front-end + JSON constructors (fast unit-test mode)\n"
         "  3  C API bootstrap (SDOM_Init / SDOM_Configure)\n"
+        "  4  JSON config loader (reads examples/test/json/config.json)\n"
         << std::endl;
 }
 
@@ -142,6 +143,7 @@ int main(int argc, char** argv)
         case 1: return SDOM_main_variant_1(argcVariant, argvVariant.data());
         case 2: return SDOM_main_variant_2(argcVariant, argvVariant.data());
         case 3: return SDOM_main_variant_3(argcVariant, argvVariant.data());
+        case 4: return SDOM_main_variant_4(argcVariant, argvVariant.data());
         default:
             std::cerr << "ERROR: Unknown variant " << variant
                       << ". Use --list-variants for help.\n";

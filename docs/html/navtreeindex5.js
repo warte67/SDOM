@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classSDOM_1_1AssetHandle.html#a04af6e3e38f8a8cbed5893f285d728b5":[2,0,0,6,21],
 "classSDOM_1_1AssetHandle.html#a04af6e3e38f8a8cbed5893f285d728b5":[3,0,0,5,21],
 "classSDOM_1_1AssetHandle.html#a050f62c9db3508c9f2125d8020e24b6f":[2,0,0,6,44],
 "classSDOM_1_1AssetHandle.html#a050f62c9db3508c9f2125d8020e24b6f":[3,0,0,5,44],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classSDOM_1_1BitmapFont.html#ad222efbf8082d85c7fb136c28ea12ada":[2,0,0,7,23],
 "classSDOM_1_1BitmapFont.html#ad222efbf8082d85c7fb136c28ea12ada":[3,0,0,6,23],
 "classSDOM_1_1BitmapFont.html#adb96fab263c40f6294461886cc8c2f20":[2,0,0,7,56],
-"classSDOM_1_1BitmapFont.html#adb96fab263c40f6294461886cc8c2f20":[3,0,0,6,56],
-"classSDOM_1_1BitmapFont.html#add05647990d22252de1ef584ae622ae5":[2,0,0,7,71]
+"classSDOM_1_1BitmapFont.html#adb96fab263c40f6294461886cc8c2f20":[3,0,0,6,56]
 };

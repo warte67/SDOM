@@ -2,6 +2,9 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <algorithm>
 #include <filesystem>
+#include <fstream>
+#include <unordered_map>
+#include <vector>
 
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Version.hpp>
@@ -23,6 +26,60 @@
 
 namespace SDOM
 {
+    namespace
+    {
+        using json = nlohmann::json;
+        using NodeLookup = std::unordered_map<std::string, DisplayHandle>;
+
+        DisplayHandle buildNodeFromJson(Factory& factory,
+                                        const json& node,
+                                        NodeLookup& lookup,
+                                        DisplayHandle& firstStage)
+        {
+            if (!node.is_object())
+            {
+                WARNING("buildNodeFromJson: skipping non-object node");
+                return {};
+            }
+
+            const std::string type = node.value("type", "");
+            if (type.empty())
+            {
+                WARNING("buildNodeFromJson: node missing 'type'");
+                return {};
+            }
+
+            DisplayHandle handle = factory.createDisplayObjectFromJson(type, node);
+            if (!handle.isValid())
+            {
+                WARNING(std::string("buildNodeFromJson: failed to create display object of type '") + type + "'");
+                return {};
+            }
+
+            if (auto name = handle.getName(); !name.empty())
+            {
+                lookup[name] = handle;
+            }
+            if (!firstStage.isValid() && type == Stage::TypeName)
+            {
+                firstStage = handle;
+            }
+
+            if (auto childIt = node.find("children"); childIt != node.end() && childIt->is_array())
+            {
+                for (const auto& child : *childIt)
+                {
+                    DisplayHandle childHandle = buildNodeFromJson(factory, child, lookup, firstStage);
+                    if (childHandle.isValid())
+                    {
+                        handle->addChild(childHandle);
+                    }
+                }
+            }
+
+            return handle;
+        }
+    }
 
     Core::Core() : IDataObject()
     {
@@ -88,6 +145,253 @@ namespace SDOM
         // Initialize the Factory if it hasn't been initialized yet.
         if (factory_ && !factory_->isInitialized()) {
             factory_->startup();
+        }
+    }
+
+    bool Core::configureFromJson(const nlohmann::json& doc)
+    {
+        if (!doc.is_object())
+        {
+            ERROR("Core::configureFromJson: root document must be a JSON object.");
+            return false;
+        }
+
+        try
+        {
+            CoreConfig cfg = getConfig();
+
+            auto set_float = [&](const char* key, float& field) {
+                if (doc.contains(key))
+                {
+                    field = doc.at(key).get<float>();
+                }
+            };
+            auto set_bool = [&](const char* key, bool& field) {
+                if (doc.contains(key))
+                {
+                    field = doc.at(key).get<bool>();
+                }
+            };
+
+            set_float("windowWidth", cfg.windowWidth);
+            set_float("windowHeight", cfg.windowHeight);
+            set_float("pixelWidth", cfg.pixelWidth);
+            set_float("pixelHeight", cfg.pixelHeight);
+            set_bool("allowTextureResize", cfg.allowTextureResize);
+            set_bool("preserveAspectRatio", cfg.preserveAspectRatio);
+
+            if (doc.contains("rendererLogicalPresentation"))
+            {
+                cfg.rendererLogicalPresentation = SDL_Utils::rendererLogicalPresentationFromString(
+                    doc.at("rendererLogicalPresentation").get<std::string>());
+            }
+            if (doc.contains("windowFlags"))
+            {
+                const std::string flagsStr = doc.at("windowFlags").get<std::string>();
+                const Uint64 parsedFlags = SDL_Utils::windowFlagsFromString(flagsStr);
+                if (flagsStr != "0" && parsedFlags == 0)
+                {
+                    WARNING(std::string("Core::configureFromJson: unknown windowFlags entry '") + flagsStr + "'");
+                }
+                else
+                {
+                    cfg.windowFlags = static_cast<SDL_WindowFlags>(parsedFlags);
+                }
+            }
+            if (doc.contains("pixelFormat"))
+            {
+                const std::string formatStr = doc.at("pixelFormat").get<std::string>();
+                SDL_PixelFormat parsedFormat = SDL_Utils::pixelFormatFromString(formatStr);
+                if (parsedFormat == SDL_PIXELFORMAT_UNKNOWN)
+                {
+                    WARNING(std::string("Core::configureFromJson: unknown pixelFormat entry '") + formatStr + "'");
+                }
+                else
+                {
+                    cfg.pixelFormat = parsedFormat;
+                }
+            }
+            if (doc.contains("color") && doc.at("color").is_object())
+            {
+                const auto& c = doc.at("color");
+                auto read_component = [&](const char* key, Uint8& comp) {
+                    if (c.contains(key))
+                    {
+                        comp = static_cast<Uint8>(std::clamp(c.at(key).get<int>(), 0, 255));
+                    }
+                };
+                read_component("r", cfg.color.r);
+                read_component("g", cfg.color.g);
+                read_component("b", cfg.color.b);
+                read_component("a", cfg.color.a);
+            }
+
+            configure(cfg);
+            return true;
+        }
+        catch (const std::exception& ex)
+        {
+            ERROR(std::string("Core::configureFromJson: ") + ex.what());
+            return false;
+        }
+    }
+
+    bool Core::preloadResourcesFromJson(const nlohmann::json& doc)
+    {
+        auto it = doc.find("resources");
+        if (it == doc.end())
+        {
+            return true;
+        }
+        if (!it->is_array())
+        {
+            ERROR("Core::preloadResourcesFromJson: 'resources' must be an array.");
+            return false;
+        }
+
+        bool allOk = true;
+        Factory& factory = getFactory();
+
+        for (size_t idx = 0; idx < it->size(); ++idx)
+        {
+            const auto& resource = (*it)[idx];
+            if (!resource.is_object())
+            {
+                WARNING("Core::preloadResourcesFromJson: skipping non-object resource entry.");
+                allOk = false;
+                continue;
+            }
+
+            const std::string type = resource.value("type", std::string{});
+            if (type.empty())
+            {
+                WARNING("Core::preloadResourcesFromJson: resource missing 'type'.");
+                allOk = false;
+                continue;
+            }
+
+            try
+            {
+                factory.createAssetObjectFromJson(type, resource);
+            }
+            catch (const std::exception& ex)
+            {
+                const std::string name = resource.value("name", type);
+                ERROR(std::string("Core::preloadResourcesFromJson: failed to load resource '") + name + "' of type '" + type + "': " + ex.what());
+                allOk = false;
+            }
+        }
+
+        return allOk;
+    }
+
+    DisplayHandle Core::buildDomFromJson(const nlohmann::json& doc)
+    {
+        if (!doc.is_object())
+        {
+            ERROR("Core::buildDomFromJson: root document must be a JSON object.");
+            return {};
+        }
+
+        NodeLookup lookup;
+        DisplayHandle firstStage;
+        std::vector<DisplayHandle> topLevelStages;
+        Factory& factory = getFactory();
+
+        if (auto childrenIt = doc.find("children"); childrenIt != doc.end())
+        {
+            if (!childrenIt->is_array())
+            {
+                ERROR("Core::buildDomFromJson: 'children' must be an array.");
+            }
+            else
+            {
+                for (const auto& stageJson : *childrenIt)
+                {
+                    DisplayHandle handle = buildNodeFromJson(factory, stageJson, lookup, firstStage);
+                    if (handle.isValid() && stageJson.value("type", std::string{}) == Stage::TypeName)
+                    {
+                        topLevelStages.push_back(handle);
+                    }
+                }
+            }
+        }
+
+        const std::string desiredRoot = doc.value("rootStage", std::string{});
+        DisplayHandle rootHandle;
+        if (!desiredRoot.empty())
+        {
+            if (auto it = lookup.find(desiredRoot); it != lookup.end())
+            {
+                rootHandle = it->second;
+            }
+            else
+            {
+                WARNING(std::string("Core::buildDomFromJson: requested root stage '") + desiredRoot + "' not found.");
+            }
+        }
+        if (!rootHandle.isValid())
+        {
+            if (!topLevelStages.empty())
+            {
+                rootHandle = topLevelStages.front();
+            }
+            else
+            {
+                rootHandle = firstStage;
+            }
+        }
+
+        if (rootHandle.isValid())
+        {
+            setRootNode(rootHandle);
+        }
+        else
+        {
+            WARNING("Core::buildDomFromJson: no Stage could be promoted to root.");
+        }
+
+        return rootHandle;
+    }
+
+    bool Core::loadProjectFromJson(const nlohmann::json& doc)
+    {
+        if (!doc.is_object())
+        {
+            ERROR("Core::loadProjectFromJson: root document must be a JSON object.");
+            return false;
+        }
+
+        bool ok = configureFromJson(doc);
+        ok = preloadResourcesFromJson(doc) && ok;
+        DisplayHandle root = buildDomFromJson(doc);
+        if (!root.isValid())
+        {
+            ok = false;
+        }
+
+        return ok;
+    }
+
+    bool Core::loadProjectFromJsonFile(const std::string& path)
+    {
+        std::ifstream stream(path);
+        if (!stream)
+        {
+            ERROR(std::string("Core::loadProjectFromJsonFile: unable to open '") + path + "'.");
+            return false;
+        }
+
+        try
+        {
+            nlohmann::json doc;
+            stream >> doc;
+            return loadProjectFromJson(doc);
+        }
+        catch (const std::exception& ex)
+        {
+            ERROR(std::string("Core::loadProjectFromJsonFile: failed to parse '") + path + "': " + ex.what());
+            return false;
         }
     }
 
