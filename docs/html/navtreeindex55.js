@@ -1,5 +1,17 @@
 var NAVTREEINDEX55 =
 {
+"structSDOM_1_1TristateButton_1_1InitStruct.html#aa7b08df49f2ccce84e3ea1b1c5e7221e":[2,0,0,56,0,14],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#aa7b08df49f2ccce84e3ea1b1c5e7221e":[3,0,0,55,0,14],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939":[2,0,0,56,0,30],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939":[3,0,0,55,0,30],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6":[2,0,0,56,0,29],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ab41dcfc6259800a732c4eccd40452ae6":[3,0,0,55,0,29],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf":[2,0,0,56,0,38],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ac3b4c19819ff87fd7886678ef807edcf":[3,0,0,55,0,38],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[2,0,0,56,0,33],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[3,0,0,55,0,33],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ac4c1f5183ade02442e63b2839d93f71b":[2,0,0,56,0,34],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#ac4c1f5183ade02442e63b2839d93f71b":[3,0,0,55,0,34],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[2,0,0,56,0,24],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[3,0,0,55,0,24],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#acaa22d991cbb8c75bfc92475cb8b7251":[2,0,0,56,0,27],
@@ -237,17 +249,5 @@ var NAVTREEINDEX55 =
 "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_4.html#a42134b83904cb1e3442e40c03b5d9254":[2,0,0,2,3,2],
 "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_4.html#a42134b83904cb1e3442e40c03b5d9254":[3,0,0,1,3,2],
 "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_4.html#aed676fc0532d3f38ceecbc930cc21718":[2,0,0,2,3,0],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_4.html#aed676fc0532d3f38ceecbc930cc21718":[3,0,0,1,3,0],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html":[2,0,0,2,2],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html":[3,0,0,1,2],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html#a372281aab4d6be68cbc71410b5cf5ec4":[2,0,0,2,2,1],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html#a372281aab4d6be68cbc71410b5cf5ec4":[3,0,0,1,2,1],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html#a42134b83904cb1e3442e40c03b5d9254":[2,0,0,2,2,2],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html#a42134b83904cb1e3442e40c03b5d9254":[3,0,0,1,2,2],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html#aed676fc0532d3f38ceecbc930cc21718":[2,0,0,2,2,0],
-"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07_5_08_07Args_8_8_8_08_4.html#aed676fc0532d3f38ceecbc930cc21718":[3,0,0,1,2,0],
-"structSDOM_1_1detail_1_1RemoveCVRef.html":[2,0,0,2,0],
-"structSDOM_1_1detail_1_1RemoveCVRef.html":[3,0,0,1,0],
-"structSDOM_1_1detail_1_1RemoveCVRef.html#a460aa62c930cd639e7c8407fd1fd5d01":[2,0,0,2,0,0],
-"structSDOM_1_1detail_1_1RemoveCVRef.html#a460aa62c930cd639e7c8407fd1fd5d01":[3,0,0,1,0,0]
+"structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_4.html#aed676fc0532d3f38ceecbc930cc21718":[3,0,0,1,3,0]
 };

@@ -19,6 +19,7 @@ bool init(uint64_t flags);
 bool configure(const SDOM_CoreConfig* cfg);
 bool getCoreConfig(SDOM_CoreConfig* out_cfg);
 bool setStopAfterUnitTests(bool stop);
+bool setIsRunning(bool running);
 bool loadDomFromJsonFile(const char* filename);
 bool run();
 void quit();

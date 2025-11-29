@@ -1,5 +1,13 @@
 var NAVTREEINDEX26 =
 {
+"classSDOM_1_1IRangeControl__scaffold.html#a3ab76421405a1be09be35ae2e215efb2":[2,0,0,40,66],
+"classSDOM_1_1IRangeControl__scaffold.html#a3ab76421405a1be09be35ae2e215efb2":[3,0,0,39,66],
+"classSDOM_1_1IRangeControl__scaffold.html#a3eee98020b7f0ce46d9fafe34908992c":[2,0,0,40,176],
+"classSDOM_1_1IRangeControl__scaffold.html#a3eee98020b7f0ce46d9fafe34908992c":[3,0,0,39,176],
+"classSDOM_1_1IRangeControl__scaffold.html#a3f0b3ddac629950c96eea41c5c1b6ea5":[2,0,0,40,27],
+"classSDOM_1_1IRangeControl__scaffold.html#a3f0b3ddac629950c96eea41c5c1b6ea5":[3,0,0,39,27],
+"classSDOM_1_1IRangeControl__scaffold.html#a3f70a5b8822ec45b06aea26d79978709":[2,0,0,40,171],
+"classSDOM_1_1IRangeControl__scaffold.html#a3f70a5b8822ec45b06aea26d79978709":[3,0,0,39,171],
 "classSDOM_1_1IRangeControl__scaffold.html#a429303d04136c25a55faee3b1694ddaf":[2,0,0,40,117],
 "classSDOM_1_1IRangeControl__scaffold.html#a429303d04136c25a55faee3b1694ddaf":[3,0,0,39,117],
 "classSDOM_1_1IRangeControl__scaffold.html#a42fc83030cf0a1ad920736f654fdf6e7":[2,0,0,40,44],
@@ -241,13 +249,5 @@ var NAVTREEINDEX26 =
 "classSDOM_1_1IRangeControl__scaffold.html#ab3985031f0fbac4d1eee9c8bee5681c9":[2,0,0,40,216],
 "classSDOM_1_1IRangeControl__scaffold.html#ab3985031f0fbac4d1eee9c8bee5681c9":[3,0,0,39,216],
 "classSDOM_1_1IRangeControl__scaffold.html#ab3b87f6350ce8b2272d54888fb26bcc9":[2,0,0,40,183],
-"classSDOM_1_1IRangeControl__scaffold.html#ab3b87f6350ce8b2272d54888fb26bcc9":[3,0,0,39,183],
-"classSDOM_1_1IRangeControl__scaffold.html#ab78aac3a9b8c14589ba2bf9d0344140f":[2,0,0,40,104],
-"classSDOM_1_1IRangeControl__scaffold.html#ab78aac3a9b8c14589ba2bf9d0344140f":[3,0,0,39,104],
-"classSDOM_1_1IRangeControl__scaffold.html#abb3234d9e98839cce304daf9f98f2081":[2,0,0,40,153],
-"classSDOM_1_1IRangeControl__scaffold.html#abb3234d9e98839cce304daf9f98f2081":[3,0,0,39,153],
-"classSDOM_1_1IRangeControl__scaffold.html#abd7be10060116e26935e894937d0e95b":[2,0,0,40,148],
-"classSDOM_1_1IRangeControl__scaffold.html#abd7be10060116e26935e894937d0e95b":[3,0,0,39,148],
-"classSDOM_1_1IRangeControl__scaffold.html#abda87b944bd12092c524a44fc2f534c2":[2,0,0,40,151],
-"classSDOM_1_1IRangeControl__scaffold.html#abda87b944bd12092c524a44fc2f534c2":[3,0,0,39,151]
+"classSDOM_1_1IRangeControl__scaffold.html#ab3b87f6350ce8b2272d54888fb26bcc9":[3,0,0,39,183]
 };

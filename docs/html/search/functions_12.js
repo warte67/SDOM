@@ -51,7 +51,7 @@ var searchData=
   ['reset_5fperformance_5fstats_48',['reset_performance_stats',['../classSDOM_1_1Factory.html#ab979a1c520bb6b6026d88f809bb9a030',1,'SDOM::Factory']]],
   ['resolve_49',['resolve',['../classSDOM_1_1PathRegistry.html#a691e25a34a2a03053026fec22407f802',1,'SDOM::PathRegistry']]],
   ['restore_5fcursor_50',['restore_cursor',['../classCLR.html#a40dab47633e088162b9d8a54913a6a59',1,'CLR']]],
-  ['run_51',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
+  ['run_51',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run()'],['../namespaceSDOM_1_1CoreAPI.html#a4cc14392fefaf85500030cdf1c6fc6af',1,'SDOM::CoreAPI::run()']]],
   ['run_5fall_52',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
   ['run_5fevent_5fbehavior_5ftest_53',['run_event_behavior_test',['../classSDOM_1_1UnitTests.html#a5a59c4514887f6d2fd41c057fb1f50f8',1,'SDOM::UnitTests']]],
   ['run_5flua_5ftests_54',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],

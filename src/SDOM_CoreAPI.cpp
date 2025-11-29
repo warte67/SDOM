@@ -130,6 +130,19 @@ public:
                 return makeBoolResult(CoreAPI::setStopAfterUnitTests(stop));
             });
 
+        SDOM::CAPI::registerCallable("SDOM_SetIsRunning",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                bool running = false;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::Bool) {
+                        running = args[0].v.b;
+                    } else if (args[0].kind == CallArg::Kind::UInt) {
+                        running = (args[0].v.u != 0);
+                    }
+                }
+                return makeBoolResult(CoreAPI::setIsRunning(running));
+            });
+
         SDOM::CAPI::registerCallable("SDOM_LoadDomFromJsonFile",
             [](const std::vector<CallArg>& args) -> CallResult {
                 const char* filename = nullptr;
@@ -279,6 +292,23 @@ bool setStopAfterUnitTests(bool stop)
     }
 }
 
+bool setIsRunning(bool running)
+{
+    try {
+        SDOM::Core::getInstance().isRunning(running);
+        return true;
+    } catch (const SDOM::Exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_SetIsRunning unknown error");
+        return false;
+    }
+}
+
 bool loadDomFromJsonFile(const char* filename)
 {
     if (!filename) {
@@ -402,6 +432,18 @@ void registerBindings(Core& core, const std::string& typeName)
         "Instructs the Core main loop to exit automatically after unit tests complete.",
         [](bool stop) -> bool {
             return CoreAPI::setStopAfterUnitTests(stop);
+        });
+
+    core.registerMethod(
+        typeName,
+        "SetIsRunning",
+        "bool Core::capiSetIsRunning(bool running)",
+        "bool",
+        "SDOM_SetIsRunning",
+        "bool SDOM_SetIsRunning(bool running)",
+        "Start or stop the Core main loop without invoking a full shutdown; accepts true to run, false to pause.",
+        [](bool running) -> bool {
+            return CoreAPI::setIsRunning(running);
         });
 
     core.registerMethod(

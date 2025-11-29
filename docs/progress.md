@@ -888,41 +888,42 @@ Each layer grows more predictable — and therefore, more powerful.
 
 <a id="november-29-2025"></a>
 <a id="latest-update"></a>
-
 ## 🗓️ November 29, 2025 — When SDOM Learned to Load Itself
 
 > 💬 *“A good engine initializes itself. A great engine teaches every language how to initialize it too.”*
 
-Today SDOM took a major step toward *configuration-driven startup*, closing the loop between JSON-defined projects, the C++ API, and the newly expanded C API. Variant 4 established the clean high-level JSON boot path — and Variant 3 now mirrors it, proving that the reflection and binding system is mature enough to drive the entire initialization pipeline.
-
----
+Today SDOM took a major step toward **configuration-driven startup**, closing the loop between JSON-defined projects, the C++ Core API, and the newly expanded C API. Variant 4 established the clean high-level JSON boot path — and Variant 3 now mirrors it, proving that the reflection and binding system is mature enough to drive the entire initialization pipeline from any language.
 
 ### 🧩 JSON Configuration Pipeline
 - **Implemented `main_variant_4()` — full C++ JSON-driven startup**
   - Loads window config, assets, fonts, images, spritesheets, theme paths, and DOM hierarchy directly from `config.json`.
-  - Verified that complex object graphs (stages → frames → groups → widgets) resolve correctly.
+  - Verified that complex object graphs (stages → frames → groups → widgets) assemble and resolve correctly.
 
-- **Established `PathRegistry` as the new canonical resolver for all asset paths**
-  - Auto-generated `sdom_paths.json` at startup based on executable directory, system dirs, and XDG paths.
-  - Ensures all fonts, images, Lua files, themes, configs, cache directories, and user settings resolve consistently across:
-    - Linux  
-    - macOS  
-    - Windows  
-  - Fully normalizes and expands tilde (`~/`), relative paths, and environment overrides.
-
----
+- **Introduced `PathRegistry` as the canonical resolver for all asset paths**
+  - Auto-generates `sdom_paths.json` on startup from executable directory, system paths, and XDG directories.
+  - Ensures consistent, platform-neutral resolution for:
+    - Fonts  
+    - Images  
+    - Lua scripts  
+    - Themes  
+    - Config files  
+    - Cache/user data  
+  - Fully normalizes:
+    - `~/` home shortcuts  
+    - Relative paths  
+    - Environment-variable overrides  
 
 ### 🧩 C API Expansion (Variant 3)
-- **Created `main_variant_3()` — C API version of Variant 4**
+- **Created `main_variant_3()` — C API mirror of Variant 4**
   - Calls:
     - `SDOM_Init()`
     - `SDOM_SetStopAfterUnitTests()`
     - `SDOM_LoadDomFromJsonFile()`
     - `SDOM_Run()`
-  - Mirrors the C++ bootstrap nearly 1:1, confirming correctness of new bindings.
-  - Zero C++-side work required to load complete DOM trees — everything flows through CAPI.
+  - Bootstraps SDOM exactly like the C++ path — confirming correctness of the new bindings.
+  - No C++ glue required to load full DOM trees; the C API drives the entire pipeline cleanly.
 
-- **New CAPI bindings validated end-to-end:**
+- **New CAPI bindings validated end-to-end**
   - `SDOM_GetError()`
   - `SDOM_SetError()`
   - `SDOM_Init()`
@@ -932,34 +933,30 @@ Today SDOM took a major step toward *configuration-driven startup*, closing the 
   - `SDOM_Run()`
   - `SDOM_Quit()`
 
-All methods exercised through full unit-test sequences — 65/65 tests passing.
-
----
+All functions exercised through the **full unit-test sequence — 65/65 passing**.
 
 ### 🧩 Core Initialization & Lifecycle
-- JSON boot path now loads assets before DOM to match C++ behavior  
-- Verified texture/font creation for both TrueType and Bitmap fonts  
-- Ensured consistent behavior between Variant 3 (C) and Variant 4 (C++)
-
----
+- JSON boot path now loads **assets before DOM**, matching C++ behavior precisely  
+- Verified texture and font creation (TrueType + Bitmap) in both languages  
+- Confirmed consistent lifecycle flow between Variant 3 (C) and Variant 4 (C++)
 
 ### 🌟 **Summary**
-SDOM’s startup architecture has now *fully converged*:
+SDOM’s startup model has **fully converged**:
 
 - **Variant 2** — Hand-authored C++ initialization  
-- **Variant 3** — C API–driven, external-language friendly  
-- **Variant 4** — Declarative JSON bootstrapping  
+- **Variant 3** — C API / external-language initialization  
+- **Variant 4** — Declarative JSON-based initialization  
 
-All three now demonstrate the same behavior and run the full SDOM test suite without divergence.
+All three now execute the same startup sequence and pass the entire SDOM test suite with no divergence.
 
-This sets the stage for:
-- Lua auto-startup via JSON (`scripts`, `callbacks`, etc.)
-- Rust bindings with zero extra effort
-- A future “SDOM Editor” that outputs full project trees in JSON
+This unifies SDOM’s initialization story and opens the door to:
 
-SDOM’s initialization story is no longer ad-hoc — it is now **systematic, deterministic, and language-agnostic**.
+- Lua auto-startup via JSON (`scripts`, `callbacks`, etc.)  
+- Rust bindings with zero extra engineering  
+- A future **SDOM Editor** that outputs complete, runnable project trees  
+- Turnkey integration for scripting, tooling, and automated tests  
 
----
+Initialization is no longer ad-hoc — it is now **systematic, deterministic, and language-agnostic**.
 
 ## 🚧 ToDo Today / Carryover
 - ☐ Audit all existing `Event` payload writers  
@@ -980,10 +977,8 @@ Completed:
 - ✅ SDOM API CMake cleanup  
 - ✅ Ensure BindGenerator always runs prior to tests  
 - ✅ Transition Version.hpp to JSON pipeline  
-- ✅ JSON → DOM loading verified in both C and C++ APIs  
+- ✅ JSON → DOM loading validated in both C and C++ APIs  
 - ✅ `PathRegistry` fully integrated into asset resolution  
-
----
 
 #### 🤔 *End of Day Reflection*
 > *“Initialization is just ontology wearing a hardhat.”*

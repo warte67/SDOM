@@ -1,5 +1,13 @@
 var NAVTREEINDEX27 =
 {
+"classSDOM_1_1IRangeControl__scaffold.html#ab78aac3a9b8c14589ba2bf9d0344140f":[2,0,0,40,104],
+"classSDOM_1_1IRangeControl__scaffold.html#ab78aac3a9b8c14589ba2bf9d0344140f":[3,0,0,39,104],
+"classSDOM_1_1IRangeControl__scaffold.html#abb3234d9e98839cce304daf9f98f2081":[2,0,0,40,153],
+"classSDOM_1_1IRangeControl__scaffold.html#abb3234d9e98839cce304daf9f98f2081":[3,0,0,39,153],
+"classSDOM_1_1IRangeControl__scaffold.html#abd7be10060116e26935e894937d0e95b":[2,0,0,40,148],
+"classSDOM_1_1IRangeControl__scaffold.html#abd7be10060116e26935e894937d0e95b":[3,0,0,39,148],
+"classSDOM_1_1IRangeControl__scaffold.html#abda87b944bd12092c524a44fc2f534c2":[2,0,0,40,151],
+"classSDOM_1_1IRangeControl__scaffold.html#abda87b944bd12092c524a44fc2f534c2":[3,0,0,39,151],
 "classSDOM_1_1IRangeControl__scaffold.html#abef98ceb11e7781be41a23dec0ac74cc":[2,0,0,40,146],
 "classSDOM_1_1IRangeControl__scaffold.html#abef98ceb11e7781be41a23dec0ac74cc":[3,0,0,39,146],
 "classSDOM_1_1IRangeControl__scaffold.html#ac0d8e727dbb2c0ddd7485fa245ec78bc":[2,0,0,40,158],
@@ -241,13 +249,5 @@ var NAVTREEINDEX27 =
 "classSDOM_1_1IconButton.html#a4d4f5976d3d6b3d6a90bc4e5496ce306":[2,0,0,33,184],
 "classSDOM_1_1IconButton.html#a4d4f5976d3d6b3d6a90bc4e5496ce306":[3,0,0,32,184],
 "classSDOM_1_1IconButton.html#a4e592598afb290b788aecdfe749177f6":[2,0,0,33,171],
-"classSDOM_1_1IconButton.html#a4e592598afb290b788aecdfe749177f6":[3,0,0,32,171],
-"classSDOM_1_1IconButton.html#a50e20433396994800a79876cb28068d6":[2,0,0,33,78],
-"classSDOM_1_1IconButton.html#a50e20433396994800a79876cb28068d6":[3,0,0,32,78],
-"classSDOM_1_1IconButton.html#a5143e0bf1003fae334207a1bbc4b9cc6":[2,0,0,33,69],
-"classSDOM_1_1IconButton.html#a5143e0bf1003fae334207a1bbc4b9cc6":[3,0,0,32,69],
-"classSDOM_1_1IconButton.html#a514bb1586b9cf3bc4f6043669cf049b2":[2,0,0,33,206],
-"classSDOM_1_1IconButton.html#a514bb1586b9cf3bc4f6043669cf049b2":[3,0,0,32,206],
-"classSDOM_1_1IconButton.html#a523b18e70cc99fdb48154bb2c4720db0":[2,0,0,33,107],
-"classSDOM_1_1IconButton.html#a523b18e70cc99fdb48154bb2c4720db0":[3,0,0,32,107]
+"classSDOM_1_1IconButton.html#a4e592598afb290b788aecdfe749177f6":[3,0,0,32,171]
 };

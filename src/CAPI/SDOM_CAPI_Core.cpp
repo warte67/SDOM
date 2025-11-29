@@ -95,6 +95,19 @@ bool SDOM_SetStopAfterUnitTests(bool stop) {
     return callResult.v.b;
 }
 
+bool SDOM_SetIsRunning(bool running) {
+    // Dispatch family: singleton (Core)
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makeBool(running));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetIsRunning", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 bool SDOM_LoadDomFromJsonFile(const char* filename) {
     // Dispatch family: singleton (Core)
     std::vector<SDOM::CAPI::CallArg> args;

@@ -521,6 +521,14 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_SetIsRunning",
+      "c_signature": "bool SDOM_SetIsRunning(bool running)",
+      "dispatch_family": "singleton",
+      "name": "SetIsRunning",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_LoadDomFromJsonFile",
       "c_signature": "bool SDOM_LoadDomFromJsonFile(const char* filename)",
       "dispatch_family": "singleton",

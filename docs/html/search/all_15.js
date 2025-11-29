@@ -107,7 +107,7 @@ var searchData=
   ['rightcenter_104',['RightCenter',['../classSDOM.html#a176e331c0f2e44c038e10b25684370b5a5595404fe7046ad0f3796b176c4f257e',1,'SDOM']]],
   ['rocky_105',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md66',1,'']]],
   ['rootnode_5f_106',['rootNode_',['../classSDOM_1_1Core.html#a6d360ea59596eafb72afe4af6e15fe24',1,'SDOM::Core']]],
-  ['run_107',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run(const std::string &amp;objName, const std::string &amp;testName, Func &amp;&amp;testFunc)']]],
+  ['run_107',['run',['../classSDOM_1_1Core.html#aa6c9e1100971ea3848dd6b053962e6b5',1,'SDOM::Core::run()'],['../classSDOM_1_1UnitTests.html#a70d3dcdfb8d5d04548612a13e822c712',1,'SDOM::UnitTests::run()'],['../namespaceSDOM_1_1CoreAPI.html#a4cc14392fefaf85500030cdf1c6fc6af',1,'SDOM::CoreAPI::run()']]],
   ['run_5fall_108',['run_all',['../classSDOM_1_1UnitTests.html#a4d840a8d5fdec42718beeb59b90febfe',1,'SDOM::UnitTests']]],
   ['run_5fevent_5fbehavior_5ftest_109',['run_event_behavior_test',['../classSDOM_1_1UnitTests.html#a5a59c4514887f6d2fd41c057fb1f50f8',1,'SDOM::UnitTests']]],
   ['run_5flua_5ftests_110',['run_lua_tests',['../classSDOM_1_1UnitTests.html#a3a21dea151d3ed2832db254612c4478d',1,'SDOM::UnitTests']]],

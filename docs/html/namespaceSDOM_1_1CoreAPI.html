@@ -102,6 +102,10 @@ Functions</h2></td></tr>
 <tr class="memitem:adca06271adec531ec75c3472e624a4ad" id="r_adca06271adec531ec75c3472e624a4ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adca06271adec531ec75c3472e624a4ad">init</a> (uint64_t flags)</td></tr>
 <tr class="memitem:a1d3869decd430890ade4c1c5edda94d8" id="r_a1d3869decd430890ade4c1c5edda94d8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d3869decd430890ade4c1c5edda94d8">configure</a> (const <a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *cfg)</td></tr>
 <tr class="memitem:a44002fdb39cae2bbb639ab0582ae035f" id="r_a44002fdb39cae2bbb639ab0582ae035f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44002fdb39cae2bbb639ab0582ae035f">getCoreConfig</a> (<a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *out_cfg)</td></tr>
+<tr class="memitem:a6fd78871ef0a98ddeaa80d8bf27d651e" id="r_a6fd78871ef0a98ddeaa80d8bf27d651e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fd78871ef0a98ddeaa80d8bf27d651e">setStopAfterUnitTests</a> (bool stop)</td></tr>
+<tr class="memitem:abbd8e118446159d804e112068207acf0" id="r_abbd8e118446159d804e112068207acf0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbd8e118446159d804e112068207acf0">setIsRunning</a> (bool running)</td></tr>
+<tr class="memitem:adc0b5c31d948f7aaf0b89847ce9ed7c9" id="r_adc0b5c31d948f7aaf0b89847ce9ed7c9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc0b5c31d948f7aaf0b89847ce9ed7c9">loadDomFromJsonFile</a> (const char *filename)</td></tr>
+<tr class="memitem:a4cc14392fefaf85500030cdf1c6fc6af" id="r_a4cc14392fefaf85500030cdf1c6fc6af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cc14392fefaf85500030cdf1c6fc6af">run</a> ()</td></tr>
 <tr class="memitem:adb010e8aa7c39036b7d35cde1ee8be01" id="r_adb010e8aa7c39036b7d35cde1ee8be01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb010e8aa7c39036b7d35cde1ee8be01">quit</a> ()</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
@@ -190,6 +194,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="adc0b5c31d948f7aaf0b89847ce9ed7c9" name="adc0b5c31d948f7aaf0b89847ce9ed7c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc0b5c31d948f7aaf0b89847ce9ed7c9">&#9670;&#160;</a></span>loadDomFromJsonFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::loadDomFromJsonFile </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="adb010e8aa7c39036b7d35cde1ee8be01" name="adb010e8aa7c39036b7d35cde1ee8be01"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adb010e8aa7c39036b7d35cde1ee8be01">&#9670;&#160;</a></span>quit()</h2>
 
@@ -228,6 +249,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a4cc14392fefaf85500030cdf1c6fc6af" name="a4cc14392fefaf85500030cdf1c6fc6af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cc14392fefaf85500030cdf1c6fc6af">&#9670;&#160;</a></span>run()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::run </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="afada90905db85b6ed9781acd9a0a3ea5" name="afada90905db85b6ed9781acd9a0a3ea5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afada90905db85b6ed9781acd9a0a3ea5">&#9670;&#160;</a></span>setErrorMessage()</h2>
 
@@ -238,6 +276,40 @@ Functions</h2></td></tr>
           <td class="memname">bool SDOM::CoreAPI::setErrorMessage </td>
           <td>(</td>
           <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abbd8e118446159d804e112068207acf0" name="abbd8e118446159d804e112068207acf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbd8e118446159d804e112068207acf0">&#9670;&#160;</a></span>setIsRunning()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setIsRunning </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>running</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6fd78871ef0a98ddeaa80d8bf27d651e" name="a6fd78871ef0a98ddeaa80d8bf27d651e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fd78871ef0a98ddeaa80d8bf27d651e">&#9670;&#160;</a></span>setStopAfterUnitTests()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setStopAfterUnitTests </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>stop</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
