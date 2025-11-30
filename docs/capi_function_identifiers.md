@@ -22,13 +22,13 @@ Lifecycle & Main Loop
 | `void onQuit()` | _callback only_ | _callback only_ | Internal | Use `RegisterOnQuit`; direct Lua access removed in favor of callbacks. |
 | `bool onUnitTest(int frame)` | _callback only_ | _callback only_ | Internal | Triggered through `RegisterOnUnitTest`; not exported as a callable Lua method. |
 | `bool run()` | `SDOM_Run` | `Core:Run()` | Existing | Enters the main loop until quit/stop is requested. |
-| `void isRunning(bool running)` | `SDOM_SetIsRunning` | `Core:SetIsRunning(running)` | Proposed | Allows scripts/tests to pause the loop without a full quit. |
+| `void isRunning(bool running)` | `SDOM_SetIsRunning` | `Core:SetIsRunning(running)` | Existing | Allows scripts/tests to pause the loop without a full quit. |
 | `void quit()` | `SDOM_Quit` | `Core:Quit()` | Existing | Graceful shutdown; also aliased by `shutdown()`. |
 | `void shutdown()` | `SDOM_Quit` | `Core:Shutdown()` | Existing | Thin wrapper over `quit()`; reuse the same C API entry point. |
 | `void onRender()` | _callback only_ | _callback only_ | Internal | Use `RegisterOnRender`; the Lua runtime should not call this directly. |
 | `void onEvent(Event& evt)` | _callback only_ | _callback only_ | Internal | Events are surfaced via listener registration instead of a direct Lua method. |
 | `void onUpdate(float dt)` | _callback only_ | _callback only_ | Internal | Use `RegisterOnUpdate` to hook into the frame loop. |
-| `void onWindowResize(int w, int h)` | `SDOM_OnWindowResize` | _callback dispatch_ | Proposed | Delivered through `RegisterOnWindowResize` rather than exposing `Core:OnWindowResize()` to Lua. |
+| `void onWindowResize(int w, int h)` | `SDOM_OnWindowResize` | _callback only_ | Internal | Delivered through `RegisterOnWindowResize` rather than exposing `Core:OnWindowResize()` to Lua. |
 
 Configuration & JSON Project Loading
 ------------------------------------
@@ -36,25 +36,22 @@ Configuration & JSON Project Loading
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
 | `void configure(const CoreConfig& cfg)` | `SDOM_Configure` | `Core:Configure(cfg)` | Existing | Applies a fresh configuration prior to SDL startup. |
-| `void reconfigure(const CoreConfig& cfg)` | `SDOM_Reconfigure` | `Core:Reconfigure(cfg)` | Proposed | Hot-reload friendly version that applies even after SDL is live. |
-| `bool configureFromJson(const nlohmann::json& doc)` | `SDOM_ConfigureFromJson` | `Core:ConfigureFromJson(json)` | Proposed | Converts JSON blobs to `CoreConfig`. |
-| `bool preloadResourcesFromJson(const nlohmann::json& doc)` | `SDOM_PreloadResourcesFromJson` | `Core:PreloadResourcesFromJson(json)` | Proposed | Loads assets without instantiating the DOM yet. |
-| `DisplayHandle buildDomFromJson(const nlohmann::json& doc)` | `SDOM_BuildDomFromJson` | `Core:BuildDomFromJson(json)` | Proposed | Returns the root display handle for scripted DOM builds. |
-| `bool loadProjectFromJson(const nlohmann::json& doc)` | `SDOM_LoadProjectFromJson` | `Core:LoadProjectFromJson(json)` | Proposed | Convenience that chains configure → preload → DOM build. |
-| `bool loadProjectFromJsonFile(const std::string& path)` | `SDOM_LoadDomFromJsonFile` | `Core:LoadProjectFromJsonFile(path)` | Existing | Primary entry point for variant 3/4 bootstraps. |
+| `bool configureFromJson(const nlohmann::json& doc)` | `SDOM_ConfigureFromJson` | `Core:ConfigureFromJson(json)` | Existing | Converts JSON blobs to `CoreConfig`. |
+| `bool loadDomFromJson(const nlohmann::json& doc)` | `SDOM_LoadDomFromJson` | `Core:LoadDomFromJson(json)` | Existing | Convenience that chains configure → DOM build; JSON-first entry for in-memory documents. |
+| `bool loadDomFromJsonFile(const std::string& path)` | `SDOM_LoadDomFromJsonFile` | `Core:LoadDomFromJsonFile(path)` | Existing | Primary entry point for variant 3/4 bootstraps (file-based JSON). |
 
 Callback Registration & Lua-facing Helpers
 ------------------------------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `void registerOnInit(std::function<bool()>)` | `SDOM_RegisterOnInit` | `Core:RegisterOnInit(fn)` | Proposed | Allows C/lua to inject callbacks executed before the main loop starts. |
-| `void registerOnQuit(std::function<void()>)` | `SDOM_RegisterOnQuit` | `Core:RegisterOnQuit(fn)` | Proposed | Invoke custom teardown logic. |
-| `void registerOnUpdate(std::function<void(float)>)` | `SDOM_RegisterOnUpdate` | `Core:RegisterOnUpdate(fn)` | Proposed | Frame-update hook. |
-| `void registerOnEvent(std::function<void(const Event&)>)` | `SDOM_RegisterOnEvent` | `Core:RegisterOnEvent(fn)` | Proposed | Allows listeners to observe raw SDL events. |
-| `void registerOnRender(std::function<void()>)` | `SDOM_RegisterOnRender` | `Core:RegisterOnRender(fn)` | Proposed | Custom render callback. |
-| `void registerOnUnitTest(std::function<bool()>)` | `SDOM_RegisterOnUnitTest` | `Core:RegisterOnUnitTest(fn)` | Proposed | Enables scripted tests to run alongside C++ suites. |
-| `void registerOnWindowResize(std::function<void(int,int)>)` | `SDOM_RegisterOnWindowResize` | `Core:RegisterOnWindowResize(fn)` | Proposed | Resize notifications for overlays. |
+| `void registerOnInit(std::function<bool()>)` | `SDOM_RegisterOnInit` | `Core:RegisterOnInit(fn)` | Existing | Allows C/lua to inject callbacks executed before the main loop starts. |
+| `void registerOnQuit(std::function<void()>)` | `SDOM_RegisterOnQuit` | `Core:RegisterOnQuit(fn)` | Existing | Invoke custom teardown logic. |
+| `void registerOnUpdate(std::function<void(float)>)` | `SDOM_RegisterOnUpdate` | `Core:RegisterOnUpdate(fn)` | Existing | Frame-update hook. |
+| `void registerOnEvent(std::function<void(const Event&)>)` | `SDOM_RegisterOnEvent` | `Core:RegisterOnEvent(fn)` | Existing | Allows listeners to observe raw SDL events. |
+| `void registerOnRender(std::function<void()>)` | `SDOM_RegisterOnRender` | `Core:RegisterOnRender(fn)` | Existing | Custom render callback. |
+| `void registerOnUnitTest(std::function<bool()>)` | `SDOM_RegisterOnUnitTest` | `Core:RegisterOnUnitTest(fn)` | Existing | Enables scripted tests to run alongside C++ suites. |
+| `void registerOnWindowResize(std::function<void(int,int)>)` | `SDOM_RegisterOnWindowResize` | `Core:RegisterOnWindowResize(fn)` | Existing | Resize notifications for overlays. |
 | `_fnOn*/_fnGetOn* helpers (seven setter/getter pairs)` | _n/a_ | `Core:_fnOnInit(fn)` etc. | Internal | Convenience shims reserved for Lua binding internals; keep C++-only. |
 
 > **Lifecycle policy:** Both the Lua runtime *and* the public C API must wire lifecycle behavior exclusively through these callback registrars. Functions like `Core:onInit()` or `SDOM_OnWindowResize()` stay internal and are triggered by the engine, never invoked directly by external callers.
@@ -64,40 +61,42 @@ Stage / Root DOM Management
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `void setRootNode(const std::string& name)` | `SDOM_SetRootNodeByName` | `Core:SetRootNode(name)` | Proposed | Resolves a display handle by name and sets it as the stage root. |
-| `void setRootNode(const DisplayHandle& handle)` | `SDOM_SetRootNode` | `Core:SetRootNodeHandle(handle)` | Proposed | Direct-handle overload. |
-| `void setStage(const std::string& name)` | `SDOM_SetStage` | `Core:SetStage(name)` | Proposed | Alias retained for backward compatibility. |
-| `Stage* getStage() const` | `SDOM_GetStage` | `Core:GetStage()` | Proposed | Should likely return/unwrap a `Stage` handle rather than a raw pointer in C. |
+| `void setRootNode(const std::string& name)` | `SDOM_SetRootNodeByName` | `Core:SetRootNode(name)` | Existing | Resolves a display handle by name and sets it as the stage root. |
+| `void setRootNode(const DisplayHandle& handle)` | `SDOM_SetRootNode` | `Core:SetRootNodeHandle(handle)` | Existing | Direct-handle overload. |
+| `void setStage(const std::string& name)` | `SDOM_SetStageByName` | `Core:SetStage(name)` | Existing | Alias retained for backward compatibility. |
+| `void setRootNode(const DisplayHandle& handle)` | `SDOM_SetStage` | `Core:SetStageHandle(handle)` | Existing | Alias to set the stage via handle. |
+| `Stage* getStage() const` | _n/a_ | `Core:GetStage()` | Internal | C API exposes handle-based getters instead. |
 | `IDisplayObject* getRootNodePtr() const` | _n/a_ | `Core:GetRootNodePtr()` | Internal | Raw pointer unsafe for the public C API; expose as handle via `getRootNode()` instead. |
-| `DisplayHandle getRootNode() const` | `SDOM_GetRootNode` | `Core:GetRootNode()` | Proposed | Preferred accessor for scripting and C. |
-| `DisplayHandle getStageHandle() const` | `SDOM_GetStageHandle` | `Core:GetStageHandle()` | Proposed | Alias that matches older naming. |
+| `DisplayHandle getRootNode() const` | `SDOM_GetRootNode` | `Core:GetRootNode()` | Existing | Returns the active root/stage handle via out-param. |
+| `DisplayHandle getStageHandle() const` | `SDOM_GetStageHandle` | `Core:GetStageHandle()` | Existing | Alias that matches older naming. |
 
 SDL Resource Access & Presentation State
 ----------------------------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `SDL_Window* getWindow() const` | _n/a_ | `Core:GetWindow()` | Internal | Exposes raw SDL pointers — leave C++-only. |
-| `SDL_Renderer* getRenderer() const` | _n/a_ | `Core:GetRenderer()` | Internal | Same reasoning as above. |
-| `SDL_Texture* getTexture() const` | _n/a_ | `Core:GetTexture()` | Internal | Same reasoning as above. |
-| `SDL_Color getColor() const` | `SDOM_GetBorderColor` | `Core:GetColor()` | Proposed | Returns the frame border color applied during presentation. |
-| `void setColor(const SDL_Color& color)` | `SDOM_SetBorderColor` | `Core:SetColor(color)` | Proposed | Updates the border color and pushes it to the renderer immediately. |
+| `SDL_Window* getWindow() const` | `SDOM_GetWindow()` | `Core:GetWindow()` | Existing | Caveat: This pointer is ABI Safe as long as SDL_DestroyWindow() is not allowed. |
+| `SDL_Renderer* getRenderer() const` | `SDOM_GetRenderer()` | `Core:GetRenderer()` | Existing | Caveat: This pointer is ABI Safe as long as SDL_DestroyRenderer() is not allowed. |
+| `SDL_Texture* getTexture() const` | `SDOM_GetTexture()` | `Core:GetTexture()` | Existing | Caveat: This pointer is ABI Safe as long as SDL_DestroyTexture() is not allowed. |
+| `SDL_Color getColor() const` | `SDOM_GetBorderColor` | `Core:GetColor()` | Existing | Returns the frame border color applied during presentation. |
+| `void setColor(const SDL_Color& color)` | `SDOM_SetBorderColor` | `Core:SetColor(color)` | Existing | Updates the border color and pushes it to the renderer immediately. |
+
+> Ownership note: SDL resources returned by Core (window/renderer/texture) are **SDOM-owned borrows**. Callers may use them with SDL APIs but must **never destroy** (`SDL_Destroy*`) or reparent them unless the resource was created via a CAPI call that explicitly transfers ownership. Destroy only what you create.
 
 Window Title & Timing
 ---------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `std::string getWindowTitle() const` | `SDOM_GetWindowTitle` | `Core:GetWindowTitle()` | Proposed | Returns cached title; in C return `const char*`. |
-| `void setWindowTitle(const std::string& title)` | `SDOM_SetWindowTitle` | `Core:SetWindowTitle(title)` | Proposed | Calls `SDL_SetWindowTitle` when live. |
-| `float getElapsedTime() const` | `SDOM_GetElapsedTime` | `Core:GetElapsedTime()` | Proposed | Last frame delta time in seconds. |
+| `std::string getWindowTitle() const` | `SDOM_GetWindowTitle` | `Core:GetWindowTitle()` | Existing | Returns cached title; in C return `const char*`. |
+| `void setWindowTitle(const std::string& title)` | `SDOM_SetWindowTitle` | `Core:SetWindowTitle(title)` | Existing | Calls `SDL_SetWindowTitle` when live. |
+| `float getElapsedTime() const` | `SDOM_GetElapsedTime` | `Core:GetElapsedTime()` | Existing | Last frame delta time in seconds. |
 
 Configuration Accessors (Getters)
 ---------------------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `CoreConfig& getConfig()` | `SDOM_GetCoreConfig` | `Core:GetConfig()` | Existing | Returns by value in C (`SDOM_CoreConfig`). |
 | `float getWindowWidth() const` | `SDOM_GetWindowWidth` | `Core:GetWindowWidth()` | Proposed | Convenience scalar accessor. |
 | `float getWindowHeight() const` | `SDOM_GetWindowHeight` | `Core:GetWindowHeight()` | Proposed | — |
 | `float getPixelWidth() const` | `SDOM_GetPixelWidth` | `Core:GetPixelWidth()` | Proposed | — |
@@ -109,13 +108,14 @@ Configuration Accessors (Getters)
 | `SDL_PixelFormat getPixelFormat() const` | `SDOM_GetPixelFormat` | `Core:GetPixelFormat()` | Proposed | — |
 | `bool isFullscreen() const` | `SDOM_IsFullscreen` | `Core:IsFullscreen()` | Proposed | Derived from SDL window state. |
 | `bool isWindowed() const` | `SDOM_IsWindowed` | `Core:IsWindowed()` | Proposed | Complement of `IsFullscreen`. |
+| `bool getIsTraversing() const` | `SDOM_GetIsTraversing` | `Core:GetIsTraversing()` | Proposed | Reports when the DOM is currently being traversed; safe for tests & tooling. |
+| `void setIsTraversing(bool)` | `SDOM_SetIsTraversing` | `Core:SetIsTraversing(flag)` | Proposed | Allows tests or async loaders to suppress traversal during mutation. |
 
 Configuration Mutators (Setters)
 --------------------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `void setConfig(CoreConfig& cfg)` | `SDOM_SetConfig` | `Core:SetConfig(cfg)` | Proposed | Applies a pre-built struct (non-const in C++ for historical reasons). |
 | `void setWindowWidth(float width)` | `SDOM_SetWindowWidth` | `Core:SetWindowWidth(width)` | Proposed | Auto-triggers reconfigure when SDL is active. |
 | `void setWindowHeight(float height)` | `SDOM_SetWindowHeight` | `Core:SetWindowHeight(height)` | Proposed | — |
 | `void setPixelWidth(float width)` | `SDOM_SetPixelWidth` | `Core:SetPixelWidth(width)` | Proposed | — |
@@ -129,50 +129,181 @@ Configuration Mutators (Setters)
 | `void setWindowed(bool windowed)` | `SDOM_SetWindowed` | `Core:SetWindowed(windowed)` | Proposed | Complements `SetFullscreen`; only two modes exist so this simply clears fullscreen and re-applies standard window flags. |
 
 Factory / Registry / Traversal State
-------------------------------------
+====================================
 
-| C++ API | C API Identifier | Lua Binding | Status | Notes |
-| --- | --- | --- | --- | --- |
-| `Factory& getFactory() const` | _n/a_ | `Core:GetFactory()` | Internal | Factory is C++-only today; expose via higher-level helpers instead. |
-| `EventManager& getEventManager() const` | _n/a_ | `Core:GetEventManager()` | Internal | Same as above. |
-| `DataRegistry& getDataRegistry()` / `const DataRegistry& ...` | `SDOM_GetDataRegistry` | `Core:GetDataRegistry()` | Proposed | Would return an opaque registry handle for tooling. |
-| `DataRegistry& getRegistry()` (deprecated) | _n/a_ | `Core:GetRegistry()` | Internal | Keep deprecated alias internal. |
-| `bool exportBindings()` | `SDOM_ExportBindings` | `Core:ExportBindings()` | Proposed | Triggers the BindGenerator to emit manifests/heades. |
-| `bool getIsTraversing() const` | `SDOM_GetIsTraversing` | `Core:GetIsTraversing()` | Proposed | Indicates when DOM traversal is active. |
-| `void setIsTraversing(bool)` | `SDOM_SetIsTraversing` | `Core:SetIsTraversing(flag)` | Proposed | Used by async loaders/tests. |
+This section contains **only** the Core functions that are appropriate for
+exposure to external languages (C API, Lua).  
+All internal engine subsystems — Factory, EventManager, DataRegistry,
+and the BindGenerator — remain strictly inside the C++ implementation.
+
+Only **engine-state queries** from this category are suitable for
+public binding. Everything else is for internal Core operation and
+must not be surfaced outside C++.
+
+Public API (External Bindings)
+------------------------------
+
+| C++ API                      | C API Identifier        | Lua Binding                 | Status    | Notes |
+|-----------------------------|-------------------------|-----------------------------|-----------|-------|
+| `bool getIsTraversing() const` | `SDOM_GetIsTraversing` | `Core:GetIsTraversing()`     | Proposed  | Reports when the DOM is currently being traversed; safe for tests & tooling. |
+| `void setIsTraversing(bool)`   | `SDOM_SetIsTraversing` | `Core:SetIsTraversing(flag)` | Proposed  | Allows tests or async loaders to suppress traversal during mutation. |
+
+Internal-Only (Not for CAPI, Not for Lua)
+-----------------------------------------
+
+These functions are **engine infrastructure**, tightly bound to the internal
+implementation and not ABI-safe. They must **not** appear in generated
+bindings.
+
+| C++ API                               | Reason for Exclusion |
+|---------------------------------------|-----------------------|
+| `Factory& getFactory() const`         | Exposes object-creation internals; bypasses safety. |
+| `EventManager& getEventManager() const` | Low-level event pipeline; volatile to refactoring. |
+| `DataRegistry& getDataRegistry()`     | Reflection/compiler subsystem; unsafe for foreign code. |
+| `DataRegistry& getRegistry()` (deprecated) | Deprecated internal alias. |
+| `bool exportBindings()`               | Invokes BindGenerator; can overwrite SDK output. |
+
+Rationale
+---------
+
+Only traversal-state queries (`getIsTraversing`, `setIsTraversing`)
+represent a stable, safe, engine-level status flag.  
+All other items in this category operate on **engine infrastructure**
+that external callers must never touch.
+
+This separation preserves:
+
+- ABI stability  
+- soft real-time safety  
+- DOM integrity during mutation  
+- the flexibility to refactor internals without breaking the C API
+
 
 Focus & Hover Management
-------------------------
+========================
 
-| C++ API | C API Identifier | Lua Binding | Status | Notes |
-| --- | --- | --- | --- | --- |
-| `void handleTabKeyPress()` | `SDOM_HandleTabKeyPress` | `Core:HandleTabKeyPress()` | Proposed | Advances keyboard focus forward. |
-| `void handleTabKeyPressReverse()` | `SDOM_HandleTabKeyPressReverse` | `Core:HandleTabKeyPressReverse()` | Proposed | Moves focus backward. |
-| `void setKeyboardFocusedObject(DisplayHandle obj)` | `SDOM_SetKeyboardFocus` | `Core:SetKeyboardFocus(handle)` | Proposed | Accepts display handles in C API. |
-| `DisplayHandle getKeyboardFocusedObject() const` | `SDOM_GetKeyboardFocus` | `Core:GetKeyboardFocus()` | Proposed | — |
-| `void clearKeyboardFocusedObject()` | `SDOM_ClearKeyboardFocus` | `Core:ClearKeyboardFocus()` | Proposed | — |
-| `void setMouseHoveredObject(DisplayHandle obj)` | `SDOM_SetMouseHover` | `Core:SetMouseHover(handle)` | Proposed | — |
-| `DisplayHandle getMouseHoveredObject() const` | `SDOM_GetMouseHover` | `Core:GetMouseHover()` | Proposed | — |
-| `void clearMouseHoveredObject()` | `SDOM_ClearMouseHover` | `Core:ClearMouseHover()` | Proposed | — |
+These APIs control SDOM’s **keyboard focus chain** and **mouse hover state**.
+They are safe to expose (they use only `DisplayHandle`), but they exist **primarily
+for testing and tooling**, not for normal application logic.
+
+⚠️ **Stability Notice**  
+These functions are **not part of SDOM’s long-term stable public API**.  
+They may be **relocated**, **renamed**, or **removed** in a future major release once
+a dedicated testing harness or editor-only extension layer exists.
+
+For now they remain exposed to support:
+- Deterministic unit tests  
+- Headless CI runs  
+- Automated input simulation  
+- Editor/inspection overlays  
+
+Normal applications should rely on standard SDL-driven input events.
+
+Public API (External Bindings)
+------------------------------
+
+| C++ API                                       | C API Identifier                | Lua Binding                        | Status    | Notes |
+|-----------------------------------------------|----------------------------------|--------------------------------------|-----------|-------|
+| `void handleTabKeyPress()`                    | `SDOM_HandleTabKeyPress`         | `Core:HandleTabKeyPress()`           | Existing  | Moves focus forward. **Testing/editor only.** |
+| `void handleTabKeyPressReverse()`             | `SDOM_HandleTabKeyPressReverse`  | `Core:HandleTabKeyPressReverse()`    | Existing  | Moves focus backward. **Testing/editor only.** |
+| `void setKeyboardFocusedObject(DisplayHandle)` | `SDOM_SetKeyboardFocus`        | `Core:SetKeyboardFocus(handle)`      | Existing  | Direct focus override. **Not intended for production use.** |
+| `DisplayHandle getKeyboardFocusedObject() const` | `SDOM_GetKeyboardFocus`      | `Core:GetKeyboardFocus()`            | Existing  | Useful for deterministic tests. |
+| `void clearKeyboardFocusedObject()`           | `SDOM_ClearKeyboardFocus`        | `Core:ClearKeyboardFocus()`          | Existing  | Clears focus. |
+| `void setMouseHoveredObject(DisplayHandle)`   | `SDOM_SetMouseHover`             | `Core:SetMouseHover(handle)`         | Existing  | Synthetic hover assignment. |
+| `DisplayHandle getMouseHoveredObject() const` | `SDOM_GetMouseHover`             | `Core:GetMouseHover()`               | Existing  | Query hover state. |
+| `void clearMouseHoveredObject()`              | `SDOM_ClearMouseHover`           | `Core:ClearMouseHover()`             | Existing  | Clears hover. |
+
+Intended Usage Notes
+--------------------
+
+- **Not recommended** for general application development.  
+  SDOM will manage focus/hover automatically from real events.
+
+- **Threading requirement:**  
+  Must be called on SDOM’s main thread — modifying focus/hover during traversal
+  could cause state inconsistencies.
+
+- **Possible future changes:**  
+  A later SDOM version may move these APIs into:
+  - a `SDOM_Test` auxiliary module,  
+  - a dedicated “Editor” extension block,  
+  - or a specialized simulation subsystem.
+
+Rationale
+---------
+
+Although niche, these bindings significantly simplify:
+- Writing deterministic unit tests  
+- Running SDOM headlessly  
+- Validating DOM structure in CI environments  
+- Implementing external editors or training UIs
+
+Therefore they remain public *for now*, with clear warnings about their
+non-stability.
 
 Frame & Loop Diagnostics
 ------------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `int getFrameCount() const` | `SDOM_GetFrameCount` | `Core:GetFrameCount()` | Proposed | Useful for deterministic tests. |
+| `int getFrameCount() const` | `SDOM_GetFrameCount` | `Core:GetFrameCount()` | Existing | Useful for deterministic tests. |
+
+---
 
 Display / Asset Object Creation
 -------------------------------
 
+> **Modern SDOM Standard:**  
+> SDOM objects are now constructed from **InitStructs** (C++/C API) or **JSON** (file or memory).  
+> Lua-table and Lua-script constructors remain *legacy/optional* and only exist when SDOM is built
+> with Lua enabled. JSON is the authoritative cross-language initializer.
+
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `DisplayHandle createDisplayObject(const std::string&, const sol::table&)` | `SDOM_CreateDisplayObjectFromTable` | `Core:CreateDisplayObject(type, table)` | Proposed | Requires marshalling Lua tables through the registry. |
-| `DisplayHandle createDisplayObject(const std::string&, const IDisplayObject::InitStruct&)` | `SDOM_CreateDisplayObject` | `Core:CreateDisplayObjectFromInit(type, init)` | Proposed | Struct-based initializer for C API callers. |
-| `DisplayHandle createDisplayObjectFromScript(const std::string&, const std::string&)` | `SDOM_CreateDisplayObjectFromScript` | `Core:CreateDisplayObjectFromScript(type, lua)` | Proposed | Compiles Lua snippet to configure object. |
-| `AssetHandle createAssetObject(const std::string&, const sol::table&)` | `SDOM_CreateAssetObjectFromTable` | `Core:CreateAssetObject(type, table)` | Proposed | — |
-| `AssetHandle createAssetObject(const std::string&, const IAssetObject::InitStruct&)` | `SDOM_CreateAssetObject` | `Core:CreateAssetObjectFromInit(type, init)` | Proposed | — |
-| `AssetHandle createAssetObjectFromScript(const std::string&, const std::string&)` | `SDOM_CreateAssetObjectFromScript` | `Core:CreateAssetObjectFromScript(type, lua)` | Proposed | — |
+
+### Display Creation
+
+| `DisplayHandle createDisplayObject(const std::string& type, const IDisplayObject::InitStruct& init)` | `SDOM_CreateDisplayObject` | `Core:CreateDisplayObjectFromInit(type, init)` | Existing | Primary C/C++ entry point. Uses strongly-typed InitStructs. |
+
+| `DisplayHandle createDisplayObjectFromJson(const std::string& type, const nlohmann::json& j)` | `SDOM_CreateDisplayObjectFromJson` | `Core:CreateDisplayObjectFromJson(type, json)` | Proposed | Calls `<T>::InitStruct::from_json()` then `<T>::CreateFromJson()`. JSON is now the preferred initializer for projects and tooling. |
+
+| *(optional)* `DisplayHandle createDisplayObject(const std::string& type, const sol::table&)` | `SDOM_CreateDisplayObjectFromLuaTable` | `Core:CreateDisplayObject(type, table)` | Legacy / Optional | Only available when Lua is enabled. Deprecated; may be removed in a future release. |
+
+| *(optional)* `DisplayHandle createDisplayObjectFromScript(const std::string&, const std::string&)` | `SDOM_CreateDisplayObjectFromLuaScript` | `Core:CreateDisplayObjectFromScript(type, code)` | Legacy / Optional | Compiles Lua snippet; only exists with Lua enabled. |
+
+---
+
+### Asset Creation
+
+| `AssetHandle createAssetObject(const std::string& type, const IAssetObject::InitStruct& init)` | `SDOM_CreateAssetObject` | `Core:CreateAssetObjectFromInit(type, init)` | Existing | Strongly typed InitStruct constructor. |
+
+| `AssetHandle createAssetObjectFromJson(const std::string& type, const nlohmann::json& j)` | `SDOM_CreateAssetObjectFromJson` | `Core:CreateAssetObjectFromJson(type, json)` | Proposed | Mirrors display-object JSON construction. |
+
+| *(optional)* `AssetHandle createAssetObject(const std::string&, const sol::table&)` | `SDOM_CreateAssetObjectFromLuaTable` | `Core:CreateAssetObject(type, table)` | Legacy / Optional | Lua-only; deprecated. |
+
+| *(optional)* `AssetHandle createAssetObjectFromScript(const std::string&, const std::string&)` | `SDOM_CreateAssetObjectFromLuaScript` | `Core:CreateAssetObjectFromScript(type, code)` | Legacy / Optional | Lua-only; deprecated. |
+
+---
+
+### Notes & Policy
+
+- **JSON is now the canonical cross-language initializer** for both Display and Asset objects.  
+  Every SDOM object already implements:
+  - `InitStruct` with defaults  
+  - `static void InitStruct::from_json(const json&, InitStruct&)`  
+  - `static std::unique_ptr<T> CreateFromJson(const json&)`
+
+- The C API should always prefer:
+  - `SDOM_CreateDisplayObject(type, initStruct)`
+  - `SDOM_CreateDisplayObjectFromJson(type, jsonString)`
+
+- Lua constructors are **optional and deprecated**.  
+  They may not appear in future SDOM major releases.
+
+- We should know that **InitStruct + JSON is the modern pipeline**, and table/script constructors are legacy shims.
+
+
+
 
 Object Lookup & Lifetime Management
 -----------------------------------
@@ -219,7 +350,7 @@ Testing & Input Filtering
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
 | `void setStopAfterUnitTests(bool stop)` | `SDOM_SetStopAfterUnitTests` | `Core:SetStopAfterUnitTests(stop)` | Existing | Already wired through C API + Lua. |
-| `bool getStopAfterUnitTests()` | `SDOM_GetStopAfterUnitTests` | `Core:GetStopAfterUnitTests()` | Proposed | Complements the setter. |
+| `bool getStopAfterUnitTests()` | `SDOM_GetStopAfterUnitTests` | `Core:GetStopAfterUnitTests()` | Existing | Complements the setter. |
 | `void setIgnoreRealInput(bool)` | `SDOM_SetIgnoreRealInput` | `Core:SetIgnoreRealInput(flag)` | Proposed | Shields automated tests from physical mouse events. |
 | `bool getIgnoreRealInput() const` | `SDOM_GetIgnoreRealInput` | `Core:GetIgnoreRealInput()` | Proposed | — |
 | `float getKeyfocusGray() const` | `SDOM_GetKeyfocusGray` | `Core:GetKeyfocusGray()` | Proposed | Visualization helper for focus overlays. |
@@ -275,4 +406,3 @@ Open Questions / Follow-ups
 1. **Handle exposure vs. raw pointers** – functions currently returning `Stage*`, `IDisplayObject*`, `IAssetObject*`, or SDL pointers should either stay internal or gain safe handle-based wrappers before generating bindings.
 2. **Config mutation granularity** – decide whether per-field getters/setters are needed in C, or if manipulating an `SDOM_CoreConfig` blob suffices.
 3. **Async safety** – some proposed APIs (`SetIsRunning`, focus setters) mutate state that is only safe on the main thread; generation should embed thread-safety warnings.
-

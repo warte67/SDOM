@@ -886,8 +886,8 @@ Each layer grows more predictable — and therefore, more powerful.
 
 ---
 
-<a id="november-29-2025"></a>
-<a id="latest-update"></a>
+
+
 ## 🗓️ November 29, 2025 — When SDOM Learned to Load Itself
 
 > 💬 *“A good engine initializes itself. A great engine teaches every language how to initialize it too.”*
@@ -958,7 +958,69 @@ This unifies SDOM’s initialization story and opens the door to:
 
 Initialization is no longer ad-hoc — it is now **systematic, deterministic, and language-agnostic**.
 
+#### 🤔 *End of Day Reflection*
+> *“Initialization is just ontology wearing a hardhat.”*
+
+---
+
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
+<a id="november-30-2025"></a>
+<a id="latest-update"></a>
+
+## 🗓️ November 30, 2025 — When Config Revealed Its Missing Pulse
+
+> 💬 *“Engines don’t hide bugs — they whisper them in fields you forgot to bind.”*  
+Today’s focus turned toward the **CoreConfig truth table** — and in doing so, revealed that `rendererVSync` has been quietly sitting in the struct without ever participating in JSON parsing, reconfigure logic, or the C API surface.  
+A small omission with big downstream effects.
+
+### 🧩 Core Configuration & CAPI Alignment
+- Identified that **`rendererVSync` exists in `CoreConfig`**, but:
+  - ❌ Not parsed from JSON  
+  - ❌ Not included in C API struct  
+  - ❌ Not surfaced in getter/setter tables  
+  - ❌ Not respected in `configureFromJson`  
+  - ❌ Not represented in manifest or binding metadata  
+- Planned a deep-dive session to unify:
+  - JSON field → CoreConfig
+  - CoreConfig → reconfigure()
+  - CoreConfig → CAPI struct
+  - CAPI → Lua bindings  
+- Marked the entire `rendererVSync` property chain as **pending full audit**.
+
+### 🧩 Binding Manifest Cross-Verification
+- Completed another pass comparing the *dynamic manifest* against the *static Core table*.  
+- Verified all existing CAPI identifiers for correctness; marked remaining Proposed entries for generator integration.
+
+### 🌟 **Summary**
+Today revealed a subtle but important gap: **configuration completeness**.  
+SDOM’s Core is nearly fully reflected — but `rendererVSync` demonstrated how easy it is for a field to drift out of sync across JSON, C++, the C API, and Lua.  
+Tomorrow’s focus will be unifying that chain and ensuring the manifest becomes the single source of truth for Core behavior.
+
 ## 🚧 ToDo Today / Carryover
+- 🔄 Continue registering & binding Core APIs  
+- ☐ Add `rendererVSync` to JSON parsing  
+- ☐ Add `rendererVSync` to C API & binding manifest  
+- ☐ Update `reconfigure()` logic to apply vsync changes consistently  
+- ☐ Expand unit test coverage (CAPI + JSON startup + reconfigure cycle)
+
+#### 🤔 *End of Day Reflection*
+> *“The smallest missing field can mislead the mightiest engine — completeness is a kingdom built one property at a time.”*
+
+---
+
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
+#### end-of-day
+
+---
+
+
+### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
 - ☐ Audit all existing `Event` payload writers  
 - ☐ Typed accessor checklist for remaining payload fields  
 - ☐ Optional: Script a payload-key discovery pass  
@@ -971,29 +1033,6 @@ Initialization is no longer ad-hoc — it is now **systematic, deterministic, an
 - 🔄 Add common ABI wrapper layer  
 - 🔄 Expand unit test coverage  
 
-Completed:
-- ✅ JSON payload accessors & typed-event improvements  
-- ✅ CAPI cleanup & removal of legacy paths  
-- ✅ SDOM API CMake cleanup  
-- ✅ Ensure BindGenerator always runs prior to tests  
-- ✅ Transition Version.hpp to JSON pipeline  
-- ✅ JSON → DOM loading validated in both C and C++ APIs  
-- ✅ `PathRegistry` fully integrated into asset resolution  
-
-#### 🤔 *End of Day Reflection*
-> *“Initialization is just ontology wearing a hardhat.”*
-
----
-
-[⬆️ Back to Progress Updates](../progress.md#progress-updates)
-
----
-
-#### end-of-day
-
----
-
-### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
 - ☐ Implement [IDataObject_binding_helpers](IDataObject_binding_helpers) for consistent property/function registration
 - 🔄 Expand **CAPI_BindGenerator**  
   - 🔄 Generate standalone C API functions  
@@ -1004,36 +1043,6 @@ Completed:
 - ☐ Initialize **DataRegistry** from JSON  
 - ☐ Serialize/deserialize **entire DOM tree** via JSON  
   *(Eventually complementing or replacing Lua init)*
-
-#### 🔧 Registry / ABI Work
-- ☐ Implement `Core::registerResource()`
-- ☐ Build **C ABI unit-test harness** (proof-of-concept)
-  - ☐ `SDOM_CLR` → static singleton (inherits `IDataObject`)
-  - 🔄 `SDOM_Event` → inherits `IDataObject`
-  - ☐ `SDOM_EventType` → inherits `IDataObject`
-  - ☐ `SDOM_IButtonObject` → inherits `IDataObject`
-  - ☐ `SDOM_IconIndex` → static singleton (inherits `IDataObject`)
-  - ☐ `SDOM_SDL_Utils` → inherits `IDataObject`
-  - ☐ `SDOM_UnitTests` → inherits `IDataObject`
-- ☐ `SDOM_Utils` → static singleton
-- ☐ Integrate `SDOM_Version.hpp.in` with new binding pipeline
-- ☐ Surface full **EventType registry** through `Event::registerBindingsImpl()`
-
-#### 🖼️ Rendering / Assets
-- ☐ Prototype **SVG renderer** for next-gen asset pipeline
-
-#### 🧪 Lua Phase 2
-- ☐ Add Lua runtime tests validating registry ↔ live system sync
-
-#### 📘 Documentation / Meta
-- ☐ Expand developer wiki with:
-  - DataRegistry flow diagrams
-  - Binding generator design
-  - ABI wrapper spec
-- ☐ Add Doxygen + comments for updated scripts:
-  - `compile`
-  - `dox`
-  - `gen_version.sh`
 
 #### 📝 UI Components
 - ☐ Begin **EditBox / IME input system** implementation

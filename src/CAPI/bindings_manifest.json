@@ -505,6 +505,14 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_ConfigureFromJson",
+      "c_signature": "bool SDOM_ConfigureFromJson(const char* json)",
+      "dispatch_family": "singleton",
+      "name": "ConfigureFromJson",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_GetCoreConfig",
       "c_signature": "bool SDOM_GetCoreConfig(SDOM_CoreConfig* out_cfg)",
       "dispatch_family": "singleton",
@@ -537,6 +545,350 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_LoadDomFromJson",
+      "c_signature": "bool SDOM_LoadDomFromJson(const char* json)",
+      "dispatch_family": "singleton",
+      "name": "LoadDomFromJson",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetBorderColor",
+      "c_signature": "bool SDOM_GetBorderColor(SDL_Color* out_color)",
+      "dispatch_family": "singleton",
+      "name": "GetBorderColor",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetBorderColor",
+      "c_signature": "bool SDOM_SetBorderColor(const SDL_Color* color)",
+      "dispatch_family": "singleton",
+      "name": "SetBorderColor",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetWindowTitle",
+      "c_signature": "const char* SDOM_GetWindowTitle(void)",
+      "dispatch_family": "singleton",
+      "name": "GetWindowTitle",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetWindowTitle",
+      "c_signature": "bool SDOM_SetWindowTitle(const char* title)",
+      "dispatch_family": "singleton",
+      "name": "SetWindowTitle",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetElapsedTime",
+      "c_signature": "float SDOM_GetElapsedTime(void)",
+      "dispatch_family": "singleton",
+      "name": "GetElapsedTime",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetWindowWidth",
+      "c_signature": "float SDOM_GetWindowWidth(void)",
+      "dispatch_family": "singleton",
+      "name": "GetWindowWidth",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetWindowHeight",
+      "c_signature": "float SDOM_GetWindowHeight(void)",
+      "dispatch_family": "singleton",
+      "name": "GetWindowHeight",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetPixelWidth",
+      "c_signature": "float SDOM_GetPixelWidth(void)",
+      "dispatch_family": "singleton",
+      "name": "GetPixelWidth",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetPixelHeight",
+      "c_signature": "float SDOM_GetPixelHeight(void)",
+      "dispatch_family": "singleton",
+      "name": "GetPixelHeight",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetPreserveAspectRatio",
+      "c_signature": "bool SDOM_GetPreserveAspectRatio(void)",
+      "dispatch_family": "singleton",
+      "name": "GetPreserveAspectRatio",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetAllowTextureResize",
+      "c_signature": "bool SDOM_GetAllowTextureResize(void)",
+      "dispatch_family": "singleton",
+      "name": "GetAllowTextureResize",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetLogicalPresentation",
+      "c_signature": "SDL_RendererLogicalPresentation SDOM_GetLogicalPresentation(void)",
+      "dispatch_family": "singleton",
+      "name": "GetLogicalPresentation",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetWindowFlags",
+      "c_signature": "SDL_WindowFlags SDOM_GetWindowFlags(void)",
+      "dispatch_family": "singleton",
+      "name": "GetWindowFlags",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetPixelFormat",
+      "c_signature": "SDL_PixelFormat SDOM_GetPixelFormat(void)",
+      "dispatch_family": "singleton",
+      "name": "GetPixelFormat",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_IsFullscreen",
+      "c_signature": "bool SDOM_IsFullscreen(void)",
+      "dispatch_family": "singleton",
+      "name": "IsFullscreen",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_IsWindowed",
+      "c_signature": "bool SDOM_IsWindowed(void)",
+      "dispatch_family": "singleton",
+      "name": "IsWindowed",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetIsTraversing",
+      "c_signature": "bool SDOM_GetIsTraversing(void)",
+      "dispatch_family": "singleton",
+      "name": "GetIsTraversing",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_HandleTabKeyPress",
+      "c_signature": "bool SDOM_HandleTabKeyPress(void)",
+      "dispatch_family": "singleton",
+      "name": "HandleTabKeyPress",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_HandleTabKeyPressReverse",
+      "c_signature": "bool SDOM_HandleTabKeyPressReverse(void)",
+      "dispatch_family": "singleton",
+      "name": "HandleTabKeyPressReverse",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetIsTraversing",
+      "c_signature": "bool SDOM_GetIsTraversing(void)",
+      "dispatch_family": "singleton",
+      "name": "GetIsTraversing",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetWindow",
+      "c_signature": "bool SDOM_GetWindow(SDL_Window** out_window)",
+      "dispatch_family": "singleton",
+      "name": "GetWindow",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetRenderer",
+      "c_signature": "bool SDOM_GetRenderer(SDL_Renderer** out_renderer)",
+      "dispatch_family": "singleton",
+      "name": "GetRenderer",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetTexture",
+      "c_signature": "bool SDOM_GetTexture(SDL_Texture** out_texture)",
+      "dispatch_family": "singleton",
+      "name": "GetTexture",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetWindowWidth",
+      "c_signature": "bool SDOM_SetWindowWidth(float width)",
+      "dispatch_family": "singleton",
+      "name": "SetWindowWidth",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetWindowHeight",
+      "c_signature": "bool SDOM_SetWindowHeight(float height)",
+      "dispatch_family": "singleton",
+      "name": "SetWindowHeight",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetPixelWidth",
+      "c_signature": "bool SDOM_SetPixelWidth(float width)",
+      "dispatch_family": "singleton",
+      "name": "SetPixelWidth",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetPixelHeight",
+      "c_signature": "bool SDOM_SetPixelHeight(float height)",
+      "dispatch_family": "singleton",
+      "name": "SetPixelHeight",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetPreserveAspectRatio",
+      "c_signature": "bool SDOM_SetPreserveAspectRatio(bool preserve)",
+      "dispatch_family": "singleton",
+      "name": "SetPreserveAspectRatio",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetAllowTextureResize",
+      "c_signature": "bool SDOM_SetAllowTextureResize(bool allow)",
+      "dispatch_family": "singleton",
+      "name": "SetAllowTextureResize",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetLogicalPresentation",
+      "c_signature": "bool SDOM_SetLogicalPresentation(SDL_RendererLogicalPresentation presentation)",
+      "dispatch_family": "singleton",
+      "name": "SetLogicalPresentation",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetWindowFlags",
+      "c_signature": "bool SDOM_SetWindowFlags(SDL_WindowFlags flags)",
+      "dispatch_family": "singleton",
+      "name": "SetWindowFlags",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetPixelFormat",
+      "c_signature": "bool SDOM_SetPixelFormat(SDL_PixelFormat fmt)",
+      "dispatch_family": "singleton",
+      "name": "SetPixelFormat",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetFullscreen",
+      "c_signature": "bool SDOM_SetFullscreen(bool fullscreen)",
+      "dispatch_family": "singleton",
+      "name": "SetFullscreen",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetWindowed",
+      "c_signature": "bool SDOM_SetWindowed(bool windowed)",
+      "dispatch_family": "singleton",
+      "name": "SetWindowed",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetIsTraversing",
+      "c_signature": "bool SDOM_SetIsTraversing(bool traversing)",
+      "dispatch_family": "singleton",
+      "name": "SetIsTraversing",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetKeyboardFocus",
+      "c_signature": "bool SDOM_SetKeyboardFocus(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetKeyboardFocus",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetKeyboardFocus",
+      "c_signature": "bool SDOM_GetKeyboardFocus(SDOM_DisplayHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetKeyboardFocus",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_ClearKeyboardFocus",
+      "c_signature": "bool SDOM_ClearKeyboardFocus(void)",
+      "dispatch_family": "singleton",
+      "name": "ClearKeyboardFocus",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetMouseHover",
+      "c_signature": "bool SDOM_SetMouseHover(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetMouseHover",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetMouseHover",
+      "c_signature": "bool SDOM_GetMouseHover(SDOM_DisplayHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetMouseHover",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_ClearMouseHover",
+      "c_signature": "bool SDOM_ClearMouseHover(void)",
+      "dispatch_family": "singleton",
+      "name": "ClearMouseHover",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetFrameCount",
+      "c_signature": "int SDOM_GetFrameCount(void)",
+      "dispatch_family": "singleton",
+      "name": "GetFrameCount",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_Run",
       "c_signature": "bool SDOM_Run(void)",
       "dispatch_family": "singleton",
@@ -545,10 +897,122 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_GetStopAfterUnitTests",
+      "c_signature": "bool SDOM_GetStopAfterUnitTests(void)",
+      "dispatch_family": "singleton",
+      "name": "GetStopAfterUnitTests",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_Quit",
       "c_signature": "void SDOM_Quit(void)",
       "dispatch_family": "singleton",
       "name": "Quit",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetRootNode",
+      "c_signature": "bool SDOM_SetRootNode(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetRootNode",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetRootNodeByName",
+      "c_signature": "bool SDOM_SetRootNodeByName(const char* name)",
+      "dispatch_family": "singleton",
+      "name": "SetRootNodeByName",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetStage",
+      "c_signature": "bool SDOM_SetStage(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetStage",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetStageByName",
+      "c_signature": "bool SDOM_SetStageByName(const char* name)",
+      "dispatch_family": "singleton",
+      "name": "SetStageByName",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetRootNode",
+      "c_signature": "bool SDOM_GetRootNode(SDOM_DisplayHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetRootNode",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetStageHandle",
+      "c_signature": "bool SDOM_GetStageHandle(SDOM_DisplayHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetStageHandle",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RegisterOnInit",
+      "c_signature": "bool SDOM_RegisterOnInit(void* fn)",
+      "dispatch_family": "singleton",
+      "name": "RegisterOnInit",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RegisterOnQuit",
+      "c_signature": "bool SDOM_RegisterOnQuit(void* fn)",
+      "dispatch_family": "singleton",
+      "name": "RegisterOnQuit",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RegisterOnUpdate",
+      "c_signature": "bool SDOM_RegisterOnUpdate(void* fn)",
+      "dispatch_family": "singleton",
+      "name": "RegisterOnUpdate",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RegisterOnEvent",
+      "c_signature": "bool SDOM_RegisterOnEvent(void* fn)",
+      "dispatch_family": "singleton",
+      "name": "RegisterOnEvent",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RegisterOnRender",
+      "c_signature": "bool SDOM_RegisterOnRender(void* fn)",
+      "dispatch_family": "singleton",
+      "name": "RegisterOnRender",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RegisterOnUnitTest",
+      "c_signature": "bool SDOM_RegisterOnUnitTest(void* fn)",
+      "dispatch_family": "singleton",
+      "name": "RegisterOnUnitTest",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RegisterOnWindowResize",
+      "c_signature": "bool SDOM_RegisterOnWindowResize(void* fn)",
+      "dispatch_family": "singleton",
+      "name": "RegisterOnWindowResize",
       "owner_type": "Core",
       "subject_kind": "Core"
     }
