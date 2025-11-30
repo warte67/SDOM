@@ -458,3 +458,19 @@ Open Questions / Follow-ups
 1. **Handle exposure vs. raw pointers** – functions currently returning `Stage*`, `IDisplayObject*`, `IAssetObject*`, or SDL pointers should either stay internal or gain safe handle-based wrappers before generating bindings.
 2. **Config mutation granularity** – decide whether per-field getters/setters are needed in C, or if manipulating an `SDOM_CoreConfig` blob suffices.
 3. **Async safety** – some proposed APIs (`SetIsRunning`, focus setters) mutate state that is only safe on the main thread; generation should embed thread-safety warnings.
+
+
+---
+### Runtime Loop & Frame Control
+The following C API functions expose the event pipeline, DOM traversal, update, rendering, and present steps. They are required for automated unit testing, synthetic event injection, and frame-by-frame deterministic evaluation.
+
+| C API Identifier | C Signature | Dispatch | Notes |
+|------------------|-------------|----------|-------|
+| `SDOM_PollEvents` | `bool SDOM_PollEvents(void)` | singleton | Polls and dispatches all queued events (real + synthetic). |
+| `SDOM_PumpEventsOnce` | `bool SDOM_PumpEventsOnce(void)` | singleton | Pumps exactly one event. Useful for determinism. |
+| `SDOM_PollEventsAndTraverseDom` | `bool SDOM_PollEventsAndTraverseDom(void)` | singleton | Polls events and performs full DOM traversal (hover, focus, dispatch). |
+| `SDOM_Update` | `bool SDOM_Update(float dt)` | singleton | Executes per-frame update on all active objects. |
+| `SDOM_Render` | `bool SDOM_Render(void)` | singleton | Calls all onRender callbacks in z-order. |
+| `SDOM_Present` | `bool SDOM_Present(void)` | singleton | Presents the final frame (renderer->present). |
+| `SDOM_RunFrame` (optional) | `bool SDOM_RunFrame(float dt)` | singleton | Performs Poll → Traverse → Update → Render → Present in sequence. |
+

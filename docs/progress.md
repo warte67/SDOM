@@ -1009,9 +1009,10 @@ Tomorrow’s focus will be unifying that chain and ensuring the manifest becomes
 
 ## 🚧 ToDo Today / Carryover
 - 🔄 Continue registering & binding Core APIs  
-- ☐ Add `rendererVSync` to JSON parsing  
-- ☐ Add `rendererVSync` to C API & binding manifest  
-- ☐ Update `reconfigure()` logic to apply vsync changes consistently  
+  - ☐ Add `Runtime Loop & Frame Control` from the capi_functions_identifiers list  
+  - ☐ Add `rendererVSync` to JSON parsing  
+  - ☐ Add `rendererVSync` to C API & binding manifest  
+  - ☐ Update `reconfigure()` logic to apply vsync changes consistently  
 - ☐ Expand unit test coverage (CAPI + JSON startup + reconfigure cycle)  
 - ☐ Fix remaining CAPI marshaling TODOs in Core (presentation, flags, pixel format)  
 - ☐ Clean up duplicate includes + unify JSON null-check handling  
@@ -1036,8 +1037,6 @@ Tomorrow’s focus will be unifying that chain and ensuring the manifest becomes
   - ☐ Ensure all Core functions appear in generated docs (public API surface)
   - ☐ Mirror doc-blocks in `SDOM_CoreAPI.cpp` for consistency  
   - ☐ Expect both files to grow substantially as SDOM’s public API becomes fully documented
-
-
 
 #### 🤔 *End of Day Reflection*
 > *“The smallest missing field can mislead the mightiest engine — completeness is a kingdom built one property at a time.”*
