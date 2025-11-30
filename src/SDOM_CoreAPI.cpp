@@ -4,7 +4,9 @@
 #include <SDOM/SDOM_DataRegistry.hpp>
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Stage.hpp>
+#include <SDOM/SDOM_EventManager.hpp>
 
+#include <cstring>
 #include <mutex>
 #include <vector>
 
@@ -68,6 +70,124 @@ SDOM::CAPI::CallResult makeStringResult(const std::string& value)
     return SDOM::CAPI::CallResult::FromString(value);
 }
 
+bool parseSyntheticMouseEventJson(const char* jsonStr, SDL_Event& outEvent)
+{
+    if (!jsonStr) {
+        setErrorMessage("SDOM_PushMouseEvent: json is null");
+        return false;
+    }
+
+    try {
+        auto& core = SDOM::Core::getInstance();
+        nlohmann::json j = nlohmann::json::parse(jsonStr);
+        if (!j.contains("x") || !j.contains("y")) {
+            setErrorMessage("SDOM_PushMouseEvent: missing x/y");
+            return false;
+        }
+
+        float stageX = j.value("x", 0.0f);
+        float stageY = j.value("y", 0.0f);
+        std::string type = j.value("type", std::string("down"));
+        int button = j.value("button", 1);
+        int clicks = j.value("clicks", 1);
+
+        float winX = 0.0f;
+        float winY = 0.0f;
+        SDL_Renderer* renderer = core.getRenderer();
+        if (renderer) {
+            SDL_RenderCoordinatesToWindow(renderer, stageX, stageY, &winX, &winY);
+        } else {
+            const SDOM::Core::CoreConfig& cfg = core.getConfig();
+            winX = stageX * cfg.pixelWidth;
+            winY = stageY * cfg.pixelHeight;
+        }
+
+        Uint32 winID = 0;
+        if (core.getWindow()) {
+            winID = SDL_GetWindowID(core.getWindow());
+        }
+
+        std::memset(&outEvent, 0, sizeof(outEvent));
+        if (type == "up") {
+            outEvent.type = SDL_EVENT_MOUSE_BUTTON_UP;
+            outEvent.button.windowID = winID;
+            outEvent.button.which = 0;
+            outEvent.button.button = button;
+            outEvent.button.clicks = clicks;
+            outEvent.button.x = winX;
+            outEvent.button.y = winY;
+            outEvent.motion.windowID = winID;
+            outEvent.motion.which = 0;
+            outEvent.motion.x = winX;
+            outEvent.motion.y = winY;
+        } else if (type == "motion") {
+            outEvent.type = SDL_EVENT_MOUSE_MOTION;
+            outEvent.motion.windowID = winID;
+            outEvent.motion.which = 0;
+            outEvent.motion.x = winX;
+            outEvent.motion.y = winY;
+        } else {
+            outEvent.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+            outEvent.button.windowID = winID;
+            outEvent.button.which = 0;
+            outEvent.button.button = button;
+            outEvent.button.clicks = clicks;
+            outEvent.button.x = winX;
+            outEvent.button.y = winY;
+            outEvent.motion.windowID = winID;
+            outEvent.motion.which = 0;
+            outEvent.motion.x = winX;
+            outEvent.motion.y = winY;
+        }
+
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_PushMouseEvent unknown error");
+        return false;
+    }
+}
+
+bool parseSyntheticKeyboardEventJson(const char* jsonStr, SDL_Event& outEvent)
+{
+    if (!jsonStr) {
+        setErrorMessage("SDOM_PushKeyboardEvent: json is null");
+        return false;
+    }
+
+    try {
+        auto& core = SDOM::Core::getInstance();
+        nlohmann::json j = nlohmann::json::parse(jsonStr);
+        if (!j.contains("key")) {
+            setErrorMessage("SDOM_PushKeyboardEvent: missing key");
+            return false;
+        }
+
+        int key = j.value("key", 0);
+        int mod = j.value("mod", 0);
+        std::string type = j.value("type", std::string("down"));
+        int repeat = j.value("repeat", 0);
+
+        std::memset(&outEvent, 0, sizeof(outEvent));
+        outEvent.type = (type == "up") ? SDL_EVENT_KEY_UP : SDL_EVENT_KEY_DOWN;
+        outEvent.key.windowID = core.getWindow() ? SDL_GetWindowID(core.getWindow()) : 0;
+        outEvent.key.timestamp = SDL_GetTicks();
+        outEvent.key.repeat = repeat;
+        outEvent.key.mod = mod;
+        outEvent.key.key = key;
+
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_PushKeyboardEvent unknown error");
+        return false;
+    }
+}
+
 DisplayHandle resolveDisplayHandle(const SDOM_DisplayHandle* handle)
 {
     if (!handle) return DisplayHandle();
@@ -90,6 +210,31 @@ bool writeDisplayHandleOut(const DisplayHandle& src, SDOM_DisplayHandle* dst)
 
     if (!src.isValid() || !src.get()) {
         setErrorMessage("SDOM_GetRootNode: handle is not set");
+        dst->object_id = 0;
+        dst->name = nullptr;
+        dst->type = nullptr;
+        return false;
+    }
+
+    dst->object_id = 0;
+    static thread_local std::string s_name;
+    static thread_local std::string s_type;
+    s_name = src.getName();
+    s_type = src.getType();
+    dst->name = s_name.c_str();
+    dst->type = s_type.c_str();
+    return true;
+}
+
+bool writeAssetHandleOut(const SDOM::AssetHandle& src, SDOM_AssetHandle* dst, const char* errCtx)
+{
+    if (!dst) {
+        setErrorMessage(errCtx ? errCtx : "Asset handle out is null");
+        return false;
+    }
+
+    if (!src.isValid() || !src.get()) {
+        setErrorMessage(errCtx ? errCtx : "Asset handle is not set");
         dst->object_id = 0;
         dst->name = nullptr;
         dst->type = nullptr;
@@ -228,6 +373,102 @@ public:
                     }
                 }
                 return makeBoolResult(CoreAPI::setWindowTitle(title));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_PumpEventsOnce",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::pumpEventsOnce());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_PushMouseEvent",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* jsonStr = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) {
+                        jsonStr = args[0].s.c_str();
+                    } else if (args[0].kind == CallArg::Kind::Ptr) {
+                        jsonStr = static_cast<const char*>(args[0].v.p);
+                    }
+                }
+                return makeBoolResult(CoreAPI::pushMouseEvent(jsonStr));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_PushKeyboardEvent",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* jsonStr = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) {
+                        jsonStr = args[0].s.c_str();
+                    } else if (args[0].kind == CallArg::Kind::Ptr) {
+                        jsonStr = static_cast<const char*>(args[0].v.p);
+                    }
+                }
+                return makeBoolResult(CoreAPI::pushKeyboardEvent(jsonStr));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_HasLuaSupport",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::hasLuaSupport());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionString",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionString());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionFullString",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionFullString());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionMajor",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return SDOM::CAPI::CallResult::FromInt(static_cast<std::int64_t>(CoreAPI::getVersionMajor()));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionMinor",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return SDOM::CAPI::CallResult::FromInt(static_cast<std::int64_t>(CoreAPI::getVersionMinor()));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionPatch",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return SDOM::CAPI::CallResult::FromInt(static_cast<std::int64_t>(CoreAPI::getVersionPatch()));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionCodename",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionCodename());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionBuild",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionBuild());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionBuildDate",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionBuildDate());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionCommit",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionCommit());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionBranch",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionBranch());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionCompiler",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionCompiler());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetVersionPlatform",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeStringResult(CoreAPI::getVersionPlatform());
             });
 
         SDOM::CAPI::registerCallable("SDOM_GetElapsedTime",
@@ -500,6 +741,343 @@ public:
         SDOM::CAPI::registerCallable("SDOM_ClearMouseHover",
             [](const std::vector<CallArg>&) -> CallResult {
                 return makeBoolResult(CoreAPI::clearMouseHover());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetDisplayObject",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* name = nullptr;
+                SDOM_DisplayHandle* outHandle = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) name = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) name = static_cast<const char*>(args[0].v.p);
+                }
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    outHandle = static_cast<SDOM_DisplayHandle*>(args[1].v.p);
+                }
+                return makeBoolResult(CoreAPI::getDisplayObject(name, outHandle));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_HasDisplayObject",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* name = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) name = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) name = static_cast<const char*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::hasDisplayObject(name));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_DestroyDisplayObjectByName",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* name = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) name = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) name = static_cast<const char*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::destroyDisplayObjectByName(name));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_DestroyDisplayObject",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const SDOM_DisplayHandle* handle = nullptr;
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) {
+                    handle = static_cast<const SDOM_DisplayHandle*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::destroyDisplayObject(handle));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetAssetObject",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* name = nullptr;
+                SDOM_AssetHandle* outHandle = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) name = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) name = static_cast<const char*>(args[0].v.p);
+                }
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    outHandle = static_cast<SDOM_AssetHandle*>(args[1].v.p);
+                }
+                return makeBoolResult(CoreAPI::getAssetObject(name, outHandle));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_HasAssetObject",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* name = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) name = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) name = static_cast<const char*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::hasAssetObject(name));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_DestroyAssetObjectByName",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* name = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) name = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) name = static_cast<const char*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::destroyAssetObjectByName(name));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_DestroyAssetObject",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const SDOM_AssetHandle* handle = nullptr;
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) {
+                    handle = static_cast<const SDOM_AssetHandle*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::destroyAssetObject(handle));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_CreateDisplayObjectFromJson",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* type = nullptr;
+                const char* json = nullptr;
+                SDOM_DisplayHandle* outHandle = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) type = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) type = static_cast<const char*>(args[0].v.p);
+                }
+                if (args.size() > 1) {
+                    if (args[1].kind == CallArg::Kind::CString) json = args[1].s.c_str();
+                    else if (args[1].kind == CallArg::Kind::Ptr) json = static_cast<const char*>(args[1].v.p);
+                }
+                if (args.size() > 2 && args[2].kind == CallArg::Kind::Ptr) {
+                    outHandle = static_cast<SDOM_DisplayHandle*>(args[2].v.p);
+                }
+                return makeBoolResult(CoreAPI::createDisplayObjectFromJson(type, json, outHandle));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_CreateAssetObjectFromJson",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* type = nullptr;
+                const char* json = nullptr;
+                SDOM_AssetHandle* outHandle = nullptr;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) type = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) type = static_cast<const char*>(args[0].v.p);
+                }
+                if (args.size() > 1) {
+                    if (args[1].kind == CallArg::Kind::CString) json = args[1].s.c_str();
+                    else if (args[1].kind == CallArg::Kind::Ptr) json = static_cast<const char*>(args[1].v.p);
+                }
+                if (args.size() > 2 && args[2].kind == CallArg::Kind::Ptr) {
+                    outHandle = static_cast<SDOM_AssetHandle*>(args[2].v.p);
+                }
+                return makeBoolResult(CoreAPI::createAssetObjectFromJson(type, json, outHandle));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_CountOrphans",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return SDOM::CAPI::CallResult::FromInt(static_cast<std::int64_t>(CoreAPI::countOrphanedDisplayObjects()));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetOrphans",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                auto* outHandles = (args.size() > 0 && args[0].kind == CallArg::Kind::Ptr)
+                    ? static_cast<SDOM_DisplayHandle*>(args[0].v.p)
+                    : nullptr;
+                int* outCount = nullptr;
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    outCount = static_cast<int*>(args[1].v.p);
+                }
+                int maxCount = 0;
+                if (args.size() > 2) {
+                    if (args[2].kind == CallArg::Kind::Int) maxCount = static_cast<int>(args[2].v.i);
+                    else if (args[2].kind == CallArg::Kind::UInt) maxCount = static_cast<int>(args[2].v.u);
+                }
+                return makeBoolResult(CoreAPI::getOrphanedDisplayObjects(outHandles, outCount, maxCount));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_DetachOrphans",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::detachOrphans());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_CollectGarbage",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::collectGarbage());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_AttachFutureChildren",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::attachFutureChildren());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_AddOrphan",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const SDOM_DisplayHandle* orphan = nullptr;
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) {
+                    orphan = static_cast<const SDOM_DisplayHandle*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::addToOrphanList(orphan));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_AddFutureChild",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const SDOM_DisplayHandle* child = nullptr;
+                const SDOM_DisplayHandle* parent = nullptr;
+                bool useWorld = false;
+                int worldX = 0;
+                int worldY = 0;
+
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) {
+                    child = static_cast<const SDOM_DisplayHandle*>(args[0].v.p);
+                }
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    parent = static_cast<const SDOM_DisplayHandle*>(args[1].v.p);
+                }
+                if (args.size() > 2) {
+                    if (args[2].kind == CallArg::Kind::Bool) useWorld = args[2].v.b;
+                    else if (args[2].kind == CallArg::Kind::UInt) useWorld = args[2].v.u != 0;
+                    else if (args[2].kind == CallArg::Kind::Int) useWorld = args[2].v.i != 0;
+                }
+                if (args.size() > 3) {
+                    if (args[3].kind == CallArg::Kind::Int) worldX = static_cast<int>(args[3].v.i);
+                    else if (args[3].kind == CallArg::Kind::UInt) worldX = static_cast<int>(args[3].v.u);
+                }
+                if (args.size() > 4) {
+                    if (args[4].kind == CallArg::Kind::Int) worldY = static_cast<int>(args[4].v.i);
+                    else if (args[4].kind == CallArg::Kind::UInt) worldY = static_cast<int>(args[4].v.u);
+                }
+
+                return makeBoolResult(CoreAPI::addToFutureChildrenList(child, parent, useWorld, worldX, worldY));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetDisplayObjectNames",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                auto* outNames = (args.size() > 0 && args[0].kind == CallArg::Kind::Ptr)
+                    ? static_cast<const char**>(args[0].v.p)
+                    : nullptr;
+                int* outCount = nullptr;
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    outCount = static_cast<int*>(args[1].v.p);
+                }
+                int maxCount = 0;
+                if (args.size() > 2) {
+                    if (args[2].kind == CallArg::Kind::Int) maxCount = static_cast<int>(args[2].v.i);
+                    else if (args[2].kind == CallArg::Kind::UInt) maxCount = static_cast<int>(args[2].v.u);
+                }
+                return makeBoolResult(CoreAPI::getDisplayObjectNames(outNames, outCount, maxCount));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_ClearFactory",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::clearFactory());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_PrintObjectRegistry",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::printObjectRegistry());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetPropertyNamesForType",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* type = nullptr;
+                const char** outNames = nullptr;
+                int* outCount = nullptr;
+                int maxCount = 0;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) type = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) type = static_cast<const char*>(args[0].v.p);
+                }
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    outNames = static_cast<const char**>(args[1].v.p);
+                }
+                if (args.size() > 2 && args[2].kind == CallArg::Kind::Ptr) {
+                    outCount = static_cast<int*>(args[2].v.p);
+                }
+                if (args.size() > 3) {
+                    if (args[3].kind == CallArg::Kind::Int) maxCount = static_cast<int>(args[3].v.i);
+                    else if (args[3].kind == CallArg::Kind::UInt) maxCount = static_cast<int>(args[3].v.u);
+                }
+                return makeBoolResult(CoreAPI::getPropertyNamesForType(type, outNames, outCount, maxCount));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetCommandNamesForType",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* type = nullptr;
+                const char** outNames = nullptr;
+                int* outCount = nullptr;
+                int maxCount = 0;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) type = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) type = static_cast<const char*>(args[0].v.p);
+                }
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    outNames = static_cast<const char**>(args[1].v.p);
+                }
+                if (args.size() > 2 && args[2].kind == CallArg::Kind::Ptr) {
+                    outCount = static_cast<int*>(args[2].v.p);
+                }
+                if (args.size() > 3) {
+                    if (args[3].kind == CallArg::Kind::Int) maxCount = static_cast<int>(args[3].v.i);
+                    else if (args[3].kind == CallArg::Kind::UInt) maxCount = static_cast<int>(args[3].v.u);
+                }
+                return makeBoolResult(CoreAPI::getCommandNamesForType(type, outNames, outCount, maxCount));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetFunctionNamesForType",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                const char* type = nullptr;
+                const char** outNames = nullptr;
+                int* outCount = nullptr;
+                int maxCount = 0;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::CString) type = args[0].s.c_str();
+                    else if (args[0].kind == CallArg::Kind::Ptr) type = static_cast<const char*>(args[0].v.p);
+                }
+                if (args.size() > 1 && args[1].kind == CallArg::Kind::Ptr) {
+                    outNames = static_cast<const char**>(args[1].v.p);
+                }
+                if (args.size() > 2 && args[2].kind == CallArg::Kind::Ptr) {
+                    outCount = static_cast<int*>(args[2].v.p);
+                }
+                if (args.size() > 3) {
+                    if (args[3].kind == CallArg::Kind::Int) maxCount = static_cast<int>(args[3].v.i);
+                    else if (args[3].kind == CallArg::Kind::UInt) maxCount = static_cast<int>(args[3].v.u);
+                }
+                return makeBoolResult(CoreAPI::getFunctionNamesForType(type, outNames, outCount, maxCount));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_SetIgnoreRealInput",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                bool ignore = false;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::Bool) ignore = args[0].v.b;
+                    else if (args[0].kind == CallArg::Kind::UInt) ignore = args[0].v.u != 0;
+                    else if (args[0].kind == CallArg::Kind::Int) ignore = args[0].v.i != 0;
+                }
+                return makeBoolResult(CoreAPI::setIgnoreRealInput(ignore));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetIgnoreRealInput",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                bool* outIgnore = nullptr;
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) {
+                    outIgnore = static_cast<bool*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::getIgnoreRealInput(outIgnore));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_GetKeyfocusGray",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                float* outGray = nullptr;
+                if (!args.empty() && args[0].kind == CallArg::Kind::Ptr) {
+                    outGray = static_cast<float*>(args[0].v.p);
+                }
+                return makeBoolResult(CoreAPI::getKeyfocusGray(outGray));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_SetKeyfocusGray",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                float gray = 0.0f;
+                if (!args.empty()) {
+                    if (args[0].kind == CallArg::Kind::Double) gray = static_cast<float>(args[0].v.d);
+                    else if (args[0].kind == CallArg::Kind::UInt) gray = static_cast<float>(args[0].v.u);
+                    else if (args[0].kind == CallArg::Kind::Int) gray = static_cast<float>(args[0].v.i);
+                }
+                return makeBoolResult(CoreAPI::setKeyfocusGray(gray));
             });
 
         SDOM::CAPI::registerCallable("SDOM_GetFrameCount",
@@ -1099,6 +1677,58 @@ void quit()
     }
 }
 
+bool pumpEventsOnce()
+{
+    try {
+        SDOM::Core::getInstance().pumpEventsOnce();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_PumpEventsOnce unknown error");
+        return false;
+    }
+}
+
+bool pushMouseEvent(const char* json)
+{
+    SDL_Event ev;
+    if (!parseSyntheticMouseEventJson(json, ev)) {
+        return false;
+    }
+
+    try {
+        SDOM::Core::getInstance().getEventManager().Queue_SDL_Event(ev);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_PushMouseEvent dispatch error");
+        return false;
+    }
+}
+
+bool pushKeyboardEvent(const char* json)
+{
+    SDL_Event ev;
+    if (!parseSyntheticKeyboardEventJson(json, ev)) {
+        return false;
+    }
+
+    try {
+        SDOM::Core::getInstance().getEventManager().Queue_SDL_Event(ev);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_PushKeyboardEvent dispatch error");
+        return false;
+    }
+}
+
 const char* getWindowTitle()
 {
     try {
@@ -1130,6 +1760,189 @@ bool setWindowTitle(const char* title)
     } catch (...) {
         setErrorMessage("SDOM_SetWindowTitle unknown error");
         return false;
+    }
+}
+
+bool hasLuaSupport()
+{
+#ifdef SDOM_ENABLE_LUA_BINDINGS
+    return true;
+#else
+    return false;
+#endif
+}
+
+const char* getVersionString()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionString();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionString unknown error");
+        return nullptr;
+    }
+}
+
+const char* getVersionFullString()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionFullString();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionFullString unknown error");
+        return nullptr;
+    }
+}
+
+int getVersionMajor()
+{
+    try {
+        return SDOM::Core::getInstance().getVersionMajor();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return 0;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionMajor unknown error");
+        return 0;
+    }
+}
+
+int getVersionMinor()
+{
+    try {
+        return SDOM::Core::getInstance().getVersionMinor();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return 0;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionMinor unknown error");
+        return 0;
+    }
+}
+
+int getVersionPatch()
+{
+    try {
+        return SDOM::Core::getInstance().getVersionPatch();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return 0;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionPatch unknown error");
+        return 0;
+    }
+}
+
+const char* getVersionCodename()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionCodename();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionCodename unknown error");
+        return nullptr;
+    }
+}
+
+const char* getVersionBuild()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionBuild();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionBuild unknown error");
+        return nullptr;
+    }
+}
+
+const char* getVersionBuildDate()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionBuildDate();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionBuildDate unknown error");
+        return nullptr;
+    }
+}
+
+const char* getVersionCommit()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionCommit();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionCommit unknown error");
+        return nullptr;
+    }
+}
+
+const char* getVersionBranch()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionBranch();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionBranch unknown error");
+        return nullptr;
+    }
+}
+
+const char* getVersionCompiler()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionCompiler();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionCompiler unknown error");
+        return nullptr;
+    }
+}
+
+const char* getVersionPlatform()
+{
+    try {
+        static thread_local std::string s_value;
+        s_value = SDOM::Core::getInstance().getVersionPlatform();
+        return s_value.c_str();
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return nullptr;
+    } catch (...) {
+        setErrorMessage("SDOM_GetVersionPlatform unknown error");
+        return nullptr;
     }
 }
 
@@ -1426,6 +2239,530 @@ int getFrameCount()
         return SDOM::Core::getInstance().getFrameCount();
     } catch (...) {
         return 0;
+    }
+}
+
+bool createDisplayObjectFromJson(const char* type, const char* json, SDOM_DisplayHandle* out_handle)
+{
+    if (!type) {
+        setErrorMessage("SDOM_CreateDisplayObjectFromJson: type is null");
+        return false;
+    }
+    if (!json) {
+        setErrorMessage("SDOM_CreateDisplayObjectFromJson: json is null");
+        return false;
+    }
+    if (!out_handle) {
+        setErrorMessage("SDOM_CreateDisplayObjectFromJson: out_handle is null");
+        return false;
+    }
+
+    try {
+        nlohmann::json doc = nlohmann::json::parse(json);
+        SDOM::Factory& factory = SDOM::Core::getInstance().getFactory();
+        DisplayHandle handle = factory.createDisplayObjectFromJson(type, doc);
+        if (!handle.isValid() || !handle.get()) {
+            setErrorMessage("SDOM_CreateDisplayObjectFromJson: creation failed");
+            return false;
+        }
+        return writeDisplayHandleOut(handle, out_handle);
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_CreateDisplayObjectFromJson unknown error");
+        return false;
+    }
+}
+
+bool createAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle)
+{
+    if (!type) {
+        setErrorMessage("SDOM_CreateAssetObjectFromJson: type is null");
+        return false;
+    }
+    if (!json) {
+        setErrorMessage("SDOM_CreateAssetObjectFromJson: json is null");
+        return false;
+    }
+    if (!out_handle) {
+        setErrorMessage("SDOM_CreateAssetObjectFromJson: out_handle is null");
+        return false;
+    }
+
+    try {
+        nlohmann::json doc = nlohmann::json::parse(json);
+        SDOM::Factory& factory = SDOM::Core::getInstance().getFactory();
+        SDOM::AssetHandle handle = factory.createAssetObjectFromJson(type, doc);
+        if (!handle.isValid() || !handle.get()) {
+            setErrorMessage("SDOM_CreateAssetObjectFromJson: creation failed");
+            return false;
+        }
+        return writeAssetHandleOut(handle, out_handle, "SDOM_CreateAssetObjectFromJson: handle is not set");
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_CreateAssetObjectFromJson unknown error");
+        return false;
+    }
+}
+
+bool getDisplayObject(const char* name, SDOM_DisplayHandle* out_handle)
+{
+    if (!name) {
+        setErrorMessage("SDOM_GetDisplayObject: name is null");
+        return false;
+    }
+    if (!out_handle) {
+        setErrorMessage("SDOM_GetDisplayObject: out_handle is null");
+        return false;
+    }
+
+    try {
+        DisplayHandle handle = SDOM::Core::getInstance().getDisplayObject(name);
+        if (!handle.isValid() || !handle.get()) {
+            setErrorMessage("SDOM_GetDisplayObject: not found");
+            out_handle->object_id = 0;
+            out_handle->name = nullptr;
+            out_handle->type = nullptr;
+            return false;
+        }
+        return writeDisplayHandleOut(handle, out_handle);
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_GetDisplayObject unknown error");
+        return false;
+    }
+}
+
+bool hasDisplayObject(const char* name)
+{
+    if (!name) {
+        setErrorMessage("SDOM_HasDisplayObject: name is null");
+        return false;
+    }
+    try {
+        return SDOM::Core::getInstance().hasDisplayObject(name);
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_HasDisplayObject unknown error");
+        return false;
+    }
+}
+
+bool destroyDisplayObjectByName(const char* name)
+{
+    if (!name) {
+        setErrorMessage("SDOM_DestroyDisplayObjectByName: name is null");
+        return false;
+    }
+    try {
+        SDOM::Core::getInstance().destroyDisplayObject(name);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_DestroyDisplayObjectByName unknown error");
+        return false;
+    }
+}
+
+bool destroyDisplayObject(const SDOM_DisplayHandle* handle)
+{
+    if (!handle) {
+        setErrorMessage("SDOM_DestroyDisplayObject: handle is null");
+        return false;
+    }
+    try {
+        DisplayHandle resolved = resolveDisplayHandle(handle);
+        if (!resolved.isValid()) {
+            setErrorMessage("SDOM_DestroyDisplayObject: handle is invalid");
+            return false;
+        }
+        SDOM::Core::getInstance().destroyDisplayObject(resolved.getName());
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_DestroyDisplayObject unknown error");
+        return false;
+    }
+}
+
+bool getAssetObject(const char* name, SDOM_AssetHandle* out_handle)
+{
+    if (!name) {
+        setErrorMessage("SDOM_GetAssetObject: name is null");
+        return false;
+    }
+    if (!out_handle) {
+        setErrorMessage("SDOM_GetAssetObject: out_handle is null");
+        return false;
+    }
+
+    try {
+        SDOM::AssetHandle handle = SDOM::Core::getInstance().getAssetObject(name);
+        if (!handle.isValid() || !handle.get()) {
+            setErrorMessage("SDOM_GetAssetObject: not found");
+            out_handle->object_id = 0;
+            out_handle->name = nullptr;
+            out_handle->type = nullptr;
+            return false;
+        }
+        return writeAssetHandleOut(handle, out_handle, "SDOM_GetAssetObject: handle is not set");
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_GetAssetObject unknown error");
+        return false;
+    }
+}
+
+bool hasAssetObject(const char* name)
+{
+    if (!name) {
+        setErrorMessage("SDOM_HasAssetObject: name is null");
+        return false;
+    }
+    try {
+        return SDOM::Core::getInstance().hasAssetObject(name);
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_HasAssetObject unknown error");
+        return false;
+    }
+}
+
+bool destroyAssetObjectByName(const char* name)
+{
+    if (!name) {
+        setErrorMessage("SDOM_DestroyAssetObjectByName: name is null");
+        return false;
+    }
+    try {
+        SDOM::Core::getInstance().destroyAssetObject(name);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_DestroyAssetObjectByName unknown error");
+        return false;
+    }
+}
+
+bool destroyAssetObject(const SDOM_AssetHandle* handle)
+{
+    if (!handle) {
+        setErrorMessage("SDOM_DestroyAssetObject: handle is null");
+        return false;
+    }
+    try {
+        const char* name = handle->name;
+        if (!name || std::string(name).empty()) {
+            setErrorMessage("SDOM_DestroyAssetObject: handle name is empty");
+            return false;
+        }
+        SDOM::Core::getInstance().destroyAssetObject(name);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_DestroyAssetObject unknown error");
+        return false;
+    }
+}
+
+int countOrphanedDisplayObjects()
+{
+    try {
+        return SDOM::Core::getInstance().countOrphanedDisplayObjects();
+    } catch (...) {
+        return 0;
+    }
+}
+
+bool getOrphanedDisplayObjects(SDOM_DisplayHandle* out_handles, int* out_count, int max_count)
+{
+    if (!out_handles || !out_count) {
+        setErrorMessage("SDOM_GetOrphans: out_handles or out_count is null");
+        return false;
+    }
+    if (max_count <= 0) {
+        setErrorMessage("SDOM_GetOrphans: max_count must be > 0");
+        return false;
+    }
+
+    try {
+        std::vector<DisplayHandle> orphans = SDOM::Core::getInstance().getOrphanedDisplayObjects();
+        const int n = static_cast<int>(orphans.size());
+        *out_count = n;
+        const int to_copy = std::min(max_count, n);
+
+        // Copy handles into out array
+        static thread_local std::vector<std::string> names;
+        static thread_local std::vector<std::string> types;
+        names.clear();
+        types.clear();
+        names.reserve(to_copy);
+        types.reserve(to_copy);
+
+        for (int i = 0; i < to_copy; ++i) {
+            auto& h = orphans[static_cast<size_t>(i)];
+            names.push_back(h.getName());
+            types.push_back(h.getType());
+            out_handles[i].object_id = 0;
+            out_handles[i].name = names.back().c_str();
+            out_handles[i].type = types.back().c_str();
+        }
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_GetOrphans unknown error");
+        return false;
+    }
+}
+
+bool detachOrphans()
+{
+    try {
+        SDOM::Core::getInstance().detachOrphans();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_DetachOrphans unknown error");
+        return false;
+    }
+}
+
+bool collectGarbage()
+{
+    try {
+        SDOM::Core::getInstance().collectGarbage();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_CollectGarbage unknown error");
+        return false;
+    }
+}
+
+bool attachFutureChildren()
+{
+    try {
+        SDOM::Core::getInstance().attachFutureChildren();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_AttachFutureChildren unknown error");
+        return false;
+    }
+}
+
+bool addToOrphanList(const SDOM_DisplayHandle* orphan)
+{
+    if (!orphan) {
+        setErrorMessage("SDOM_AddOrphan: orphan is null");
+        return false;
+    }
+    try {
+        DisplayHandle h = resolveDisplayHandle(orphan);
+        SDOM::Core::getInstance().addToOrphanList(h);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_AddOrphan unknown error");
+        return false;
+    }
+}
+
+bool addToFutureChildrenList(const SDOM_DisplayHandle* child, const SDOM_DisplayHandle* parent, bool useWorld, int worldX, int worldY)
+{
+    if (!child || !parent) {
+        setErrorMessage("SDOM_AddFutureChild: child or parent is null");
+        return false;
+    }
+    try {
+        DisplayHandle c = resolveDisplayHandle(child);
+        DisplayHandle p = resolveDisplayHandle(parent);
+        SDOM::Core::getInstance().addToFutureChildrenList(c, p, useWorld, worldX, worldY);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_AddFutureChild unknown error");
+        return false;
+    }
+}
+
+bool getDisplayObjectNames(const char** out_names, int* out_count, int max_count)
+{
+    if (!out_names || !out_count) {
+        setErrorMessage("SDOM_GetDisplayObjectNames: out_names or out_count is null");
+        return false;
+    }
+    if (max_count <= 0) {
+        setErrorMessage("SDOM_GetDisplayObjectNames: max_count must be > 0");
+        return false;
+    }
+
+    try {
+        std::vector<std::string> names = SDOM::Core::getInstance().getDisplayObjectNames();
+        const int n = static_cast<int>(names.size());
+        *out_count = n;
+        const int to_copy = std::min(max_count, n);
+        static thread_local std::vector<std::string> s_names;
+        s_names.clear();
+        s_names.reserve(to_copy);
+        for (int i = 0; i < to_copy; ++i) {
+            s_names.push_back(names[static_cast<size_t>(i)]);
+            out_names[i] = s_names.back().c_str();
+        }
+        if (to_copy < max_count) {
+            out_names[to_copy] = nullptr; // null-terminate if space
+        }
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_GetDisplayObjectNames unknown error");
+        return false;
+    }
+}
+
+bool clearFactory()
+{
+    try {
+        SDOM::Core::getInstance().clearFactory();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_ClearFactory unknown error");
+        return false;
+    }
+}
+
+bool printObjectRegistry()
+{
+    try {
+        SDOM::Core::getInstance().printObjectRegistry();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_PrintObjectRegistry unknown error");
+        return false;
+    }
+}
+
+bool getPropertyNamesForType(const char* type, const char** out_names, int* out_count, int max_count)
+{
+    setErrorMessage("SDOM_GetPropertyNamesForType not implemented");
+    (void)type; (void)out_names; (void)out_count; (void)max_count;
+    return false;
+}
+
+bool getCommandNamesForType(const char* type, const char** out_names, int* out_count, int max_count)
+{
+    setErrorMessage("SDOM_GetCommandNamesForType not implemented");
+    (void)type; (void)out_names; (void)out_count; (void)max_count;
+    return false;
+}
+
+bool getFunctionNamesForType(const char* type, const char** out_names, int* out_count, int max_count)
+{
+    setErrorMessage("SDOM_GetFunctionNamesForType not implemented");
+    (void)type; (void)out_names; (void)out_count; (void)max_count;
+    return false;
+}
+
+bool setIgnoreRealInput(bool ignore)
+{
+    try {
+        SDOM::Core::getInstance().setIgnoreRealInput(ignore);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_SetIgnoreRealInput unknown error");
+        return false;
+    }
+}
+
+bool getIgnoreRealInput(bool* out_ignore)
+{
+    if (!out_ignore) {
+        setErrorMessage("SDOM_GetIgnoreRealInput: out_ignore is null");
+        return false;
+    }
+    try {
+        *out_ignore = SDOM::Core::getInstance().getIgnoreRealInput();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_GetIgnoreRealInput unknown error");
+        return false;
+    }
+}
+
+bool getKeyfocusGray(float* out_gray)
+{
+    if (!out_gray) {
+        setErrorMessage("SDOM_GetKeyfocusGray: out_gray is null");
+        return false;
+    }
+    try {
+        *out_gray = SDOM::Core::getInstance().getKeyfocusGray();
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_GetKeyfocusGray unknown error");
+        return false;
+    }
+}
+
+bool setKeyfocusGray(float gray)
+{
+    try {
+        SDOM::Core::getInstance().setKeyfocusGray(gray);
+        return true;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_SetKeyfocusGray unknown error");
+        return false;
     }
 }
 
@@ -1977,6 +3314,198 @@ void registerBindings(Core& core, const std::string& typeName)
 
     core.registerMethod(
         typeName,
+        "PumpEventsOnce",
+        "bool Core::capiPumpEventsOnce()",
+        "bool",
+        "SDOM_PumpEventsOnce",
+        "bool SDOM_PumpEventsOnce(void)",
+        "Pumps SDL events one iteration for headless/deterministic testing.",
+        []() -> bool {
+            return CoreAPI::pumpEventsOnce();
+        });
+
+    core.registerMethod(
+        typeName,
+        "PushMouseEvent",
+        "bool Core::capiPushMouseEvent(const char* json)",
+        "bool",
+        "SDOM_PushMouseEvent",
+        "bool SDOM_PushMouseEvent(const char* json)",
+        "Queues a synthetic mouse event from a JSON description.",
+        [](const char* json) -> bool {
+            return CoreAPI::pushMouseEvent(json);
+        });
+
+    core.registerMethod(
+        typeName,
+        "PushKeyboardEvent",
+        "bool Core::capiPushKeyboardEvent(const char* json)",
+        "bool",
+        "SDOM_PushKeyboardEvent",
+        "bool SDOM_PushKeyboardEvent(const char* json)",
+        "Queues a synthetic keyboard event from a JSON description.",
+        [](const char* json) -> bool {
+            return CoreAPI::pushKeyboardEvent(json);
+        });
+
+    core.registerMethod(
+        typeName,
+        "HasLuaSupport",
+        "bool Core::capiHasLuaSupport() const",
+        "bool",
+        "SDOM_HasLuaSupport",
+        "bool SDOM_HasLuaSupport(void)",
+        "Returns true when Lua support is compiled in and available.",
+        []() -> bool {
+            return CoreAPI::hasLuaSupport();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionString",
+        "const char* Core::capiGetVersionString() const",
+        "const char*",
+        "SDOM_GetVersionString",
+        "const char* SDOM_GetVersionString(void)",
+        "Returns semantic version string.",
+        []() -> const char* {
+            return CoreAPI::getVersionString();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionFullString",
+        "const char* Core::capiGetVersionFullString() const",
+        "const char*",
+        "SDOM_GetVersionFullString",
+        "const char* SDOM_GetVersionFullString(void)",
+        "Returns full version string including build metadata.",
+        []() -> const char* {
+            return CoreAPI::getVersionFullString();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionMajor",
+        "int Core::capiGetVersionMajor() const",
+        "int",
+        "SDOM_GetVersionMajor",
+        "int SDOM_GetVersionMajor(void)",
+        "Returns major version component.",
+        []() -> int {
+            return CoreAPI::getVersionMajor();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionMinor",
+        "int Core::capiGetVersionMinor() const",
+        "int",
+        "SDOM_GetVersionMinor",
+        "int SDOM_GetVersionMinor(void)",
+        "Returns minor version component.",
+        []() -> int {
+            return CoreAPI::getVersionMinor();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionPatch",
+        "int Core::capiGetVersionPatch() const",
+        "int",
+        "SDOM_GetVersionPatch",
+        "int SDOM_GetVersionPatch(void)",
+        "Returns patch version component.",
+        []() -> int {
+            return CoreAPI::getVersionPatch();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionCodename",
+        "const char* Core::capiGetVersionCodename() const",
+        "const char*",
+        "SDOM_GetVersionCodename",
+        "const char* SDOM_GetVersionCodename(void)",
+        "Returns codename string.",
+        []() -> const char* {
+            return CoreAPI::getVersionCodename();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionBuild",
+        "const char* Core::capiGetVersionBuild() const",
+        "const char*",
+        "SDOM_GetVersionBuild",
+        "const char* SDOM_GetVersionBuild(void)",
+        "Returns build identifier.",
+        []() -> const char* {
+            return CoreAPI::getVersionBuild();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionBuildDate",
+        "const char* Core::capiGetVersionBuildDate() const",
+        "const char*",
+        "SDOM_GetVersionBuildDate",
+        "const char* SDOM_GetVersionBuildDate(void)",
+        "Returns build date/time string.",
+        []() -> const char* {
+            return CoreAPI::getVersionBuildDate();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionCommit",
+        "const char* Core::capiGetVersionCommit() const",
+        "const char*",
+        "SDOM_GetVersionCommit",
+        "const char* SDOM_GetVersionCommit(void)",
+        "Returns commit hash.",
+        []() -> const char* {
+            return CoreAPI::getVersionCommit();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionBranch",
+        "const char* Core::capiGetVersionBranch() const",
+        "const char*",
+        "SDOM_GetVersionBranch",
+        "const char* SDOM_GetVersionBranch(void)",
+        "Returns branch name.",
+        []() -> const char* {
+            return CoreAPI::getVersionBranch();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionCompiler",
+        "const char* Core::capiGetVersionCompiler() const",
+        "const char*",
+        "SDOM_GetVersionCompiler",
+        "const char* SDOM_GetVersionCompiler(void)",
+        "Returns compiler string.",
+        []() -> const char* {
+            return CoreAPI::getVersionCompiler();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetVersionPlatform",
+        "const char* Core::capiGetVersionPlatform() const",
+        "const char*",
+        "SDOM_GetVersionPlatform",
+        "const char* SDOM_GetVersionPlatform(void)",
+        "Returns platform description.",
+        []() -> const char* {
+            return CoreAPI::getVersionPlatform();
+        });
+
+    core.registerMethod(
+        typeName,
         "GetElapsedTime",
         "float Core::capiGetElapsedTime() const",
         "float",
@@ -2429,6 +3958,330 @@ void registerBindings(Core& core, const std::string& typeName)
         "Returns the current frame count (testing/tooling).",
         []() -> int {
             return CoreAPI::getFrameCount();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetDisplayObject",
+        "bool Core::capiGetDisplayObject(const char* name, SDOM_DisplayHandle* out_handle)",
+        "bool",
+        "SDOM_GetDisplayObject",
+        "bool SDOM_GetDisplayObject(const char* name, SDOM_DisplayHandle* out_handle)",
+        "Lookup a display object by name and return its handle.",
+        [](const char* name, SDOM_DisplayHandle* out_handle) -> bool {
+            return CoreAPI::getDisplayObject(name, out_handle);
+        });
+
+    core.registerMethod(
+        typeName,
+        "HasDisplayObject",
+        "bool Core::capiHasDisplayObject(const char* name) const",
+        "bool",
+        "SDOM_HasDisplayObject",
+        "bool SDOM_HasDisplayObject(const char* name)",
+        "Returns true if a display object by that name exists.",
+        [](const char* name) -> bool {
+            return CoreAPI::hasDisplayObject(name);
+        });
+
+    core.registerMethod(
+        typeName,
+        "DestroyDisplayObjectByName",
+        "bool Core::capiDestroyDisplayObjectByName(const char* name)",
+        "bool",
+        "SDOM_DestroyDisplayObjectByName",
+        "bool SDOM_DestroyDisplayObjectByName(const char* name)",
+        "Destroys a display object by name.",
+        [](const char* name) -> bool {
+            return CoreAPI::destroyDisplayObjectByName(name);
+        });
+
+    core.registerMethod(
+        typeName,
+        "DestroyDisplayObject",
+        "bool Core::capiDestroyDisplayObject(const SDOM_DisplayHandle* handle)",
+        "bool",
+        "SDOM_DestroyDisplayObject",
+        "bool SDOM_DestroyDisplayObject(const SDOM_DisplayHandle* handle)",
+        "Destroys a display object by handle.",
+        [](const SDOM_DisplayHandle* handle) -> bool {
+            return CoreAPI::destroyDisplayObject(handle);
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetAssetObject",
+        "bool Core::capiGetAssetObject(const char* name, SDOM_AssetHandle* out_handle)",
+        "bool",
+        "SDOM_GetAssetObject",
+        "bool SDOM_GetAssetObject(const char* name, SDOM_AssetHandle* out_handle)",
+        "Lookup an asset by name and return its handle.",
+        [](const char* name, SDOM_AssetHandle* out_handle) -> bool {
+            return CoreAPI::getAssetObject(name, out_handle);
+        });
+
+    core.registerMethod(
+        typeName,
+        "HasAssetObject",
+        "bool Core::capiHasAssetObject(const char* name) const",
+        "bool",
+        "SDOM_HasAssetObject",
+        "bool SDOM_HasAssetObject(const char* name)",
+        "Returns true if an asset by that name exists.",
+        [](const char* name) -> bool {
+            return CoreAPI::hasAssetObject(name);
+        });
+
+    core.registerMethod(
+        typeName,
+        "DestroyAssetObjectByName",
+        "bool Core::capiDestroyAssetObjectByName(const char* name)",
+        "bool",
+        "SDOM_DestroyAssetObjectByName",
+        "bool SDOM_DestroyAssetObjectByName(const char* name)",
+        "Destroys an asset by name.",
+        [](const char* name) -> bool {
+            return CoreAPI::destroyAssetObjectByName(name);
+        });
+
+    core.registerMethod(
+        typeName,
+        "DestroyAssetObject",
+        "bool Core::capiDestroyAssetObject(const SDOM_AssetHandle* handle)",
+        "bool",
+        "SDOM_DestroyAssetObject",
+        "bool SDOM_DestroyAssetObject(const SDOM_AssetHandle* handle)",
+        "Destroys an asset by handle.",
+        [](const SDOM_AssetHandle* handle) -> bool {
+            return CoreAPI::destroyAssetObject(handle);
+        });
+
+    core.registerMethod(
+        typeName,
+        "CountOrphans",
+        "int Core::capiCountOrphans() const",
+        "int",
+        "SDOM_CountOrphans",
+        "int SDOM_CountOrphans(void)",
+        "Counts orphaned display objects (testing/editor).",
+        []() -> int {
+            return CoreAPI::countOrphanedDisplayObjects();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetOrphans",
+        "bool Core::capiGetOrphans(SDOM_DisplayHandle* out_handles, int* out_count, int max_count)",
+        "bool",
+        "SDOM_GetOrphans",
+        "bool SDOM_GetOrphans(SDOM_DisplayHandle* out_handles, int* out_count, int max_count)",
+        "Returns orphaned display handles up to max_count; testing/editor only.",
+        [](SDOM_DisplayHandle* out_handles, int* out_count, int max_count) -> bool {
+            return CoreAPI::getOrphanedDisplayObjects(out_handles, out_count, max_count);
+        });
+
+    core.registerMethod(
+        typeName,
+        "DetachOrphans",
+        "bool Core::capiDetachOrphans()",
+        "bool",
+        "SDOM_DetachOrphans",
+        "bool SDOM_DetachOrphans(void)",
+        "Detaches orphaned display objects (testing/editor).",
+        []() -> bool {
+            return CoreAPI::detachOrphans();
+        });
+
+    core.registerMethod(
+        typeName,
+        "CollectGarbage",
+        "bool Core::capiCollectGarbage()",
+        "bool",
+        "SDOM_CollectGarbage",
+        "bool SDOM_CollectGarbage(void)",
+        "Collects unreachable objects.",
+        []() -> bool {
+            return CoreAPI::collectGarbage();
+        });
+
+    core.registerMethod(
+        typeName,
+        "AttachFutureChildren",
+        "bool Core::capiAttachFutureChildren()",
+        "bool",
+        "SDOM_AttachFutureChildren",
+        "bool SDOM_AttachFutureChildren(void)",
+        "Attaches deferred children (testing/editor).",
+        []() -> bool {
+            return CoreAPI::attachFutureChildren();
+        });
+
+    core.registerMethod(
+        typeName,
+        "AddOrphan",
+        "bool Core::capiAddOrphan(const SDOM_DisplayHandle* orphan)",
+        "bool",
+        "SDOM_AddOrphan",
+        "bool SDOM_AddOrphan(const SDOM_DisplayHandle* orphan)",
+        "Adds an orphan handle (testing/editor).",
+        [](const SDOM_DisplayHandle* orphan) -> bool {
+            return CoreAPI::addToOrphanList(orphan);
+        });
+
+    core.registerMethod(
+        typeName,
+        "AddFutureChild",
+        "bool Core::capiAddFutureChild(const SDOM_DisplayHandle* child, const SDOM_DisplayHandle* parent, bool useWorld, int worldX, int worldY)",
+        "bool",
+        "SDOM_AddFutureChild",
+        "bool SDOM_AddFutureChild(const SDOM_DisplayHandle* child, const SDOM_DisplayHandle* parent, bool useWorld, int worldX, int worldY)",
+        "Queues a future child relationship (testing/editor).",
+        [](const SDOM_DisplayHandle* child, const SDOM_DisplayHandle* parent, bool useWorld, int worldX, int worldY) -> bool {
+            return CoreAPI::addToFutureChildrenList(child, parent, useWorld, worldX, worldY);
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetDisplayObjectNames",
+        "bool Core::capiGetDisplayObjectNames(const char** out_names, int* out_count, int max_count)",
+        "bool",
+        "SDOM_GetDisplayObjectNames",
+        "bool SDOM_GetDisplayObjectNames(const char** out_names, int* out_count, int max_count)",
+        "Returns display object names up to max_count; null-terminates when space permits.",
+        [](const char** out_names, int* out_count, int max_count) -> bool {
+            return CoreAPI::getDisplayObjectNames(out_names, out_count, max_count);
+        });
+
+    core.registerMethod(
+        typeName,
+        "ClearFactory",
+        "bool Core::capiClearFactory()",
+        "bool",
+        "SDOM_ClearFactory",
+        "bool SDOM_ClearFactory(void)",
+        "Clears factory registrations (hot-reload/test).",
+        []() -> bool {
+            return CoreAPI::clearFactory();
+        });
+
+    core.registerMethod(
+        typeName,
+        "PrintObjectRegistry",
+        "bool Core::capiPrintObjectRegistry() const",
+        "bool",
+        "SDOM_PrintObjectRegistry",
+        "bool SDOM_PrintObjectRegistry(void)",
+        "Prints registered objects (debug).",
+        []() -> bool {
+            return CoreAPI::printObjectRegistry();
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetPropertyNamesForType",
+        "bool Core::capiGetPropertyNamesForType(const char* type, const char** out_names, int* out_count, int max_count) const",
+        "bool",
+        "SDOM_GetPropertyNamesForType",
+        "bool SDOM_GetPropertyNamesForType(const char* type, const char** out_names, int* out_count, int max_count)",
+        "Returns property names for a type (currently stubbed).",
+        [](const char* type, const char** out_names, int* out_count, int max_count) -> bool {
+            return CoreAPI::getPropertyNamesForType(type, out_names, out_count, max_count);
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetCommandNamesForType",
+        "bool Core::capiGetCommandNamesForType(const char* type, const char** out_names, int* out_count, int max_count) const",
+        "bool",
+        "SDOM_GetCommandNamesForType",
+        "bool SDOM_GetCommandNamesForType(const char* type, const char** out_names, int* out_count, int max_count)",
+        "Returns command names for a type (currently stubbed).",
+        [](const char* type, const char** out_names, int* out_count, int max_count) -> bool {
+            return CoreAPI::getCommandNamesForType(type, out_names, out_count, max_count);
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetFunctionNamesForType",
+        "bool Core::capiGetFunctionNamesForType(const char* type, const char** out_names, int* out_count, int max_count) const",
+        "bool",
+        "SDOM_GetFunctionNamesForType",
+        "bool SDOM_GetFunctionNamesForType(const char* type, const char** out_names, int* out_count, int max_count)",
+        "Returns function names for a type (currently stubbed).",
+        [](const char* type, const char** out_names, int* out_count, int max_count) -> bool {
+            return CoreAPI::getFunctionNamesForType(type, out_names, out_count, max_count);
+        });
+
+    core.registerMethod(
+        typeName,
+        "SetIgnoreRealInput",
+        "bool Core::capiSetIgnoreRealInput(bool ignore)",
+        "bool",
+        "SDOM_SetIgnoreRealInput",
+        "bool SDOM_SetIgnoreRealInput(bool ignore)",
+        "Testing: ignore real input while processing synthetic events.",
+        [](bool ignore) -> bool {
+            return CoreAPI::setIgnoreRealInput(ignore);
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetIgnoreRealInput",
+        "bool Core::capiGetIgnoreRealInput(bool* out_ignore) const",
+        "bool",
+        "SDOM_GetIgnoreRealInput",
+        "bool SDOM_GetIgnoreRealInput(bool* out_ignore)",
+        "Testing: read ignore-real-input flag.",
+        [](bool* out_ignore) -> bool {
+            return CoreAPI::getIgnoreRealInput(out_ignore);
+        });
+
+    core.registerMethod(
+        typeName,
+        "GetKeyfocusGray",
+        "bool Core::capiGetKeyfocusGray(float* out_gray) const",
+        "bool",
+        "SDOM_GetKeyfocusGray",
+        "bool SDOM_GetKeyfocusGray(float* out_gray)",
+        "Testing: retrieve keyfocus gray level.",
+        [](float* out_gray) -> bool {
+            return CoreAPI::getKeyfocusGray(out_gray);
+        });
+
+    core.registerMethod(
+        typeName,
+        "SetKeyfocusGray",
+        "bool Core::capiSetKeyfocusGray(float gray)",
+        "bool",
+        "SDOM_SetKeyfocusGray",
+        "bool SDOM_SetKeyfocusGray(float gray)",
+        "Testing: set keyfocus gray level.",
+        [](float gray) -> bool {
+            return CoreAPI::setKeyfocusGray(gray);
+        });
+
+    core.registerMethod(
+        typeName,
+        "CreateDisplayObjectFromJson",
+        "bool Core::capiCreateDisplayObjectFromJson(const char* type, const char* json, SDOM_DisplayHandle* out_handle)",
+        "bool",
+        "SDOM_CreateDisplayObjectFromJson",
+        "bool SDOM_CreateDisplayObjectFromJson(const char* type, const char* json, SDOM_DisplayHandle* out_handle)",
+        "Creates a display object by type name from a JSON string; returns handle via out param.",
+        [](const char* type, const char* json, SDOM_DisplayHandle* out_handle) -> bool {
+            return CoreAPI::createDisplayObjectFromJson(type, json, out_handle);
+        });
+
+    core.registerMethod(
+        typeName,
+        "CreateAssetObjectFromJson",
+        "bool Core::capiCreateAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle)",
+        "bool",
+        "SDOM_CreateAssetObjectFromJson",
+        "bool SDOM_CreateAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle)",
+        "Creates an asset object by type name from a JSON string; returns handle via out param.",
+        [](const char* type, const char* json, SDOM_AssetHandle* out_handle) -> bool {
+            return CoreAPI::createAssetObjectFromJson(type, json, out_handle);
         });
 
     core.registerMethod(

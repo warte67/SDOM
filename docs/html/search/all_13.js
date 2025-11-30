@@ -48,7 +48,7 @@ var searchData=
   ['printbubblingeventlisteners_45',['printBubblingEventListeners',['../classSDOM_1_1IDisplayObject.html#a578dda47630664d0875063fde133291b',1,'SDOM::IDisplayObject']]],
   ['printcaptureeventlisteners_46',['printCaptureEventListeners',['../classSDOM_1_1IDisplayObject.html#a523b18e70cc99fdb48154bb2c4720db0',1,'SDOM::IDisplayObject']]],
   ['printmessagebox_47',['printMessageBox',['../namespaceSDOM.html#ae0f1adcc0eb0a047b6e53f9ee15fdd57',1,'SDOM']]],
-  ['printobjectregistry_48',['printObjectRegistry',['../classSDOM_1_1Core.html#a12012a49089d5409e2f671d6bb9ba96c',1,'SDOM::Core::printObjectRegistry()'],['../classSDOM_1_1Factory.html#a760cce7209d592610e31a6fc52667b9c',1,'SDOM::Factory::printObjectRegistry()']]],
+  ['printobjectregistry_48',['printObjectRegistry',['../classSDOM_1_1Core.html#a12012a49089d5409e2f671d6bb9ba96c',1,'SDOM::Core::printObjectRegistry()'],['../classSDOM_1_1Factory.html#a760cce7209d592610e31a6fc52667b9c',1,'SDOM::Factory::printObjectRegistry()'],['../namespaceSDOM_1_1CoreAPI.html#a5384d166a0a7046951cb5bfbef63ea88',1,'SDOM::CoreAPI::printObjectRegistry()']]],
   ['printtree_49',['printTree',['../classSDOM_1_1IDisplayObject.html#a853fddbff86054aae8abc808cf55d1b6',1,'SDOM::IDisplayObject']]],
   ['priority_50',['priority',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939',1,'SDOM::IDisplayObject::InitStruct::priority'],['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ae5443a7162a458e6421ba26c3723aacf',1,'SDOM::IDisplayObject::ListenerEntry::priority']]],
   ['priority_5f_51',['priority_',['../classSDOM_1_1IDisplayObject.html#aa018f216f79dcdfebf0b0b3487cec40f',1,'SDOM::IDisplayObject']]],
@@ -60,11 +60,11 @@ var searchData=
   ['propertyinfo_57',['PropertyInfo',['../structSDOM_1_1PropertyInfo.html',1,'SDOM']]],
   ['ptr_58',['Ptr',['../structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afa165d3d525f6d0cbd55e42cc3058cafcc',1,'SDOM::CAPI::CallArg']]],
   ['ptr_59',['ptr',['../structSDOM_1_1VariantStorage_1_1DynamicValue.html#a169284899e68f5398198efa30241b20c',1,'SDOM::VariantStorage::DynamicValue']]],
-  ['pumpeventsonce_60',['pumpEventsOnce',['../classSDOM_1_1Core.html#acf6416c4261fa977000cad76b49d5605',1,'SDOM::Core']]],
+  ['pumpeventsonce_60',['pumpEventsOnce',['../classSDOM_1_1Core.html#acf6416c4261fa977000cad76b49d5605',1,'SDOM::Core::pumpEventsOnce()'],['../namespaceSDOM_1_1CoreAPI.html#a129297576924082195a29521d2f84c56',1,'SDOM::CoreAPI::pumpEventsOnce()']]],
   ['punctuation_61',['Punctuation',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429af4b431f98bafb371052a2e0ef27d39dd',1,'SDOM::Label']]],
   ['purple_62',['PURPLE',['../classCLR.html#aa4cc393e127a4f0b06e598beafa4cb3a',1,'CLR']]],
   ['purpose_63',['Purpose',['../classSDOM_1_1AssetHandle.html#AssetHandle_Purpose',1,'']]],
   ['push_64',['push',['../classSDOM_1_1Variant.html#a0a5c8acfbcdc93622dae47eb2655dd4a',1,'SDOM::Variant']]],
-  ['pushkeyboardevent_65',['pushKeyboardEvent',['../classSDOM_1_1Core.html#ad25fed581fb1df34b1fd786be16337ca',1,'SDOM::Core']]],
-  ['pushmouseevent_66',['pushMouseEvent',['../classSDOM_1_1Core.html#a9ab9dc69bc273a85e5a0356464a05e80',1,'SDOM::Core']]]
+  ['pushkeyboardevent_65',['pushKeyboardEvent',['../classSDOM_1_1Core.html#ad25fed581fb1df34b1fd786be16337ca',1,'SDOM::Core::pushKeyboardEvent()'],['../namespaceSDOM_1_1CoreAPI.html#a75e906f90e14a08b0301b63d2ab69645',1,'SDOM::CoreAPI::pushKeyboardEvent()']]],
+  ['pushmouseevent_66',['pushMouseEvent',['../classSDOM_1_1Core.html#a9ab9dc69bc273a85e5a0356464a05e80',1,'SDOM::Core::pushMouseEvent()'],['../namespaceSDOM_1_1CoreAPI.html#a601845cf13c777541cec87508e645fd4',1,'SDOM::CoreAPI::pushMouseEvent()']]]
 ];

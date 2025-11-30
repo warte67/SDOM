@@ -302,93 +302,145 @@ Display / Asset Object Creation
 
 - We should know that **InitStruct + JSON is the modern pipeline**, and table/script constructors are legacy shims.
 
-
-
+---
 
 Object Lookup & Lifetime Management
 -----------------------------------
 
-| C++ API | C API Identifier | Lua Binding | Status | Notes |
-| --- | --- | --- | --- | --- |
-| `IDisplayObject* getDisplayObjectPtr(const std::string& name)` | _n/a_ | `Core:GetDisplayObjectPtr(name)` | Internal | Prefer returning `DisplayHandle` to avoid dangling pointers. |
-| `DisplayHandle getDisplayObject(const std::string& name)` | `SDOM_GetDisplayObject` | `Core:GetDisplayObject(name)` | Proposed | — |
-| `bool hasDisplayObject(const std::string& name) const` | `SDOM_HasDisplayObject` | `Core:HasDisplayObject(name)` | Proposed | — |
-| `IAssetObject* getAssetObjectPtr(const std::string& name)` | _n/a_ | `Core:GetAssetObjectPtr(name)` | Internal | Same pointer safety concern. |
-| `AssetHandle getAssetObject(const std::string& name)` | `SDOM_GetAssetObject` | `Core:GetAssetObject(name)` | Proposed | — |
-| `bool hasAssetObject(const std::string& name) const` | `SDOM_HasAssetObject` | `Core:HasAssetObject(name)` | Proposed | — |
-| `void destroyDisplayObject(const std::string& name)` | `SDOM_DestroyDisplayObject` | `Core:DestroyDisplayObject(name)` | Proposed | Accepts either name or handle (add overload). |
-| `void destroyAssetObject(const std::string& name)` | `SDOM_DestroyAssetObject` | `Core:DestroyAssetObject(name)` | Proposed | — |
-
-Orphan & Future Child Management
---------------------------------
+**Design Rule:**  
+SDOM never exposes raw pointers (IDisplayObject* / IAssetObject*) to external APIs.  
+All external lookup must use *handles only* (DisplayHandle / AssetHandle).
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `int countOrphanedDisplayObjects() const` | `SDOM_CountOrphans` | `Core:CountOrphans()` | Proposed | Helps diagnose DOM leaks. |
-| `std::vector<DisplayHandle> getOrphanedDisplayObjects()` | `SDOM_GetOrphans` | `Core:GetOrphans()` | Proposed | Returns array of handles. |
-| `void detachOrphans()` | `SDOM_DetachOrphans` | `Core:DetachOrphans()` | Proposed | Removes unparented nodes from the stage. |
-| `void collectGarbage()` | `SDOM_CollectGarbage` | `Core:CollectGarbage()` | Proposed | Force-destroys unreachable objects (display + assets). |
-| `void attachFutureChildren()` | `SDOM_AttachFutureChildren` | `Core:AttachFutureChildren()` | Proposed | Flushes deferred parenting queue. |
-| `void addToOrphanList(const DisplayHandle& orphan)` | `SDOM_AddOrphan` | `Core:AddOrphan(handle)` | Proposed | Typically internal but can aid editor tooling. |
-| `void addToFutureChildrenList(const DisplayHandle& child, const DisplayHandle& parent, bool useWorld, int worldX, int worldY)` | `SDOM_AddFutureChild` | `Core:AddFutureChild(child, parent, opts)` | Proposed | Provide struct parameter in C for clarity. |
+| `DisplayHandle getDisplayObject(const std::string& name)` | `SDOM_GetDisplayObject` | `Core:GetDisplayObject(name)` | Proposed | Returns a stable handle; safe across reloads/reconfigure. |
+| `bool hasDisplayObject(const std::string& name) const` | `SDOM_HasDisplayObject` | `Core:HasDisplayObject(name)` | Proposed | Lookup-by-name. |
+| `bool isDisplayHandleValid(const DisplayHandle&)` | `SDOM_IsDisplayHandleValid` | `Core:IsDisplayHandleValid(h)` | Proposed | Recommended safety helper. |
+| `AssetHandle getAssetObject(const std::string& name)` | `SDOM_GetAssetObject` | `Core:GetAssetObject(name)` | Proposed | Safe handle return. |
+| `bool hasAssetObject(const std::string& name) const` | `SDOM_HasAssetObject` | `Core:HasAssetObject(name)` | Proposed | Lookup-by-name. |
+| `bool isAssetHandleValid(const AssetHandle&)` | `SDOM_IsAssetHandleValid` | `Core:IsAssetHandleValid(h)` | Proposed | Recommended safety helper. |
+| `void destroyDisplayObject(const std::string& name)` | `SDOM_DestroyDisplayObjectByName` | `Core:DestroyDisplayObject(name)` | Proposed | Destroy-by-name. |
+| `void destroyDisplayObject(DisplayHandle)` | `SDOM_DestroyDisplayObject` | `Core:DestroyDisplayObject(handle)` | Proposed | Destroy-by-handle. Preferred for C API. |
+| `void destroyAssetObject(const std::string& name)` | `SDOM_DestroyAssetObjectByName` | `Core:DestroyAssetObject(name)` | Proposed | Destroy-by-name. |
+| `void destroyAssetObject(AssetHandle)` | `SDOM_DestroyAssetObject` | `Core:DestroyAssetObject(handle)` | Proposed | Destroy-by-handle. Preferred for C API. |
 
-Utility & Introspection
------------------------
+### ✔ Notes
+
+- **Raw pointers (`IDisplayObject*`, `IAssetObject*`) are internal-only and must not be exported.**
+- **DisplayHandle and AssetHandle are the only supported identity tokens** in the C API.
+- Lookup-by-handle is optional but recommended; lookup-by-name remains supported for convenience.
+- Handles remain stable across renderer/window rebuilds but become invalid after destruction; they remain safe to test via `.isValid()` / validity helpers.
+- All external callers should validate handles via:
+  - `SDOM_IsDisplayHandleValid()`
+  - `SDOM_IsAssetHandleValid()`
+- Destroy functions should accept either name or handle; both variants will be generated.
+
+### ✔ Future-Proofing
+If object IDs are later introduced, handles become even safer (opaque ID + name + type).  
+No API changes required — this table already matches that future direction.
+
+---
+
+Orphan & Future-Child Management (Testing / Editor Utilities)
+-------------------------------------------------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `std::vector<std::string> getDisplayObjectNames() const` | `SDOM_GetDisplayObjectNames` | `Core:GetDisplayObjectNames()` | Proposed | Returns null-terminated string list in C. |
-| `void clearFactory()` | `SDOM_ClearFactory` | `Core:ClearFactory()` | Proposed | Tears down every registered object type. |
-| `void printObjectRegistry() const` | `SDOM_PrintObjectRegistry` | `Core:PrintObjectRegistry()` | Proposed | Debug helper; consider piping into error log callback. |
-| `std::vector<std::string> getPropertyNamesForType(const std::string& type)` | `SDOM_GetPropertyNamesForType` | `Core:GetPropertyNamesForType(type)` | Proposed | Useful for editor UIs. |
-| `std::vector<std::string> getCommandNamesForType(const std::string& type)` | `SDOM_GetCommandNamesForType` | `Core:GetCommandNamesForType(type)` | Proposed | — |
-| `std::vector<std::string> getFunctionNamesForType(const std::string& type)` | `SDOM_GetFunctionNamesForType` | `Core:GetFunctionNamesForType(type)` | Proposed | — |
+| int countOrphanedDisplayObjects() const | SDOM_CountOrphans | Core:CountOrphans() | Proposed | **Testing-only**. Verifies DOM integrity. MAY BE REMOVED in future major versions. |
+| std::vector<DisplayHandle> getOrphanedDisplayObjects() | SDOM_GetOrphans | Core:GetOrphans() | Proposed | **Testing/editor utility**. Returns orphan handles. Unstable API. |
+| void detachOrphans() | SDOM_DetachOrphans | Core:DetachOrphans() | Proposed | **Testing utility**. Helps simulate DOM repair. |
+| void collectGarbage() | SDOM_CollectGarbage | Core:CollectGarbage() | Proposed | Forces destruction of unreachable objects. SAFE to expose for CI. |
+| void attachFutureChildren() | SDOM_AttachFutureChildren | Core:AttachFutureChildren() | Proposed | Needed for deferred-parenting QA tests. |
+| void addToOrphanList(DisplayHandle) | SDOM_AddOrphan | Core:AddOrphan(handle) | Proposed | Debug/editor path only. Normal apps should NEVER call. |
+| void addToFutureChildrenList(DisplayHandle child, DisplayHandle parent, ...) | SDOM_AddFutureChild | Core:AddFutureChild(child, parent, opts) | Proposed | Should use a struct in C API. Marked **Debug/Editor Only**. |
 
-Testing & Input Filtering
--------------------------
+---
 
-| C++ API | C API Identifier | Lua Binding | Status | Notes |
-| --- | --- | --- | --- | --- |
-| `void setStopAfterUnitTests(bool stop)` | `SDOM_SetStopAfterUnitTests` | `Core:SetStopAfterUnitTests(stop)` | Existing | Already wired through C API + Lua. |
-| `bool getStopAfterUnitTests()` | `SDOM_GetStopAfterUnitTests` | `Core:GetStopAfterUnitTests()` | Existing | Complements the setter. |
-| `void setIgnoreRealInput(bool)` | `SDOM_SetIgnoreRealInput` | `Core:SetIgnoreRealInput(flag)` | Proposed | Shields automated tests from physical mouse events. |
-| `bool getIgnoreRealInput() const` | `SDOM_GetIgnoreRealInput` | `Core:GetIgnoreRealInput()` | Proposed | — |
-| `float getKeyfocusGray() const` | `SDOM_GetKeyfocusGray` | `Core:GetKeyfocusGray()` | Proposed | Visualization helper for focus overlays. |
-| `void setKeyfocusGray(float)` | `SDOM_SetKeyfocusGray` | `Core:SetKeyfocusGray(value)` | Proposed | — |
+
+# Utility, Introspection, and Testing APIs  
+(Stable vs Testing-Only Classification)
+
+This section replaces the previous "Utility & Introspection" and  
+"Testing & Input Filtering" tables with a unified, generator-ready layout.
+
+---
+
+## 🧩 Stable Utility & Introspection APIs  
+These are **engine-supported**, **non-testing**, and intended for real features:  
+editors, inspectors, scripting, tooling, dynamic UI generation.
+
+| C++ API | C Identifier | Lua Binding | Status | Notes |
+|--------|--------------|-------------|--------|-------|
+| `std::vector<std::string> getDisplayObjectNames() const` | `SDOM_GetDisplayObjectNames` | `Core:GetDisplayObjectNames()` | Proposed | Produces a null-terminated list of names in C. |
+| `void clearFactory()` | `SDOM_ClearFactory` | `Core:ClearFactory()` | Proposed | Tears down registered types; useful for hot reload. |
+| `void printObjectRegistry() const` | `SDOM_PrintObjectRegistry` | `Core:PrintObjectRegistry()` | Proposed | Debug helper; may route through error/log callback. |
+| `std::vector<std::string> getPropertyNamesForType(const std::string& type)` | `SDOM_GetPropertyNamesForType` | `Core:GetPropertyNamesForType(type)` | Proposed | Useful for editor tooling & reflection UIs. |
+| `std::vector<std::string> getCommandNamesForType(const std::string& type)` | `SDOM_GetCommandNamesForType` | `Core:GetCommandNamesForType(type)` | Proposed | Exposes registered commands for a type. |
+| `std::vector<std::string> getFunctionNamesForType(const std::string& type)` | `SDOM_GetFunctionNamesForType` | `Core:GetFunctionNamesForType(type)` | Proposed | Returns callable function names for introspection. |
+
+---
+
+## 🧪 Testing & Simulation Utilities  
+These **must not be relied on by real applications**.  
+They exist primarily for CI, headless testing, and automated verification.
+
+| C++ API | C Identifier | Lua Binding | Status | Notes |
+|--------|--------------|-------------|--------|-------|
+| `void setStopAfterUnitTests(bool stop)` | `SDOM_SetStopAfterUnitTests` | `Core:SetStopAfterUnitTests(flag)` | Existing | Signals engine to exit after unit tests. |
+| `bool getStopAfterUnitTests()` | `SDOM_GetStopAfterUnitTests` | `Core:GetStopAfterUnitTests()` | Existing | Paired with setter. |
+| `void setIgnoreRealInput(bool)` | `SDOM_SetIgnoreRealInput` | `Core:SetIgnoreRealInput(flag)` | Proposed | Suppresses physical mouse/keyboard input. |
+| `bool getIgnoreRealInput() const` | `SDOM_GetIgnoreRealInput` | `Core:GetIgnoreRealInput()` | Proposed | Useful for CI/deterministic testing. |
+| `float getKeyfocusGray() const` | `SDOM_GetKeyfocusGray` | `Core:GetKeyfocusGray()` | Proposed | Test helper for visual-debug focus tint. |
+| `void setKeyfocusGray(float)` | `SDOM_SetKeyfocusGray` | `Core:SetKeyfocusGray(value)` | Proposed | Same category; not intended for runtime apps. |
+
+---
+
+## 📝 Notes for Implementation / Llama Checklist
+
+- **Stable utilities must be included** in the bindings manifest.
+- **Testing utilities should also be included**, but flagged as testing-only in comments.
+- None of these APIs return raw pointers.  
+  All name-based lookups emit `DisplayHandle` or `AssetHandle` lists (in C).
+- Ensure C string-list allocation rules are standardized (allocator or callback).
+- For Lua, stable utilities integrate into the `Core` table normally.  
+  Testing APIs should be placed under `Core.Testing` or similarly namespaced (optional).
+
+
+---
 
 Event Helpers
 -------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `void pumpEventsOnce()` | `SDOM_PumpEventsOnce` | `Core:PumpEventsOnce()` | Proposed | Useful for headless tests that do not run the full loop. |
-| `void pushMouseEvent(const sol::object& args)` | `SDOM_PushMouseEvent` | `Core:PushMouseEvent(args)` | Proposed | Accepts Lua tables describing synthetic mouse events. |
-| `void pushKeyboardEvent(const sol::object& args)` | `SDOM_PushKeyboardEvent` | `Core:PushKeyboardEvent(args)` | Proposed | — |
+| `void pumpEventsOnce()` | `SDOM_PumpEventsOnce` | `Core:PumpEventsOnce()` | Generated | Useful for headless tests that do not run the full loop. |
+| `void pushMouseEvent(const char* json)` | `SDOM_PushMouseEvent` | `Core:PushMouseEvent(json)` | Generated | Accepts JSON describing synthetic mouse events; queues into EventManager. |
+| `void pushKeyboardEvent(const char* json)` | `SDOM_PushKeyboardEvent` | `Core:PushKeyboardEvent(json)` | Generated | Accepts JSON describing synthetic keyboard events. |
 
 Capability Queries
 ------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `bool hasLuaSupport() const` *(new)* | `SDOM_HasLuaSupport` | `Core:HasLuaSupport()` | Proposed | Returns `true` when the engine was built with Lua enabled **and** the Lua runtime has been initialized. Boolean reports capability instead of pass/fail, so this is an allowed exception to the common signature guideline. |
+| `bool hasLuaSupport() const` *(new)* | `SDOM_HasLuaSupport` | `Core:HasLuaSupport()` | Generated | Returns `true` when the engine was built with Lua enabled **and** the Lua runtime has been initialized. Boolean reports capability instead of pass/fail, so this is an allowed exception to the common signature guideline. |
 
 Version Information
 -------------------
 
 | C++ API | C API Identifier | Lua Binding | Status | Notes |
 | --- | --- | --- | --- | --- |
-| `std::string getVersionString() const` | `SDOM_GetVersionString` | `Core:GetVersionString()` | Proposed | Human-friendly `major.minor.patch`. |
-| `std::string getVersionFullString() const` | `SDOM_GetVersionFullString` | `Core:GetVersionFullString()` | Proposed | Includes codename/build metadata. |
-| `int getVersionMajor() const` | `SDOM_GetVersionMajor` | `Core:GetVersionMajor()` | Proposed | — |
-| `int getVersionMinor() const` | `SDOM_GetVersionMinor` | `Core:GetVersionMinor()` | Proposed | — |
-| `int getVersionPatch() const` | `SDOM_GetVersionPatch` | `Core:GetVersionPatch()` | Proposed | — |
-| `std::string getVersionCodename() const` | `SDOM_GetVersionCodename` | `Core:GetVersionCodename()` | Proposed | — |
-| `std::string getVersionBuild() const` | `SDOM_GetVersionBuild` | `Core:GetVersionBuild()` | Proposed | — |
-| `std::string getVersionBuildDate() const` | `SDOM_GetVersionBuildDate` | `Core:GetVersionBuildDate()` | Proposed | — |
-| `std::string getVersionCommit() const` | `SDOM_GetVersionCommit` | `Core:GetVersionCommit()` | Proposed | — |
-| `std::string getVersionBranch() const` | `SDOM_GetVersionBranch` | `Core:GetVersionBranch()` | Proposed | — |
-| `std::string getVersionCompiler() const` | `SDOM_GetVersionCompiler` | `Core:GetVersionCompiler()` | Proposed | — |
-| `std::string getVersionPlatform() const` | `SDOM_GetVersionPlatform` | `Core:GetVersionPlatform()` | Proposed | — |
+| `std::string getVersionString() const` | `SDOM_GetVersionString` | `Core:GetVersionString()` | Generated | Human-friendly `major.minor.patch`. |
+| `std::string getVersionFullString() const` | `SDOM_GetVersionFullString` | `Core:GetVersionFullString()` | Generated | Includes codename/build metadata. |
+| `int getVersionMajor() const` | `SDOM_GetVersionMajor` | `Core:GetVersionMajor()` | Generated | — |
+| `int getVersionMinor() const` | `SDOM_GetVersionMinor` | `Core:GetVersionMinor()` | Generated | — |
+| `int getVersionPatch() const` | `SDOM_GetVersionPatch` | `Core:GetVersionPatch()` | Generated | — |
+| `std::string getVersionCodename() const` | `SDOM_GetVersionCodename` | `Core:GetVersionCodename()` | Generated | — |
+| `std::string getVersionBuild() const` | `SDOM_GetVersionBuild` | `Core:GetVersionBuild()` | Generated | — |
+| `std::string getVersionBuildDate() const` | `SDOM_GetVersionBuildDate` | `Core:GetVersionBuildDate()` | Generated | — |
+| `std::string getVersionCommit() const` | `SDOM_GetVersionCommit` | `Core:GetVersionCommit()` | Generated | — |
+| `std::string getVersionBranch() const` | `SDOM_GetVersionBranch` | `Core:GetVersionBranch()` | Generated | — |
+| `std::string getVersionCompiler() const` | `SDOM_GetVersionCompiler` | `Core:GetVersionCompiler()` | Generated | — |
+| `std::string getVersionPlatform() const` | `SDOM_GetVersionPlatform` | `Core:GetVersionPlatform()` | Generated | — |
 
 Internal / Private Helpers (Not for C API)
 ------------------------------------------

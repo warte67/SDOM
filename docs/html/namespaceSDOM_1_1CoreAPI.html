@@ -103,12 +103,250 @@ Functions</h2></td></tr>
 <tr class="memitem:a1d3869decd430890ade4c1c5edda94d8" id="r_a1d3869decd430890ade4c1c5edda94d8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d3869decd430890ade4c1c5edda94d8">configure</a> (const <a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *cfg)</td></tr>
 <tr class="memitem:a44002fdb39cae2bbb639ab0582ae035f" id="r_a44002fdb39cae2bbb639ab0582ae035f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44002fdb39cae2bbb639ab0582ae035f">getCoreConfig</a> (<a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *out_cfg)</td></tr>
 <tr class="memitem:a6fd78871ef0a98ddeaa80d8bf27d651e" id="r_a6fd78871ef0a98ddeaa80d8bf27d651e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fd78871ef0a98ddeaa80d8bf27d651e">setStopAfterUnitTests</a> (bool stop)</td></tr>
+<tr class="memitem:a15eff3832448f57d8e85b8c68c3db579" id="r_a15eff3832448f57d8e85b8c68c3db579"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15eff3832448f57d8e85b8c68c3db579">getStopAfterUnitTests</a> ()</td></tr>
+<tr class="memitem:ae190d5cc1c28e23cf4c4d8fcf2eb7f53" id="r_ae190d5cc1c28e23cf4c4d8fcf2eb7f53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae190d5cc1c28e23cf4c4d8fcf2eb7f53">hasLuaSupport</a> ()</td></tr>
 <tr class="memitem:abbd8e118446159d804e112068207acf0" id="r_abbd8e118446159d804e112068207acf0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbd8e118446159d804e112068207acf0">setIsRunning</a> (bool running)</td></tr>
+<tr class="memitem:af00a182cc62b83e650eb42b6dac4c054" id="r_af00a182cc62b83e650eb42b6dac4c054"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af00a182cc62b83e650eb42b6dac4c054">configureFromJson</a> (const char *json)</td></tr>
+<tr class="memitem:aacce77a1b797c357629f5775f0b38315" id="r_aacce77a1b797c357629f5775f0b38315"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aacce77a1b797c357629f5775f0b38315">loadDomFromJson</a> (const char *json)</td></tr>
 <tr class="memitem:adc0b5c31d948f7aaf0b89847ce9ed7c9" id="r_adc0b5c31d948f7aaf0b89847ce9ed7c9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc0b5c31d948f7aaf0b89847ce9ed7c9">loadDomFromJsonFile</a> (const char *filename)</td></tr>
 <tr class="memitem:a4cc14392fefaf85500030cdf1c6fc6af" id="r_a4cc14392fefaf85500030cdf1c6fc6af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cc14392fefaf85500030cdf1c6fc6af">run</a> ()</td></tr>
 <tr class="memitem:adb010e8aa7c39036b7d35cde1ee8be01" id="r_adb010e8aa7c39036b7d35cde1ee8be01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb010e8aa7c39036b7d35cde1ee8be01">quit</a> ()</td></tr>
+<tr class="memitem:a129297576924082195a29521d2f84c56" id="r_a129297576924082195a29521d2f84c56"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a129297576924082195a29521d2f84c56">pumpEventsOnce</a> ()</td></tr>
+<tr class="memitem:a601845cf13c777541cec87508e645fd4" id="r_a601845cf13c777541cec87508e645fd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a601845cf13c777541cec87508e645fd4">pushMouseEvent</a> (const char *json)</td></tr>
+<tr class="memitem:a75e906f90e14a08b0301b63d2ab69645" id="r_a75e906f90e14a08b0301b63d2ab69645"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75e906f90e14a08b0301b63d2ab69645">pushKeyboardEvent</a> (const char *json)</td></tr>
+<tr class="memitem:a08ec09953a1bde4dcb57385b357d7d08" id="r_a08ec09953a1bde4dcb57385b357d7d08"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08ec09953a1bde4dcb57385b357d7d08">getWindowTitle</a> ()</td></tr>
+<tr class="memitem:a291dd51cb83acd3a24343d9313ef9ff5" id="r_a291dd51cb83acd3a24343d9313ef9ff5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a291dd51cb83acd3a24343d9313ef9ff5">setWindowTitle</a> (const char *title)</td></tr>
+<tr class="memitem:a163905b8a1b5b65bd47554bca4171a2d" id="r_a163905b8a1b5b65bd47554bca4171a2d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a163905b8a1b5b65bd47554bca4171a2d">getVersionString</a> ()</td></tr>
+<tr class="memitem:a3439c41fa7f181f7fd9eef77769c1820" id="r_a3439c41fa7f181f7fd9eef77769c1820"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3439c41fa7f181f7fd9eef77769c1820">getVersionFullString</a> ()</td></tr>
+<tr class="memitem:aee4e5acdc052655a507fea07023f5665" id="r_aee4e5acdc052655a507fea07023f5665"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee4e5acdc052655a507fea07023f5665">getVersionMajor</a> ()</td></tr>
+<tr class="memitem:ad1d78e7156467d52a3152ed074561693" id="r_ad1d78e7156467d52a3152ed074561693"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1d78e7156467d52a3152ed074561693">getVersionMinor</a> ()</td></tr>
+<tr class="memitem:a71f8037f8c10e1d1d4ccc79116af5dc6" id="r_a71f8037f8c10e1d1d4ccc79116af5dc6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71f8037f8c10e1d1d4ccc79116af5dc6">getVersionPatch</a> ()</td></tr>
+<tr class="memitem:adef130ee9e12714cfa2f0668faa12fba" id="r_adef130ee9e12714cfa2f0668faa12fba"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adef130ee9e12714cfa2f0668faa12fba">getVersionCodename</a> ()</td></tr>
+<tr class="memitem:ab641b101569eae3e156ccc37f91d46b8" id="r_ab641b101569eae3e156ccc37f91d46b8"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab641b101569eae3e156ccc37f91d46b8">getVersionBuild</a> ()</td></tr>
+<tr class="memitem:a5efb1e4d9d188e8650281dd11d922c82" id="r_a5efb1e4d9d188e8650281dd11d922c82"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5efb1e4d9d188e8650281dd11d922c82">getVersionBuildDate</a> ()</td></tr>
+<tr class="memitem:aac5f57db1aaca107ef1eb8bb0ced6fb2" id="r_aac5f57db1aaca107ef1eb8bb0ced6fb2"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac5f57db1aaca107ef1eb8bb0ced6fb2">getVersionCommit</a> ()</td></tr>
+<tr class="memitem:aa6668fcf28b411f51a650e2d94738e87" id="r_aa6668fcf28b411f51a650e2d94738e87"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6668fcf28b411f51a650e2d94738e87">getVersionBranch</a> ()</td></tr>
+<tr class="memitem:ac662cd4c54f3d949705d713513494e1c" id="r_ac662cd4c54f3d949705d713513494e1c"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac662cd4c54f3d949705d713513494e1c">getVersionCompiler</a> ()</td></tr>
+<tr class="memitem:a91d86dac30a0c59f9a6776f7fe6e4ac7" id="r_a91d86dac30a0c59f9a6776f7fe6e4ac7"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91d86dac30a0c59f9a6776f7fe6e4ac7">getVersionPlatform</a> ()</td></tr>
+<tr class="memitem:a853fd16214e1e3b7edd9bd46dc0c5120" id="r_a853fd16214e1e3b7edd9bd46dc0c5120"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a853fd16214e1e3b7edd9bd46dc0c5120">getElapsedTime</a> ()</td></tr>
+<tr class="memitem:a1d93a358ed3d7aa0691b81328ae14d16" id="r_a1d93a358ed3d7aa0691b81328ae14d16"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d93a358ed3d7aa0691b81328ae14d16">getWindowWidth</a> ()</td></tr>
+<tr class="memitem:aba7647b42da1ee757f39b3ac745db141" id="r_aba7647b42da1ee757f39b3ac745db141"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba7647b42da1ee757f39b3ac745db141">getWindowHeight</a> ()</td></tr>
+<tr class="memitem:a7fe452082e949d9fff0ca1ac83644b19" id="r_a7fe452082e949d9fff0ca1ac83644b19"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fe452082e949d9fff0ca1ac83644b19">getPixelWidth</a> ()</td></tr>
+<tr class="memitem:aca6af7ad806b0d9cd3fe3c3de855a00d" id="r_aca6af7ad806b0d9cd3fe3c3de855a00d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca6af7ad806b0d9cd3fe3c3de855a00d">getPixelHeight</a> ()</td></tr>
+<tr class="memitem:a6514a20c7ed4bfc86cbcc40c3f6e8d62" id="r_a6514a20c7ed4bfc86cbcc40c3f6e8d62"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6514a20c7ed4bfc86cbcc40c3f6e8d62">getPreserveAspectRatio</a> ()</td></tr>
+<tr class="memitem:a41b8945c9b0222b9800c76debf72c66f" id="r_a41b8945c9b0222b9800c76debf72c66f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41b8945c9b0222b9800c76debf72c66f">getAllowTextureResize</a> ()</td></tr>
+<tr class="memitem:a42c1d684b3591be75cf16185c0c46365" id="r_a42c1d684b3591be75cf16185c0c46365"><td class="memItemLeft" align="right" valign="top">SDL_RendererLogicalPresentation&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a42c1d684b3591be75cf16185c0c46365">getLogicalPresentation</a> ()</td></tr>
+<tr class="memitem:ae9b90d16aa27c415c38079a9eab71ef2" id="r_ae9b90d16aa27c415c38079a9eab71ef2"><td class="memItemLeft" align="right" valign="top">SDL_WindowFlags&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9b90d16aa27c415c38079a9eab71ef2">getWindowFlags</a> ()</td></tr>
+<tr class="memitem:a6e0b60b670f5e1cfd9b72adf562d4f9d" id="r_a6e0b60b670f5e1cfd9b72adf562d4f9d"><td class="memItemLeft" align="right" valign="top">SDL_PixelFormat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e0b60b670f5e1cfd9b72adf562d4f9d">getPixelFormat</a> ()</td></tr>
+<tr class="memitem:ad379d00a76506f51fd991ebc411a7d7a" id="r_ad379d00a76506f51fd991ebc411a7d7a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad379d00a76506f51fd991ebc411a7d7a">isFullscreen</a> ()</td></tr>
+<tr class="memitem:ab2361c777ea17755a1ba55c958d9fbcf" id="r_ab2361c777ea17755a1ba55c958d9fbcf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2361c777ea17755a1ba55c958d9fbcf">isWindowed</a> ()</td></tr>
+<tr class="memitem:afc1362fc9f73a07391df28ffcb336cda" id="r_afc1362fc9f73a07391df28ffcb336cda"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc1362fc9f73a07391df28ffcb336cda">getIsTraversing</a> ()</td></tr>
+<tr class="memitem:a1534ec13f6128b950e0a8c6d9bb4fbc1" id="r_a1534ec13f6128b950e0a8c6d9bb4fbc1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1534ec13f6128b950e0a8c6d9bb4fbc1">createDisplayObjectFromJson</a> (const char *type, const char *json, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memitem:a732bf2aaacd45e6689a8eeea2f22ab51" id="r_a732bf2aaacd45e6689a8eeea2f22ab51"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a732bf2aaacd45e6689a8eeea2f22ab51">createAssetObjectFromJson</a> (const char *type, const char *json, <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *out_handle)</td></tr>
+<tr class="memitem:ad55c8514dc0da5b8453089b0214ffd37" id="r_ad55c8514dc0da5b8453089b0214ffd37"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad55c8514dc0da5b8453089b0214ffd37">handleTabKeyPress</a> ()</td></tr>
+<tr class="memitem:a0250cc81202b7dd6f7436e9d2aa78675" id="r_a0250cc81202b7dd6f7436e9d2aa78675"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0250cc81202b7dd6f7436e9d2aa78675">handleTabKeyPressReverse</a> ()</td></tr>
+<tr class="memitem:a969a1516da60cb6ac50dc29567db24a7" id="r_a969a1516da60cb6ac50dc29567db24a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a969a1516da60cb6ac50dc29567db24a7">setKeyboardFocus</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memitem:a723a502aa21a12b7a540b9c8f773ff76" id="r_a723a502aa21a12b7a540b9c8f773ff76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a723a502aa21a12b7a540b9c8f773ff76">getKeyboardFocus</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memitem:a357d7333f09978c9dae4f0ca0ade5c4f" id="r_a357d7333f09978c9dae4f0ca0ade5c4f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a357d7333f09978c9dae4f0ca0ade5c4f">clearKeyboardFocus</a> ()</td></tr>
+<tr class="memitem:aa1c36b84ce7c239bd495edc93373bd28" id="r_aa1c36b84ce7c239bd495edc93373bd28"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1c36b84ce7c239bd495edc93373bd28">setMouseHover</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memitem:a9e4ea0966bf75559bade743728c59ee5" id="r_a9e4ea0966bf75559bade743728c59ee5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e4ea0966bf75559bade743728c59ee5">getMouseHover</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memitem:a9e430cebe4fad776467e3b58369f6da0" id="r_a9e430cebe4fad776467e3b58369f6da0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e430cebe4fad776467e3b58369f6da0">clearMouseHover</a> ()</td></tr>
+<tr class="memitem:ac157ddd300d4190b7f87343203cebc0d" id="r_ac157ddd300d4190b7f87343203cebc0d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac157ddd300d4190b7f87343203cebc0d">getFrameCount</a> ()</td></tr>
+<tr class="memitem:aa6e2dda81a7958f7dccce7d2a4ff9112" id="r_aa6e2dda81a7958f7dccce7d2a4ff9112"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6e2dda81a7958f7dccce7d2a4ff9112">getDisplayObject</a> (const char *name, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memitem:aa5d3a70a340b93c69fc2cd1fc54fe22e" id="r_aa5d3a70a340b93c69fc2cd1fc54fe22e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5d3a70a340b93c69fc2cd1fc54fe22e">hasDisplayObject</a> (const char *name)</td></tr>
+<tr class="memitem:a0a2f9c6689b12957c78f3f2d3fc41905" id="r_a0a2f9c6689b12957c78f3f2d3fc41905"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a2f9c6689b12957c78f3f2d3fc41905">destroyDisplayObjectByName</a> (const char *name)</td></tr>
+<tr class="memitem:a9310338c6b1120691fab1eb5c0ece63b" id="r_a9310338c6b1120691fab1eb5c0ece63b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9310338c6b1120691fab1eb5c0ece63b">destroyDisplayObject</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memitem:a4379de95cdf17bc8fe72f5303827c87d" id="r_a4379de95cdf17bc8fe72f5303827c87d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4379de95cdf17bc8fe72f5303827c87d">getAssetObject</a> (const char *name, <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *out_handle)</td></tr>
+<tr class="memitem:af72c31f2a84a3fb9a03ebf84580d459f" id="r_af72c31f2a84a3fb9a03ebf84580d459f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af72c31f2a84a3fb9a03ebf84580d459f">hasAssetObject</a> (const char *name)</td></tr>
+<tr class="memitem:a7ec5aec12c6c85346ca4fcdcfaf387b9" id="r_a7ec5aec12c6c85346ca4fcdcfaf387b9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ec5aec12c6c85346ca4fcdcfaf387b9">destroyAssetObjectByName</a> (const char *name)</td></tr>
+<tr class="memitem:a68f0c2ffbb56b3ad11c6d161b2065a2a" id="r_a68f0c2ffbb56b3ad11c6d161b2065a2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68f0c2ffbb56b3ad11c6d161b2065a2a">destroyAssetObject</a> (const <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *handle)</td></tr>
+<tr class="memitem:a6936eb947001a10ed9fc524d035129b2" id="r_a6936eb947001a10ed9fc524d035129b2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6936eb947001a10ed9fc524d035129b2">countOrphanedDisplayObjects</a> ()</td></tr>
+<tr class="memitem:ab742983bcf4f3244c7b14a37e72d0f9c" id="r_ab742983bcf4f3244c7b14a37e72d0f9c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab742983bcf4f3244c7b14a37e72d0f9c">getOrphanedDisplayObjects</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handles, int *out_count, int max_count)</td></tr>
+<tr class="memitem:a3a8d2413b14d641c4ecc6f4e563bb13e" id="r_a3a8d2413b14d641c4ecc6f4e563bb13e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a8d2413b14d641c4ecc6f4e563bb13e">detachOrphans</a> ()</td></tr>
+<tr class="memitem:a17ae81cd8c069bef0300a9835431abd1" id="r_a17ae81cd8c069bef0300a9835431abd1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17ae81cd8c069bef0300a9835431abd1">collectGarbage</a> ()</td></tr>
+<tr class="memitem:ab3b541e75d2d71f6a3e8d75e55fe0ee7" id="r_ab3b541e75d2d71f6a3e8d75e55fe0ee7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3b541e75d2d71f6a3e8d75e55fe0ee7">attachFutureChildren</a> ()</td></tr>
+<tr class="memitem:aeb65ecb9bf5df8011cf8117e645727ec" id="r_aeb65ecb9bf5df8011cf8117e645727ec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb65ecb9bf5df8011cf8117e645727ec">addToOrphanList</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *orphan)</td></tr>
+<tr class="memitem:af4ad84e53a1c1fae99d9a443ccb3b013" id="r_af4ad84e53a1c1fae99d9a443ccb3b013"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4ad84e53a1c1fae99d9a443ccb3b013">addToFutureChildrenList</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *child, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *parent, bool useWorld, int worldX, int worldY)</td></tr>
+<tr class="memitem:a98dcbbbd61d41f7a976c81253f8c4601" id="r_a98dcbbbd61d41f7a976c81253f8c4601"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98dcbbbd61d41f7a976c81253f8c4601">getDisplayObjectNames</a> (const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memitem:aebcfa7f679d34983f23fd30a847757a9" id="r_aebcfa7f679d34983f23fd30a847757a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebcfa7f679d34983f23fd30a847757a9">clearFactory</a> ()</td></tr>
+<tr class="memitem:a5384d166a0a7046951cb5bfbef63ea88" id="r_a5384d166a0a7046951cb5bfbef63ea88"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5384d166a0a7046951cb5bfbef63ea88">printObjectRegistry</a> ()</td></tr>
+<tr class="memitem:abad0ee730d5d0363e7cca8552eb52705" id="r_abad0ee730d5d0363e7cca8552eb52705"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abad0ee730d5d0363e7cca8552eb52705">getPropertyNamesForType</a> (const char *type, const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memitem:a992b0a649237a78ae9b13fe0c6d527e6" id="r_a992b0a649237a78ae9b13fe0c6d527e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a992b0a649237a78ae9b13fe0c6d527e6">getCommandNamesForType</a> (const char *type, const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memitem:ae8b60712a15a37eeb75d09a55e105397" id="r_ae8b60712a15a37eeb75d09a55e105397"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8b60712a15a37eeb75d09a55e105397">getFunctionNamesForType</a> (const char *type, const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memitem:a8b5b6361ad2ad7c5d0a1e8cf33dcb051" id="r_a8b5b6361ad2ad7c5d0a1e8cf33dcb051"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b5b6361ad2ad7c5d0a1e8cf33dcb051">setIgnoreRealInput</a> (bool ignore)</td></tr>
+<tr class="memitem:ae6a00db31dbd3ae603b4282de2f5e65c" id="r_ae6a00db31dbd3ae603b4282de2f5e65c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6a00db31dbd3ae603b4282de2f5e65c">getIgnoreRealInput</a> (bool *out_ignore)</td></tr>
+<tr class="memitem:a2e4fd00386200b787dd9ca3342d149bc" id="r_a2e4fd00386200b787dd9ca3342d149bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e4fd00386200b787dd9ca3342d149bc">getKeyfocusGray</a> (float *out_gray)</td></tr>
+<tr class="memitem:aa3bcb0f7da71be450e8a7b4a9801260c" id="r_aa3bcb0f7da71be450e8a7b4a9801260c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3bcb0f7da71be450e8a7b4a9801260c">setKeyfocusGray</a> (float gray)</td></tr>
+<tr class="memitem:a516c06955b712668cea8fb7240b9c600" id="r_a516c06955b712668cea8fb7240b9c600"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a516c06955b712668cea8fb7240b9c600">getBorderColor</a> (SDL_Color *out_color)</td></tr>
+<tr class="memitem:af65be003fff830cc0049691c073ef521" id="r_af65be003fff830cc0049691c073ef521"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af65be003fff830cc0049691c073ef521">setBorderColor</a> (const SDL_Color *color)</td></tr>
+<tr class="memitem:aa28e4fbd5006cd961e444ba331a284a8" id="r_aa28e4fbd5006cd961e444ba331a284a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa28e4fbd5006cd961e444ba331a284a8">setWindowWidth</a> (float width)</td></tr>
+<tr class="memitem:a8917a2afd27ff41ebfd803df27cb6660" id="r_a8917a2afd27ff41ebfd803df27cb6660"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8917a2afd27ff41ebfd803df27cb6660">setWindowHeight</a> (float height)</td></tr>
+<tr class="memitem:a83a9dbb488aa6dda058d64bf241ea7aa" id="r_a83a9dbb488aa6dda058d64bf241ea7aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83a9dbb488aa6dda058d64bf241ea7aa">setPixelWidth</a> (float width)</td></tr>
+<tr class="memitem:ae24ae473d61f7462d429c129d079023b" id="r_ae24ae473d61f7462d429c129d079023b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae24ae473d61f7462d429c129d079023b">setPixelHeight</a> (float height)</td></tr>
+<tr class="memitem:a21edf50a95e91049df1cd7a4347ed861" id="r_a21edf50a95e91049df1cd7a4347ed861"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21edf50a95e91049df1cd7a4347ed861">setPreserveAspectRatio</a> (bool preserve)</td></tr>
+<tr class="memitem:a05c8bd7e654ce7e70eba028d89052924" id="r_a05c8bd7e654ce7e70eba028d89052924"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05c8bd7e654ce7e70eba028d89052924">setAllowTextureResize</a> (bool allow)</td></tr>
+<tr class="memitem:a78a7f7cb739b008a7111057bd6da13e8" id="r_a78a7f7cb739b008a7111057bd6da13e8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78a7f7cb739b008a7111057bd6da13e8">setLogicalPresentation</a> (SDL_RendererLogicalPresentation presentation)</td></tr>
+<tr class="memitem:abac0a2bf120d865fe503093283dc4fca" id="r_abac0a2bf120d865fe503093283dc4fca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abac0a2bf120d865fe503093283dc4fca">setWindowFlags</a> (SDL_WindowFlags flags)</td></tr>
+<tr class="memitem:a2312cd3ba8c7291839f8531742dc8dd5" id="r_a2312cd3ba8c7291839f8531742dc8dd5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2312cd3ba8c7291839f8531742dc8dd5">setPixelFormat</a> (SDL_PixelFormat format)</td></tr>
+<tr class="memitem:a65a990311d95a8353f488b1a8ad4a8a0" id="r_a65a990311d95a8353f488b1a8ad4a8a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65a990311d95a8353f488b1a8ad4a8a0">setFullscreen</a> (bool fullscreen)</td></tr>
+<tr class="memitem:a13e438acea21c290091d81511ecd1c8b" id="r_a13e438acea21c290091d81511ecd1c8b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13e438acea21c290091d81511ecd1c8b">setWindowed</a> (bool windowed)</td></tr>
+<tr class="memitem:a241deaa86b1dfa4fb42fbeccdebf220b" id="r_a241deaa86b1dfa4fb42fbeccdebf220b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a241deaa86b1dfa4fb42fbeccdebf220b">setIsTraversing</a> (bool traversing)</td></tr>
+<tr class="memitem:aab81738bfb635ab9f69b24ce0bc87ce9" id="r_aab81738bfb635ab9f69b24ce0bc87ce9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab81738bfb635ab9f69b24ce0bc87ce9">getWindow</a> (SDL_Window **out_window)</td></tr>
+<tr class="memitem:aec6dd1a3d35a122430d1d15499a355a8" id="r_aec6dd1a3d35a122430d1d15499a355a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec6dd1a3d35a122430d1d15499a355a8">getRenderer</a> (SDL_Renderer **out_renderer)</td></tr>
+<tr class="memitem:a9e9ce3c457f34e10d69565fd69ac16c4" id="r_a9e9ce3c457f34e10d69565fd69ac16c4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e9ce3c457f34e10d69565fd69ac16c4">getTexture</a> (SDL_Texture **out_texture)</td></tr>
+<tr class="memitem:ae73ceddd13f23ebfee17a6e434f8bc10" id="r_ae73ceddd13f23ebfee17a6e434f8bc10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae73ceddd13f23ebfee17a6e434f8bc10">setRootNode</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memitem:a402ca5e13758f261c7b369e29241b447" id="r_a402ca5e13758f261c7b369e29241b447"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a402ca5e13758f261c7b369e29241b447">setRootNodeByName</a> (const char *name)</td></tr>
+<tr class="memitem:a116d6784b083b10430bcc014c6264c5a" id="r_a116d6784b083b10430bcc014c6264c5a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a116d6784b083b10430bcc014c6264c5a">setStage</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memitem:ad7c47d0cbcba913cb3a6e45a00880edb" id="r_ad7c47d0cbcba913cb3a6e45a00880edb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7c47d0cbcba913cb3a6e45a00880edb">setStageByName</a> (const char *name)</td></tr>
+<tr class="memitem:a5c530934de7523f162d8ee3689153495" id="r_a5c530934de7523f162d8ee3689153495"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c530934de7523f162d8ee3689153495">getRootNode</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memitem:a5b8a8f16a6a423c0440f3acd4efe7b8b" id="r_a5b8a8f16a6a423c0440f3acd4efe7b8b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b8a8f16a6a423c0440f3acd4efe7b8b">getStageHandle</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memitem:ac4be097798d5107ddf1280c8e951438d" id="r_ac4be097798d5107ddf1280c8e951438d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4be097798d5107ddf1280c8e951438d">registerOnInit</a> (void *fnptr)</td></tr>
+<tr class="memitem:a85f05d9af577d0397ae17ca6a6341c2a" id="r_a85f05d9af577d0397ae17ca6a6341c2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85f05d9af577d0397ae17ca6a6341c2a">registerOnQuit</a> (void *fnptr)</td></tr>
+<tr class="memitem:a3435477cd12955a3848119c9c2ae7199" id="r_a3435477cd12955a3848119c9c2ae7199"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3435477cd12955a3848119c9c2ae7199">registerOnUpdate</a> (void *fnptr)</td></tr>
+<tr class="memitem:a81b670cc86663f046871d98668816429" id="r_a81b670cc86663f046871d98668816429"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81b670cc86663f046871d98668816429">registerOnEvent</a> (void *fnptr)</td></tr>
+<tr class="memitem:ac11d81d08c2f47b6ee25f150ce51063a" id="r_ac11d81d08c2f47b6ee25f150ce51063a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac11d81d08c2f47b6ee25f150ce51063a">registerOnRender</a> (void *fnptr)</td></tr>
+<tr class="memitem:a4f690edf6ab49b135a4b2145db99b599" id="r_a4f690edf6ab49b135a4b2145db99b599"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f690edf6ab49b135a4b2145db99b599">registerOnUnitTest</a> (void *fnptr)</td></tr>
+<tr class="memitem:ad4f8419dacc4f01d9d5e7c303c233128" id="r_ad4f8419dacc4f01d9d5e7c303c233128"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4f8419dacc4f01d9d5e7c303c233128">registerOnWindowResize</a> (void *fnptr)</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="af4ad84e53a1c1fae99d9a443ccb3b013" name="af4ad84e53a1c1fae99d9a443ccb3b013"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4ad84e53a1c1fae99d9a443ccb3b013">&#9670;&#160;</a></span>addToFutureChildrenList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::addToFutureChildrenList </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>child</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>useWorld</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>worldX</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>worldY</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeb65ecb9bf5df8011cf8117e645727ec" name="aeb65ecb9bf5df8011cf8117e645727ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb65ecb9bf5df8011cf8117e645727ec">&#9670;&#160;</a></span>addToOrphanList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::addToOrphanList </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>orphan</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab3b541e75d2d71f6a3e8d75e55fe0ee7" name="ab3b541e75d2d71f6a3e8d75e55fe0ee7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3b541e75d2d71f6a3e8d75e55fe0ee7">&#9670;&#160;</a></span>attachFutureChildren()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::attachFutureChildren </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aebcfa7f679d34983f23fd30a847757a9" name="aebcfa7f679d34983f23fd30a847757a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebcfa7f679d34983f23fd30a847757a9">&#9670;&#160;</a></span>clearFactory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::clearFactory </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a357d7333f09978c9dae4f0ca0ade5c4f" name="a357d7333f09978c9dae4f0ca0ade5c4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a357d7333f09978c9dae4f0ca0ade5c4f">&#9670;&#160;</a></span>clearKeyboardFocus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::clearKeyboardFocus </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9e430cebe4fad776467e3b58369f6da0" name="a9e430cebe4fad776467e3b58369f6da0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e430cebe4fad776467e3b58369f6da0">&#9670;&#160;</a></span>clearMouseHover()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::clearMouseHover </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a17ae81cd8c069bef0300a9835431abd1" name="a17ae81cd8c069bef0300a9835431abd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17ae81cd8c069bef0300a9835431abd1">&#9670;&#160;</a></span>collectGarbage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::collectGarbage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1d3869decd430890ade4c1c5edda94d8" name="a1d3869decd430890ade4c1c5edda94d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1d3869decd430890ade4c1c5edda94d8">&#9670;&#160;</a></span>configure()</h2>
 
@@ -126,6 +364,263 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af00a182cc62b83e650eb42b6dac4c054" name="af00a182cc62b83e650eb42b6dac4c054"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af00a182cc62b83e650eb42b6dac4c054">&#9670;&#160;</a></span>configureFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::configureFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6936eb947001a10ed9fc524d035129b2" name="a6936eb947001a10ed9fc524d035129b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6936eb947001a10ed9fc524d035129b2">&#9670;&#160;</a></span>countOrphanedDisplayObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::CoreAPI::countOrphanedDisplayObjects </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a732bf2aaacd45e6689a8eeea2f22ab51" name="a732bf2aaacd45e6689a8eeea2f22ab51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a732bf2aaacd45e6689a8eeea2f22ab51">&#9670;&#160;</a></span>createAssetObjectFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::createAssetObjectFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>json</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1534ec13f6128b950e0a8c6d9bb4fbc1" name="a1534ec13f6128b950e0a8c6d9bb4fbc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1534ec13f6128b950e0a8c6d9bb4fbc1">&#9670;&#160;</a></span>createDisplayObjectFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::createDisplayObjectFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>json</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a68f0c2ffbb56b3ad11c6d161b2065a2a" name="a68f0c2ffbb56b3ad11c6d161b2065a2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68f0c2ffbb56b3ad11c6d161b2065a2a">&#9670;&#160;</a></span>destroyAssetObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::destroyAssetObject </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7ec5aec12c6c85346ca4fcdcfaf387b9" name="a7ec5aec12c6c85346ca4fcdcfaf387b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ec5aec12c6c85346ca4fcdcfaf387b9">&#9670;&#160;</a></span>destroyAssetObjectByName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::destroyAssetObjectByName </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9310338c6b1120691fab1eb5c0ece63b" name="a9310338c6b1120691fab1eb5c0ece63b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9310338c6b1120691fab1eb5c0ece63b">&#9670;&#160;</a></span>destroyDisplayObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::destroyDisplayObject </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0a2f9c6689b12957c78f3f2d3fc41905" name="a0a2f9c6689b12957c78f3f2d3fc41905"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a2f9c6689b12957c78f3f2d3fc41905">&#9670;&#160;</a></span>destroyDisplayObjectByName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::destroyDisplayObjectByName </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3a8d2413b14d641c4ecc6f4e563bb13e" name="a3a8d2413b14d641c4ecc6f4e563bb13e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a8d2413b14d641c4ecc6f4e563bb13e">&#9670;&#160;</a></span>detachOrphans()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::detachOrphans </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a41b8945c9b0222b9800c76debf72c66f" name="a41b8945c9b0222b9800c76debf72c66f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41b8945c9b0222b9800c76debf72c66f">&#9670;&#160;</a></span>getAllowTextureResize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getAllowTextureResize </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4379de95cdf17bc8fe72f5303827c87d" name="a4379de95cdf17bc8fe72f5303827c87d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4379de95cdf17bc8fe72f5303827c87d">&#9670;&#160;</a></span>getAssetObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getAssetObject </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a516c06955b712668cea8fb7240b9c600" name="a516c06955b712668cea8fb7240b9c600"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a516c06955b712668cea8fb7240b9c600">&#9670;&#160;</a></span>getBorderColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getBorderColor </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Color *</td>          <td class="paramname"><span class="paramname"><em>out_color</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a992b0a649237a78ae9b13fe0c6d527e6" name="a992b0a649237a78ae9b13fe0c6d527e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a992b0a649237a78ae9b13fe0c6d527e6">&#9670;&#160;</a></span>getCommandNamesForType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getCommandNamesForType </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **</td>          <td class="paramname"><span class="paramname"><em>out_names</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>out_count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>max_count</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a44002fdb39cae2bbb639ab0582ae035f" name="a44002fdb39cae2bbb639ab0582ae035f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a44002fdb39cae2bbb639ab0582ae035f">&#9670;&#160;</a></span>getCoreConfig()</h2>
 
@@ -136,6 +631,70 @@ Functions</h2></td></tr>
           <td class="memname">bool SDOM::CoreAPI::getCoreConfig </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *</td>          <td class="paramname"><span class="paramname"><em>out_cfg</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa6e2dda81a7958f7dccce7d2a4ff9112" name="aa6e2dda81a7958f7dccce7d2a4ff9112"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6e2dda81a7958f7dccce7d2a4ff9112">&#9670;&#160;</a></span>getDisplayObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getDisplayObject </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a98dcbbbd61d41f7a976c81253f8c4601" name="a98dcbbbd61d41f7a976c81253f8c4601"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98dcbbbd61d41f7a976c81253f8c4601">&#9670;&#160;</a></span>getDisplayObjectNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getDisplayObjectNames </td>
+          <td>(</td>
+          <td class="paramtype">const char **</td>          <td class="paramname"><span class="paramname"><em>out_names</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>out_count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>max_count</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a853fd16214e1e3b7edd9bd46dc0c5120" name="a853fd16214e1e3b7edd9bd46dc0c5120"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a853fd16214e1e3b7edd9bd46dc0c5120">&#9670;&#160;</a></span>getElapsedTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM::CoreAPI::getElapsedTime </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -177,6 +736,740 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ac157ddd300d4190b7f87343203cebc0d" name="ac157ddd300d4190b7f87343203cebc0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac157ddd300d4190b7f87343203cebc0d">&#9670;&#160;</a></span>getFrameCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::CoreAPI::getFrameCount </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae8b60712a15a37eeb75d09a55e105397" name="ae8b60712a15a37eeb75d09a55e105397"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8b60712a15a37eeb75d09a55e105397">&#9670;&#160;</a></span>getFunctionNamesForType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getFunctionNamesForType </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **</td>          <td class="paramname"><span class="paramname"><em>out_names</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>out_count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>max_count</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6a00db31dbd3ae603b4282de2f5e65c" name="ae6a00db31dbd3ae603b4282de2f5e65c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6a00db31dbd3ae603b4282de2f5e65c">&#9670;&#160;</a></span>getIgnoreRealInput()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getIgnoreRealInput </td>
+          <td>(</td>
+          <td class="paramtype">bool *</td>          <td class="paramname"><span class="paramname"><em>out_ignore</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afc1362fc9f73a07391df28ffcb336cda" name="afc1362fc9f73a07391df28ffcb336cda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc1362fc9f73a07391df28ffcb336cda">&#9670;&#160;</a></span>getIsTraversing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getIsTraversing </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a723a502aa21a12b7a540b9c8f773ff76" name="a723a502aa21a12b7a540b9c8f773ff76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a723a502aa21a12b7a540b9c8f773ff76">&#9670;&#160;</a></span>getKeyboardFocus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getKeyboardFocus </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2e4fd00386200b787dd9ca3342d149bc" name="a2e4fd00386200b787dd9ca3342d149bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e4fd00386200b787dd9ca3342d149bc">&#9670;&#160;</a></span>getKeyfocusGray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getKeyfocusGray </td>
+          <td>(</td>
+          <td class="paramtype">float *</td>          <td class="paramname"><span class="paramname"><em>out_gray</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a42c1d684b3591be75cf16185c0c46365" name="a42c1d684b3591be75cf16185c0c46365"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42c1d684b3591be75cf16185c0c46365">&#9670;&#160;</a></span>getLogicalPresentation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_RendererLogicalPresentation SDOM::CoreAPI::getLogicalPresentation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9e4ea0966bf75559bade743728c59ee5" name="a9e4ea0966bf75559bade743728c59ee5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e4ea0966bf75559bade743728c59ee5">&#9670;&#160;</a></span>getMouseHover()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getMouseHover </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab742983bcf4f3244c7b14a37e72d0f9c" name="ab742983bcf4f3244c7b14a37e72d0f9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab742983bcf4f3244c7b14a37e72d0f9c">&#9670;&#160;</a></span>getOrphanedDisplayObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getOrphanedDisplayObjects </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handles</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>out_count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>max_count</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e0b60b670f5e1cfd9b72adf562d4f9d" name="a6e0b60b670f5e1cfd9b72adf562d4f9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e0b60b670f5e1cfd9b72adf562d4f9d">&#9670;&#160;</a></span>getPixelFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_PixelFormat SDOM::CoreAPI::getPixelFormat </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca6af7ad806b0d9cd3fe3c3de855a00d" name="aca6af7ad806b0d9cd3fe3c3de855a00d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca6af7ad806b0d9cd3fe3c3de855a00d">&#9670;&#160;</a></span>getPixelHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM::CoreAPI::getPixelHeight </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7fe452082e949d9fff0ca1ac83644b19" name="a7fe452082e949d9fff0ca1ac83644b19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fe452082e949d9fff0ca1ac83644b19">&#9670;&#160;</a></span>getPixelWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM::CoreAPI::getPixelWidth </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6514a20c7ed4bfc86cbcc40c3f6e8d62" name="a6514a20c7ed4bfc86cbcc40c3f6e8d62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6514a20c7ed4bfc86cbcc40c3f6e8d62">&#9670;&#160;</a></span>getPreserveAspectRatio()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getPreserveAspectRatio </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abad0ee730d5d0363e7cca8552eb52705" name="abad0ee730d5d0363e7cca8552eb52705"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abad0ee730d5d0363e7cca8552eb52705">&#9670;&#160;</a></span>getPropertyNamesForType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getPropertyNamesForType </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **</td>          <td class="paramname"><span class="paramname"><em>out_names</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>out_count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>max_count</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aec6dd1a3d35a122430d1d15499a355a8" name="aec6dd1a3d35a122430d1d15499a355a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec6dd1a3d35a122430d1d15499a355a8">&#9670;&#160;</a></span>getRenderer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getRenderer </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Renderer **</td>          <td class="paramname"><span class="paramname"><em>out_renderer</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5c530934de7523f162d8ee3689153495" name="a5c530934de7523f162d8ee3689153495"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c530934de7523f162d8ee3689153495">&#9670;&#160;</a></span>getRootNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getRootNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5b8a8f16a6a423c0440f3acd4efe7b8b" name="a5b8a8f16a6a423c0440f3acd4efe7b8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b8a8f16a6a423c0440f3acd4efe7b8b">&#9670;&#160;</a></span>getStageHandle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getStageHandle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>out_handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a15eff3832448f57d8e85b8c68c3db579" name="a15eff3832448f57d8e85b8c68c3db579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15eff3832448f57d8e85b8c68c3db579">&#9670;&#160;</a></span>getStopAfterUnitTests()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getStopAfterUnitTests </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9e9ce3c457f34e10d69565fd69ac16c4" name="a9e9ce3c457f34e10d69565fd69ac16c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e9ce3c457f34e10d69565fd69ac16c4">&#9670;&#160;</a></span>getTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getTexture </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Texture **</td>          <td class="paramname"><span class="paramname"><em>out_texture</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa6668fcf28b411f51a650e2d94738e87" name="aa6668fcf28b411f51a650e2d94738e87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6668fcf28b411f51a650e2d94738e87">&#9670;&#160;</a></span>getVersionBranch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionBranch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab641b101569eae3e156ccc37f91d46b8" name="ab641b101569eae3e156ccc37f91d46b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab641b101569eae3e156ccc37f91d46b8">&#9670;&#160;</a></span>getVersionBuild()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionBuild </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5efb1e4d9d188e8650281dd11d922c82" name="a5efb1e4d9d188e8650281dd11d922c82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5efb1e4d9d188e8650281dd11d922c82">&#9670;&#160;</a></span>getVersionBuildDate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionBuildDate </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adef130ee9e12714cfa2f0668faa12fba" name="adef130ee9e12714cfa2f0668faa12fba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adef130ee9e12714cfa2f0668faa12fba">&#9670;&#160;</a></span>getVersionCodename()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionCodename </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aac5f57db1aaca107ef1eb8bb0ced6fb2" name="aac5f57db1aaca107ef1eb8bb0ced6fb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac5f57db1aaca107ef1eb8bb0ced6fb2">&#9670;&#160;</a></span>getVersionCommit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionCommit </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac662cd4c54f3d949705d713513494e1c" name="ac662cd4c54f3d949705d713513494e1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac662cd4c54f3d949705d713513494e1c">&#9670;&#160;</a></span>getVersionCompiler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionCompiler </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3439c41fa7f181f7fd9eef77769c1820" name="a3439c41fa7f181f7fd9eef77769c1820"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3439c41fa7f181f7fd9eef77769c1820">&#9670;&#160;</a></span>getVersionFullString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionFullString </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aee4e5acdc052655a507fea07023f5665" name="aee4e5acdc052655a507fea07023f5665"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee4e5acdc052655a507fea07023f5665">&#9670;&#160;</a></span>getVersionMajor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::CoreAPI::getVersionMajor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1d78e7156467d52a3152ed074561693" name="ad1d78e7156467d52a3152ed074561693"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1d78e7156467d52a3152ed074561693">&#9670;&#160;</a></span>getVersionMinor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::CoreAPI::getVersionMinor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a71f8037f8c10e1d1d4ccc79116af5dc6" name="a71f8037f8c10e1d1d4ccc79116af5dc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71f8037f8c10e1d1d4ccc79116af5dc6">&#9670;&#160;</a></span>getVersionPatch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SDOM::CoreAPI::getVersionPatch </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a91d86dac30a0c59f9a6776f7fe6e4ac7" name="a91d86dac30a0c59f9a6776f7fe6e4ac7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91d86dac30a0c59f9a6776f7fe6e4ac7">&#9670;&#160;</a></span>getVersionPlatform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionPlatform </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a163905b8a1b5b65bd47554bca4171a2d" name="a163905b8a1b5b65bd47554bca4171a2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a163905b8a1b5b65bd47554bca4171a2d">&#9670;&#160;</a></span>getVersionString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getVersionString </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aab81738bfb635ab9f69b24ce0bc87ce9" name="aab81738bfb635ab9f69b24ce0bc87ce9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab81738bfb635ab9f69b24ce0bc87ce9">&#9670;&#160;</a></span>getWindow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::getWindow </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Window **</td>          <td class="paramname"><span class="paramname"><em>out_window</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9b90d16aa27c415c38079a9eab71ef2" name="ae9b90d16aa27c415c38079a9eab71ef2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9b90d16aa27c415c38079a9eab71ef2">&#9670;&#160;</a></span>getWindowFlags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_WindowFlags SDOM::CoreAPI::getWindowFlags </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aba7647b42da1ee757f39b3ac745db141" name="aba7647b42da1ee757f39b3ac745db141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba7647b42da1ee757f39b3ac745db141">&#9670;&#160;</a></span>getWindowHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM::CoreAPI::getWindowHeight </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a08ec09953a1bde4dcb57385b357d7d08" name="a08ec09953a1bde4dcb57385b357d7d08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08ec09953a1bde4dcb57385b357d7d08">&#9670;&#160;</a></span>getWindowTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * SDOM::CoreAPI::getWindowTitle </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1d93a358ed3d7aa0691b81328ae14d16" name="a1d93a358ed3d7aa0691b81328ae14d16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d93a358ed3d7aa0691b81328ae14d16">&#9670;&#160;</a></span>getWindowWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float SDOM::CoreAPI::getWindowWidth </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad55c8514dc0da5b8453089b0214ffd37" name="ad55c8514dc0da5b8453089b0214ffd37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad55c8514dc0da5b8453089b0214ffd37">&#9670;&#160;</a></span>handleTabKeyPress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::handleTabKeyPress </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0250cc81202b7dd6f7436e9d2aa78675" name="a0250cc81202b7dd6f7436e9d2aa78675"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0250cc81202b7dd6f7436e9d2aa78675">&#9670;&#160;</a></span>handleTabKeyPressReverse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::handleTabKeyPressReverse </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af72c31f2a84a3fb9a03ebf84580d459f" name="af72c31f2a84a3fb9a03ebf84580d459f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af72c31f2a84a3fb9a03ebf84580d459f">&#9670;&#160;</a></span>hasAssetObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::hasAssetObject </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa5d3a70a340b93c69fc2cd1fc54fe22e" name="aa5d3a70a340b93c69fc2cd1fc54fe22e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5d3a70a340b93c69fc2cd1fc54fe22e">&#9670;&#160;</a></span>hasDisplayObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::hasDisplayObject </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae190d5cc1c28e23cf4c4d8fcf2eb7f53" name="ae190d5cc1c28e23cf4c4d8fcf2eb7f53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae190d5cc1c28e23cf4c4d8fcf2eb7f53">&#9670;&#160;</a></span>hasLuaSupport()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::hasLuaSupport </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="adca06271adec531ec75c3472e624a4ad" name="adca06271adec531ec75c3472e624a4ad"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adca06271adec531ec75c3472e624a4ad">&#9670;&#160;</a></span>init()</h2>
 
@@ -194,6 +1487,57 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ad379d00a76506f51fd991ebc411a7d7a" name="ad379d00a76506f51fd991ebc411a7d7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad379d00a76506f51fd991ebc411a7d7a">&#9670;&#160;</a></span>isFullscreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::isFullscreen </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab2361c777ea17755a1ba55c958d9fbcf" name="ab2361c777ea17755a1ba55c958d9fbcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2361c777ea17755a1ba55c958d9fbcf">&#9670;&#160;</a></span>isWindowed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::isWindowed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aacce77a1b797c357629f5775f0b38315" name="aacce77a1b797c357629f5775f0b38315"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacce77a1b797c357629f5775f0b38315">&#9670;&#160;</a></span>loadDomFromJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::loadDomFromJson </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="adc0b5c31d948f7aaf0b89847ce9ed7c9" name="adc0b5c31d948f7aaf0b89847ce9ed7c9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adc0b5c31d948f7aaf0b89847ce9ed7c9">&#9670;&#160;</a></span>loadDomFromJsonFile()</h2>
 
@@ -204,6 +1548,74 @@ Functions</h2></td></tr>
           <td class="memname">bool SDOM::CoreAPI::loadDomFromJsonFile </td>
           <td>(</td>
           <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5384d166a0a7046951cb5bfbef63ea88" name="a5384d166a0a7046951cb5bfbef63ea88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5384d166a0a7046951cb5bfbef63ea88">&#9670;&#160;</a></span>printObjectRegistry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::printObjectRegistry </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a129297576924082195a29521d2f84c56" name="a129297576924082195a29521d2f84c56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a129297576924082195a29521d2f84c56">&#9670;&#160;</a></span>pumpEventsOnce()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::pumpEventsOnce </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75e906f90e14a08b0301b63d2ab69645" name="a75e906f90e14a08b0301b63d2ab69645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75e906f90e14a08b0301b63d2ab69645">&#9670;&#160;</a></span>pushKeyboardEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::pushKeyboardEvent </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a601845cf13c777541cec87508e645fd4" name="a601845cf13c777541cec87508e645fd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a601845cf13c777541cec87508e645fd4">&#9670;&#160;</a></span>pushMouseEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::pushMouseEvent </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -249,6 +1661,125 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a81b670cc86663f046871d98668816429" name="a81b670cc86663f046871d98668816429"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81b670cc86663f046871d98668816429">&#9670;&#160;</a></span>registerOnEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::registerOnEvent </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>fnptr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac4be097798d5107ddf1280c8e951438d" name="ac4be097798d5107ddf1280c8e951438d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4be097798d5107ddf1280c8e951438d">&#9670;&#160;</a></span>registerOnInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::registerOnInit </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>fnptr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a85f05d9af577d0397ae17ca6a6341c2a" name="a85f05d9af577d0397ae17ca6a6341c2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85f05d9af577d0397ae17ca6a6341c2a">&#9670;&#160;</a></span>registerOnQuit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::registerOnQuit </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>fnptr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac11d81d08c2f47b6ee25f150ce51063a" name="ac11d81d08c2f47b6ee25f150ce51063a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac11d81d08c2f47b6ee25f150ce51063a">&#9670;&#160;</a></span>registerOnRender()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::registerOnRender </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>fnptr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f690edf6ab49b135a4b2145db99b599" name="a4f690edf6ab49b135a4b2145db99b599"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f690edf6ab49b135a4b2145db99b599">&#9670;&#160;</a></span>registerOnUnitTest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::registerOnUnitTest </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>fnptr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3435477cd12955a3848119c9c2ae7199" name="a3435477cd12955a3848119c9c2ae7199"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3435477cd12955a3848119c9c2ae7199">&#9670;&#160;</a></span>registerOnUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::registerOnUpdate </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>fnptr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad4f8419dacc4f01d9d5e7c303c233128" name="ad4f8419dacc4f01d9d5e7c303c233128"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4f8419dacc4f01d9d5e7c303c233128">&#9670;&#160;</a></span>registerOnWindowResize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::registerOnWindowResize </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>fnptr</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4cc14392fefaf85500030cdf1c6fc6af" name="a4cc14392fefaf85500030cdf1c6fc6af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4cc14392fefaf85500030cdf1c6fc6af">&#9670;&#160;</a></span>run()</h2>
 
@@ -259,6 +1790,40 @@ Functions</h2></td></tr>
           <td class="memname">bool SDOM::CoreAPI::run </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a05c8bd7e654ce7e70eba028d89052924" name="a05c8bd7e654ce7e70eba028d89052924"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05c8bd7e654ce7e70eba028d89052924">&#9670;&#160;</a></span>setAllowTextureResize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setAllowTextureResize </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>allow</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af65be003fff830cc0049691c073ef521" name="af65be003fff830cc0049691c073ef521"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af65be003fff830cc0049691c073ef521">&#9670;&#160;</a></span>setBorderColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setBorderColor </td>
+          <td>(</td>
+          <td class="paramtype">const SDL_Color *</td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -283,6 +1848,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a65a990311d95a8353f488b1a8ad4a8a0" name="a65a990311d95a8353f488b1a8ad4a8a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65a990311d95a8353f488b1a8ad4a8a0">&#9670;&#160;</a></span>setFullscreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setFullscreen </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>fullscreen</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b5b6361ad2ad7c5d0a1e8cf33dcb051" name="a8b5b6361ad2ad7c5d0a1e8cf33dcb051"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b5b6361ad2ad7c5d0a1e8cf33dcb051">&#9670;&#160;</a></span>setIgnoreRealInput()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setIgnoreRealInput </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>ignore</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="abbd8e118446159d804e112068207acf0" name="abbd8e118446159d804e112068207acf0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abbd8e118446159d804e112068207acf0">&#9670;&#160;</a></span>setIsRunning()</h2>
 
@@ -300,6 +1899,227 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a241deaa86b1dfa4fb42fbeccdebf220b" name="a241deaa86b1dfa4fb42fbeccdebf220b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a241deaa86b1dfa4fb42fbeccdebf220b">&#9670;&#160;</a></span>setIsTraversing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setIsTraversing </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>traversing</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a969a1516da60cb6ac50dc29567db24a7" name="a969a1516da60cb6ac50dc29567db24a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a969a1516da60cb6ac50dc29567db24a7">&#9670;&#160;</a></span>setKeyboardFocus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setKeyboardFocus </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa3bcb0f7da71be450e8a7b4a9801260c" name="aa3bcb0f7da71be450e8a7b4a9801260c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3bcb0f7da71be450e8a7b4a9801260c">&#9670;&#160;</a></span>setKeyfocusGray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setKeyfocusGray </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>gray</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a78a7f7cb739b008a7111057bd6da13e8" name="a78a7f7cb739b008a7111057bd6da13e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78a7f7cb739b008a7111057bd6da13e8">&#9670;&#160;</a></span>setLogicalPresentation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setLogicalPresentation </td>
+          <td>(</td>
+          <td class="paramtype">SDL_RendererLogicalPresentation</td>          <td class="paramname"><span class="paramname"><em>presentation</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1c36b84ce7c239bd495edc93373bd28" name="aa1c36b84ce7c239bd495edc93373bd28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1c36b84ce7c239bd495edc93373bd28">&#9670;&#160;</a></span>setMouseHover()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setMouseHover </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2312cd3ba8c7291839f8531742dc8dd5" name="a2312cd3ba8c7291839f8531742dc8dd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2312cd3ba8c7291839f8531742dc8dd5">&#9670;&#160;</a></span>setPixelFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setPixelFormat </td>
+          <td>(</td>
+          <td class="paramtype">SDL_PixelFormat</td>          <td class="paramname"><span class="paramname"><em>format</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae24ae473d61f7462d429c129d079023b" name="ae24ae473d61f7462d429c129d079023b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae24ae473d61f7462d429c129d079023b">&#9670;&#160;</a></span>setPixelHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setPixelHeight </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>height</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a83a9dbb488aa6dda058d64bf241ea7aa" name="a83a9dbb488aa6dda058d64bf241ea7aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83a9dbb488aa6dda058d64bf241ea7aa">&#9670;&#160;</a></span>setPixelWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setPixelWidth </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>width</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21edf50a95e91049df1cd7a4347ed861" name="a21edf50a95e91049df1cd7a4347ed861"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21edf50a95e91049df1cd7a4347ed861">&#9670;&#160;</a></span>setPreserveAspectRatio()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setPreserveAspectRatio </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>preserve</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae73ceddd13f23ebfee17a6e434f8bc10" name="ae73ceddd13f23ebfee17a6e434f8bc10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae73ceddd13f23ebfee17a6e434f8bc10">&#9670;&#160;</a></span>setRootNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setRootNode </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a402ca5e13758f261c7b369e29241b447" name="a402ca5e13758f261c7b369e29241b447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a402ca5e13758f261c7b369e29241b447">&#9670;&#160;</a></span>setRootNodeByName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setRootNodeByName </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a116d6784b083b10430bcc014c6264c5a" name="a116d6784b083b10430bcc014c6264c5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a116d6784b083b10430bcc014c6264c5a">&#9670;&#160;</a></span>setStage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setStage </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad7c47d0cbcba913cb3a6e45a00880edb" name="ad7c47d0cbcba913cb3a6e45a00880edb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7c47d0cbcba913cb3a6e45a00880edb">&#9670;&#160;</a></span>setStageByName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setStageByName </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6fd78871ef0a98ddeaa80d8bf27d651e" name="a6fd78871ef0a98ddeaa80d8bf27d651e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6fd78871ef0a98ddeaa80d8bf27d651e">&#9670;&#160;</a></span>setStopAfterUnitTests()</h2>
 
@@ -310,6 +2130,91 @@ Functions</h2></td></tr>
           <td class="memname">bool SDOM::CoreAPI::setStopAfterUnitTests </td>
           <td>(</td>
           <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>stop</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a13e438acea21c290091d81511ecd1c8b" name="a13e438acea21c290091d81511ecd1c8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13e438acea21c290091d81511ecd1c8b">&#9670;&#160;</a></span>setWindowed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setWindowed </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>windowed</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abac0a2bf120d865fe503093283dc4fca" name="abac0a2bf120d865fe503093283dc4fca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abac0a2bf120d865fe503093283dc4fca">&#9670;&#160;</a></span>setWindowFlags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setWindowFlags </td>
+          <td>(</td>
+          <td class="paramtype">SDL_WindowFlags</td>          <td class="paramname"><span class="paramname"><em>flags</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8917a2afd27ff41ebfd803df27cb6660" name="a8917a2afd27ff41ebfd803df27cb6660"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8917a2afd27ff41ebfd803df27cb6660">&#9670;&#160;</a></span>setWindowHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setWindowHeight </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>height</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a291dd51cb83acd3a24343d9313ef9ff5" name="a291dd51cb83acd3a24343d9313ef9ff5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a291dd51cb83acd3a24343d9313ef9ff5">&#9670;&#160;</a></span>setWindowTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setWindowTitle </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>title</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa28e4fbd5006cd961e444ba331a284a8" name="aa28e4fbd5006cd961e444ba331a284a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa28e4fbd5006cd961e444ba331a284a8">&#9670;&#160;</a></span>setWindowWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::setWindowWidth </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>width</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

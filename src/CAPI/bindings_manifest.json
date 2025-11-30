@@ -585,6 +585,134 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_PumpEventsOnce",
+      "c_signature": "bool SDOM_PumpEventsOnce(void)",
+      "dispatch_family": "singleton",
+      "name": "PumpEventsOnce",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_PushMouseEvent",
+      "c_signature": "bool SDOM_PushMouseEvent(const char* json)",
+      "dispatch_family": "singleton",
+      "name": "PushMouseEvent",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_PushKeyboardEvent",
+      "c_signature": "bool SDOM_PushKeyboardEvent(const char* json)",
+      "dispatch_family": "singleton",
+      "name": "PushKeyboardEvent",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_HasLuaSupport",
+      "c_signature": "bool SDOM_HasLuaSupport(void)",
+      "dispatch_family": "singleton",
+      "name": "HasLuaSupport",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionString",
+      "c_signature": "const char* SDOM_GetVersionString(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionString",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionFullString",
+      "c_signature": "const char* SDOM_GetVersionFullString(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionFullString",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionMajor",
+      "c_signature": "int SDOM_GetVersionMajor(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionMajor",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionMinor",
+      "c_signature": "int SDOM_GetVersionMinor(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionMinor",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionPatch",
+      "c_signature": "int SDOM_GetVersionPatch(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionPatch",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionCodename",
+      "c_signature": "const char* SDOM_GetVersionCodename(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionCodename",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionBuild",
+      "c_signature": "const char* SDOM_GetVersionBuild(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionBuild",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionBuildDate",
+      "c_signature": "const char* SDOM_GetVersionBuildDate(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionBuildDate",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionCommit",
+      "c_signature": "const char* SDOM_GetVersionCommit(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionCommit",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionBranch",
+      "c_signature": "const char* SDOM_GetVersionBranch(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionBranch",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionCompiler",
+      "c_signature": "const char* SDOM_GetVersionCompiler(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionCompiler",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetVersionPlatform",
+      "c_signature": "const char* SDOM_GetVersionPlatform(void)",
+      "dispatch_family": "singleton",
+      "name": "GetVersionPlatform",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_GetElapsedTime",
       "c_signature": "float SDOM_GetElapsedTime(void)",
       "dispatch_family": "singleton",
@@ -885,6 +1013,222 @@
       "c_signature": "int SDOM_GetFrameCount(void)",
       "dispatch_family": "singleton",
       "name": "GetFrameCount",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetDisplayObject",
+      "c_signature": "bool SDOM_GetDisplayObject(const char* name, SDOM_DisplayHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetDisplayObject",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_HasDisplayObject",
+      "c_signature": "bool SDOM_HasDisplayObject(const char* name)",
+      "dispatch_family": "singleton",
+      "name": "HasDisplayObject",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_DestroyDisplayObjectByName",
+      "c_signature": "bool SDOM_DestroyDisplayObjectByName(const char* name)",
+      "dispatch_family": "singleton",
+      "name": "DestroyDisplayObjectByName",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_DestroyDisplayObject",
+      "c_signature": "bool SDOM_DestroyDisplayObject(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "singleton",
+      "name": "DestroyDisplayObject",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetAssetObject",
+      "c_signature": "bool SDOM_GetAssetObject(const char* name, SDOM_AssetHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetAssetObject",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_HasAssetObject",
+      "c_signature": "bool SDOM_HasAssetObject(const char* name)",
+      "dispatch_family": "singleton",
+      "name": "HasAssetObject",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_DestroyAssetObjectByName",
+      "c_signature": "bool SDOM_DestroyAssetObjectByName(const char* name)",
+      "dispatch_family": "singleton",
+      "name": "DestroyAssetObjectByName",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_DestroyAssetObject",
+      "c_signature": "bool SDOM_DestroyAssetObject(const SDOM_AssetHandle* handle)",
+      "dispatch_family": "singleton",
+      "name": "DestroyAssetObject",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_CountOrphans",
+      "c_signature": "int SDOM_CountOrphans(void)",
+      "dispatch_family": "singleton",
+      "name": "CountOrphans",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetOrphans",
+      "c_signature": "bool SDOM_GetOrphans(SDOM_DisplayHandle* out_handles, int* out_count, int max_count)",
+      "dispatch_family": "singleton",
+      "name": "GetOrphans",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_DetachOrphans",
+      "c_signature": "bool SDOM_DetachOrphans(void)",
+      "dispatch_family": "singleton",
+      "name": "DetachOrphans",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_CollectGarbage",
+      "c_signature": "bool SDOM_CollectGarbage(void)",
+      "dispatch_family": "singleton",
+      "name": "CollectGarbage",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_AttachFutureChildren",
+      "c_signature": "bool SDOM_AttachFutureChildren(void)",
+      "dispatch_family": "singleton",
+      "name": "AttachFutureChildren",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_AddOrphan",
+      "c_signature": "bool SDOM_AddOrphan(const SDOM_DisplayHandle* orphan)",
+      "dispatch_family": "singleton",
+      "name": "AddOrphan",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_AddFutureChild",
+      "c_signature": "bool SDOM_AddFutureChild(const SDOM_DisplayHandle* child, const SDOM_DisplayHandle* parent, bool useWorld, int worldX, int worldY)",
+      "dispatch_family": "singleton",
+      "name": "AddFutureChild",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetDisplayObjectNames",
+      "c_signature": "bool SDOM_GetDisplayObjectNames(const char** out_names, int* out_count, int max_count)",
+      "dispatch_family": "singleton",
+      "name": "GetDisplayObjectNames",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_ClearFactory",
+      "c_signature": "bool SDOM_ClearFactory(void)",
+      "dispatch_family": "singleton",
+      "name": "ClearFactory",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_PrintObjectRegistry",
+      "c_signature": "bool SDOM_PrintObjectRegistry(void)",
+      "dispatch_family": "singleton",
+      "name": "PrintObjectRegistry",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetPropertyNamesForType",
+      "c_signature": "bool SDOM_GetPropertyNamesForType(const char* type, const char** out_names, int* out_count, int max_count)",
+      "dispatch_family": "singleton",
+      "name": "GetPropertyNamesForType",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetCommandNamesForType",
+      "c_signature": "bool SDOM_GetCommandNamesForType(const char* type, const char** out_names, int* out_count, int max_count)",
+      "dispatch_family": "singleton",
+      "name": "GetCommandNamesForType",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetFunctionNamesForType",
+      "c_signature": "bool SDOM_GetFunctionNamesForType(const char* type, const char** out_names, int* out_count, int max_count)",
+      "dispatch_family": "singleton",
+      "name": "GetFunctionNamesForType",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetIgnoreRealInput",
+      "c_signature": "bool SDOM_SetIgnoreRealInput(bool ignore)",
+      "dispatch_family": "singleton",
+      "name": "SetIgnoreRealInput",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetIgnoreRealInput",
+      "c_signature": "bool SDOM_GetIgnoreRealInput(bool* out_ignore)",
+      "dispatch_family": "singleton",
+      "name": "GetIgnoreRealInput",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetKeyfocusGray",
+      "c_signature": "bool SDOM_GetKeyfocusGray(float* out_gray)",
+      "dispatch_family": "singleton",
+      "name": "GetKeyfocusGray",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetKeyfocusGray",
+      "c_signature": "bool SDOM_SetKeyfocusGray(float gray)",
+      "dispatch_family": "singleton",
+      "name": "SetKeyfocusGray",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_CreateDisplayObjectFromJson",
+      "c_signature": "bool SDOM_CreateDisplayObjectFromJson(const char* type, const char* json, SDOM_DisplayHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "CreateDisplayObjectFromJson",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_CreateAssetObjectFromJson",
+      "c_signature": "bool SDOM_CreateAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "CreateAssetObjectFromJson",
       "owner_type": "Core",
       "subject_kind": "Core"
     },

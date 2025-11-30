@@ -16,7 +16,7 @@ var searchData=
   ['sdom_5fcapi_5fbutton_2eh_13',['SDOM_CAPI_Button.h',['../SDOM__CAPI__Button_8h.html',1,'']]],
   ['sdom_5fcapi_5fcheckbutton_2eh_14',['SDOM_CAPI_CheckButton.h',['../SDOM__CAPI__CheckButton_8h.html',1,'']]],
   ['sdom_5fcapi_5fcore_2ecpp_15',['SDOM_CAPI_Core.cpp',['../SDOM__CAPI__Core_8cpp.html',1,'']]],
-  ['sdom_5fcapi_5fcore_2eh_16',['SDOM_CAPI_Core.h',['../SDOM__CAPI__Core_8h.html',1,'']]],
+  ['sdom_5fcapi_5fcore_2eh_16',['SDOM_CAPI_Core.h',['../bak_2SDOM__CAPI__Core_8h.html',1,'(Global Namespace)'],['../SDOM__CAPI__Core_8h.html',1,'(Global Namespace)']]],
   ['sdom_5fcapi_5fevent_2ecpp_17',['SDOM_CAPI_Event.cpp',['../SDOM__CAPI__Event_8cpp.html',1,'']]],
   ['sdom_5fcapi_5fevent_2eh_18',['SDOM_CAPI_Event.h',['../SDOM__CAPI__Event_8h.html',1,'']]],
   ['sdom_5fcapi_5feventtype_2eh_19',['SDOM_CAPI_EventType.h',['../SDOM__CAPI__EventType_8h.html',1,'']]],

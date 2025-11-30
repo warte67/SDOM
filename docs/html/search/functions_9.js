@@ -31,7 +31,7 @@ var searchData=
   ['isdirty_28',['isDirty',['../classSDOM_1_1IDisplayObject.html#af73756bb0bfa49f9ed02a3e655bb9a1b',1,'SDOM::IDisplayObject']]],
   ['isdynamic_29',['isDynamic',['../classSDOM_1_1Variant.html#a0da9a172d898bda26b3b355a5bcd5087',1,'SDOM::Variant']]],
   ['isenabled_30',['isEnabled',['../classSDOM_1_1IDisplayObject.html#ac452d690d98c233a22b72ab565ca83c3',1,'SDOM::IDisplayObject']]],
-  ['isfullscreen_31',['isFullscreen',['../classSDOM_1_1Core.html#ab2c45e07a9ab44b14cd57cf148815d5e',1,'SDOM::Core']]],
+  ['isfullscreen_31',['isFullscreen',['../classSDOM_1_1Core.html#ab2c45e07a9ab44b14cd57cf148815d5e',1,'SDOM::Core::isFullscreen()'],['../namespaceSDOM_1_1CoreAPI.html#ad379d00a76506f51fd991ebc411a7d7a',1,'SDOM::CoreAPI::isFullscreen()']]],
   ['ishidden_32',['isHidden',['../classSDOM_1_1IDisplayObject.html#afa37c4995ca399ecb45fa588c0df0b2e',1,'SDOM::IDisplayObject']]],
   ['isinitialized_33',['isInitialized',['../classSDOM_1_1Factory.html#aead0acc35450aa92ebbabbac2ec6f14f',1,'SDOM::Factory']]],
   ['isint_34',['isInt',['../classSDOM_1_1Variant.html#af41847ee3c68e67e83f296c4fcefcda0',1,'SDOM::Variant']]],
@@ -55,6 +55,6 @@ var searchData=
   ['istabenabled_52',['isTabEnabled',['../classSDOM_1_1IDisplayObject.html#ac833508be5695b4b45a4ffbfd970c3bb',1,'SDOM::IDisplayObject']]],
   ['isvalid_53',['isValid',['../classSDOM_1_1AssetHandle.html#abf912a65a0e055a3e9cf2bb9da51d00a',1,'SDOM::AssetHandle::isValid()'],['../classSDOM_1_1DisplayHandle.html#a8cfd62e992f72ef158b3fcd25e0ba3b7',1,'SDOM::DisplayHandle::isValid()']]],
   ['isvisible_54',['isVisible',['../classSDOM_1_1IDisplayObject.html#a59f0351159eb9bac6a1c89b56639d49f',1,'SDOM::IDisplayObject']]],
-  ['iswindowed_55',['isWindowed',['../classSDOM_1_1Core.html#a0540163ee57d7cb4a762ed71bc0833f4',1,'SDOM::Core']]],
+  ['iswindowed_55',['isWindowed',['../classSDOM_1_1Core.html#a0540163ee57d7cb4a762ed71bc0833f4',1,'SDOM::Core::isWindowed()'],['../namespaceSDOM_1_1CoreAPI.html#ab2361c777ea17755a1ba55c958d9fbcf',1,'SDOM::CoreAPI::isWindowed()']]],
   ['iszorderdirty_56',['isZOrderDirty',['../classSDOM_1_1IDisplayObject.html#a178db1bc8bbde20ebaa79044ae9af38e',1,'SDOM::IDisplayObject']]]
 ];

@@ -984,14 +984,22 @@ A small omission with big downstream effects.
   - ❌ Not respected in `configureFromJson`  
   - ❌ Not represented in manifest or binding metadata  
 - Planned a deep-dive session to unify:
-  - JSON field → CoreConfig
-  - CoreConfig → reconfigure()
-  - CoreConfig → CAPI struct
+  - JSON → CoreConfig  
+  - CoreConfig → `reconfigure()`  
+  - CoreConfig → CAPI struct  
   - CAPI → Lua bindings  
 - Marked the entire `rendererVSync` property chain as **pending full audit**.
+- Added follow-up item for **CAPI marshaling correctness audit** — including unimplemented return marshaling for:
+  - `SDOM_GetLogicalPresentation`  
+  - `SDOM_GetWindowFlags`  
+  - `SDOM_GetPixelFormat`  
+- Noted minor issues to resolve later:
+  - Duplicate includes in `SDOM_CAPI_Core.cpp`  
+  - Consistency pass for null-checks on JSON-related functions  
+  - Validation that all new Core API identifiers are correctly registered in the dispatcher  
 
 ### 🧩 Binding Manifest Cross-Verification
-- Completed another pass comparing the *dynamic manifest* against the *static Core table*.  
+- Completed another pass comparing the *dynamic manifest* against the *static Core C++ API table*.  
 - Verified all existing CAPI identifiers for correctness; marked remaining Proposed entries for generator integration.
 
 ### 🌟 **Summary**
@@ -1004,7 +1012,32 @@ Tomorrow’s focus will be unifying that chain and ensuring the manifest becomes
 - ☐ Add `rendererVSync` to JSON parsing  
 - ☐ Add `rendererVSync` to C API & binding manifest  
 - ☐ Update `reconfigure()` logic to apply vsync changes consistently  
-- ☐ Expand unit test coverage (CAPI + JSON startup + reconfigure cycle)
+- ☐ Expand unit test coverage (CAPI + JSON startup + reconfigure cycle)  
+- ☐ Fix remaining CAPI marshaling TODOs in Core (presentation, flags, pixel format)  
+- ☐ Clean up duplicate includes + unify JSON null-check handling  
+- ☐ Verify dispatcher registration exists for all newly added Core methods  
+- ☐ Add handle-based lookup & destruction API tasks  
+  - ☐ Implement `getDisplayObject(name, out_handle)` / `hasDisplayObject(name)`  
+  - ☐ Implement `destroyDisplayObjectByName(name)` and `destroyDisplayObject(handle)`  
+  - ☐ Implement equivalent AssetObject versions  
+  - ☐ Ensure *no raw pointers* are ever returned; all lookup must use SDOM_DisplayHandle or SDOM_AssetHandle  
+  - ☐ Consider optional helpers: `isDisplayHandleValid()` / `isAssetHandleValid()` for CAPI tests
+- ☐ Add handle-based lookup & destruction API tasks  
+  - ☐ Implement `getDisplayObject(name, out_handle)` / `hasDisplayObject(name)`  
+  - ☐ Implement `destroyDisplayObjectByName(name)` and `destroyDisplayObject(handle)`  
+  - ☐ Implement equivalent AssetObject versions  
+  - ☐ Ensure *no raw pointers* are ever returned; all lookup must use SDOM_DisplayHandle or SDOM_AssetHandle  
+  - ☐ Consider optional helpers: `isDisplayHandleValid()` / `isAssetHandleValid()` for CAPI tests
+  - ☐ Update naming for hover focus APIs:
+    - ☐ Rename `getMouseHover` → `getMouseHoveredObject`
+    - ☐ Rename `clearMouseHover` → `clearMouseHoveredObject`
+- ☐ Add full **Doxygen comments** for every function in `SDOM_CAPI_Core.h`  
+  - ☐ Include brief description, parameter docs, return semantics, error cases  
+  - ☐ Ensure all Core functions appear in generated docs (public API surface)
+  - ☐ Mirror doc-blocks in `SDOM_CoreAPI.cpp` for consistency  
+  - ☐ Expect both files to grow substantially as SDOM’s public API becomes fully documented
+
+
 
 #### 🤔 *End of Day Reflection*
 > *“The smallest missing field can mislead the mightiest engine — completeness is a kingdom built one property at a time.”*
