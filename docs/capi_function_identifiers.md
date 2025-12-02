@@ -22,9 +22,15 @@ Lifecycle & Main Loop
 | `void onQuit()` | _callback only_ | _callback only_ | Internal | Use `RegisterOnQuit`; direct Lua access removed in favor of callbacks. |
 | `bool onUnitTest(int frame)` | _callback only_ | _callback only_ | Internal | Triggered through `RegisterOnUnitTest`; not exported as a callable Lua method. |
 | `bool run()` | `SDOM_Run` | `Core:Run()` | Existing | Enters the main loop until quit/stop is requested. |
+| `bool pollEvents()` | `SDOM_PollEvents` | `Core:PollEvents()` | Proposed | Polls and queues SDL/synthetic events. Auto-runs if omitted by subsequent phases. |
+| `bool pumpEventsOnce()` | `SDOM_PumpEventsOnce` | `Core:PumpEventsOnce()` | Proposed | Pumps exactly one event from the queue. Debug/testing utility. |
+| `bool update()` | `SDOM_Update` | `Core:Update()` | Proposed | Updates DOM tree; calls onUpdate callbacks. Auto-runs PollEvents if required. |
+| `bool render()` | `SDOM_Render` | `Core:Render()` | Proposed | Renders DOM to texture. Auto-runs PollEvents/Update if required. |
+| `bool present()` | `SDOM_Present` | `Core:Present()` | Proposed | Presents texture to screen; auto-runs all missing phases; resets frame flags. |
+| `bool runFrame()` | `SDOM_RunFrame` | `Core:RunFrame()` | Proposed | Full frame cycle: Poll → Update → Render → Present. Explicit frame boundary. |
 | `void isRunning(bool running)` | `SDOM_SetIsRunning` | `Core:SetIsRunning(running)` | Existing | Allows scripts/tests to pause the loop without a full quit. |
 | `void quit()` | `SDOM_Quit` | `Core:Quit()` | Existing | Graceful shutdown; also aliased by `shutdown()`. |
-| `void shutdown()` | `SDOM_Quit` | `Core:Shutdown()` | Existing | Thin wrapper over `quit()`; reuse the same C API entry point. |
+| `void shutdown()` | `SDOM_Shutdown` | `Core:Shutdown()` | Proposed | Clears the internal **is_running** flag to request termination. |
 | `void onRender()` | _callback only_ | _callback only_ | Internal | Use `RegisterOnRender`; the Lua runtime should not call this directly. |
 | `void onEvent(Event& evt)` | _callback only_ | _callback only_ | Internal | Events are surfaced via listener registration instead of a direct Lua method. |
 | `void onUpdate(float dt)` | _callback only_ | _callback only_ | Internal | Use `RegisterOnUpdate` to hook into the frame loop. |
@@ -460,17 +466,6 @@ Open Questions / Follow-ups
 3. **Async safety** – some proposed APIs (`SetIsRunning`, focus setters) mutate state that is only safe on the main thread; generation should embed thread-safety warnings.
 
 
----
-### Runtime Loop & Frame Control
-The following C API functions expose the event pipeline, DOM traversal, update, rendering, and present steps. They are required for automated unit testing, synthetic event injection, and frame-by-frame deterministic evaluation.
 
-| C API Identifier | C Signature | Dispatch | Notes |
-|------------------|-------------|----------|-------|
-| `SDOM_PollEvents` | `bool SDOM_PollEvents(void)` | singleton | Polls and dispatches all queued events (real + synthetic). |
-| `SDOM_PumpEventsOnce` | `bool SDOM_PumpEventsOnce(void)` | singleton | Pumps exactly one event. Useful for determinism. |
-| `SDOM_PollEventsAndTraverseDom` | `bool SDOM_PollEventsAndTraverseDom(void)` | singleton | Polls events and performs full DOM traversal (hover, focus, dispatch). |
-| `SDOM_Update` | `bool SDOM_Update(float dt)` | singleton | Executes per-frame update on all active objects. |
-| `SDOM_Render` | `bool SDOM_Render(void)` | singleton | Calls all onRender callbacks in z-order. |
-| `SDOM_Present` | `bool SDOM_Present(void)` | singleton | Presents the final frame (renderer->present). |
-| `SDOM_RunFrame` (optional) | `bool SDOM_RunFrame(float dt)` | singleton | Performs Poll → Traverse → Update → Render → Present in sequence. |
+
 
