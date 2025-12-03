@@ -97,50 +97,508 @@ extern "C" {
 #endif
 
 // Callable bindings
+
+/**
+ * @brief Retrieves the numeric SDOM_EventType id for this event.
+ *
+ * C++:   EventType Event::getType() const
+ * C API: bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type)
+ *
+ * @param evt Pointer parameter.
+ * @param out_type Pointer parameter.
+ * @return EventType; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type);
+
+/**
+ * @brief Retrieves the EventType name associated with this event.
+ *
+ * C++:   std::string Event::getTypeName() const
+ * C API: const char* SDOM_GetEventTypeName(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return const char*; check SDOM_GetError() for details on failure.
+ */
 const char* SDOM_GetEventTypeName(const SDOM_Event* evt);
+
+/**
+ * @brief Returns the current propagation phase for this event.
+ *
+ * C++:   Event::Phase Event::getPhase() const
+ * C API: SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return SDOM_EventPhase; check SDOM_GetError() for details on failure.
+ */
 SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the propagation phase for this event.
+ *
+ * C++:   Event& Event::setPhase(Event::Phase phase)
+ * C API: bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase);
+
+/**
+ * @brief Retrieves the textual description of the current dispatch phase.
+ *
+ * C++:   std::string Event::getPhaseString() const
+ * C API: const char* SDOM_GetEventPhaseString(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return const char*; check SDOM_GetError() for details on failure.
+ */
 const char* SDOM_GetEventPhaseString(const SDOM_Event* evt);
+
+/**
+ * @brief Copies the event's target DisplayHandle into an SDOM_DisplayHandle snapshot.
+ *
+ * C++:   DisplayHandle Event::getTarget() const
+ * C API: bool SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)
+ *
+ * @param evt Pointer parameter.
+ * @param out_target Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
+
+/**
+ * @brief Assigns a new DisplayHandle target snapshot to the event.
+ *
+ * C++:   Event& Event::setTarget(DisplayHandle newTarget)
+ * C API: bool SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)
+ *
+ * @param evt Pointer parameter.
+ * @param new_target Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
+
+/**
+ * @brief Copies the current dispatch target DisplayHandle into an SDOM_DisplayHandle snapshot.
+ *
+ * C++:   DisplayHandle Event::getCurrentTarget() const
+ * C API: bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)
+ *
+ * @param evt Pointer parameter.
+ * @param out_target Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
+
+/**
+ * @brief Assigns a new current dispatch target via an SDOM_DisplayHandle snapshot.
+ *
+ * C++:   Event& Event::setCurrentTarget(DisplayHandle newCurrentTarget)
+ * C API: bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)
+ *
+ * @param evt Pointer parameter.
+ * @param new_target Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
+
+/**
+ * @brief Copies the related target DisplayHandle (if any) into an SDOM_DisplayHandle snapshot.
+ *
+ * C++:   DisplayHandle Event::getRelatedTarget() const
+ * C API: bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)
+ *
+ * @param evt Pointer parameter.
+ * @param out_target Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target);
+
+/**
+ * @brief Assigns a new related target DisplayHandle snapshot on the event.
+ *
+ * C++:   Event& Event::setRelatedTarget(DisplayHandle newRelatedTarget)
+ * C API: bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)
+ *
+ * @param evt Pointer parameter.
+ * @param new_target Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target);
+
+/**
+ * @brief Serializes the embedded SDL_Event into a JSON snapshot for interop.
+ *
+ * C++:   std::string Event::getSDL_EventJson() const
+ * C API: const char* SDOM_GetEventSDLJson(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return const char*; check SDOM_GetError() for details on failure.
+ */
 const char* SDOM_GetEventSDLJson(const SDOM_Event* evt);
+
+/**
+ * @brief Reconstructs the embedded SDL_Event from a JSON snapshot.
+ *
+ * C++:   Event& Event::setSDL_EventJson(const std::string& json)
+ * C API: bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json)
+ *
+ * @param evt Pointer parameter.
+ * @param json Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json);
+
+/**
+ * @brief Returns true if propagation has been stopped for this event.
+ *
+ * C++:   bool Event::isPropagationStopped() const
+ * C API: bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt);
+
+/**
+ * @brief Stops event propagation (capture/bubble) for this event instance.
+ *
+ * C++:   Event& Event::stopPropagation()
+ * C API: bool SDOM_StopEventPropagation(SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_StopEventPropagation(SDOM_Event* evt);
+
+/**
+ * @brief Returns true if the event's default behavior has been disabled.
+ *
+ * C++:   bool Event::isDefaultBehaviorDisabled() const
+ * C API: bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt);
+
+/**
+ * @brief Enables or disables the event's default behavior.
+ *
+ * C++:   Event& Event::setDisableDefaultBehavior(bool disable)
+ * C API: bool SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable);
+
+/**
+ * @brief Returns whether this event is currently using capture semantics.
+ *
+ * C++:   bool Event::getUseCapture() const
+ * C API: bool SDOM_GetEventUseCapture(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_GetEventUseCapture(const SDOM_Event* evt);
+
+/**
+ * @brief Sets whether this event should use capture semantics during dispatch.
+ *
+ * C++:   Event& Event::setUseCapture(bool useCapture)
+ * C API: bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture);
+
+/**
+ * @brief Retrieves the elapsed time associated with this event in seconds.
+ *
+ * C++:   float Event::getElapsedTime() const
+ * C API: float SDOM_GetEventElapsedTime(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return float; check SDOM_GetError() for details on failure.
+ */
 float SDOM_GetEventElapsedTime(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the elapsed time (in seconds) for this event instance.
+ *
+ * C++:   Event& Event::setElapsedTime(float elapsedTime)
+ * C API: bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time);
+
+/**
+ * @brief Retrieves the cached mouse X coordinate for the event.
+ *
+ * C++:   float Event::getMouseX() const
+ * C API: float SDOM_GetEventMouseX(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return float; check SDOM_GetError() for details on failure.
+ */
 float SDOM_GetEventMouseX(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the mouse X coordinate for the event payload.
+ *
+ * C++:   Event& Event::setMouseX(float x)
+ * C API: bool SDOM_SetEventMouseX(SDOM_Event* evt, float x)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventMouseX(SDOM_Event* evt, float x);
+
+/**
+ * @brief Retrieves the cached mouse Y coordinate for the event.
+ *
+ * C++:   float Event::getMouseY() const
+ * C API: float SDOM_GetEventMouseY(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return float; check SDOM_GetError() for details on failure.
+ */
 float SDOM_GetEventMouseY(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the mouse Y coordinate for the event payload.
+ *
+ * C++:   Event& Event::setMouseY(float y)
+ * C API: bool SDOM_SetEventMouseY(SDOM_Event* evt, float y)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventMouseY(SDOM_Event* evt, float y);
+
+/**
+ * @brief Returns the horizontal wheel delta collected for the event.
+ *
+ * C++:   float Event::getWheelX() const
+ * C API: float SDOM_GetEventWheelX(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return float; check SDOM_GetError() for details on failure.
+ */
 float SDOM_GetEventWheelX(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the horizontal wheel delta in the payload.
+ *
+ * C++:   Event& Event::setWheelX(float x)
+ * C API: bool SDOM_SetEventWheelX(SDOM_Event* evt, float x)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventWheelX(SDOM_Event* evt, float x);
+
+/**
+ * @brief Returns the vertical wheel delta collected for the event.
+ *
+ * C++:   float Event::getWheelY() const
+ * C API: float SDOM_GetEventWheelY(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return float; check SDOM_GetError() for details on failure.
+ */
 float SDOM_GetEventWheelY(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the vertical wheel delta in the payload.
+ *
+ * C++:   Event& Event::setWheelY(float y)
+ * C API: bool SDOM_SetEventWheelY(SDOM_Event* evt, float y)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventWheelY(SDOM_Event* evt, float y);
+
+/**
+ * @brief Provides the drag offset (X axis) for drag events.
+ *
+ * C++:   float Event::getDragOffsetX() const
+ * C API: float SDOM_GetEventDragOffsetX(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return float; check SDOM_GetError() for details on failure.
+ */
 float SDOM_GetEventDragOffsetX(const SDOM_Event* evt);
+
+/**
+ * @brief Stores the drag offset (X axis) into the event payload.
+ *
+ * C++:   Event& Event::setDragOffsetX(float offsetX)
+ * C API: bool SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x);
+
+/**
+ * @brief Provides the drag offset (Y axis) for drag events.
+ *
+ * C++:   float Event::getDragOffsetY() const
+ * C API: float SDOM_GetEventDragOffsetY(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return float; check SDOM_GetError() for details on failure.
+ */
 float SDOM_GetEventDragOffsetY(const SDOM_Event* evt);
+
+/**
+ * @brief Stores the drag offset (Y axis) into the event payload.
+ *
+ * C++:   Event& Event::setDragOffsetY(float offsetY)
+ * C API: bool SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y);
+
+/**
+ * @brief Returns the click count (single/double/etc.) stored in the event.
+ *
+ * C++:   int Event::getClickCount() const
+ * C API: int SDOM_GetEventClickCount(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return int; check SDOM_GetError() for details on failure.
+ */
 int SDOM_GetEventClickCount(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the click count metadata for the event payload.
+ *
+ * C++:   Event& Event::setClickCount(int count)
+ * C API: bool SDOM_SetEventClickCount(SDOM_Event* evt, int count)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventClickCount(SDOM_Event* evt, int count);
+
+/**
+ * @brief Returns the mouse button identifier that triggered the event.
+ *
+ * C++:   uint8_t Event::getButton() const
+ * C API: uint8_t SDOM_GetEventButton(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return uint8_t; check SDOM_GetError() for details on failure.
+ */
 uint8_t SDOM_GetEventButton(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the mouse button identifier for this event payload.
+ *
+ * C++:   Event& Event::setButton(uint8_t btn)
+ * C API: bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button);
+
+/**
+ * @brief Retrieves the SDL scancode associated with the keyboard event.
+ *
+ * C++:   SDL_Scancode Event::getScanCode() const
+ * C API: int SDOM_GetEventScanCode(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return int; check SDOM_GetError() for details on failure.
+ */
 int SDOM_GetEventScanCode(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the SDL scancode metadata for the keyboard event.
+ *
+ * C++:   Event& Event::setScanCode(SDL_Scancode scancode)
+ * C API: bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode);
+
+/**
+ * @brief Retrieves the SDL keycode value stored on the event.
+ *
+ * C++:   SDL_Keycode Event::getKeycode() const
+ * C API: int SDOM_GetEventKeycode(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return int; check SDOM_GetError() for details on failure.
+ */
 int SDOM_GetEventKeycode(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the SDL keycode value for the event payload.
+ *
+ * C++:   Event& Event::setKeycode(SDL_Keycode keycode)
+ * C API: bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode);
+
+/**
+ * @brief Returns the SDL key modifier mask stored on the event.
+ *
+ * C++:   Uint16 Event::getKeymod() const
+ * C API: int SDOM_GetEventKeymod(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return int; check SDOM_GetError() for details on failure.
+ */
 int SDOM_GetEventKeymod(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the key modifier mask for the keyboard event.
+ *
+ * C++:   Event& Event::setKeymod(Uint16 keymod)
+ * C API: bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod);
+
+/**
+ * @brief Returns the translated ASCII code (if available) for the keypress.
+ *
+ * C++:   int Event::getAsciiCode() const
+ * C API: int SDOM_GetEventAsciiCode(const SDOM_Event* evt)
+ *
+ * @param evt Pointer parameter.
+ * @return int; check SDOM_GetError() for details on failure.
+ */
 int SDOM_GetEventAsciiCode(const SDOM_Event* evt);
+
+/**
+ * @brief Sets the translated ASCII code for the keyboard event payload.
+ *
+ * C++:   Event& Event::setAsciiCode(int asciiCode)
+ * C API: bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code)
+ *
+ * @param evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code);
 
 #ifdef __cplusplus

@@ -267,6 +267,41 @@ std::string emitCallArgForParameter(const ParameterInfo& param,
     return "SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(" + param.name + "))";
 }
 
+void emitDocComment(std::ofstream& out, const std::string& doc)
+{
+    if (doc.empty()) {
+        return;
+    }
+
+    std::string oneLine = doc;
+    std::replace(oneLine.begin(), oneLine.end(), '\n', ' ');
+    out << "/** " << oneLine << " */\n";
+}
+
+void emitDoxygenForPrototype(std::ofstream& out, const FunctionInfo& fn)
+{
+    // Build brief
+    std::string brief = fn.doc;
+    std::replace(brief.begin(), brief.end(), '\n', ' ');
+
+    out << "/**\n";
+    out << " * @brief " << brief << "\n";
+    out << " *\n";
+    out << " * C++:   " << fn.cpp_signature << "\n";
+    out << " * C API: " << fn.c_signature << "\n";
+    out << " *\n";
+
+    const auto params = extractParameters(fn);
+    for (const auto& p : params) {
+        if (trim(p.type).find('*') != std::string::npos) {
+            out << " * @param " << p.name << " Pointer parameter.\n";
+        }
+    }
+
+    out << " * @return " << fn.return_type << "; check SDOM_GetError() for details on failure.\n";
+    out << " */\n";
+}
+
 struct ReturnMetadata {
     std::string c_type;
     std::string normalized;
@@ -1036,6 +1071,9 @@ void CAPI_BindGenerator::emitFunctionPrototypes(std::ofstream& out, const BindMo
                 wrote_any = true;
             }
 
+            // Separate comment blocks for readability
+            out << "\n";
+            emitDoxygenForPrototype(out, fn);
             out << fn.c_signature << ";\n";
         }
     });

@@ -22,7 +22,27 @@ extern "C" {
 #endif
 
 // Callable bindings
+
+/**
+ * @brief Returns true if the referenced asset is still registered and resolves to a live instance.
+ *
+ * C++:   bool AssetHandle::isValid() const
+ * C API: bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle);
+
+/**
+ * @brief Returns true if the referenced display object currently resolves to a live instance.
+ *
+ * C++:   bool DisplayHandle::isValid() const
+ * C API: bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
 bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle);
 
 #ifdef __cplusplus
