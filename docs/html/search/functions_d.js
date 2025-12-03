@@ -13,7 +13,11 @@ var searchData=
   ['makeptr_10',['makePtr',['../structSDOM_1_1CAPI_1_1CallArg.html#a0925f6a80791578f234d7a78795b817e',1,'SDOM::CAPI::CallArg']]],
   ['makeuint_11',['makeUInt',['../structSDOM_1_1CAPI_1_1CallArg.html#abd1e0b2e642ab48634c4cede5fc171ca',1,'SDOM::CAPI::CallArg']]],
   ['manifesttojson_12',['manifestToJson',['../namespaceSDOM.html#ab997a380f160f98cc9e1750a20738e13',1,'SDOM']]],
-  ['modulehasfunctions_13',['moduleHasFunctions',['../classSDOM_1_1IBindGenerator.html#a7e533b1de89bce22e86d6ce54bb9e2ea',1,'SDOM::IBindGenerator']]],
-  ['movetobottom_14',['moveToBottom',['../classSDOM_1_1IDisplayObject.html#a9d360407addf13332471fbbe2b05d452',1,'SDOM::IDisplayObject']]],
-  ['movetotop_15',['moveToTop',['../classSDOM_1_1IDisplayObject.html#a6c2d2b40744947b37db8974dc783d5c1',1,'SDOM::IDisplayObject']]]
+  ['markeventspolled_13',['markEventsPolled',['../classSDOM_1_1Core.html#ac670091c9bce51179cbbd5f0080bea9d',1,'SDOM::Core']]],
+  ['markgarbagecollected_14',['markGarbageCollected',['../classSDOM_1_1Core.html#a920550a2c7bf3e5a02136d19738da15b',1,'SDOM::Core']]],
+  ['markwasrendered_15',['markWasRendered',['../classSDOM_1_1Core.html#a35f0f8bd52e0fde0872c6b3209b22774',1,'SDOM::Core']]],
+  ['markwasupdated_16',['markWasUpdated',['../classSDOM_1_1Core.html#a419e9852260d90cd90e4446d105eefec',1,'SDOM::Core']]],
+  ['modulehasfunctions_17',['moduleHasFunctions',['../classSDOM_1_1IBindGenerator.html#a7e533b1de89bce22e86d6ce54bb9e2ea',1,'SDOM::IBindGenerator']]],
+  ['movetobottom_18',['moveToBottom',['../classSDOM_1_1IDisplayObject.html#a9d360407addf13332471fbbe2b05d452',1,'SDOM::IDisplayObject']]],
+  ['movetotop_19',['moveToTop',['../classSDOM_1_1IDisplayObject.html#a6c2d2b40744947b37db8974dc783d5c1',1,'SDOM::IDisplayObject']]]
 ];

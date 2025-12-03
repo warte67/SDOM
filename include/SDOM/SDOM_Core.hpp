@@ -48,6 +48,31 @@ namespace SDOM
         friend void CoreAPI::registerBindings(Core& core, const std::string& typeName);
 
     public:
+        enum class MainLoopPhase
+        {
+            PollEvents,
+            Update,
+            Render,
+            Present,
+            CollectGarbage
+        };
+
+        struct FramePhaseState
+        {
+            bool eventsPolled = false;
+            bool wasUpdated = false;
+            bool wasRendered = false;
+            bool garbageCollected = false;
+        };
+
+        struct PhaseOutcome
+        {
+            bool phaseCompleted = false;
+            bool autoCorrected = false;
+            bool fatalError = false;
+            std::string errorMessage;
+        };
+
         // --- Configuration Struct --- //
         struct CoreConfig 
         {
@@ -231,6 +256,28 @@ namespace SDOM
         // --- UnitTest Wrappers --- //
         int getFrameCount() const;
 
+        // --- Manual Main Loop Phase Helpers --- //
+        void resetFramePhaseState();
+        FramePhaseState getFramePhaseState() const { return framePhaseState_; }
+        bool eventsWerePolledThisFrame() const { return framePhaseState_.eventsPolled; }
+        bool wasUpdatedThisFrame() const { return framePhaseState_.wasUpdated; }
+        bool wasRenderedThisFrame() const { return framePhaseState_.wasRendered; }
+        bool wasGarbageCollectedThisFrame() const { return framePhaseState_.garbageCollected; }
+        void markEventsPolled();
+        void markWasUpdated();
+        void markWasRendered();
+        void markGarbageCollected();
+        bool isFrameInProgress() const;
+        void resetManualFrameTimer();
+        float sampleManualFrameDelta();
+
+        PhaseOutcome pollEventsPhase(Event* outEvent, bool isAuto = false);
+        PhaseOutcome updatePhase(bool isAuto = false);
+        PhaseOutcome renderPhase(bool isAuto = false);
+        PhaseOutcome presentPhase(bool isAuto = false);
+        PhaseOutcome collectGarbagePhase(bool isAuto = false);
+        PhaseOutcome runFramePhase();
+
         
 
         // --- Factory Wrappers --- //
@@ -342,6 +389,9 @@ namespace SDOM
         float keyfocus_gray_ = 0.0f;  // used for keyfocus indication
         float saved_window_width_ = 0.0f;
         float saved_window_height_ = 0.0f;       
+        FramePhaseState framePhaseState_{};
+        Uint64 manualFrameLastCounter_ = 0;
+        bool manualFrameTimerInitialized_ = false;
 
         // Track whether SDL has been started for this Core instance. Using a
         // member instead of a function-static variable keeps state tied to
@@ -402,6 +452,15 @@ namespace SDOM
         void shutdown_SDL();    // Gracefully shutdown SDL subsystems and free resources
         void refreshSDLResources(); // Initialize or refresh SDL resources (window, renderer, texture) as needed
         bool coreTests_();  // some basic initial internal Core Unit Tests
+
+        PhaseOutcome healPreviousFrame(MainLoopPhase caller, bool suppressError);
+        PhaseOutcome autoRunPrerequisite(MainLoopPhase caller, MainLoopPhase prereq);
+        bool ensureStageReady(std::string& errorOut) const;
+        bool dispatchNextQueuedEvent(Event* outSnapshot);
+        bool pumpSingleSDLEvent(SDL_Event& eventOut);
+        void dispatchRawEventToRoot(const SDL_Event& event);
+        void handleImmediateShortcuts(const SDL_Event& event);
+        std::string phaseDisplayName(MainLoopPhase phase) const;
 
         // Request that the given config be applied on the main thread
         // at the next safe point. Thread-safe.

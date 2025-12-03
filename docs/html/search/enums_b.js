@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['sdom_5feventphase_0',['SDOM_EventPhase',['../SDOM__CAPI__Event_8h.html#afdbccfd0be6549d89bbaaa2c409694f2',1,'SDOM_CAPI_Event.h']]],
-  ['sdom_5feventtype_1',['SDOM_EventType',['../SDOM__CAPI__Event_8h.html#aa0508dec540cd5cee7ffb5fa16cd2d94',1,'SDOM_CAPI_Event.h']]],
-  ['subjectdispatchfamily_2',['SubjectDispatchFamily',['../classSDOM.html#a25d005f86d3a9c8856e47a0e538d529d',1,'SDOM']]]
+  ['renderpass_0',['RenderPass',['../classSDOM_1_1Label.html#a3c2910aa54834bd1fd44e456861832b2',1,'SDOM::Label']]]
 ];

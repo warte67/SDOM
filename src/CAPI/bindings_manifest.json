@@ -1233,6 +1233,46 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_PollEvents",
+      "c_signature": "bool SDOM_PollEvents(SDOM_Event* evt)",
+      "dispatch_family": "singleton",
+      "name": "PollEvents",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Update",
+      "c_signature": "bool SDOM_Update(void)",
+      "dispatch_family": "singleton",
+      "name": "Update",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Render",
+      "c_signature": "bool SDOM_Render(void)",
+      "dispatch_family": "singleton",
+      "name": "Render",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Present",
+      "c_signature": "bool SDOM_Present(void)",
+      "dispatch_family": "singleton",
+      "name": "Present",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_RunFrame",
+      "c_signature": "bool SDOM_RunFrame(void)",
+      "dispatch_family": "singleton",
+      "name": "RunFrame",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_Run",
       "c_signature": "bool SDOM_Run(void)",
       "dispatch_family": "singleton",

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['tablestoragemode_0',['TableStorageMode',['../classSDOM_1_1Variant.html#a6b332f7c56f99f71979b74792f0fcbda',1,'SDOM::Variant']]],
-  ['tokentype_1',['TokenType',['../classSDOM_1_1Label.html#a4e9eb7d8424686a6c78d9a66086e4429',1,'SDOM::Label']]]
+  ['sdom_5feventphase_0',['SDOM_EventPhase',['../SDOM__CAPI__Event_8h.html#afdbccfd0be6549d89bbaaa2c409694f2',1,'SDOM_CAPI_Event.h']]],
+  ['sdom_5feventtype_1',['SDOM_EventType',['../SDOM__CAPI__Event_8h.html#aa0508dec540cd5cee7ffb5fa16cd2d94',1,'SDOM_CAPI_Event.h']]],
+  ['subjectdispatchfamily_2',['SubjectDispatchFamily',['../classSDOM.html#a25d005f86d3a9c8856e47a0e538d529d',1,'SDOM']]]
 ];

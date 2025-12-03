@@ -19,5 +19,6 @@ var classSDOM_1_1EventManager =
     [ "isMouseWithinBounds", "classSDOM_1_1EventManager.html#a2ab55342913b8e6ba98e9fedea21ce95", null ],
     [ "onFrameTick", "classSDOM_1_1EventManager.html#a6b72469f0140786d919272ce8d68126c", null ],
     [ "Queue_SDL_Event", "classSDOM_1_1EventManager.html#a7ef51b6b24295ea49537303e5cefd7fd", null ],
-    [ "should_emit_hover_events", "classSDOM_1_1EventManager.html#a311349ab0f787b5e1983413de94371e8", null ]
+    [ "should_emit_hover_events", "classSDOM_1_1EventManager.html#a311349ab0f787b5e1983413de94371e8", null ],
+    [ "takeNextEvent", "classSDOM_1_1EventManager.html#af83061c12d9733288060c077d29b405e", null ]
 ];

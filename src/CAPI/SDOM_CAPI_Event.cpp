@@ -8,6 +8,11 @@
 extern "C" {
 #endif
 
+static inline void* eventImplPtr(const SDOM_Event* evt)
+{
+    return evt ? evt->impl : nullptr;
+}
+
 bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type) {
     // Dispatch family: event_router (Event)
     if (!evt) {
@@ -17,7 +22,7 @@ bool SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_type)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventType", args);
@@ -36,7 +41,7 @@ const char* SDOM_GetEventTypeName(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     static thread_local std::string s_result;
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventTypeName", args);
@@ -57,7 +62,7 @@ SDOM_EventPhase SDOM_GetEventPhase(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventPhase", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
@@ -78,7 +83,7 @@ bool SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(phase)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventPhase", args);
@@ -97,7 +102,7 @@ const char* SDOM_GetEventPhaseString(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     static thread_local std::string s_result;
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventPhaseString", args);
@@ -118,7 +123,7 @@ bool SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target) 
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_target)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventTarget", args);
@@ -137,7 +142,7 @@ bool SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target) 
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(new_target))));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventTarget", args);
@@ -156,7 +161,7 @@ bool SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_t
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_target)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventCurrentTarget", args);
@@ -175,7 +180,7 @@ bool SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_t
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(new_target))));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventCurrentTarget", args);
@@ -194,7 +199,7 @@ bool SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_t
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_target)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventRelatedTarget", args);
@@ -213,7 +218,7 @@ bool SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_t
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(new_target))));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventRelatedTarget", args);
@@ -232,7 +237,7 @@ const char* SDOM_GetEventSDLJson(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     static thread_local std::string s_result;
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventSDLJson", args);
@@ -253,7 +258,7 @@ bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeCString(json));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventSDLJson", args);
@@ -272,7 +277,7 @@ bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IsEventPropagationStopped", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
@@ -290,7 +295,7 @@ bool SDOM_StopEventPropagation(SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_StopEventPropagation", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
@@ -308,7 +313,7 @@ bool SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IsEventDefaultBehaviorDisabled", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
@@ -326,7 +331,7 @@ bool SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeBool(disable));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventDisableDefaultBehavior", args);
@@ -345,7 +350,7 @@ bool SDOM_GetEventUseCapture(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventUseCapture", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
@@ -363,7 +368,7 @@ bool SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeBool(use_capture));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventUseCapture", args);
@@ -382,7 +387,7 @@ float SDOM_GetEventElapsedTime(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventElapsedTime", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
@@ -406,7 +411,7 @@ bool SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(elapsed_time)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventElapsedTime", args);
@@ -425,7 +430,7 @@ float SDOM_GetEventMouseX(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventMouseX", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
@@ -449,7 +454,7 @@ bool SDOM_SetEventMouseX(SDOM_Event* evt, float x) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(x)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventMouseX", args);
@@ -468,7 +473,7 @@ float SDOM_GetEventMouseY(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventMouseY", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
@@ -492,7 +497,7 @@ bool SDOM_SetEventMouseY(SDOM_Event* evt, float y) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(y)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventMouseY", args);
@@ -511,7 +516,7 @@ float SDOM_GetEventWheelX(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventWheelX", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
@@ -535,7 +540,7 @@ bool SDOM_SetEventWheelX(SDOM_Event* evt, float x) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(x)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventWheelX", args);
@@ -554,7 +559,7 @@ float SDOM_GetEventWheelY(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventWheelY", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
@@ -578,7 +583,7 @@ bool SDOM_SetEventWheelY(SDOM_Event* evt, float y) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(y)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventWheelY", args);
@@ -597,7 +602,7 @@ float SDOM_GetEventDragOffsetX(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventDragOffsetX", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
@@ -621,7 +626,7 @@ bool SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(offset_x)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventDragOffsetX", args);
@@ -640,7 +645,7 @@ float SDOM_GetEventDragOffsetY(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventDragOffsetY", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Double) {
@@ -664,7 +669,7 @@ bool SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeDouble(static_cast<double>(offset_y)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventDragOffsetY", args);
@@ -683,7 +688,7 @@ int SDOM_GetEventClickCount(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventClickCount", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
@@ -707,7 +712,7 @@ bool SDOM_SetEventClickCount(SDOM_Event* evt, int count) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(count)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventClickCount", args);
@@ -726,7 +731,7 @@ uint8_t SDOM_GetEventButton(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventButton", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::UInt) {
@@ -752,7 +757,7 @@ bool SDOM_SetEventButton(SDOM_Event* evt, uint8_t button) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeUInt(static_cast<std::uint64_t>(button)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventButton", args);
@@ -771,7 +776,7 @@ int SDOM_GetEventScanCode(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventScanCode", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
@@ -795,7 +800,7 @@ bool SDOM_SetEventScanCode(SDOM_Event* evt, int scancode) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(scancode)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventScanCode", args);
@@ -814,7 +819,7 @@ int SDOM_GetEventKeycode(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventKeycode", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
@@ -838,7 +843,7 @@ bool SDOM_SetEventKeycode(SDOM_Event* evt, int keycode) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(keycode)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventKeycode", args);
@@ -857,7 +862,7 @@ int SDOM_GetEventKeymod(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventKeymod", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
@@ -881,7 +886,7 @@ bool SDOM_SetEventKeymod(SDOM_Event* evt, int keymod) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(keymod)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventKeymod", args);
@@ -900,7 +905,7 @@ int SDOM_GetEventAsciiCode(const SDOM_Event* evt) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(1);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventAsciiCode", args);
     if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {
@@ -924,7 +929,7 @@ bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code) {
 
     std::vector<SDOM::CAPI::CallArg> args;
     args.reserve(2);
-    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
     args.push_back(SDOM::CAPI::CallArg::makeInt(static_cast<std::int64_t>(ascii_code)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventAsciiCode", args);

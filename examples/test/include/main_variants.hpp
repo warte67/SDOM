@@ -6,6 +6,9 @@
  *   - main_variant_1.cpp
  *   - main_variant_2.cpp
  *   - main_variant_3.cpp
+ *   - main_variant_4.cpp
+ *   - main_variant_5.cpp
+ *   - main_variant_6.cpp
  *
  * These functions behave exactly like a standalone `main(argc, argv)`
  * but are invoked by the unified command-line dispatcher.
@@ -25,3 +28,8 @@ int SDOM_main_variant_3(int argc, char** argv);
 // Variant 4 — JSON config loader (builds DOM from config.json)
 int SDOM_main_variant_4(int argc, char** argv);
 
+// Variant 5 — CAPI Main Loop (pollEvents, update, render, present)
+int SDOM_main_variant_5(int argc, char** argv);
+
+// Variant 6 — Minimal manual main loop with SDL_EVENT_QUIT detection
+int SDOM_main_variant_6(int argc, char** argv);

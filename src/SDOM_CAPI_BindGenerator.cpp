@@ -202,7 +202,29 @@ bool isCStringType(const std::string& type)
     return trimmed == "char*" || trimmed == "char *";
 }
 
-std::string emitCallArgForParameter(const ParameterInfo& param)
+// Detect SDOM_Event handle pointers (but not SDOM_EventType, etc.)
+bool isEventHandlePointerType(const std::string& trimmedType)
+{
+    if (trimmedType.find('*') == std::string::npos) {
+        return false;
+    }
+
+    std::string base = trimmedType;
+    // strip pointers, const, and whitespace
+    base.erase(std::remove_if(base.begin(), base.end(), [](char c) {
+        return c == '*' || c == ' ' || c == '\t';
+    }), base.end());
+
+    const std::string kConst = "const";
+    if (base.rfind(kConst, 0) == 0) {
+        base = base.substr(kConst.size());
+    }
+
+    return base == "SDOM_Event";
+}
+
+std::string emitCallArgForParameter(const ParameterInfo& param,
+                                    bool wrapEventHandles)
 {
     const std::string trimmedType = trim(param.type);
     if (trimmedType.empty()) {
@@ -214,6 +236,9 @@ std::string emitCallArgForParameter(const ParameterInfo& param)
     }
 
     const bool isPointer = trimmedType.find('*') != std::string::npos;
+    if (isPointer && wrapEventHandles && isEventHandlePointerType(trimmedType)) {
+        return "SDOM::CAPI::CallArg::makePtr(eventImplPtr(" + param.name + "))";
+    }
     if (isPointer) {
         const bool isConstPtr = trimmedType.find("const") != std::string::npos;
         if (isConstPtr) {
@@ -353,7 +378,8 @@ std::vector<std::string> collectDependencyIncludes(const BindModule& module)
 
     static constexpr TokenInclude requirements[] = {
         { "SDOM_AssetHandle", "#include <SDOM/CAPI/SDOM_CAPI_Handles.h>" },
-        { "SDOM_DisplayHandle", "#include <SDOM/CAPI/SDOM_CAPI_Handles.h>" }
+        { "SDOM_DisplayHandle", "#include <SDOM/CAPI/SDOM_CAPI_Handles.h>" },
+        { "SDOM_Event", "#include <SDOM/CAPI/SDOM_CAPI_Event.h>" }
     };
 
     std::vector<std::string> includes;
@@ -444,14 +470,15 @@ void emitSubjectGuard(std::ofstream& out,
 void emitInvokeCallableCore(std::ofstream& out,
                             const FunctionInfo& fn,
                             const std::vector<ParameterInfo>& params,
-                            const ReturnMetadata& meta)
+                            const ReturnMetadata& meta,
+                            bool wrapEventHandles)
 {
     const bool hasArgs = !params.empty();
     if (hasArgs) {
         out << "    std::vector<SDOM::CAPI::CallArg> args;\n";
         out << "    args.reserve(" << params.size() << ");\n";
         for (const auto& param : params) {
-            out << "    args.push_back(" << emitCallArgForParameter(param) << ");\n";
+            out << "    args.push_back(" << emitCallArgForParameter(param, wrapEventHandles) << ");\n";
         }
         out << '\n';
     }
@@ -734,6 +761,13 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
     out << "extern \"C\" {\n";
     out << "#endif\n\n";
 
+    if (moduleUsesEventHandle(module)) {
+        out << "static inline void* eventImplPtr(const SDOM_Event* evt)\n";
+        out << "{\n";
+        out << "    return evt ? evt->impl : nullptr;\n";
+        out << "}\n\n";
+    }
+
     emitFunctionBodies(out, module);
 
     out << "#ifdef __cplusplus\n";
@@ -785,6 +819,32 @@ bool CAPI_BindGenerator::moduleNeedsCstdint(const BindModule& module)
     }
 
     return false;
+}
+
+bool CAPI_BindGenerator::moduleUsesEventHandle(const BindModule& module)
+{
+    bool usesEventHandle = false;
+    forEachCallableType(module, [&](const TypeInfo* type) {
+        if (!type) {
+            return;
+        }
+        for (const auto& fn : type->functions) {
+            if (!fn.exported || fn.c_signature.empty()) {
+                continue;
+            }
+            const auto params = extractParameters(fn);
+            for (const auto& p : params) {
+                if (isEventHandlePointerType(trim(p.type))) {
+                    usesEventHandle = true;
+                    return;
+                }
+            }
+            if (usesEventHandle) {
+                return;
+            }
+        }
+    });
+    return usesEventHandle;
 }
 
 void CAPI_BindGenerator::emitStructs(std::ofstream& out, const BindModule& module) const
@@ -1085,7 +1145,7 @@ void CAPI_BindGenerator::emitMethodTableFunction(std::ofstream& out,
         emitSubjectGuard(out, fn, *subject, returnMeta);
     }
 
-    emitInvokeCallableCore(out, fn, params, returnMeta);
+    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/false);
 }
 
 void CAPI_BindGenerator::emitSingletonFunction(std::ofstream& out,
@@ -1105,7 +1165,7 @@ void CAPI_BindGenerator::emitSingletonFunction(std::ofstream& out,
         emitSubjectGuard(out, fn, *subject, returnMeta);
     }
 
-    emitInvokeCallableCore(out, fn, params, returnMeta);
+    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/false);
 }
 
 void CAPI_BindGenerator::emitEventRouterFunction(std::ofstream& out,
@@ -1125,7 +1185,7 @@ void CAPI_BindGenerator::emitEventRouterFunction(std::ofstream& out,
         emitSubjectGuard(out, fn, *subject, returnMeta);
     }
 
-    emitInvokeCallableCore(out, fn, params, returnMeta);
+    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/true);
 }
 
 void CAPI_BindGenerator::emitCustomFunction(std::ofstream& out,
@@ -1153,7 +1213,7 @@ void CAPI_BindGenerator::emitLegacyCallableBody(std::ofstream& out,
     const auto params = extractParameters(fn);
     const auto returnMeta = analyzeReturnMetadata(fn, module);
 
-    emitInvokeCallableCore(out, fn, params, returnMeta);
+    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/false);
 }
 
 std::string CAPI_BindGenerator::headerPathFor(const std::string& dir, const std::string& stem)

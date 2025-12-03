@@ -1016,50 +1016,78 @@ Tomorrow’s focus will be unifying that chain and ensuring the manifest becomes
 <a id="december-2-2025"></a>
 <a id="latest-update"></a>
 
-## 🗓️ December 2, 2025 — [Title Placeholder]
+## 🗓️ **December 2, 2025 — “The Day the Loop Became Unbreakable”**
 
-> 💬 *[Brief summary of today’s focus or achievements.]*
+> 💬 *Today’s focus was on transforming the SDOM runtime loop into a fully self-healing, any-order, state-consistent execution model — capped off by a proper two-tier SDOM/SDL event pump that guarantees determinism and DOM correctness.*
 
-### 🧩 [Subsystem or Feature Group]
-- [Key change or feature accomplished.]
-- [Supporting details, design notes, or rationale.]
+### 🧩 **Core Runtime / Main Loop Stabilization**
+- Converted `SDOM_PollEvents()` to the new **event-out** form:  
+  `bool SDOM_PollEvents(SDOM_Event* evt);`
+- Integrated the **two-tier event pump**:  
+  - SDOM’s internal event queue now *always drains first*  
+  - SDL events are converted only after internal events are fully processed  
+  - Guarantees deterministic ordering, no hover/focus starvation, and strict DOM invariants
+- Fully formalized the **self-healing phase system**:  
+  - Any phase can run at any time  
+  - Each phase auto-completes missing phases from *last frame*  
+  - Each phase auto-runs required *current-frame* prerequisites  
+  - Sequence violations are nonfatal (`return false` + `SDOM_GetError()` message)  
+  - Engine remains stable and consistent regardless of call order
+- Updated `Present()` to reliably terminate a frame and reset phase flags  
+  - GC is guaranteed to execute at least once per frame  
+  - Extra GC calls (debug/test mode) remain harmless and supported
 
-### 🌟 **Summary:**
-_[Short summary of results and next direction.]_
+### 🧩 **Documentation / Design**
+- Regenerated the **entire main-loop design document**, now reflecting:  
+  - Any-order-safe phase execution  
+  - Automatic last-frame healing rules  
+  - Prerequisite enforcement logic  
+  - The new two-queue event pump  
+  - Updated Core API tables, invariants, and error semantics
+- Removed outdated behavior references; tightened internal terminology  
+- Clarified priority ordering: **internal SDOM events always precede SDL events**
 
-## 🚧 ToDo Today / Carryover
-- 🔄 Continue registering & binding Core APIs  
-  - ☐ Add `Runtime Loop & Frame Control` from the capi_functions_identifiers list  
+### 🌟 **Summary**
+Today’s work elevates SDOM’s runtime loop into a *robust, self-correcting engine model* where misuse becomes nearly impossible.  
+With deterministic event pumping and a fully auto-healed phase graph, the system now properly supports C API consumers, automated tests, and future runtime reconfiguration (e.g., vsync changes).  
+This is a major stability milestone — and a huge enabler for the next stage of CAPI binding expansion.
+
+## 🚧 **ToDo Today / Carryover**
+
+### 🔄 CAPI & Core API Expansion
+- ☐ Register & bind remaining Core APIs  
+  - ☐ Add `Runtime Loop & Frame Control` from `capi_functions_identifiers`  
   - ☐ Add `rendererVSync` to JSON parsing  
   - ☐ Add `rendererVSync` to C API & binding manifest  
-  - ☐ Update `reconfigure()` logic to apply vsync changes consistently  
-- ☐ Expand unit test coverage (CAPI + JSON startup + reconfigure cycle)  
-- ☐ Fix remaining CAPI marshaling TODOs in Core (presentation, flags, pixel format)  
-- ☐ Clean up duplicate includes + unify JSON null-check handling  
-- ☐ Verify dispatcher registration exists for all newly added Core methods  
-- ☐ Add handle-based lookup & destruction API tasks  
-  - ☐ Implement `getDisplayObject(name, out_handle)` / `hasDisplayObject(name)`  
-  - ☐ Implement `destroyDisplayObjectByName(name)` and `destroyDisplayObject(handle)`  
-  - ☐ Implement equivalent AssetObject versions  
-  - ☐ Ensure *no raw pointers* are ever returned; all lookup must use SDOM_DisplayHandle or SDOM_AssetHandle  
-  - ☐ Consider optional helpers: `isDisplayHandleValid()` / `isAssetHandleValid()` for CAPI tests
-- ☐ Add handle-based lookup & destruction API tasks  
-  - ☐ Implement `getDisplayObject(name, out_handle)` / `hasDisplayObject(name)`  
-  - ☐ Implement `destroyDisplayObjectByName(name)` and `destroyDisplayObject(handle)`  
-  - ☐ Implement equivalent AssetObject versions  
-  - ☐ Ensure *no raw pointers* are ever returned; all lookup must use SDOM_DisplayHandle or SDOM_AssetHandle  
-  - ☐ Consider optional helpers: `isDisplayHandleValid()` / `isAssetHandleValid()` for CAPI tests
-  - ☐ Update naming for hover focus APIs:
-    - ☐ Rename `getMouseHover` → `getMouseHoveredObject`
-    - ☐ Rename `clearMouseHover` → `clearMouseHoveredObject`
-- ☐ Add full **Doxygen comments** for every function in `SDOM_CAPI_Core.h`  
-  - ☐ Include brief description, parameter docs, return semantics, error cases  
-  - ☐ Ensure all Core functions appear in generated docs (public API surface)
-  - ☐ Mirror doc-blocks in `SDOM_CoreAPI.cpp` for consistency  
-  - ☐ Expect both files to grow substantially as SDOM’s public API becomes fully documented
+  - ☐ Update `reconfigure()` to apply vsync changes consistently  
+- ☐ Extend unit test coverage (CAPI + JSON startup + reconfigure cycle)
+- ☐ Complete CAPI marshaling TODOs in Core (presentation flags, pixel format)
+- ☐ Clean up duplicate includes / unify JSON null-check handling
+- ☐ Ensure dispatchers exist for all new Core API methods
 
-#### 🤔 *End of Day Reflection*
-> *"_reflechion quote"*
+### 🔧 Handle-Based Lookup & Destruction APIs
+- ☐ `getDisplayObject(name, out_handle)` / `hasDisplayObject(name)`  
+- ☐ `destroyDisplayObjectByName(name)`  
+- ☐ `destroyDisplayObject(handle)`  
+- ☐ Equivalent set for AssetObjects  
+- ☐ Strict guarantee: **no raw pointers ever leave the engine**  
+- ☐ Optional CAPI: `isDisplayHandleValid()` / `isAssetHandleValid()`
+
+### 🖱️ Input / Hover APIs Cleanup
+- ☐ Rename & standardize hover/focus accessors:  
+  - `getMouseHover` → `getMouseHoveredObject`  
+  - `clearMouseHover` → `clearMouseHoveredObject`
+
+### 📚 Documentation
+- ☐ Add full **Doxygen comments** for each function in `SDOM_CAPI_Core.h`  
+  - ☐ Include descriptions, parameter semantics, return values, and error conditions  
+  - ☐ Mirror docs in `SDOM_CoreAPI.cpp`  
+  - ☐ Verify full public API coverage
+
+---
+
+## 🤔 **End of Day Reflection**
+> *“A well-behaved loop doesn’t demand obedience — it quietly fixes your mistakes.”*
 
 ---
 

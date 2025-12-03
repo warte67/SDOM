@@ -110,6 +110,9 @@ namespace SDOM
         // Register Core usertype
         this->registerBindings("Core", getDataRegistry()); 
 
+        resetFramePhaseState();
+        manualFrameTimerInitialized_ = false;
+
         // Note: Factory initialization is performed later (e.g. during
         // configuration) to avoid recursive-construction ordering issues.
     }
@@ -1961,6 +1964,564 @@ namespace SDOM
     { 
         UnitTests& ut = UnitTests::getInstance();
         return ut.get_frame_counter(); 
+    }
+
+    void Core::resetFramePhaseState()
+    {
+        framePhaseState_ = {};
+    }
+
+    void Core::markEventsPolled()
+    {
+        framePhaseState_.eventsPolled = true;
+    }
+
+    void Core::markWasUpdated()
+    {
+        framePhaseState_.wasUpdated = true;
+    }
+
+    void Core::markWasRendered()
+    {
+        framePhaseState_.wasRendered = true;
+    }
+
+    void Core::markGarbageCollected()
+    {
+        framePhaseState_.garbageCollected = true;
+    }
+
+    bool Core::isFrameInProgress() const
+    {
+        return framePhaseState_.eventsPolled ||
+               framePhaseState_.wasUpdated ||
+               framePhaseState_.wasRendered;
+    }
+
+    void Core::resetManualFrameTimer()
+    {
+        manualFrameLastCounter_ = SDL_GetPerformanceCounter();
+        manualFrameTimerInitialized_ = true;
+    }
+
+    float Core::sampleManualFrameDelta()
+    {
+        Uint64 now = SDL_GetPerformanceCounter();
+        if (!manualFrameTimerInitialized_)
+        {
+            manualFrameLastCounter_ = now;
+            manualFrameTimerInitialized_ = true;
+            return 0.0f;
+        }
+
+        Uint64 deltaTicks = now - manualFrameLastCounter_;
+        manualFrameLastCounter_ = now;
+        double seconds = static_cast<double>(deltaTicks) /
+                         static_cast<double>(SDL_GetPerformanceFrequency());
+        float delta = static_cast<float>(seconds);
+        fElapsedTime_ = delta;
+        return delta;
+    }
+
+    std::string Core::phaseDisplayName(MainLoopPhase phase) const
+    {
+        switch (phase)
+        {
+            case MainLoopPhase::PollEvents:     return "SDOM_PollEvents";
+            case MainLoopPhase::Update:         return "SDOM_Update";
+            case MainLoopPhase::Render:         return "SDOM_Render";
+            case MainLoopPhase::Present:        return "SDOM_Present";
+            case MainLoopPhase::CollectGarbage: return "SDOM_CollectGarbage";
+        }
+        return "SDOM_RunFrame";
+    }
+
+    bool Core::ensureStageReady(std::string& errorOut) const
+    {
+        if (!eventManager_)
+        {
+            errorOut = "SDOM event manager is not initialized.";
+            return false;
+        }
+
+        Stage* rootStage = dynamic_cast<Stage*>(rootNode_.get());
+        if (!rootStage)
+        {
+            errorOut = "SDOM core requires an active Stage before running manual phases.";
+            return false;
+        }
+        return true;
+    }
+
+    void Core::handleImmediateShortcuts(const SDL_Event& event)
+    {
+        if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_TAB)
+        {
+            if (event.key.mod & SDL_KMOD_SHIFT)
+            {
+                handleTabKeyPressReverse();
+            }
+            else
+            {
+                handleTabKeyPress();
+            }
+        }
+
+        if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE)
+        {
+            keyboardFocusedObject_.reset();
+        }
+    }
+
+    void Core::dispatchRawEventToRoot(const SDL_Event& event)
+    {
+        if (!eventManager_ || !rootNode_)
+            return;
+
+        DisplayHandle rootHandle = getStageHandle();
+        if (!rootHandle)
+            return;
+
+        auto onEvent = std::make_unique<Event>(EventType::OnEvent, rootHandle);
+        onEvent->setSDL_Event(event);
+        onEvent->setRelatedTarget(rootHandle);
+        eventManager_->dispatchEvent(std::move(onEvent), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
+
+        auto rawEvent = std::make_unique<Event>(EventType::SDL_Event, rootHandle);
+        rawEvent->setSDL_Event(event);
+        rawEvent->setRelatedTarget(rootHandle);
+        eventManager_->dispatchEvent(std::move(rawEvent), DisplayHandle(rootHandle.getName(), rootHandle.getType()));
+    }
+
+    bool Core::pumpSingleSDLEvent(SDL_Event& eventOut)
+    {
+        auto isFilteredInput = [&](const SDL_Event& e) -> bool
+        {
+            if (!getIgnoreRealInput())
+                return false;
+
+            switch (e.type)
+            {
+                case SDL_EVENT_MOUSE_MOTION:
+                case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                case SDL_EVENT_MOUSE_BUTTON_UP:
+                case SDL_EVENT_MOUSE_WHEEL:
+                case SDL_EVENT_KEY_DOWN:
+                case SDL_EVENT_KEY_UP:
+                case SDL_EVENT_TEXT_INPUT:
+                case SDL_EVENT_TEXT_EDITING:
+                case SDL_EVENT_WINDOW_FOCUS_GAINED:
+                case SDL_EVENT_WINDOW_FOCUS_LOST:
+                case SDL_EVENT_WINDOW_MOUSE_ENTER:
+                case SDL_EVENT_WINDOW_MOUSE_LEAVE:
+                    return true;
+                default:
+                    return false;
+            }
+        };
+
+        while (SDL_PollEvent(&eventOut))
+        {
+            if (isFilteredInput(eventOut))
+                continue;
+
+            if (eventOut.type == SDL_EVENT_QUIT)
+                bIsRunning_ = false;
+
+            if (eventOut.type == SDL_EVENT_WINDOW_RESIZED)
+            {
+                int newWidth = 0;
+                int newHeight = 0;
+                if (!SDL_GetWindowSize(window_, &newWidth, &newHeight))
+                {
+                    ERROR("Unable to get the new window size: " + std::string(SDL_GetError()));
+                }
+                else
+                {
+                    onWindowResize(newWidth, newHeight);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    bool Core::dispatchNextQueuedEvent(Event* outSnapshot)
+    {
+        if (!eventManager_)
+            return false;
+
+        auto evt = eventManager_->takeNextEvent();
+        if (!evt)
+            return false;
+
+        if (outSnapshot)
+            *outSnapshot = *evt;
+
+        DisplayHandle rootHandle = getStageHandle();
+        if (!rootHandle)
+            return false;
+
+        eventManager_->dispatchEvent(std::move(evt), rootHandle);
+        return true;
+    }
+
+    Core::PhaseOutcome Core::healPreviousFrame(MainLoopPhase caller, bool suppressError)
+    {
+        PhaseOutcome outcome;
+        if (!isFrameInProgress())
+            return outcome;
+
+        const bool onlyEventsPolled = framePhaseState_.eventsPolled &&
+                                      !framePhaseState_.wasUpdated &&
+                                      !framePhaseState_.wasRendered &&
+                                      !framePhaseState_.garbageCollected;
+        if (onlyEventsPolled)
+        {
+            // Allow manual loops to drain multiple events before advancing
+            // to Update/Render/Present without triggering an auto-heal.
+            return outcome;
+        }
+
+        outcome.autoCorrected = true;
+        if (!suppressError)
+        {
+            outcome.errorMessage = "Previous frame was incomplete before calling " +
+                phaseDisplayName(caller) + ". Auto-running Update → Render → Present.";
+        }
+
+        auto updateResult = updatePhase(true);
+        if (updateResult.fatalError)
+            return updateResult;
+
+        auto renderResult = renderPhase(true);
+        if (renderResult.fatalError)
+            return renderResult;
+
+        auto presentResult = presentPhase(true);
+        if (presentResult.fatalError)
+            return presentResult;
+
+        return outcome;
+    }
+
+    Core::PhaseOutcome Core::pollEventsPhase(Event* outEvent, bool isAuto)
+    {
+        PhaseOutcome outcome;
+        if (!isAuto)
+        {
+            auto heal = healPreviousFrame(MainLoopPhase::PollEvents, false);
+            if (heal.fatalError)
+                return heal;
+            if (heal.autoCorrected)
+            {
+                outcome.autoCorrected = true;
+                outcome.errorMessage = heal.errorMessage;
+            }
+        }
+
+        std::string readyError;
+        if (!ensureStageReady(readyError))
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = readyError;
+            return outcome;
+        }
+
+        if (!framePhaseState_.eventsPolled)
+            markEventsPolled();
+
+        Event snapshot;
+        bool dispatched = dispatchNextQueuedEvent(&snapshot);
+
+        if (!dispatched)
+        {
+            SDL_Event rawEvent;
+            if (pumpSingleSDLEvent(rawEvent))
+            {
+                if (eventManager_)
+                {
+                    eventManager_->Queue_SDL_Event(rawEvent);
+                }
+                dispatched = dispatchNextQueuedEvent(&snapshot);
+                dispatchRawEventToRoot(rawEvent);
+                handleImmediateShortcuts(rawEvent);
+            }
+        }
+
+        if (dispatched)
+        {
+            outcome.phaseCompleted = true;
+            if (outEvent)
+                *outEvent = snapshot;
+        }
+
+        return outcome;
+    }
+
+    Core::PhaseOutcome Core::updatePhase(bool isAuto)
+    {
+        PhaseOutcome outcome;
+
+        if (framePhaseState_.wasUpdated)
+        {
+            outcome.phaseCompleted = true;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                outcome.errorMessage = phaseDisplayName(MainLoopPhase::Update) +
+                    " called multiple times within the same frame.";
+            }
+            return outcome;
+        }
+
+        if (!framePhaseState_.eventsPolled)
+        {
+            auto prereq = pollEventsPhase(nullptr, true);
+            if (prereq.fatalError)
+                return prereq;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                outcome.errorMessage = phaseDisplayName(MainLoopPhase::Update) +
+                    " called before " + phaseDisplayName(MainLoopPhase::PollEvents);
+            }
+        }
+
+        std::string readyError;
+        if (!ensureStageReady(readyError))
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = readyError;
+            return outcome;
+        }
+
+        markWasUpdated();
+        float dt = sampleManualFrameDelta();
+        onUpdate(dt);
+        outcome.phaseCompleted = true;
+        return outcome;
+    }
+
+    Core::PhaseOutcome Core::renderPhase(bool isAuto)
+    {
+        PhaseOutcome outcome;
+
+        if (framePhaseState_.wasRendered)
+        {
+            outcome.phaseCompleted = true;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                outcome.errorMessage = phaseDisplayName(MainLoopPhase::Render) +
+                    " called multiple times within the same frame.";
+            }
+            return outcome;
+        }
+
+        if (!framePhaseState_.eventsPolled)
+        {
+            auto prereq = pollEventsPhase(nullptr, true);
+            if (prereq.fatalError)
+                return prereq;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                outcome.errorMessage = phaseDisplayName(MainLoopPhase::Render) +
+                    " called before " + phaseDisplayName(MainLoopPhase::PollEvents);
+            }
+        }
+
+        if (!framePhaseState_.wasUpdated)
+        {
+            auto prereq = updatePhase(true);
+            if (prereq.fatalError)
+                return prereq;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                if (outcome.errorMessage.empty())
+                    outcome.errorMessage = phaseDisplayName(MainLoopPhase::Render) +
+                        " called before " + phaseDisplayName(MainLoopPhase::Update);
+            }
+        }
+
+        std::string readyError;
+        if (!ensureStageReady(readyError))
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = readyError;
+            return outcome;
+        }
+
+        if (!renderer_)
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = "SDOM renderer is not initialized.";
+            return outcome;
+        }
+        if (!texture_)
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = "SDOM render target texture is not initialized.";
+            return outcome;
+        }
+
+        markWasRendered();
+        SDL_SetRenderTarget(renderer_, texture_);
+        onRender();
+        outcome.phaseCompleted = true;
+        return outcome;
+    }
+
+    Core::PhaseOutcome Core::collectGarbagePhase(bool isAuto)
+    {
+        PhaseOutcome outcome;
+        (void)isAuto;
+
+        if (!factory_)
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = "SDOM factory is not initialized.";
+            return outcome;
+        }
+
+        markGarbageCollected();
+        factory_->collectGarbage();
+        outcome.phaseCompleted = true;
+        return outcome;
+    }
+
+    Core::PhaseOutcome Core::presentPhase(bool isAuto)
+    {
+        PhaseOutcome outcome;
+
+        if (!framePhaseState_.eventsPolled)
+        {
+            auto prereq = pollEventsPhase(nullptr, true);
+            if (prereq.fatalError)
+                return prereq;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                outcome.errorMessage = phaseDisplayName(MainLoopPhase::Present) +
+                    " called before " + phaseDisplayName(MainLoopPhase::PollEvents);
+            }
+        }
+
+        if (!framePhaseState_.wasUpdated)
+        {
+            auto prereq = updatePhase(true);
+            if (prereq.fatalError)
+                return prereq;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                if (outcome.errorMessage.empty())
+                    outcome.errorMessage = phaseDisplayName(MainLoopPhase::Present) +
+                        " called before " + phaseDisplayName(MainLoopPhase::Update);
+            }
+        }
+
+        if (!framePhaseState_.wasRendered)
+        {
+            auto prereq = renderPhase(true);
+            if (prereq.fatalError)
+                return prereq;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                if (outcome.errorMessage.empty())
+                    outcome.errorMessage = phaseDisplayName(MainLoopPhase::Present) +
+                        " called before " + phaseDisplayName(MainLoopPhase::Render);
+            }
+        }
+
+        if (!framePhaseState_.garbageCollected)
+        {
+            auto prereq = collectGarbagePhase(true);
+            if (prereq.fatalError)
+                return prereq;
+            if (!isAuto)
+            {
+                outcome.autoCorrected = true;
+                if (outcome.errorMessage.empty())
+                    outcome.errorMessage = phaseDisplayName(MainLoopPhase::Present) +
+                        " called before " + phaseDisplayName(MainLoopPhase::CollectGarbage);
+            }
+        }
+
+        std::string readyError;
+        if (!ensureStageReady(readyError))
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = readyError;
+            return outcome;
+        }
+
+        if (!renderer_)
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = "SDOM renderer is not initialized.";
+            return outcome;
+        }
+        if (!texture_)
+        {
+            outcome.fatalError = true;
+            outcome.errorMessage = "SDOM render target texture is not initialized.";
+            return outcome;
+        }
+
+        SDL_SetRenderTarget(renderer_, nullptr);
+        SDL_RenderTexture(renderer_, texture_, nullptr, nullptr);
+        SDL_RenderPresent(renderer_);
+
+        applyPendingConfig();
+        if (factory_)
+        {
+            factory_->detachOrphans();
+            factory_->attachFutureChildren();
+        }
+
+        resetFramePhaseState();
+        resetManualFrameTimer();
+        outcome.phaseCompleted = true;
+        return outcome;
+    }
+
+    Core::PhaseOutcome Core::runFramePhase()
+    {
+        PhaseOutcome outcome;
+
+        auto updateResult = updatePhase(false);
+        if (updateResult.fatalError)
+            return updateResult;
+
+        auto renderResult = renderPhase(false);
+        if (renderResult.fatalError)
+            return renderResult;
+
+        auto presentResult = presentPhase(false);
+        if (presentResult.fatalError)
+            return presentResult;
+
+        outcome.phaseCompleted = updateResult.phaseCompleted &&
+                                 renderResult.phaseCompleted &&
+                                 presentResult.phaseCompleted;
+        outcome.autoCorrected = updateResult.autoCorrected ||
+                                renderResult.autoCorrected ||
+                                presentResult.autoCorrected;
+
+        if (!updateResult.errorMessage.empty())
+            outcome.errorMessage = updateResult.errorMessage;
+        if (outcome.errorMessage.empty() && !renderResult.errorMessage.empty())
+            outcome.errorMessage = renderResult.errorMessage;
+        if (outcome.errorMessage.empty() && !presentResult.errorMessage.empty())
+            outcome.errorMessage = presentResult.errorMessage;
+
+        return outcome;
     }
 
 

@@ -8,6 +8,11 @@
 extern "C" {
 #endif
 
+static inline void* eventImplPtr(const SDOM_Event* evt)
+{
+    return evt ? evt->impl : nullptr;
+}
+
 const char* SDOM_GetError(void) {
     // Dispatch family: singleton (Core)
     static thread_local std::string s_result;
@@ -1249,6 +1254,60 @@ bool SDOM_CreateAssetObjectFromJson(const char* type, const char* json, SDOM_Ass
     args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_CreateAssetObjectFromJson", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_PollEvents(SDOM_Event* evt) {
+    // Dispatch family: singleton (Core)
+    if (!evt) {
+        SDOM_SetError("SDOM_PollEvents: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(evt)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_PollEvents", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Update(void) {
+    // Dispatch family: singleton (Core)
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Update", {});
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Render(void) {
+    // Dispatch family: singleton (Core)
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Render", {});
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Present(void) {
+    // Dispatch family: singleton (Core)
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Present", {});
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_RunFrame(void) {
+    // Dispatch family: singleton (Core)
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_RunFrame", {});
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }

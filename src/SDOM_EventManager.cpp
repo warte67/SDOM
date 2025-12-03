@@ -197,9 +197,8 @@ namespace SDOM
         flushCoalesced_();
         DisplayHandle rootNode = getFactory().getStageHandle();
         if (!rootNode) { return; }
-        while (!eventQueue.empty()) 
+        while (auto event = takeNextEvent()) 
         {
-            auto event = std::move(eventQueue.front());
             DisplayHandle object = event->getTarget();
             bool deliver = false;
             if (object.isValid())
@@ -252,9 +251,18 @@ namespace SDOM
             //             << " (target=" << (object ? object->getName() : "<null>") << ")"
             //             << std::endl;
             // }
-
-            eventQueue.pop();
         }
+    }
+
+    std::unique_ptr<Event> EventManager::takeNextEvent()
+    {
+        flushCoalesced_();
+        if (eventQueue.empty())
+            return nullptr;
+
+        auto evt = std::move(eventQueue.front());
+        eventQueue.pop();
+        return evt;
     }
 
     // Emit all coalesced events into the real queue (FIFO order not guaranteed
@@ -1382,6 +1390,18 @@ namespace SDOM
         preprocessSDLEvent(sdlEvent, stage);
 
         SDL_EventType sdlType = static_cast<SDL_EventType>(sdlEvent.type);
+
+        if (sdlType == SDL_EVENT_QUIT)
+        {
+            DisplayHandle stageHandle = getStageHandle();
+            if (stageHandle)
+            {
+                auto quitEvent = std::make_unique<Event>(EventType::Quit, stageHandle);
+                quitEvent->setSDL_Event(sdlEvent);
+                addEvent(std::move(quitEvent));
+            }
+            return;
+        }
 
         // Compute point under cursor for mouse events and resolve targets by point,
         // throttled to reduce repeated subtree walks during high-frequency motion.

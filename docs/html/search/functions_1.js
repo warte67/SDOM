@@ -27,5 +27,6 @@ var searchData=
   ['assetrecord_24',['AssetRecord',['../structSDOM_1_1AssetRecord.html#a9bdc756900c0d857751d84b8dd959f0c',1,'SDOM::AssetRecord']]],
   ['at_25',['at',['../classSDOM_1_1Variant.html#af9a37d93c73a55b774cb7523d2b8d90e',1,'SDOM::Variant::at(size_t i) const noexcept'],['../classSDOM_1_1Variant.html#ac49f4880f3c16ff1efad33b52a8137a4',1,'SDOM::Variant::at(size_t i) noexcept'],['../classSDOM_1_1Variant_1_1VariantView.html#a6c419bdf6001781892e955ae0e5a381b',1,'SDOM::Variant::VariantView::at()']]],
   ['attachchild_5f_26',['attachChild_',['../classSDOM_1_1IDisplayObject.html#af8c4663c22d0b3d8a8c2a1e5983295b5',1,'SDOM::IDisplayObject']]],
-  ['attachfuturechildren_27',['attachFutureChildren',['../classSDOM_1_1Core.html#a5ed19bd9877a4d1a886ba3a30c34b4bf',1,'SDOM::Core::attachFutureChildren()'],['../classSDOM_1_1Factory.html#aaa0091f03334a615d7006ec8f2f884a4',1,'SDOM::Factory::attachFutureChildren()'],['../namespaceSDOM_1_1CoreAPI.html#ab3b541e75d2d71f6a3e8d75e55fe0ee7',1,'SDOM::CoreAPI::attachFutureChildren()']]]
+  ['attachfuturechildren_27',['attachFutureChildren',['../classSDOM_1_1Core.html#a5ed19bd9877a4d1a886ba3a30c34b4bf',1,'SDOM::Core::attachFutureChildren()'],['../classSDOM_1_1Factory.html#aaa0091f03334a615d7006ec8f2f884a4',1,'SDOM::Factory::attachFutureChildren()'],['../namespaceSDOM_1_1CoreAPI.html#ab3b541e75d2d71f6a3e8d75e55fe0ee7',1,'SDOM::CoreAPI::attachFutureChildren()']]],
+  ['autorunprerequisite_28',['autoRunPrerequisite',['../classSDOM_1_1Core.html#ac98a86ad5ad1f0cfb73ef60dc54fc25b',1,'SDOM::Core']]]
 ];

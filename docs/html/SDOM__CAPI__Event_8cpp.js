@@ -1,5 +1,6 @@
 var SDOM__CAPI__Event_8cpp =
 [
+    [ "eventImplPtr", "SDOM__CAPI__Event_8cpp.html#a341dd70f5076446d6e801662f32b9e51", null ],
     [ "SDOM_GetEventAsciiCode", "SDOM__CAPI__Event_8cpp.html#a92e0dabf27044d346a8198bf196a61fd", null ],
     [ "SDOM_GetEventButton", "SDOM__CAPI__Event_8cpp.html#ad7eb35e5b9f43547fa935fa501d88b90", null ],
     [ "SDOM_GetEventClickCount", "SDOM__CAPI__Event_8cpp.html#abe669fdebfd2074423a59294d1c8b1c4", null ],

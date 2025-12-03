@@ -116,6 +116,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a75e906f90e14a08b0301b63d2ab69645" id="r_a75e906f90e14a08b0301b63d2ab69645"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75e906f90e14a08b0301b63d2ab69645">pushKeyboardEvent</a> (const char *json)</td></tr>
 <tr class="memitem:a08ec09953a1bde4dcb57385b357d7d08" id="r_a08ec09953a1bde4dcb57385b357d7d08"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08ec09953a1bde4dcb57385b357d7d08">getWindowTitle</a> ()</td></tr>
 <tr class="memitem:a291dd51cb83acd3a24343d9313ef9ff5" id="r_a291dd51cb83acd3a24343d9313ef9ff5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a291dd51cb83acd3a24343d9313ef9ff5">setWindowTitle</a> (const char *title)</td></tr>
+<tr class="memitem:acb7179997b826761fed08a5386806469" id="r_acb7179997b826761fed08a5386806469"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb7179997b826761fed08a5386806469">pollEvents</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:a9da0d60066da3c4921a8d269e94a2c21" id="r_a9da0d60066da3c4921a8d269e94a2c21"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9da0d60066da3c4921a8d269e94a2c21">updatePhase</a> ()</td></tr>
+<tr class="memitem:ad93029482d1ff5c4282cdf3fc244c2cb" id="r_ad93029482d1ff5c4282cdf3fc244c2cb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad93029482d1ff5c4282cdf3fc244c2cb">renderPhase</a> ()</td></tr>
+<tr class="memitem:a642f39494af0a0048019492218e1fe47" id="r_a642f39494af0a0048019492218e1fe47"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a642f39494af0a0048019492218e1fe47">presentPhase</a> ()</td></tr>
+<tr class="memitem:a651fb0219230ad5ec3e19b22fc5f64d6" id="r_a651fb0219230ad5ec3e19b22fc5f64d6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a651fb0219230ad5ec3e19b22fc5f64d6">runFramePhase</a> ()</td></tr>
 <tr class="memitem:a163905b8a1b5b65bd47554bca4171a2d" id="r_a163905b8a1b5b65bd47554bca4171a2d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a163905b8a1b5b65bd47554bca4171a2d">getVersionString</a> ()</td></tr>
 <tr class="memitem:a3439c41fa7f181f7fd9eef77769c1820" id="r_a3439c41fa7f181f7fd9eef77769c1820"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3439c41fa7f181f7fd9eef77769c1820">getVersionFullString</a> ()</td></tr>
 <tr class="memitem:aee4e5acdc052655a507fea07023f5665" id="r_aee4e5acdc052655a507fea07023f5665"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee4e5acdc052655a507fea07023f5665">getVersionMajor</a> ()</td></tr>
@@ -1555,6 +1560,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="acb7179997b826761fed08a5386806469" name="acb7179997b826761fed08a5386806469"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb7179997b826761fed08a5386806469">&#9670;&#160;</a></span>pollEvents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::pollEvents </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a642f39494af0a0048019492218e1fe47" name="a642f39494af0a0048019492218e1fe47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a642f39494af0a0048019492218e1fe47">&#9670;&#160;</a></span>presentPhase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::presentPhase </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a5384d166a0a7046951cb5bfbef63ea88" name="a5384d166a0a7046951cb5bfbef63ea88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5384d166a0a7046951cb5bfbef63ea88">&#9670;&#160;</a></span>printObjectRegistry()</h2>
 
@@ -1780,6 +1819,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ad93029482d1ff5c4282cdf3fc244c2cb" name="ad93029482d1ff5c4282cdf3fc244c2cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad93029482d1ff5c4282cdf3fc244c2cb">&#9670;&#160;</a></span>renderPhase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::renderPhase </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4cc14392fefaf85500030cdf1c6fc6af" name="a4cc14392fefaf85500030cdf1c6fc6af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4cc14392fefaf85500030cdf1c6fc6af">&#9670;&#160;</a></span>run()</h2>
 
@@ -1788,6 +1844,23 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool SDOM::CoreAPI::run </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a651fb0219230ad5ec3e19b22fc5f64d6" name="a651fb0219230ad5ec3e19b22fc5f64d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a651fb0219230ad5ec3e19b22fc5f64d6">&#9670;&#160;</a></span>runFramePhase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::runFramePhase </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -2215,6 +2288,23 @@ Functions</h2></td></tr>
           <td class="memname">bool SDOM::CoreAPI::setWindowWidth </td>
           <td>(</td>
           <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>width</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9da0d60066da3c4921a8d269e94a2c21" name="a9da0d60066da3c4921a8d269e94a2c21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9da0d60066da3c4921a8d269e94a2c21">&#9670;&#160;</a></span>updatePhase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::CoreAPI::updatePhase </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

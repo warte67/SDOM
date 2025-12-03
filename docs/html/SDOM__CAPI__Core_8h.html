@@ -95,6 +95,7 @@ $(function(){initNavTree('SDOM__CAPI__Core_8h.html','',''); });
 <div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;SDL3/SDL.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__CAPI__Handles_8h_source.html">SDOM/CAPI/SDOM_CAPI_Handles.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__CAPI__Event_8h_source.html">SDOM/CAPI/SDOM_CAPI_Event.h</a>&gt;</code><br />
 </div>
 <p><a href="SDOM__CAPI__Core_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -206,6 +207,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a6e7b89e733e9d2173f8300a0ecede615" id="r_a6e7b89e733e9d2173f8300a0ecede615"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e7b89e733e9d2173f8300a0ecede615">SDOM_SetKeyfocusGray</a> (float gray)</td></tr>
 <tr class="memitem:ab8eeb2ee361c9c24295fee4eaa9ca366" id="r_ab8eeb2ee361c9c24295fee4eaa9ca366"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8eeb2ee361c9c24295fee4eaa9ca366">SDOM_CreateDisplayObjectFromJson</a> (const char *type, const char *json, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
 <tr class="memitem:a5f95ce9f2b471712073632932dcaa0e5" id="r_a5f95ce9f2b471712073632932dcaa0e5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f95ce9f2b471712073632932dcaa0e5">SDOM_CreateAssetObjectFromJson</a> (const char *type, const char *json, <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *out_handle)</td></tr>
+<tr class="memitem:a1320fae8b8534ed54049baa605ed5393" id="r_a1320fae8b8534ed54049baa605ed5393"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1320fae8b8534ed54049baa605ed5393">SDOM_PollEvents</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memitem:ab03e61d44a912c47f7a8a2a15e357910" id="r_ab03e61d44a912c47f7a8a2a15e357910"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab03e61d44a912c47f7a8a2a15e357910">SDOM_Update</a> (void)</td></tr>
+<tr class="memitem:a1b8646a51a6666395d114f8649105836" id="r_a1b8646a51a6666395d114f8649105836"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b8646a51a6666395d114f8649105836">SDOM_Render</a> (void)</td></tr>
+<tr class="memitem:a8c4d8438669668657d45698edce4408e" id="r_a8c4d8438669668657d45698edce4408e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c4d8438669668657d45698edce4408e">SDOM_Present</a> (void)</td></tr>
+<tr class="memitem:aa1fa414eb1460202f75d7d0baab97452" id="r_aa1fa414eb1460202f75d7d0baab97452"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1fa414eb1460202f75d7d0baab97452">SDOM_RunFrame</a> (void)</td></tr>
 <tr class="memitem:ab06193a5255c66d89fb1da1f4881613b" id="r_ab06193a5255c66d89fb1da1f4881613b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab06193a5255c66d89fb1da1f4881613b">SDOM_Run</a> (void)</td></tr>
 <tr class="memitem:a924743f664051cc410e6937c2bb5f968" id="r_a924743f664051cc410e6937c2bb5f968"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a924743f664051cc410e6937c2bb5f968">SDOM_GetStopAfterUnitTests</a> (void)</td></tr>
 <tr class="memitem:a1a77a718f1e1aae22754c99ab3a33103" id="r_a1a77a718f1e1aae22754c99ab3a33103"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a77a718f1e1aae22754c99ab3a33103">SDOM_Quit</a> (void)</td></tr>
@@ -1592,6 +1598,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1320fae8b8534ed54049baa605ed5393" name="a1320fae8b8534ed54049baa605ed5393"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1320fae8b8534ed54049baa605ed5393">&#9670;&#160;</a></span>SDOM_PollEvents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_PollEvents </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8c4d8438669668657d45698edce4408e" name="a8c4d8438669668657d45698edce4408e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c4d8438669668657d45698edce4408e">&#9670;&#160;</a></span>SDOM_Present()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Present </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a549bb171a6fd449c163287e2ec7a6085" name="a549bb171a6fd449c163287e2ec7a6085"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a549bb171a6fd449c163287e2ec7a6085">&#9670;&#160;</a></span>SDOM_PrintObjectRegistry()</h2>
 
@@ -1796,6 +1836,23 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1b8646a51a6666395d114f8649105836" name="a1b8646a51a6666395d114f8649105836"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b8646a51a6666395d114f8649105836">&#9670;&#160;</a></span>SDOM_Render()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Render </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab06193a5255c66d89fb1da1f4881613b" name="ab06193a5255c66d89fb1da1f4881613b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab06193a5255c66d89fb1da1f4881613b">&#9670;&#160;</a></span>SDOM_Run()</h2>
 
@@ -1804,6 +1861,23 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool SDOM_Run </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1fa414eb1460202f75d7d0baab97452" name="aa1fa414eb1460202f75d7d0baab97452"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1fa414eb1460202f75d7d0baab97452">&#9670;&#160;</a></span>SDOM_RunFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_RunFrame </td>
           <td>(</td>
           <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -2231,6 +2305,23 @@ Functions</h2></td></tr>
           <td class="memname">bool SDOM_SetWindowWidth </td>
           <td>(</td>
           <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>width</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab03e61d44a912c47f7a8a2a15e357910" name="ab03e61d44a912c47f7a8a2a15e357910"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab03e61d44a912c47f7a8a2a15e357910">&#9670;&#160;</a></span>SDOM_Update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Update </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

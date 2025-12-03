@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
+#include <SDOM/CAPI/SDOM_CAPI_Event.h>
 
 typedef enum SDOM_EventPhase {
     /* Event Phase events */

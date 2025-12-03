@@ -8,10 +8,12 @@ var searchData=
   ['enum_5fvalue_5',['enum_value',['../structSDOM_1_1TypeInfo.html#a59269fc7fd9731ecf55a5e9f32d838aa',1,'SDOM::TypeInfo']]],
   ['enums_6',['enums',['../structSDOM_1_1IBindGenerator_1_1BindModule.html#a7b335cf5a007e1ba27a8fb7db810b857',1,'SDOM::IBindGenerator::BindModule']]],
   ['erase_5fline_7',['ERASE_LINE',['../classCLR.html#ae04e27b0aabe54dc5cda889874fdd8a4',1,'CLR']]],
-  ['errors_8',['errors',['../structSDOM_1_1UnitTests_1_1TestCase.html#a251784699012dbaab3b0616d8dc7a964',1,'SDOM::UnitTests::TestCase']]],
-  ['event_5fmutex_5f_9',['event_mutex_',['../classSDOM_1_1Event.html#ac7418e6023fc4d551f2d92a02673dc81',1,'SDOM::Event']]],
-  ['eventmanager_5f_10',['eventManager_',['../classSDOM_1_1Core.html#ad77831344e818f2a29bf14d45e2fd402',1,'SDOM::Core']]],
-  ['eventtype_11',['eventType',['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740',1,'SDOM::IDisplayObject::ListenerEntry']]],
-  ['export_5fname_12',['export_name',['../structSDOM_1_1TypeInfo.html#aef5112a7e37a43580259d6007ec1811e',1,'SDOM::TypeInfo']]],
-  ['exported_13',['exported',['../structSDOM_1_1FunctionInfo.html#aa8c184560b31d6f724f4cdb50114ce64',1,'SDOM::FunctionInfo']]]
+  ['errormessage_8',['errorMessage',['../structSDOM_1_1Core_1_1PhaseOutcome.html#a87db04b0f9b41d1375ad4c6fb6122006',1,'SDOM::Core::PhaseOutcome']]],
+  ['errors_9',['errors',['../structSDOM_1_1UnitTests_1_1TestCase.html#a251784699012dbaab3b0616d8dc7a964',1,'SDOM::UnitTests::TestCase']]],
+  ['event_5fmutex_5f_10',['event_mutex_',['../classSDOM_1_1Event.html#ac7418e6023fc4d551f2d92a02673dc81',1,'SDOM::Event']]],
+  ['eventmanager_5f_11',['eventManager_',['../classSDOM_1_1Core.html#ad77831344e818f2a29bf14d45e2fd402',1,'SDOM::Core']]],
+  ['eventspolled_12',['eventsPolled',['../structSDOM_1_1Core_1_1FramePhaseState.html#a542edc7eebe9c08205242413cade056d',1,'SDOM::Core::FramePhaseState']]],
+  ['eventtype_13',['eventType',['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740',1,'SDOM::IDisplayObject::ListenerEntry']]],
+  ['export_5fname_14',['export_name',['../structSDOM_1_1TypeInfo.html#aef5112a7e37a43580259d6007ec1811e',1,'SDOM::TypeInfo']]],
+  ['exported_15',['exported',['../structSDOM_1_1FunctionInfo.html#aa8c184560b31d6f724f4cdb50114ce64',1,'SDOM::FunctionInfo']]]
 ];

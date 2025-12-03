@@ -1,5 +1,6 @@
 var SDOM__CAPI__Core_8cpp =
 [
+    [ "eventImplPtr", "SDOM__CAPI__Core_8cpp.html#a341dd70f5076446d6e801662f32b9e51", null ],
     [ "SDOM_AddFutureChild", "SDOM__CAPI__Core_8cpp.html#a7c3c519208f7043519c7f1871f6a44a5", null ],
     [ "SDOM_AddOrphan", "SDOM__CAPI__Core_8cpp.html#a781b0bf2e2aee305a65afbc6087ce501", null ],
     [ "SDOM_AttachFutureChildren", "SDOM__CAPI__Core_8cpp.html#a10d5dc825e7c1daf89663ad8878a649e", null ],
@@ -72,6 +73,8 @@ var SDOM__CAPI__Core_8cpp =
     [ "SDOM_IsWindowed", "SDOM__CAPI__Core_8cpp.html#a08827648c1a48bc36ddb5893803a8974", null ],
     [ "SDOM_LoadDomFromJson", "SDOM__CAPI__Core_8cpp.html#a3815964f64633175e5aab505008ec6f3", null ],
     [ "SDOM_LoadDomFromJsonFile", "SDOM__CAPI__Core_8cpp.html#a8f599cda328aa0b98faf269205d2ac03", null ],
+    [ "SDOM_PollEvents", "SDOM__CAPI__Core_8cpp.html#a1320fae8b8534ed54049baa605ed5393", null ],
+    [ "SDOM_Present", "SDOM__CAPI__Core_8cpp.html#a8c4d8438669668657d45698edce4408e", null ],
     [ "SDOM_PrintObjectRegistry", "SDOM__CAPI__Core_8cpp.html#a549bb171a6fd449c163287e2ec7a6085", null ],
     [ "SDOM_PumpEventsOnce", "SDOM__CAPI__Core_8cpp.html#adcd38e4d3756290b10ef9265c6072657", null ],
     [ "SDOM_PushKeyboardEvent", "SDOM__CAPI__Core_8cpp.html#aa14b9ce04d923efe56cc43b488bb5f1c", null ],
@@ -84,7 +87,9 @@ var SDOM__CAPI__Core_8cpp =
     [ "SDOM_RegisterOnUnitTest", "SDOM__CAPI__Core_8cpp.html#a3db93babd1465cb5f59390aea646f989", null ],
     [ "SDOM_RegisterOnUpdate", "SDOM__CAPI__Core_8cpp.html#a9999a8bbfdb21ae85670f9f995cbc35e", null ],
     [ "SDOM_RegisterOnWindowResize", "SDOM__CAPI__Core_8cpp.html#a086b5a74eccb5130ea360584fdf32a2d", null ],
+    [ "SDOM_Render", "SDOM__CAPI__Core_8cpp.html#a1b8646a51a6666395d114f8649105836", null ],
     [ "SDOM_Run", "SDOM__CAPI__Core_8cpp.html#ab06193a5255c66d89fb1da1f4881613b", null ],
+    [ "SDOM_RunFrame", "SDOM__CAPI__Core_8cpp.html#aa1fa414eb1460202f75d7d0baab97452", null ],
     [ "SDOM_SetAllowTextureResize", "SDOM__CAPI__Core_8cpp.html#ac3a9da0a524db611a02289f11470ad76", null ],
     [ "SDOM_SetBorderColor", "SDOM__CAPI__Core_8cpp.html#a72c13c0eb7bf6dd82863d8876ff0bb53", null ],
     [ "SDOM_SetError", "SDOM__CAPI__Core_8cpp.html#af7c39bd04810fbbc819dee24bdab67cd", null ],
@@ -109,5 +114,6 @@ var SDOM__CAPI__Core_8cpp =
     [ "SDOM_SetWindowFlags", "SDOM__CAPI__Core_8cpp.html#a0ec9b38b60f16cfed10b2121600f7771", null ],
     [ "SDOM_SetWindowHeight", "SDOM__CAPI__Core_8cpp.html#abaac00111352bbac543ca0e24bbf051f", null ],
     [ "SDOM_SetWindowTitle", "SDOM__CAPI__Core_8cpp.html#a5b81178a76a291acbddb995a9d83fa63", null ],
-    [ "SDOM_SetWindowWidth", "SDOM__CAPI__Core_8cpp.html#af3c1d39ad965b969594e9669ebbaa30e", null ]
+    [ "SDOM_SetWindowWidth", "SDOM__CAPI__Core_8cpp.html#af3c1d39ad965b969594e9669ebbaa30e", null ],
+    [ "SDOM_Update", "SDOM__CAPI__Core_8cpp.html#ab03e61d44a912c47f7a8a2a15e357910", null ]
 ];

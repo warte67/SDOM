@@ -60,6 +60,7 @@ namespace SDOM
         void emitFunctionPrototypes(std::ofstream& out, const BindModule& module) const;
         void emitFunctionBodies(std::ofstream& out, const BindModule& module) const;
         static bool moduleNeedsCstdint(const BindModule& module);
+        static bool moduleUsesEventHandle(const BindModule& module);
 
         static void forEachCallableType(const BindModule& module,
                                         const std::function<void(const TypeInfo*)>& fn);

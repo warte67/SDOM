@@ -85,6 +85,9 @@ namespace SDOM
         // Dispatch an event to all event listeners on the same stage
         void dispatchEventToAllEventListenersOnStage(std::unique_ptr<Event> event);
 
+        // Retrieve (without dispatching) the next queued event, if any.
+        std::unique_ptr<Event> takeNextEvent();
+
         // Returns true if there are any listeners (or node-default handlers)
         // registered that would receive events of the given type on the current stage.
         bool hasListeners(const EventType& type) const;

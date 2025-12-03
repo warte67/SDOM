@@ -74,6 +74,8 @@ var namespaceSDOM =
       [ "isWindowed", "namespaceSDOM_1_1CoreAPI.html#ab2361c777ea17755a1ba55c958d9fbcf", null ],
       [ "loadDomFromJson", "namespaceSDOM_1_1CoreAPI.html#aacce77a1b797c357629f5775f0b38315", null ],
       [ "loadDomFromJsonFile", "namespaceSDOM_1_1CoreAPI.html#adc0b5c31d948f7aaf0b89847ce9ed7c9", null ],
+      [ "pollEvents", "namespaceSDOM_1_1CoreAPI.html#acb7179997b826761fed08a5386806469", null ],
+      [ "presentPhase", "namespaceSDOM_1_1CoreAPI.html#a642f39494af0a0048019492218e1fe47", null ],
       [ "printObjectRegistry", "namespaceSDOM_1_1CoreAPI.html#a5384d166a0a7046951cb5bfbef63ea88", null ],
       [ "pumpEventsOnce", "namespaceSDOM_1_1CoreAPI.html#a129297576924082195a29521d2f84c56", null ],
       [ "pushKeyboardEvent", "namespaceSDOM_1_1CoreAPI.html#a75e906f90e14a08b0301b63d2ab69645", null ],
@@ -87,7 +89,9 @@ var namespaceSDOM =
       [ "registerOnUnitTest", "namespaceSDOM_1_1CoreAPI.html#a4f690edf6ab49b135a4b2145db99b599", null ],
       [ "registerOnUpdate", "namespaceSDOM_1_1CoreAPI.html#a3435477cd12955a3848119c9c2ae7199", null ],
       [ "registerOnWindowResize", "namespaceSDOM_1_1CoreAPI.html#ad4f8419dacc4f01d9d5e7c303c233128", null ],
+      [ "renderPhase", "namespaceSDOM_1_1CoreAPI.html#ad93029482d1ff5c4282cdf3fc244c2cb", null ],
       [ "run", "namespaceSDOM_1_1CoreAPI.html#a4cc14392fefaf85500030cdf1c6fc6af", null ],
+      [ "runFramePhase", "namespaceSDOM_1_1CoreAPI.html#a651fb0219230ad5ec3e19b22fc5f64d6", null ],
       [ "setAllowTextureResize", "namespaceSDOM_1_1CoreAPI.html#a05c8bd7e654ce7e70eba028d89052924", null ],
       [ "setBorderColor", "namespaceSDOM_1_1CoreAPI.html#af65be003fff830cc0049691c073ef521", null ],
       [ "setErrorMessage", "namespaceSDOM_1_1CoreAPI.html#afada90905db85b6ed9781acd9a0a3ea5", null ],
@@ -112,7 +116,8 @@ var namespaceSDOM =
       [ "setWindowFlags", "namespaceSDOM_1_1CoreAPI.html#abac0a2bf120d865fe503093283dc4fca", null ],
       [ "setWindowHeight", "namespaceSDOM_1_1CoreAPI.html#a8917a2afd27ff41ebfd803df27cb6660", null ],
       [ "setWindowTitle", "namespaceSDOM_1_1CoreAPI.html#a291dd51cb83acd3a24343d9313ef9ff5", null ],
-      [ "setWindowWidth", "namespaceSDOM_1_1CoreAPI.html#aa28e4fbd5006cd961e444ba331a284a8", null ]
+      [ "setWindowWidth", "namespaceSDOM_1_1CoreAPI.html#aa28e4fbd5006cd961e444ba331a284a8", null ],
+      [ "updatePhase", "namespaceSDOM_1_1CoreAPI.html#a9da0d60066da3c4921a8d269e94a2c21", null ]
     ] ],
     [ "CAPI", "namespaceSDOM_1_1CAPI.html", "namespaceSDOM_1_1CAPI" ],
     [ "detail", "namespaceSDOM_1_1detail.html", "namespaceSDOM_1_1detail" ],

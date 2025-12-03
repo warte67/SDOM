@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <SDL3/SDL.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
+#include <SDOM/CAPI/SDOM_CAPI_Event.h>
 
 
 typedef struct SDOM_CoreConfig {
@@ -128,6 +129,11 @@ bool SDOM_GetKeyfocusGray(float* out_gray);
 bool SDOM_SetKeyfocusGray(float gray);
 bool SDOM_CreateDisplayObjectFromJson(const char* type, const char* json, SDOM_DisplayHandle* out_handle);
 bool SDOM_CreateAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle);
+bool SDOM_PollEvents(SDOM_Event* evt);
+bool SDOM_Update(void);
+bool SDOM_Render(void);
+bool SDOM_Present(void);
+bool SDOM_RunFrame(void);
 bool SDOM_Run(void);
 bool SDOM_GetStopAfterUnitTests(void);
 void SDOM_Quit(void);

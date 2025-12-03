@@ -251,6 +251,22 @@ bool writeAssetHandleOut(const SDOM::AssetHandle& src, SDOM_AssetHandle* dst, co
     return true;
 }
 
+void writeEventHandleOut(const SDOM::Event* src, SDOM_Event* dst)
+{
+    if (!dst)
+        return;
+
+    if (!src)
+    {
+        dst->impl = nullptr;
+        return;
+    }
+
+    static thread_local SDOM::Event s_eventScratch;
+    s_eventScratch = *src;
+    dst->impl = &s_eventScratch;
+}
+
 bool parseJsonString(const char* jsonStr, nlohmann::json& out)
 {
     if (!jsonStr) return false;
@@ -378,6 +394,34 @@ public:
         SDOM::CAPI::registerCallable("SDOM_PumpEventsOnce",
             [](const std::vector<CallArg>&) -> CallResult {
                 return makeBoolResult(CoreAPI::pumpEventsOnce());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_PollEvents",
+            [](const std::vector<CallArg>& args) -> CallResult {
+                auto* evt = (args.empty() || args[0].kind != CallArg::Kind::Ptr)
+                    ? nullptr
+                    : static_cast<SDOM_Event*>(args[0].v.p);
+                return makeBoolResult(CoreAPI::pollEvents(evt));
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_Update",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::updatePhase());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_Render",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::renderPhase());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_Present",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::presentPhase());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_RunFrame",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::runFramePhase());
             });
 
         SDOM::CAPI::registerCallable("SDOM_PushMouseEvent",
@@ -1337,6 +1381,8 @@ bool init(uint64_t /*flags*/)
         SDOM_CoreConfig defaults = SDOM_CORECONFIG_DEFAULT;
         SDOM::Core::CoreConfig cc = toCoreConfig(&defaults);
         core.configure(cc);
+        core.resetFramePhaseState();
+        core.resetManualFrameTimer();
         return true;
     } catch (const SDOM::Exception& e) {
         setErrorMessage(e.what());
@@ -1759,6 +1805,110 @@ bool setWindowTitle(const char* title)
         return false;
     } catch (...) {
         setErrorMessage("SDOM_SetWindowTitle unknown error");
+        return false;
+    }
+}
+
+bool pollEvents(SDOM_Event* evt)
+{
+    if (!evt) {
+        setErrorMessage("SDOM_PollEvents: evt is null");
+        return false;
+    }
+
+    writeEventHandleOut(nullptr, evt);
+
+    try {
+        SDOM::Core& core = SDOM::Core::getInstance();
+        SDOM::Event snapshot;
+        auto outcome = core.pollEventsPhase(&snapshot, false);
+        if (!outcome.errorMessage.empty())
+            setErrorMessage(outcome.errorMessage.c_str());
+
+        if (outcome.fatalError)
+            return false;
+
+        if (outcome.phaseCompleted)
+            writeEventHandleOut(&snapshot, evt);
+
+        return outcome.phaseCompleted;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_PollEvents unknown error");
+        return false;
+    }
+}
+
+bool updatePhase()
+{
+    try {
+        auto outcome = SDOM::Core::getInstance().updatePhase(false);
+        if (!outcome.errorMessage.empty())
+            setErrorMessage(outcome.errorMessage.c_str());
+        if (outcome.fatalError)
+            return false;
+        return outcome.phaseCompleted && !outcome.autoCorrected;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_Update unknown error");
+        return false;
+    }
+}
+
+bool renderPhase()
+{
+    try {
+        auto outcome = SDOM::Core::getInstance().renderPhase(false);
+        if (!outcome.errorMessage.empty())
+            setErrorMessage(outcome.errorMessage.c_str());
+        if (outcome.fatalError)
+            return false;
+        return outcome.phaseCompleted && !outcome.autoCorrected;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_Render unknown error");
+        return false;
+    }
+}
+
+bool presentPhase()
+{
+    try {
+        auto outcome = SDOM::Core::getInstance().presentPhase(false);
+        if (!outcome.errorMessage.empty())
+            setErrorMessage(outcome.errorMessage.c_str());
+        if (outcome.fatalError)
+            return false;
+        return outcome.phaseCompleted;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_Present unknown error");
+        return false;
+    }
+}
+
+bool runFramePhase()
+{
+    try {
+        auto outcome = SDOM::Core::getInstance().runFramePhase();
+        if (!outcome.errorMessage.empty())
+            setErrorMessage(outcome.errorMessage.c_str());
+        if (outcome.fatalError)
+            return false;
+        return outcome.phaseCompleted;
+    } catch (const std::exception& e) {
+        setErrorMessage(e.what());
+        return false;
+    } catch (...) {
+        setErrorMessage("SDOM_RunFrame unknown error");
         return false;
     }
 }
@@ -2553,8 +2703,10 @@ bool detachOrphans()
 bool collectGarbage()
 {
     try {
-        SDOM::Core::getInstance().collectGarbage();
-        return true;
+        auto outcome = SDOM::Core::getInstance().collectGarbagePhase(false);
+        if (!outcome.errorMessage.empty())
+            setErrorMessage(outcome.errorMessage.c_str());
+        return !outcome.fatalError;
     } catch (const std::exception& e) {
         setErrorMessage(e.what());
         return false;
@@ -4282,6 +4434,66 @@ void registerBindings(Core& core, const std::string& typeName)
         "Creates an asset object by type name from a JSON string; returns handle via out param.",
         [](const char* type, const char* json, SDOM_AssetHandle* out_handle) -> bool {
             return CoreAPI::createAssetObjectFromJson(type, json, out_handle);
+        });
+
+    core.registerMethod(
+        typeName,
+        "PollEvents",
+        "bool Core::capiPollEvents(SDOM_Event* evt)",
+        "bool",
+        "SDOM_PollEvents",
+        "bool SDOM_PollEvents(SDOM_Event* evt)",
+        "Heals the previous frame if needed then pumps a single prioritized event.",
+        [](SDOM_Event* evt) -> bool {
+            return CoreAPI::pollEvents(evt);
+        });
+
+    core.registerMethod(
+        typeName,
+        "Update",
+        "bool Core::capiUpdatePhase()",
+        "bool",
+        "SDOM_Update",
+        "bool SDOM_Update(void)",
+        "Manual Update phase entry point with automatic healing for prior phases.",
+        []() -> bool {
+            return CoreAPI::updatePhase();
+        });
+
+    core.registerMethod(
+        typeName,
+        "Render",
+        "bool Core::capiRenderPhase()",
+        "bool",
+        "SDOM_Render",
+        "bool SDOM_Render(void)",
+        "Manual Render phase entry point; auto-runs missing prerequisites.",
+        []() -> bool {
+            return CoreAPI::renderPhase();
+        });
+
+    core.registerMethod(
+        typeName,
+        "Present",
+        "bool Core::capiPresentPhase()",
+        "bool",
+        "SDOM_Present",
+        "bool SDOM_Present(void)",
+        "Manual Present phase entry point that also ensures GC.",
+        []() -> bool {
+            return CoreAPI::presentPhase();
+        });
+
+    core.registerMethod(
+        typeName,
+        "RunFrame",
+        "bool Core::capiRunFrame()",
+        "bool",
+        "SDOM_RunFrame",
+        "bool SDOM_RunFrame(void)",
+        "Convenience helper that executes Update → Render → Present in order.",
+        []() -> bool {
+            return CoreAPI::runFramePhase();
         });
 
     core.registerMethod(

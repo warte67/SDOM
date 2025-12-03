@@ -105,5 +105,7 @@ var searchData=
   ['attachfuturechildren_102',['attachFutureChildren',['../classSDOM_1_1Core.html#a5ed19bd9877a4d1a886ba3a30c34b4bf',1,'SDOM::Core::attachFutureChildren()'],['../classSDOM_1_1Factory.html#aaa0091f03334a615d7006ec8f2f884a4',1,'SDOM::Factory::attachFutureChildren()'],['../namespaceSDOM_1_1CoreAPI.html#ab3b541e75d2d71f6a3e8d75e55fe0ee7',1,'SDOM::CoreAPI::attachFutureChildren()']]],
   ['author_103',['Author',['../md_README.html#autotoc_md83',1,'']]],
   ['auto_5fresize_104',['auto_resize',['../structSDOM_1_1FontStyle.html#a9ab48a7dda4fe97c0e71a7d0c23cb56e',1,'SDOM::FontStyle::auto_resize'],['../structSDOM_1_1Label_1_1InitStruct.html#a46c743df8645554c8dfd24333ad3c194',1,'SDOM::Label::InitStruct::auto_resize']]],
-  ['autodestroy_105',['AutoDestroy',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72',1,'SDOM::IDisplayObject']]]
+  ['autocorrected_105',['autoCorrected',['../structSDOM_1_1Core_1_1PhaseOutcome.html#a3b2580c4d4afe9afd3bfcc2cd80968e8',1,'SDOM::Core::PhaseOutcome']]],
+  ['autodestroy_106',['AutoDestroy',['../classSDOM_1_1IDisplayObject.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72',1,'SDOM::IDisplayObject']]],
+  ['autorunprerequisite_107',['autoRunPrerequisite',['../classSDOM_1_1Core.html#ac98a86ad5ad1f0cfb73ef60dc54fc25b',1,'SDOM::Core']]]
 ];
