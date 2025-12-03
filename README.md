@@ -114,13 +114,38 @@ cd examples/test
 ```
 
 ### Notable recent changes
-- Symbol rename: DisplayObject -> DisplayHandle and AssetObject -> AssetHandle across the codebase and Lua scripts (Oct 2025).
-  - The code and examples have been updated; some diagrams and docs still reference the old names and will be updated in a follow-up.
-  - Lua compatibility: Lua userdata/type names remain stable where necessary; check the README/changelog for per-release compatibility notes.
 
-### Migration notes
-- If you maintain scripts that referenced the old names, search & replace DisplayObject / AssetObject -> DisplayHandle / AssetHandle.
-- The repository includes transitional aliases during migration for staged rollouts (if present); prefer the new names in new code.
+- **Runtime Loop & Event System Overhaul (Dec 2025)**  
+  - New self-healing, any-order-safe phase model  
+  - Deterministic two-tier SDOM/SDL event pump  
+  - Unified `SDOM_PollEvents(SDOM_Event* evt)` API  
+  - Major stability improvements and consistent frame semantics  
+
+- **DataRegistry: Runtime Reflection & Metadata Pipeline**  
+  - All SDOM types now register function signatures, property metadata,  
+    type info, and documentation strings into a unified reflection table  
+  - The registry now acts as the canonical source of truth for API surfaces  
+  - Enables programmatic inspection, debugging tools, object browsers,  
+    and future serialization or live-editing features  
+
+- **Automatic External Language Bind Generation System**  
+  - New generator produces complete C API wrapper code from DataRegistry metadata  
+  - Includes automatic argument marshaling, error reporting, and type validation  
+  - Generates full **Doxygen-annotated headers** for the public C API  
+  - Lays the foundation for:  
+    - Lua/Sol2 bindings  
+    - Python/Rust bindings  
+    - FFI-ready integration with other ecosystems  
+  - Eliminates hand-written C API boilerplate and ensures consistency  
+
+- **CAPI Core Modernization**  
+  - All core functions now documented and fully reflected in the generator  
+  - Improved error propagation and diagnostic messages  
+  - Clean separation of internal vs. external event lifetimes  
+
+- **DisplayObject/AssetHandle migration completed**  
+  - Renamed API for clarity and correctness  
+  - Updated examples and CAPI interfaces  
 
 ## Project Structure
 - `src/` — Core SDOM source code
