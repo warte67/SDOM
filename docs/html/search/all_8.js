@@ -46,7 +46,7 @@ var searchData=
   ['export_5fname_43',['export_name',['../structSDOM_1_1TypeInfo.html#aef5112a7e37a43580259d6007ec1811e',1,'SDOM::TypeInfo']]],
   ['exportbindings_44',['exportBindings',['../classSDOM_1_1Core.html#af16f30c71b993348d0367b45ffaa39c5',1,'SDOM::Core::exportBindings()'],['../classSDOM_1_1Factory.html#a39206ce40948168b860b02b16f3533ca',1,'SDOM::Factory::exportBindings()']]],
   ['exported_45',['exported',['../structSDOM_1_1FunctionInfo.html#aa8c184560b31d6f724f4cdb50114ce64',1,'SDOM::FunctionInfo']]],
-  ['exporting_20mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_46',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md78',1,'']]],
+  ['exporting_20mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_46',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md77',1,'']]],
   ['exposetolua_47',['exposeToLua',['../classCLR.html#acfa3e70b746cc0c0ba648ea2d07c5524',1,'CLR']]],
   ['extendedcharacterindex_48',['ExtendedCharacterIndex',['../classSDOM.html#aee303a5ea55cf095657cc513fa582406',1,'SDOM']]]
 ];

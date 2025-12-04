@@ -45,9 +45,9 @@ static void print_variants()
         "  1  Lua-driven mode (uses sol2 and lua/config.lua)\n"
         "  2  C++ front-end + JSON constructors (fast unit-test mode)\n"
         "  3  C API bootstrap (SDOM_Init / SDOM_Configure)\n"
-    "  4  JSON config loader (reads examples/test/json/config.json)\n"
-    "  5  C API manual loop verification (poll/update/render/present)\n"
-    "  6  Minimal manual loop w/ SDL quit handling\n"
+        "  4  JSON config loader (reads examples/test/json/config.json)\n"
+        "  5  C API manual loop verification (poll/update/render/present)\n"
+        "  6  Minimal manual loop w/ SDL quit handling\n"
         << std::endl;
 }
 
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     bool showVersion = false;
     bool showVariants = false;
 
-    // allow passing through arguments to variants
+     // allow passing through arguments to variants
     std::vector<std::string> passthroughArgs;
     passthroughArgs.reserve(argc);
 

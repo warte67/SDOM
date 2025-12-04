@@ -1408,11 +1408,16 @@ namespace SDOM
     {
         // Store previous config for comparison
         static CoreConfig prevConfig = config_;
+        CoreConfig nextConfig = config_;
+
+        // Ensure reconfigure sees the prior config as the current state so
+        // change detection logic compares old->new correctly.
+        config_ = prevConfig;
 
         // initialize or reconfigure SDL resources as needed
-        reconfigure(prevConfig);
+        reconfigure(nextConfig);
 
-        // Update previous config
+        // Update previous config snapshot for future comparisons
         prevConfig = config_;
 
         // After reconfigure, proactively notify all display objects that the
@@ -2444,13 +2449,6 @@ namespace SDOM
             auto prereq = collectGarbagePhase(true);
             if (prereq.fatalError)
                 return prereq;
-            if (!isAuto)
-            {
-                outcome.autoCorrected = true;
-                if (outcome.errorMessage.empty())
-                    outcome.errorMessage = phaseDisplayName(MainLoopPhase::Present) +
-                        " called before " + phaseDisplayName(MainLoopPhase::CollectGarbage);
-            }
         }
 
         std::string readyError;

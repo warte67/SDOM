@@ -114,120 +114,235 @@ Typedefs</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ace710e7380be895820f89c5d7d9655ca" id="r_ace710e7380be895820f89c5d7d9655ca"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError</a> (void)</td></tr>
+<tr class="memdesc:ace710e7380be895820f89c5d7d9655ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the most recent <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> error string (or SDL_GetError when none).  <br /></td></tr>
 <tr class="memitem:af7c39bd04810fbbc819dee24bdab67cd" id="r_af7c39bd04810fbbc819dee24bdab67cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7c39bd04810fbbc819dee24bdab67cd">SDOM_SetError</a> (const char *message)</td></tr>
+<tr class="memdesc:af7c39bd04810fbbc819dee24bdab67cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the global <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> error string consumers read via <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a>.  <br /></td></tr>
 <tr class="memitem:a5f09c270f3e70b498b51dd81b758ba3d" id="r_a5f09c270f3e70b498b51dd81b758ba3d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f09c270f3e70b498b51dd81b758ba3d">SDOM_Init</a> (uint64_t init_flags)</td></tr>
+<tr class="memdesc:a5f09c270f3e70b498b51dd81b758ba3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> Core singleton using default configuration values.  <br /></td></tr>
 <tr class="memitem:adcadeeb392588977ba734bf562da8ce0" id="r_adcadeeb392588977ba734bf562da8ce0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcadeeb392588977ba734bf562da8ce0">SDOM_Configure</a> (const <a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *cfg)</td></tr>
+<tr class="memdesc:adcadeeb392588977ba734bf562da8ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the supplied <a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> to the Core singleton.  <br /></td></tr>
 <tr class="memitem:ae9fcf51d75083dda10893d18a428af1d" id="r_ae9fcf51d75083dda10893d18a428af1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9fcf51d75083dda10893d18a428af1d">SDOM_ConfigureFromJson</a> (const char *json)</td></tr>
+<tr class="memdesc:ae9fcf51d75083dda10893d18a428af1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a JSON string into a CoreConfig and applies it.  <br /></td></tr>
 <tr class="memitem:afcb4329f051cfd28d14d97342a5852ff" id="r_afcb4329f051cfd28d14d97342a5852ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcb4329f051cfd28d14d97342a5852ff">SDOM_GetCoreConfig</a> (<a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> *out_cfg)</td></tr>
+<tr class="memdesc:afcb4329f051cfd28d14d97342a5852ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the active Core configuration into out_cfg.  <br /></td></tr>
 <tr class="memitem:a618865255a7bfbfae6c50abf4ed315a8" id="r_a618865255a7bfbfae6c50abf4ed315a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a618865255a7bfbfae6c50abf4ed315a8">SDOM_SetStopAfterUnitTests</a> (bool stop)</td></tr>
+<tr class="memdesc:a618865255a7bfbfae6c50abf4ed315a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instructs the Core main loop to exit automatically after unit tests complete.  <br /></td></tr>
 <tr class="memitem:a4680f2525ddb053520fe1e3a14c208b4" id="r_a4680f2525ddb053520fe1e3a14c208b4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4680f2525ddb053520fe1e3a14c208b4">SDOM_SetIsRunning</a> (bool running)</td></tr>
+<tr class="memdesc:a4680f2525ddb053520fe1e3a14c208b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start or stop the Core main loop without invoking a full shutdown; accepts true to run, false to pause.  <br /></td></tr>
 <tr class="memitem:a8f599cda328aa0b98faf269205d2ac03" id="r_a8f599cda328aa0b98faf269205d2ac03"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f599cda328aa0b98faf269205d2ac03">SDOM_LoadDomFromJsonFile</a> (const char *filename)</td></tr>
+<tr class="memdesc:a8f599cda328aa0b98faf269205d2ac03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads Core configuration, resources, and DOM hierarchy from the provided JSON document.  <br /></td></tr>
 <tr class="memitem:a3815964f64633175e5aab505008ec6f3" id="r_a3815964f64633175e5aab505008ec6f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3815964f64633175e5aab505008ec6f3">SDOM_LoadDomFromJson</a> (const char *json)</td></tr>
+<tr class="memdesc:a3815964f64633175e5aab505008ec6f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads Core configuration, resources, and DOM hierarchy from an in-memory JSON string.  <br /></td></tr>
 <tr class="memitem:a310a3d4e144509e8399529d9bc3f31fb" id="r_a310a3d4e144509e8399529d9bc3f31fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a310a3d4e144509e8399529d9bc3f31fb">SDOM_GetBorderColor</a> (SDL_Color *out_color)</td></tr>
+<tr class="memdesc:a310a3d4e144509e8399529d9bc3f31fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current frame border color.  <br /></td></tr>
 <tr class="memitem:a72c13c0eb7bf6dd82863d8876ff0bb53" id="r_a72c13c0eb7bf6dd82863d8876ff0bb53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72c13c0eb7bf6dd82863d8876ff0bb53">SDOM_SetBorderColor</a> (const SDL_Color *color)</td></tr>
+<tr class="memdesc:a72c13c0eb7bf6dd82863d8876ff0bb53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the frame border color and applies it.  <br /></td></tr>
 <tr class="memitem:ac4f3435b99de608b535dee079baef3e0" id="r_ac4f3435b99de608b535dee079baef3e0"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4f3435b99de608b535dee079baef3e0">SDOM_GetWindowTitle</a> (void)</td></tr>
+<tr class="memdesc:ac4f3435b99de608b535dee079baef3e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the cached window title (borrowed string).  <br /></td></tr>
 <tr class="memitem:a5b81178a76a291acbddb995a9d83fa63" id="r_a5b81178a76a291acbddb995a9d83fa63"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b81178a76a291acbddb995a9d83fa63">SDOM_SetWindowTitle</a> (const char *title)</td></tr>
+<tr class="memdesc:a5b81178a76a291acbddb995a9d83fa63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the window title; applies immediately when window is live.  <br /></td></tr>
 <tr class="memitem:adcd38e4d3756290b10ef9265c6072657" id="r_adcd38e4d3756290b10ef9265c6072657"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcd38e4d3756290b10ef9265c6072657">SDOM_PumpEventsOnce</a> (void)</td></tr>
+<tr class="memdesc:adcd38e4d3756290b10ef9265c6072657"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pumps SDL events one iteration for headless/deterministic testing.  <br /></td></tr>
 <tr class="memitem:a15bd6efe8c1cd59c5d13f5529e6d6d17" id="r_a15bd6efe8c1cd59c5d13f5529e6d6d17"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15bd6efe8c1cd59c5d13f5529e6d6d17">SDOM_PushMouseEvent</a> (const char *json)</td></tr>
+<tr class="memdesc:a15bd6efe8c1cd59c5d13f5529e6d6d17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a synthetic mouse event from a JSON description.  <br /></td></tr>
 <tr class="memitem:aa14b9ce04d923efe56cc43b488bb5f1c" id="r_aa14b9ce04d923efe56cc43b488bb5f1c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa14b9ce04d923efe56cc43b488bb5f1c">SDOM_PushKeyboardEvent</a> (const char *json)</td></tr>
+<tr class="memdesc:aa14b9ce04d923efe56cc43b488bb5f1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a synthetic keyboard event from a JSON description.  <br /></td></tr>
 <tr class="memitem:ad4eed37dd83d400d70e53973499f5d64" id="r_ad4eed37dd83d400d70e53973499f5d64"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4eed37dd83d400d70e53973499f5d64">SDOM_HasLuaSupport</a> (void)</td></tr>
+<tr class="memdesc:ad4eed37dd83d400d70e53973499f5d64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when Lua support is compiled in and available.  <br /></td></tr>
 <tr class="memitem:a32ec2f0f2aee98aec53108ac2307d96d" id="r_a32ec2f0f2aee98aec53108ac2307d96d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32ec2f0f2aee98aec53108ac2307d96d">SDOM_GetVersionString</a> (void)</td></tr>
+<tr class="memdesc:a32ec2f0f2aee98aec53108ac2307d96d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns semantic version string.  <br /></td></tr>
 <tr class="memitem:ad44a89e096cb82a6511207ecc2471e23" id="r_ad44a89e096cb82a6511207ecc2471e23"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad44a89e096cb82a6511207ecc2471e23">SDOM_GetVersionFullString</a> (void)</td></tr>
+<tr class="memdesc:ad44a89e096cb82a6511207ecc2471e23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns full version string including build metadata.  <br /></td></tr>
 <tr class="memitem:a801367541d3f99f6f21a84ac087936f0" id="r_a801367541d3f99f6f21a84ac087936f0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a801367541d3f99f6f21a84ac087936f0">SDOM_GetVersionMajor</a> (void)</td></tr>
+<tr class="memdesc:a801367541d3f99f6f21a84ac087936f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns major version component.  <br /></td></tr>
 <tr class="memitem:a678537b41141bd6fdc9f0791c7e18dfc" id="r_a678537b41141bd6fdc9f0791c7e18dfc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a678537b41141bd6fdc9f0791c7e18dfc">SDOM_GetVersionMinor</a> (void)</td></tr>
+<tr class="memdesc:a678537b41141bd6fdc9f0791c7e18dfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns minor version component.  <br /></td></tr>
 <tr class="memitem:abe37d194a4fca5dc165bb850806c50ec" id="r_abe37d194a4fca5dc165bb850806c50ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe37d194a4fca5dc165bb850806c50ec">SDOM_GetVersionPatch</a> (void)</td></tr>
+<tr class="memdesc:abe37d194a4fca5dc165bb850806c50ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns patch version component.  <br /></td></tr>
 <tr class="memitem:ac03516ce39b59e70d961c221914ccf42" id="r_ac03516ce39b59e70d961c221914ccf42"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac03516ce39b59e70d961c221914ccf42">SDOM_GetVersionCodename</a> (void)</td></tr>
+<tr class="memdesc:ac03516ce39b59e70d961c221914ccf42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns codename string.  <br /></td></tr>
 <tr class="memitem:a446bc41b4e82c909196e3e155bb2921d" id="r_a446bc41b4e82c909196e3e155bb2921d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a446bc41b4e82c909196e3e155bb2921d">SDOM_GetVersionBuild</a> (void)</td></tr>
+<tr class="memdesc:a446bc41b4e82c909196e3e155bb2921d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns build identifier.  <br /></td></tr>
 <tr class="memitem:a704405a70e7cabfc89404ed90fe2f707" id="r_a704405a70e7cabfc89404ed90fe2f707"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a704405a70e7cabfc89404ed90fe2f707">SDOM_GetVersionBuildDate</a> (void)</td></tr>
+<tr class="memdesc:a704405a70e7cabfc89404ed90fe2f707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns build date/time string.  <br /></td></tr>
 <tr class="memitem:a721b514a729e5432adf1ac43106e208b" id="r_a721b514a729e5432adf1ac43106e208b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a721b514a729e5432adf1ac43106e208b">SDOM_GetVersionCommit</a> (void)</td></tr>
+<tr class="memdesc:a721b514a729e5432adf1ac43106e208b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns commit hash.  <br /></td></tr>
 <tr class="memitem:acc7953bf0a4cd535a0dea8243ac409b9" id="r_acc7953bf0a4cd535a0dea8243ac409b9"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc7953bf0a4cd535a0dea8243ac409b9">SDOM_GetVersionBranch</a> (void)</td></tr>
+<tr class="memdesc:acc7953bf0a4cd535a0dea8243ac409b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns branch name.  <br /></td></tr>
 <tr class="memitem:a3dd965f98240f9fc0fa1cf3f7702528d" id="r_a3dd965f98240f9fc0fa1cf3f7702528d"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3dd965f98240f9fc0fa1cf3f7702528d">SDOM_GetVersionCompiler</a> (void)</td></tr>
+<tr class="memdesc:a3dd965f98240f9fc0fa1cf3f7702528d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns compiler string.  <br /></td></tr>
 <tr class="memitem:aeb400e8ab9c2e6debcc3422176505771" id="r_aeb400e8ab9c2e6debcc3422176505771"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb400e8ab9c2e6debcc3422176505771">SDOM_GetVersionPlatform</a> (void)</td></tr>
+<tr class="memdesc:aeb400e8ab9c2e6debcc3422176505771"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns platform description.  <br /></td></tr>
 <tr class="memitem:afb573b150a80c58407f4630c4e2ca508" id="r_afb573b150a80c58407f4630c4e2ca508"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb573b150a80c58407f4630c4e2ca508">SDOM_GetElapsedTime</a> (void)</td></tr>
+<tr class="memdesc:afb573b150a80c58407f4630c4e2ca508"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the last frame delta time in seconds.  <br /></td></tr>
 <tr class="memitem:aa18e3a4099a739f2b1013d2a92634f16" id="r_aa18e3a4099a739f2b1013d2a92634f16"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa18e3a4099a739f2b1013d2a92634f16">SDOM_GetWindowWidth</a> (void)</td></tr>
+<tr class="memdesc:aa18e3a4099a739f2b1013d2a92634f16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the configured window width.  <br /></td></tr>
 <tr class="memitem:a8679b473307b4757d26f429b9e9c491f" id="r_a8679b473307b4757d26f429b9e9c491f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8679b473307b4757d26f429b9e9c491f">SDOM_GetWindowHeight</a> (void)</td></tr>
+<tr class="memdesc:a8679b473307b4757d26f429b9e9c491f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the configured window height.  <br /></td></tr>
 <tr class="memitem:a979a122642ff053f2df8c60729e601ab" id="r_a979a122642ff053f2df8c60729e601ab"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a979a122642ff053f2df8c60729e601ab">SDOM_GetPixelWidth</a> (void)</td></tr>
+<tr class="memdesc:a979a122642ff053f2df8c60729e601ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the configured pixel width.  <br /></td></tr>
 <tr class="memitem:af8773f49f63b24ce04676f68877bbdcf" id="r_af8773f49f63b24ce04676f68877bbdcf"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8773f49f63b24ce04676f68877bbdcf">SDOM_GetPixelHeight</a> (void)</td></tr>
+<tr class="memdesc:af8773f49f63b24ce04676f68877bbdcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the configured pixel height.  <br /></td></tr>
 <tr class="memitem:a42cc8d12c8317260dc596eb945a27ef5" id="r_a42cc8d12c8317260dc596eb945a27ef5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a42cc8d12c8317260dc596eb945a27ef5">SDOM_GetPreserveAspectRatio</a> (void)</td></tr>
+<tr class="memdesc:a42cc8d12c8317260dc596eb945a27ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether aspect ratio preservation is enabled.  <br /></td></tr>
 <tr class="memitem:a4847b37243f464ba8edf15eb4df3beb9" id="r_a4847b37243f464ba8edf15eb4df3beb9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4847b37243f464ba8edf15eb4df3beb9">SDOM_GetAllowTextureResize</a> (void)</td></tr>
+<tr class="memdesc:a4847b37243f464ba8edf15eb4df3beb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether texture resize is allowed.  <br /></td></tr>
 <tr class="memitem:affe105363fe46af38832a0a9f08a5a7d" id="r_affe105363fe46af38832a0a9f08a5a7d"><td class="memItemLeft" align="right" valign="top">SDL_RendererLogicalPresentation&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affe105363fe46af38832a0a9f08a5a7d">SDOM_GetLogicalPresentation</a> (void)</td></tr>
+<tr class="memdesc:affe105363fe46af38832a0a9f08a5a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the logical presentation mode.  <br /></td></tr>
 <tr class="memitem:a7575d68cd014ab19315b7f01e9ffceb8" id="r_a7575d68cd014ab19315b7f01e9ffceb8"><td class="memItemLeft" align="right" valign="top">SDL_WindowFlags&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7575d68cd014ab19315b7f01e9ffceb8">SDOM_GetWindowFlags</a> (void)</td></tr>
+<tr class="memdesc:a7575d68cd014ab19315b7f01e9ffceb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns current window flags.  <br /></td></tr>
 <tr class="memitem:a92fc1a198a6590b75d9340d4976e74ba" id="r_a92fc1a198a6590b75d9340d4976e74ba"><td class="memItemLeft" align="right" valign="top">SDL_PixelFormat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92fc1a198a6590b75d9340d4976e74ba">SDOM_GetPixelFormat</a> (void)</td></tr>
+<tr class="memdesc:a92fc1a198a6590b75d9340d4976e74ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the pixel format.  <br /></td></tr>
 <tr class="memitem:ab96df8c506f02676019e4eac8d78f502" id="r_ab96df8c506f02676019e4eac8d78f502"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab96df8c506f02676019e4eac8d78f502">SDOM_IsFullscreen</a> (void)</td></tr>
+<tr class="memdesc:ab96df8c506f02676019e4eac8d78f502"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if Core is in fullscreen mode.  <br /></td></tr>
 <tr class="memitem:a08827648c1a48bc36ddb5893803a8974" id="r_a08827648c1a48bc36ddb5893803a8974"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08827648c1a48bc36ddb5893803a8974">SDOM_IsWindowed</a> (void)</td></tr>
+<tr class="memdesc:a08827648c1a48bc36ddb5893803a8974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if Core is windowed.  <br /></td></tr>
 <tr class="memitem:a150ed7163c889ed5d0769683efd2e19f" id="r_a150ed7163c889ed5d0769683efd2e19f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a150ed7163c889ed5d0769683efd2e19f">SDOM_GetIsTraversing</a> (void)</td></tr>
+<tr class="memdesc:a150ed7163c889ed5d0769683efd2e19f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true while the DOM is actively being traversed.  <br /></td></tr>
 <tr class="memitem:ad593f65cf0df0f0202ddbc8793dcdd1d" id="r_ad593f65cf0df0f0202ddbc8793dcdd1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad593f65cf0df0f0202ddbc8793dcdd1d">SDOM_HandleTabKeyPress</a> (void)</td></tr>
+<tr class="memdesc:ad593f65cf0df0f0202ddbc8793dcdd1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves focus forward (testing/editor only).  <br /></td></tr>
 <tr class="memitem:a7624bcce32e2a80e0a52d1298a6326d7" id="r_a7624bcce32e2a80e0a52d1298a6326d7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7624bcce32e2a80e0a52d1298a6326d7">SDOM_HandleTabKeyPressReverse</a> (void)</td></tr>
+<tr class="memdesc:a7624bcce32e2a80e0a52d1298a6326d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves focus backward (testing/editor only).  <br /></td></tr>
 <tr class="memitem:a0f8c326680d51619248fe44c77897d88" id="r_a0f8c326680d51619248fe44c77897d88"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f8c326680d51619248fe44c77897d88">SDOM_GetWindow</a> (SDL_Window **out_window)</td></tr>
+<tr class="memdesc:a0f8c326680d51619248fe44c77897d88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Borrows the SDL_Window owned by Core; do not destroy it.  <br /></td></tr>
 <tr class="memitem:a63b4e2dffb66f7814d0efd13aabd9118" id="r_a63b4e2dffb66f7814d0efd13aabd9118"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63b4e2dffb66f7814d0efd13aabd9118">SDOM_GetRenderer</a> (SDL_Renderer **out_renderer)</td></tr>
+<tr class="memdesc:a63b4e2dffb66f7814d0efd13aabd9118"><td class="mdescLeft">&#160;</td><td class="mdescRight">Borrows the SDL_Renderer owned by Core; do not destroy it.  <br /></td></tr>
 <tr class="memitem:a7660518ffcebdbf7184f731e5986933b" id="r_a7660518ffcebdbf7184f731e5986933b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7660518ffcebdbf7184f731e5986933b">SDOM_GetTexture</a> (SDL_Texture **out_texture)</td></tr>
+<tr class="memdesc:a7660518ffcebdbf7184f731e5986933b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Borrows the SDL_Texture owned by Core; do not destroy it.  <br /></td></tr>
 <tr class="memitem:af3c1d39ad965b969594e9669ebbaa30e" id="r_af3c1d39ad965b969594e9669ebbaa30e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3c1d39ad965b969594e9669ebbaa30e">SDOM_SetWindowWidth</a> (float width)</td></tr>
+<tr class="memdesc:af3c1d39ad965b969594e9669ebbaa30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets window width; may trigger reconfigure.  <br /></td></tr>
 <tr class="memitem:abaac00111352bbac543ca0e24bbf051f" id="r_abaac00111352bbac543ca0e24bbf051f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abaac00111352bbac543ca0e24bbf051f">SDOM_SetWindowHeight</a> (float height)</td></tr>
+<tr class="memdesc:abaac00111352bbac543ca0e24bbf051f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets window height; may trigger reconfigure.  <br /></td></tr>
 <tr class="memitem:abc4d65013c49fbc045f5513b30c6a212" id="r_abc4d65013c49fbc045f5513b30c6a212"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc4d65013c49fbc045f5513b30c6a212">SDOM_SetPixelWidth</a> (float width)</td></tr>
+<tr class="memdesc:abc4d65013c49fbc045f5513b30c6a212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets pixel width.  <br /></td></tr>
 <tr class="memitem:a78c236399c220ef7e7871e859c06ab05" id="r_a78c236399c220ef7e7871e859c06ab05"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78c236399c220ef7e7871e859c06ab05">SDOM_SetPixelHeight</a> (float height)</td></tr>
+<tr class="memdesc:a78c236399c220ef7e7871e859c06ab05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets pixel height.  <br /></td></tr>
 <tr class="memitem:a6e0672c35c14ba077b7e81b6635de6b1" id="r_a6e0672c35c14ba077b7e81b6635de6b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e0672c35c14ba077b7e81b6635de6b1">SDOM_SetPreserveAspectRatio</a> (bool preserve)</td></tr>
+<tr class="memdesc:a6e0672c35c14ba077b7e81b6635de6b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets aspect ratio preservation.  <br /></td></tr>
 <tr class="memitem:ac3a9da0a524db611a02289f11470ad76" id="r_ac3a9da0a524db611a02289f11470ad76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3a9da0a524db611a02289f11470ad76">SDOM_SetAllowTextureResize</a> (bool allow)</td></tr>
+<tr class="memdesc:ac3a9da0a524db611a02289f11470ad76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether texture resize is allowed.  <br /></td></tr>
 <tr class="memitem:af652a089837041e3d2c4b73191e96b8c" id="r_af652a089837041e3d2c4b73191e96b8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af652a089837041e3d2c4b73191e96b8c">SDOM_SetLogicalPresentation</a> (SDL_RendererLogicalPresentation presentation)</td></tr>
+<tr class="memdesc:af652a089837041e3d2c4b73191e96b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets logical presentation mode.  <br /></td></tr>
 <tr class="memitem:a0ec9b38b60f16cfed10b2121600f7771" id="r_a0ec9b38b60f16cfed10b2121600f7771"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ec9b38b60f16cfed10b2121600f7771">SDOM_SetWindowFlags</a> (SDL_WindowFlags flags)</td></tr>
+<tr class="memdesc:a0ec9b38b60f16cfed10b2121600f7771"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets window flags.  <br /></td></tr>
 <tr class="memitem:a54919e24c255f4f91ed8c561eb41fae6" id="r_a54919e24c255f4f91ed8c561eb41fae6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54919e24c255f4f91ed8c561eb41fae6">SDOM_SetPixelFormat</a> (SDL_PixelFormat fmt)</td></tr>
+<tr class="memdesc:a54919e24c255f4f91ed8c561eb41fae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets pixel format.  <br /></td></tr>
 <tr class="memitem:aac869dd24c4966e5d0259a9933a9c789" id="r_aac869dd24c4966e5d0259a9933a9c789"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac869dd24c4966e5d0259a9933a9c789">SDOM_SetFullscreen</a> (bool fullscreen)</td></tr>
+<tr class="memdesc:aac869dd24c4966e5d0259a9933a9c789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggles fullscreen.  <br /></td></tr>
 <tr class="memitem:a4a65ce0397919416b81075691fe0a15a" id="r_a4a65ce0397919416b81075691fe0a15a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a65ce0397919416b81075691fe0a15a">SDOM_SetWindowed</a> (bool windowed)</td></tr>
+<tr class="memdesc:a4a65ce0397919416b81075691fe0a15a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggles windowed mode.  <br /></td></tr>
 <tr class="memitem:a543222b036fe79c9634f8beaaeb826ed" id="r_a543222b036fe79c9634f8beaaeb826ed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a543222b036fe79c9634f8beaaeb826ed">SDOM_SetIsTraversing</a> (bool traversing)</td></tr>
+<tr class="memdesc:a543222b036fe79c9634f8beaaeb826ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets traversal flag; primarily for tests/tooling.  <br /></td></tr>
 <tr class="memitem:a0655b4e5c868e015fab0fc19a9dee39b" id="r_a0655b4e5c868e015fab0fc19a9dee39b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0655b4e5c868e015fab0fc19a9dee39b">SDOM_SetKeyboardFocus</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memdesc:a0655b4e5c868e015fab0fc19a9dee39b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Directly sets keyboard focus (testing/editor only).  <br /></td></tr>
 <tr class="memitem:a62762af8ce12830a03e6845c3204fcd4" id="r_a62762af8ce12830a03e6845c3204fcd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62762af8ce12830a03e6845c3204fcd4">SDOM_GetKeyboardFocus</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:a62762af8ce12830a03e6845c3204fcd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current keyboard focus handle.  <br /></td></tr>
 <tr class="memitem:a5550b63228188a830020115db54df62b" id="r_a5550b63228188a830020115db54df62b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5550b63228188a830020115db54df62b">SDOM_ClearKeyboardFocus</a> (void)</td></tr>
+<tr class="memdesc:a5550b63228188a830020115db54df62b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears keyboard focus.  <br /></td></tr>
 <tr class="memitem:a4e8372b9df707e78b27769f7aa223e10" id="r_a4e8372b9df707e78b27769f7aa223e10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e8372b9df707e78b27769f7aa223e10">SDOM_SetMouseHover</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memdesc:a4e8372b9df707e78b27769f7aa223e10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Directly sets mouse hover (testing/editor only).  <br /></td></tr>
 <tr class="memitem:ab89096c47be0c9c1158dfb830b8bf546" id="r_ab89096c47be0c9c1158dfb830b8bf546"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab89096c47be0c9c1158dfb830b8bf546">SDOM_GetMouseHover</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:ab89096c47be0c9c1158dfb830b8bf546"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current mouse hover handle.  <br /></td></tr>
 <tr class="memitem:ac0befef5dcd8bf366db42c1b2b7dcf7c" id="r_ac0befef5dcd8bf366db42c1b2b7dcf7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0befef5dcd8bf366db42c1b2b7dcf7c">SDOM_ClearMouseHover</a> (void)</td></tr>
+<tr class="memdesc:ac0befef5dcd8bf366db42c1b2b7dcf7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears mouse hover.  <br /></td></tr>
 <tr class="memitem:ae4f345eeff74528bbfea3282e2437c50" id="r_ae4f345eeff74528bbfea3282e2437c50"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4f345eeff74528bbfea3282e2437c50">SDOM_GetFrameCount</a> (void)</td></tr>
+<tr class="memdesc:ae4f345eeff74528bbfea3282e2437c50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current frame count (testing/tooling).  <br /></td></tr>
 <tr class="memitem:adf49c7579770bbc466491f272d9e5c11" id="r_adf49c7579770bbc466491f272d9e5c11"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf49c7579770bbc466491f272d9e5c11">SDOM_GetDisplayObject</a> (const char *name, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:adf49c7579770bbc466491f272d9e5c11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lookup a display object by name and return its handle.  <br /></td></tr>
 <tr class="memitem:ab095eb704ee2c85aad4da330c45d8db1" id="r_ab095eb704ee2c85aad4da330c45d8db1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab095eb704ee2c85aad4da330c45d8db1">SDOM_HasDisplayObject</a> (const char *name)</td></tr>
+<tr class="memdesc:ab095eb704ee2c85aad4da330c45d8db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a display object by that name exists.  <br /></td></tr>
 <tr class="memitem:ab09696a1fe776835999400fb339945c7" id="r_ab09696a1fe776835999400fb339945c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab09696a1fe776835999400fb339945c7">SDOM_DestroyDisplayObjectByName</a> (const char *name)</td></tr>
+<tr class="memdesc:ab09696a1fe776835999400fb339945c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a display object by name.  <br /></td></tr>
 <tr class="memitem:ab49c741b824deab4efe8b77d26fcfae4" id="r_ab49c741b824deab4efe8b77d26fcfae4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab49c741b824deab4efe8b77d26fcfae4">SDOM_DestroyDisplayObject</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memdesc:ab49c741b824deab4efe8b77d26fcfae4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a display object by handle.  <br /></td></tr>
 <tr class="memitem:a7be5e71d5677e7524607c962ef5c7b13" id="r_a7be5e71d5677e7524607c962ef5c7b13"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7be5e71d5677e7524607c962ef5c7b13">SDOM_GetAssetObject</a> (const char *name, <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:a7be5e71d5677e7524607c962ef5c7b13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lookup an asset by name and return its handle.  <br /></td></tr>
 <tr class="memitem:a02e5651acf54666202d4f48faa0a1197" id="r_a02e5651acf54666202d4f48faa0a1197"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02e5651acf54666202d4f48faa0a1197">SDOM_HasAssetObject</a> (const char *name)</td></tr>
+<tr class="memdesc:a02e5651acf54666202d4f48faa0a1197"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if an asset by that name exists.  <br /></td></tr>
 <tr class="memitem:a1386367b61521a4c2c36536926e27d7b" id="r_a1386367b61521a4c2c36536926e27d7b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1386367b61521a4c2c36536926e27d7b">SDOM_DestroyAssetObjectByName</a> (const char *name)</td></tr>
+<tr class="memdesc:a1386367b61521a4c2c36536926e27d7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys an asset by name.  <br /></td></tr>
 <tr class="memitem:a60ee0cf7712a3b1a5a93ccb28f735ba2" id="r_a60ee0cf7712a3b1a5a93ccb28f735ba2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60ee0cf7712a3b1a5a93ccb28f735ba2">SDOM_DestroyAssetObject</a> (const <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *handle)</td></tr>
+<tr class="memdesc:a60ee0cf7712a3b1a5a93ccb28f735ba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys an asset by handle.  <br /></td></tr>
 <tr class="memitem:a66f11420f064158da3304fc762f0c441" id="r_a66f11420f064158da3304fc762f0c441"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66f11420f064158da3304fc762f0c441">SDOM_CountOrphans</a> (void)</td></tr>
+<tr class="memdesc:a66f11420f064158da3304fc762f0c441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts orphaned display objects (testing/editor).  <br /></td></tr>
 <tr class="memitem:a849844f1916d685347b9a05bcf557326" id="r_a849844f1916d685347b9a05bcf557326"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a849844f1916d685347b9a05bcf557326">SDOM_GetOrphans</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handles, int *out_count, int max_count)</td></tr>
+<tr class="memdesc:a849844f1916d685347b9a05bcf557326"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns orphaned display handles up to max_count; testing/editor only.  <br /></td></tr>
 <tr class="memitem:a11fecd53c36431436a32f7cde5893a7f" id="r_a11fecd53c36431436a32f7cde5893a7f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11fecd53c36431436a32f7cde5893a7f">SDOM_DetachOrphans</a> (void)</td></tr>
+<tr class="memdesc:a11fecd53c36431436a32f7cde5893a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detaches orphaned display objects (testing/editor).  <br /></td></tr>
 <tr class="memitem:af01cdd49ee1c42acd30ce792ff165776" id="r_af01cdd49ee1c42acd30ce792ff165776"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af01cdd49ee1c42acd30ce792ff165776">SDOM_CollectGarbage</a> (void)</td></tr>
+<tr class="memdesc:af01cdd49ee1c42acd30ce792ff165776"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects unreachable objects.  <br /></td></tr>
 <tr class="memitem:a10d5dc825e7c1daf89663ad8878a649e" id="r_a10d5dc825e7c1daf89663ad8878a649e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10d5dc825e7c1daf89663ad8878a649e">SDOM_AttachFutureChildren</a> (void)</td></tr>
+<tr class="memdesc:a10d5dc825e7c1daf89663ad8878a649e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches deferred children (testing/editor).  <br /></td></tr>
 <tr class="memitem:a781b0bf2e2aee305a65afbc6087ce501" id="r_a781b0bf2e2aee305a65afbc6087ce501"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a781b0bf2e2aee305a65afbc6087ce501">SDOM_AddOrphan</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *orphan)</td></tr>
+<tr class="memdesc:a781b0bf2e2aee305a65afbc6087ce501"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an orphan handle (testing/editor).  <br /></td></tr>
 <tr class="memitem:a7c3c519208f7043519c7f1871f6a44a5" id="r_a7c3c519208f7043519c7f1871f6a44a5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c3c519208f7043519c7f1871f6a44a5">SDOM_AddFutureChild</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *child, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *parent, bool useWorld, int worldX, int worldY)</td></tr>
+<tr class="memdesc:a7c3c519208f7043519c7f1871f6a44a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a future child relationship (testing/editor).  <br /></td></tr>
 <tr class="memitem:a69e0d9c2c426bc0cb0793a4d9f668bfc" id="r_a69e0d9c2c426bc0cb0793a4d9f668bfc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69e0d9c2c426bc0cb0793a4d9f668bfc">SDOM_GetDisplayObjectNames</a> (const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memdesc:a69e0d9c2c426bc0cb0793a4d9f668bfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns display object names up to max_count; null-terminates when space permits.  <br /></td></tr>
 <tr class="memitem:a4cb556a3f25f833dadb6c23bf1868541" id="r_a4cb556a3f25f833dadb6c23bf1868541"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cb556a3f25f833dadb6c23bf1868541">SDOM_ClearFactory</a> (void)</td></tr>
+<tr class="memdesc:a4cb556a3f25f833dadb6c23bf1868541"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears factory registrations (hot-reload/test).  <br /></td></tr>
 <tr class="memitem:a549bb171a6fd449c163287e2ec7a6085" id="r_a549bb171a6fd449c163287e2ec7a6085"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a549bb171a6fd449c163287e2ec7a6085">SDOM_PrintObjectRegistry</a> (void)</td></tr>
+<tr class="memdesc:a549bb171a6fd449c163287e2ec7a6085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints registered objects (debug).  <br /></td></tr>
 <tr class="memitem:a78571f931300b4fd0031905a7cc1a7d0" id="r_a78571f931300b4fd0031905a7cc1a7d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78571f931300b4fd0031905a7cc1a7d0">SDOM_GetPropertyNamesForType</a> (const char *type, const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memdesc:a78571f931300b4fd0031905a7cc1a7d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns property names for a type (currently stubbed).  <br /></td></tr>
 <tr class="memitem:af40e199e20e75ba68696fcabba14ec0a" id="r_af40e199e20e75ba68696fcabba14ec0a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af40e199e20e75ba68696fcabba14ec0a">SDOM_GetCommandNamesForType</a> (const char *type, const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memdesc:af40e199e20e75ba68696fcabba14ec0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns command names for a type (currently stubbed).  <br /></td></tr>
 <tr class="memitem:a56320990625ea845d730222b06ee4de0" id="r_a56320990625ea845d730222b06ee4de0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56320990625ea845d730222b06ee4de0">SDOM_GetFunctionNamesForType</a> (const char *type, const char **out_names, int *out_count, int max_count)</td></tr>
+<tr class="memdesc:a56320990625ea845d730222b06ee4de0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns function names for a type (currently stubbed).  <br /></td></tr>
 <tr class="memitem:a7fb5d977eebc25d1f6c5fd9a68d76143" id="r_a7fb5d977eebc25d1f6c5fd9a68d76143"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fb5d977eebc25d1f6c5fd9a68d76143">SDOM_SetIgnoreRealInput</a> (bool ignore)</td></tr>
+<tr class="memdesc:a7fb5d977eebc25d1f6c5fd9a68d76143"><td class="mdescLeft">&#160;</td><td class="mdescRight">Testing: ignore real input while processing synthetic events.  <br /></td></tr>
 <tr class="memitem:ae0e47f35d7801651e9784478bf7514fe" id="r_ae0e47f35d7801651e9784478bf7514fe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0e47f35d7801651e9784478bf7514fe">SDOM_GetIgnoreRealInput</a> (bool *out_ignore)</td></tr>
+<tr class="memdesc:ae0e47f35d7801651e9784478bf7514fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Testing: read ignore-real-input flag.  <br /></td></tr>
 <tr class="memitem:a4ff026c0519cb5183f0768c1a27e4cf5" id="r_a4ff026c0519cb5183f0768c1a27e4cf5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ff026c0519cb5183f0768c1a27e4cf5">SDOM_GetKeyfocusGray</a> (float *out_gray)</td></tr>
+<tr class="memdesc:a4ff026c0519cb5183f0768c1a27e4cf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Testing: retrieve keyfocus gray level.  <br /></td></tr>
 <tr class="memitem:a6e7b89e733e9d2173f8300a0ecede615" id="r_a6e7b89e733e9d2173f8300a0ecede615"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e7b89e733e9d2173f8300a0ecede615">SDOM_SetKeyfocusGray</a> (float gray)</td></tr>
+<tr class="memdesc:a6e7b89e733e9d2173f8300a0ecede615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Testing: set keyfocus gray level.  <br /></td></tr>
 <tr class="memitem:ab8eeb2ee361c9c24295fee4eaa9ca366" id="r_ab8eeb2ee361c9c24295fee4eaa9ca366"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8eeb2ee361c9c24295fee4eaa9ca366">SDOM_CreateDisplayObjectFromJson</a> (const char *type, const char *json, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:ab8eeb2ee361c9c24295fee4eaa9ca366"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a display object by type name from a JSON string; returns handle via out param.  <br /></td></tr>
 <tr class="memitem:a5f95ce9f2b471712073632932dcaa0e5" id="r_a5f95ce9f2b471712073632932dcaa0e5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f95ce9f2b471712073632932dcaa0e5">SDOM_CreateAssetObjectFromJson</a> (const char *type, const char *json, <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:a5f95ce9f2b471712073632932dcaa0e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an asset object by type name from a JSON string; returns handle via out param.  <br /></td></tr>
 <tr class="memitem:a1320fae8b8534ed54049baa605ed5393" id="r_a1320fae8b8534ed54049baa605ed5393"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1320fae8b8534ed54049baa605ed5393">SDOM_PollEvents</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a1320fae8b8534ed54049baa605ed5393"><td class="mdescLeft">&#160;</td><td class="mdescRight">Heals the previous frame if needed then pumps a single prioritized event.  <br /></td></tr>
 <tr class="memitem:ab03e61d44a912c47f7a8a2a15e357910" id="r_ab03e61d44a912c47f7a8a2a15e357910"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab03e61d44a912c47f7a8a2a15e357910">SDOM_Update</a> (void)</td></tr>
+<tr class="memdesc:ab03e61d44a912c47f7a8a2a15e357910"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manual Update phase entry point with automatic healing for prior phases.  <br /></td></tr>
 <tr class="memitem:a1b8646a51a6666395d114f8649105836" id="r_a1b8646a51a6666395d114f8649105836"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b8646a51a6666395d114f8649105836">SDOM_Render</a> (void)</td></tr>
+<tr class="memdesc:a1b8646a51a6666395d114f8649105836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manual Render phase entry point; auto-runs missing prerequisites.  <br /></td></tr>
 <tr class="memitem:a8c4d8438669668657d45698edce4408e" id="r_a8c4d8438669668657d45698edce4408e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c4d8438669668657d45698edce4408e">SDOM_Present</a> (void)</td></tr>
+<tr class="memdesc:a8c4d8438669668657d45698edce4408e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manual Present phase entry point that also ensures GC.  <br /></td></tr>
 <tr class="memitem:aa1fa414eb1460202f75d7d0baab97452" id="r_aa1fa414eb1460202f75d7d0baab97452"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1fa414eb1460202f75d7d0baab97452">SDOM_RunFrame</a> (void)</td></tr>
+<tr class="memdesc:aa1fa414eb1460202f75d7d0baab97452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience helper that executes Update → Render → Present in order.  <br /></td></tr>
 <tr class="memitem:ab06193a5255c66d89fb1da1f4881613b" id="r_ab06193a5255c66d89fb1da1f4881613b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab06193a5255c66d89fb1da1f4881613b">SDOM_Run</a> (void)</td></tr>
+<tr class="memdesc:ab06193a5255c66d89fb1da1f4881613b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enters the Core main loop until quit or stop-after-tests is triggered.  <br /></td></tr>
 <tr class="memitem:a924743f664051cc410e6937c2bb5f968" id="r_a924743f664051cc410e6937c2bb5f968"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a924743f664051cc410e6937c2bb5f968">SDOM_GetStopAfterUnitTests</a> (void)</td></tr>
+<tr class="memdesc:a924743f664051cc410e6937c2bb5f968"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether Core is configured to stop after unit tests.  <br /></td></tr>
 <tr class="memitem:a1a77a718f1e1aae22754c99ab3a33103" id="r_a1a77a718f1e1aae22754c99ab3a33103"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a77a718f1e1aae22754c99ab3a33103">SDOM_Quit</a> (void)</td></tr>
+<tr class="memdesc:a1a77a718f1e1aae22754c99ab3a33103"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shuts down the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> runtime and releases SDL resources.  <br /></td></tr>
 <tr class="memitem:a7054d6c49dab2f2161bee0b5086b6b2f" id="r_a7054d6c49dab2f2161bee0b5086b6b2f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7054d6c49dab2f2161bee0b5086b6b2f">SDOM_SetRootNode</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memdesc:a7054d6c49dab2f2161bee0b5086b6b2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the active stage/root node using a DisplayHandle.  <br /></td></tr>
 <tr class="memitem:a7acbc61559dc809534268d1a7bcd17f7" id="r_a7acbc61559dc809534268d1a7bcd17f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7acbc61559dc809534268d1a7bcd17f7">SDOM_SetRootNodeByName</a> (const char *name)</td></tr>
+<tr class="memdesc:a7acbc61559dc809534268d1a7bcd17f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the active stage/root node by object name.  <br /></td></tr>
 <tr class="memitem:aa6e4cd32c44d0f45b21a08664097e928" id="r_aa6e4cd32c44d0f45b21a08664097e928"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6e4cd32c44d0f45b21a08664097e928">SDOM_SetStage</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memdesc:aa6e4cd32c44d0f45b21a08664097e928"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for SetRootNode using a DisplayHandle.  <br /></td></tr>
 <tr class="memitem:a852fb4521bc63aa47e7eb321ecc8cbc0" id="r_a852fb4521bc63aa47e7eb321ecc8cbc0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a852fb4521bc63aa47e7eb321ecc8cbc0">SDOM_SetStageByName</a> (const char *name)</td></tr>
+<tr class="memdesc:a852fb4521bc63aa47e7eb321ecc8cbc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for SetRootNodeByName using an object name.  <br /></td></tr>
 <tr class="memitem:a8cb2704ee5138258e4ce7d9722b5798d" id="r_a8cb2704ee5138258e4ce7d9722b5798d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cb2704ee5138258e4ce7d9722b5798d">SDOM_GetRootNode</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:a8cb2704ee5138258e4ce7d9722b5798d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the active stage/root node handle.  <br /></td></tr>
 <tr class="memitem:a0ebd2166bdc61d7fccbfff44045f54d2" id="r_a0ebd2166bdc61d7fccbfff44045f54d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ebd2166bdc61d7fccbfff44045f54d2">SDOM_GetStageHandle</a> (<a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_handle)</td></tr>
+<tr class="memdesc:a0ebd2166bdc61d7fccbfff44045f54d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for GetRootNode; returns the active stage handle.  <br /></td></tr>
 <tr class="memitem:af6ede5781d020efb720699de53f02d9e" id="r_af6ede5781d020efb720699de53f02d9e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6ede5781d020efb720699de53f02d9e">SDOM_RegisterOnInit</a> (void *fn)</td></tr>
+<tr class="memdesc:af6ede5781d020efb720699de53f02d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a C function pointer or Lua callback to run during init.  <br /></td></tr>
 <tr class="memitem:acaa8387415ffe054d36304a9a2c0759c" id="r_acaa8387415ffe054d36304a9a2c0759c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acaa8387415ffe054d36304a9a2c0759c">SDOM_RegisterOnQuit</a> (void *fn)</td></tr>
+<tr class="memdesc:acaa8387415ffe054d36304a9a2c0759c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a callback invoked during shutdown.  <br /></td></tr>
 <tr class="memitem:a9999a8bbfdb21ae85670f9f995cbc35e" id="r_a9999a8bbfdb21ae85670f9f995cbc35e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9999a8bbfdb21ae85670f9f995cbc35e">SDOM_RegisterOnUpdate</a> (void *fn)</td></tr>
+<tr class="memdesc:a9999a8bbfdb21ae85670f9f995cbc35e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a per-frame update callback.  <br /></td></tr>
 <tr class="memitem:a6622d91f5f6dfa7f1bc8ee6524f74dc9" id="r_a6622d91f5f6dfa7f1bc8ee6524f74dc9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6622d91f5f6dfa7f1bc8ee6524f74dc9">SDOM_RegisterOnEvent</a> (void *fn)</td></tr>
+<tr class="memdesc:a6622d91f5f6dfa7f1bc8ee6524f74dc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a listener for raw <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> events.  <br /></td></tr>
 <tr class="memitem:aaf289b84da78aaffce83b45995208e10" id="r_aaf289b84da78aaffce83b45995208e10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf289b84da78aaffce83b45995208e10">SDOM_RegisterOnRender</a> (void *fn)</td></tr>
+<tr class="memdesc:aaf289b84da78aaffce83b45995208e10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a per-frame render callback.  <br /></td></tr>
 <tr class="memitem:a3db93babd1465cb5f59390aea646f989" id="r_a3db93babd1465cb5f59390aea646f989"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3db93babd1465cb5f59390aea646f989">SDOM_RegisterOnUnitTest</a> (void *fn)</td></tr>
+<tr class="memdesc:a3db93babd1465cb5f59390aea646f989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a unit-test callback used by scripted tests.  <br /></td></tr>
 <tr class="memitem:a086b5a74eccb5130ea360584fdf32a2d" id="r_a086b5a74eccb5130ea360584fdf32a2d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a086b5a74eccb5130ea360584fdf32a2d">SDOM_RegisterOnWindowResize</a> (void *fn)</td></tr>
+<tr class="memdesc:a086b5a74eccb5130ea360584fdf32a2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a callback for window resize notifications.  <br /></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a0be006070fd2926559dec26d5c7f1c4d" name="a0be006070fd2926559dec26d5c7f1c4d"></a>
@@ -303,6 +418,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Queues a future child relationship (testing/editor). </p>
+<p>C++: bool Core::capiAddFutureChild(const SDOM_DisplayHandle* child, const SDOM_DisplayHandle* parent, bool useWorld, int worldX, int worldY) C API: bool <a class="el" href="#a7c3c519208f7043519c7f1871f6a44a5" title="Queues a future child relationship (testing/editor).">SDOM_AddFutureChild(const SDOM_DisplayHandle* child, const SDOM_DisplayHandle* parent, bool useWorld, int worldX, int worldY)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">child</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">parent</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a781b0bf2e2aee305a65afbc6087ce501" name="a781b0bf2e2aee305a65afbc6087ce501"></a>
@@ -319,6 +445,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Adds an orphan handle (testing/editor). </p>
+<p>C++: bool Core::capiAddOrphan(const SDOM_DisplayHandle* orphan) C API: bool <a class="el" href="#a781b0bf2e2aee305a65afbc6087ce501" title="Adds an orphan handle (testing/editor).">SDOM_AddOrphan(const SDOM_DisplayHandle* orphan)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">orphan</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -337,6 +473,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Attaches deferred children (testing/editor). </p>
+<p>C++: bool Core::capiAttachFutureChildren() C API: bool <a class="el" href="#a10d5dc825e7c1daf89663ad8878a649e" title="Attaches deferred children (testing/editor).">SDOM_AttachFutureChildren(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a4cb556a3f25f833dadb6c23bf1868541" name="a4cb556a3f25f833dadb6c23bf1868541"></a>
@@ -353,6 +493,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Clears factory registrations (hot-reload/test). </p>
+<p>C++: bool Core::capiClearFactory() C API: bool <a class="el" href="#a4cb556a3f25f833dadb6c23bf1868541" title="Clears factory registrations (hot-reload/test).">SDOM_ClearFactory(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -371,6 +515,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Clears keyboard focus. </p>
+<p>C++: bool Core::capiClearKeyboardFocus() C API: bool <a class="el" href="#a5550b63228188a830020115db54df62b" title="Clears keyboard focus.">SDOM_ClearKeyboardFocus(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ac0befef5dcd8bf366db42c1b2b7dcf7c" name="ac0befef5dcd8bf366db42c1b2b7dcf7c"></a>
@@ -387,6 +535,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Clears mouse hover. </p>
+<p>C++: bool Core::capiClearMouseHover() C API: bool <a class="el" href="#ac0befef5dcd8bf366db42c1b2b7dcf7c" title="Clears mouse hover.">SDOM_ClearMouseHover(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -405,6 +557,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collects unreachable objects. </p>
+<p>C++: bool Core::capiCollectGarbage() C API: bool <a class="el" href="#af01cdd49ee1c42acd30ce792ff165776" title="Collects unreachable objects.">SDOM_CollectGarbage(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="adcadeeb392588977ba734bf562da8ce0" name="adcadeeb392588977ba734bf562da8ce0"></a>
@@ -421,6 +577,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Applies the supplied <a class="el" href="structSDOM__CoreConfig.html">SDOM_CoreConfig</a> to the Core singleton. </p>
+<p>C++: bool Core::capiConfigure(const SDOM_CoreConfig* cfg) C API: bool <a class="el" href="#adcadeeb392588977ba734bf562da8ce0" title="Applies the supplied SDOM_CoreConfig to the Core singleton.">SDOM_Configure(const SDOM_CoreConfig* cfg)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cfg</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -439,6 +605,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Parses a JSON string into a CoreConfig and applies it. </p>
+<p>C++: bool Core::capiConfigureFromJson(const char* json) C API: bool <a class="el" href="#ae9fcf51d75083dda10893d18a428af1d" title="Parses a JSON string into a CoreConfig and applies it.">SDOM_ConfigureFromJson(const char* json)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a66f11420f064158da3304fc762f0c441" name="a66f11420f064158da3304fc762f0c441"></a>
@@ -455,6 +631,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Counts orphaned display objects (testing/editor). </p>
+<p>C++: int Core::capiCountOrphans() const C API: int <a class="el" href="#a66f11420f064158da3304fc762f0c441" title="Counts orphaned display objects (testing/editor).">SDOM_CountOrphans(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -482,6 +662,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Creates an asset object by type name from a JSON string; returns handle via out param. </p>
+<p>C++: bool Core::capiCreateAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle) C API: bool <a class="el" href="#a5f95ce9f2b471712073632932dcaa0e5" title="Creates an asset object by type name from a JSON string; returns handle via out param.">SDOM_CreateAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">json</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab8eeb2ee361c9c24295fee4eaa9ca366" name="ab8eeb2ee361c9c24295fee4eaa9ca366"></a>
@@ -508,6 +700,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Creates a display object by type name from a JSON string; returns handle via out param. </p>
+<p>C++: bool Core::capiCreateDisplayObjectFromJson(const char* type, const char* json, SDOM_DisplayHandle* out_handle) C API: bool <a class="el" href="#ab8eeb2ee361c9c24295fee4eaa9ca366" title="Creates a display object by type name from a JSON string; returns handle via out param.">SDOM_CreateDisplayObjectFromJson(const char* type, const char* json, SDOM_DisplayHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">json</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a60ee0cf7712a3b1a5a93ccb28f735ba2" name="a60ee0cf7712a3b1a5a93ccb28f735ba2"></a>
@@ -524,6 +728,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Destroys an asset by handle. </p>
+<p>C++: bool Core::capiDestroyAssetObject(const SDOM_AssetHandle* handle) C API: bool <a class="el" href="#a60ee0cf7712a3b1a5a93ccb28f735ba2" title="Destroys an asset by handle.">SDOM_DestroyAssetObject(const SDOM_AssetHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -542,6 +756,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Destroys an asset by name. </p>
+<p>C++: bool Core::capiDestroyAssetObjectByName(const char* name) C API: bool <a class="el" href="#a1386367b61521a4c2c36536926e27d7b" title="Destroys an asset by name.">SDOM_DestroyAssetObjectByName(const char* name)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab49c741b824deab4efe8b77d26fcfae4" name="ab49c741b824deab4efe8b77d26fcfae4"></a>
@@ -558,6 +782,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Destroys a display object by handle. </p>
+<p>C++: bool Core::capiDestroyDisplayObject(const SDOM_DisplayHandle* handle) C API: bool <a class="el" href="#ab49c741b824deab4efe8b77d26fcfae4" title="Destroys a display object by handle.">SDOM_DestroyDisplayObject(const SDOM_DisplayHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -576,6 +810,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Destroys a display object by name. </p>
+<p>C++: bool Core::capiDestroyDisplayObjectByName(const char* name) C API: bool <a class="el" href="#ab09696a1fe776835999400fb339945c7" title="Destroys a display object by name.">SDOM_DestroyDisplayObjectByName(const char* name)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a11fecd53c36431436a32f7cde5893a7f" name="a11fecd53c36431436a32f7cde5893a7f"></a>
@@ -593,6 +837,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Detaches orphaned display objects (testing/editor). </p>
+<p>C++: bool Core::capiDetachOrphans() C API: bool <a class="el" href="#a11fecd53c36431436a32f7cde5893a7f" title="Detaches orphaned display objects (testing/editor).">SDOM_DetachOrphans(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a4847b37243f464ba8edf15eb4df3beb9" name="a4847b37243f464ba8edf15eb4df3beb9"></a>
@@ -609,6 +857,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns whether texture resize is allowed. </p>
+<p>C++: bool Core::capiGetAllowTextureResize() const C API: bool <a class="el" href="#a4847b37243f464ba8edf15eb4df3beb9" title="Returns whether texture resize is allowed.">SDOM_GetAllowTextureResize(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -631,6 +883,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Lookup an asset by name and return its handle. </p>
+<p>C++: bool Core::capiGetAssetObject(const char* name, SDOM_AssetHandle* out_handle) C API: bool <a class="el" href="#a7be5e71d5677e7524607c962ef5c7b13" title="Lookup an asset by name and return its handle.">SDOM_GetAssetObject(const char* name, SDOM_AssetHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a310a3d4e144509e8399529d9bc3f31fb" name="a310a3d4e144509e8399529d9bc3f31fb"></a>
@@ -647,6 +910,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves the current frame border color. </p>
+<p>C++: bool Core::capiGetBorderColor(SDL_Color* out_color) C API: bool <a class="el" href="#a310a3d4e144509e8399529d9bc3f31fb" title="Retrieves the current frame border color.">SDOM_GetBorderColor(SDL_Color* out_color)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_color</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -679,6 +952,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns command names for a type (currently stubbed). </p>
+<p>C++: bool Core::capiGetCommandNamesForType(const char* type, const char** out_names, int* out_count, int max_count) const C API: bool <a class="el" href="#af40e199e20e75ba68696fcabba14ec0a" title="Returns command names for a type (currently stubbed).">SDOM_GetCommandNamesForType(const char* type, const char** out_names, int* out_count, int max_count)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_names</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_count</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="afcb4329f051cfd28d14d97342a5852ff" name="afcb4329f051cfd28d14d97342a5852ff"></a>
@@ -695,6 +980,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Copies the active Core configuration into out_cfg. </p>
+<p>C++: bool Core::capiGetCoreConfig(SDOM_CoreConfig* out_cfg) C API: bool <a class="el" href="#afcb4329f051cfd28d14d97342a5852ff" title="Copies the active Core configuration into out_cfg.">SDOM_GetCoreConfig(SDOM_CoreConfig* out_cfg)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_cfg</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -716,6 +1011,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Lookup a display object by name and return its handle. </p>
+<p>C++: bool Core::capiGetDisplayObject(const char* name, SDOM_DisplayHandle* out_handle) C API: bool <a class="el" href="#adf49c7579770bbc466491f272d9e5c11" title="Lookup a display object by name and return its handle.">SDOM_GetDisplayObject(const char* name, SDOM_DisplayHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -743,6 +1049,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns display object names up to max_count; null-terminates when space permits. </p>
+<p>C++: bool Core::capiGetDisplayObjectNames(const char** out_names, int* out_count, int max_count) C API: bool <a class="el" href="#a69e0d9c2c426bc0cb0793a4d9f668bfc" title="Returns display object names up to max_count; null-terminates when space permits.">SDOM_GetDisplayObjectNames(const char** out_names, int* out_count, int max_count)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_names</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_count</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="afb573b150a80c58407f4630c4e2ca508" name="afb573b150a80c58407f4630c4e2ca508"></a>
@@ -759,6 +1076,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the last frame delta time in seconds. </p>
+<p>C++: float Core::capiGetElapsedTime() const C API: float <a class="el" href="#afb573b150a80c58407f4630c4e2ca508" title="Returns the last frame delta time in seconds.">SDOM_GetElapsedTime(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -777,6 +1098,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the most recent <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> error string (or SDL_GetError when none). </p>
+<p>C++: std::string Core::capiGetError() const C API: const char* <a class="el" href="#ace710e7380be895820f89c5d7d9655ca" title="Returns the most recent SDOM error string (or SDL_GetError when none).">SDOM_GetError(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ae4f345eeff74528bbfea3282e2437c50" name="ae4f345eeff74528bbfea3282e2437c50"></a>
@@ -793,6 +1118,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the current frame count (testing/tooling). </p>
+<p>C++: int Core::capiGetFrameCount() const C API: int <a class="el" href="#ae4f345eeff74528bbfea3282e2437c50" title="Returns the current frame count (testing/tooling).">SDOM_GetFrameCount(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -825,6 +1154,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns function names for a type (currently stubbed). </p>
+<p>C++: bool Core::capiGetFunctionNamesForType(const char* type, const char** out_names, int* out_count, int max_count) const C API: bool <a class="el" href="#a56320990625ea845d730222b06ee4de0" title="Returns function names for a type (currently stubbed).">SDOM_GetFunctionNamesForType(const char* type, const char** out_names, int* out_count, int max_count)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_names</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_count</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ae0e47f35d7801651e9784478bf7514fe" name="ae0e47f35d7801651e9784478bf7514fe"></a>
@@ -841,6 +1182,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Testing: read ignore-real-input flag. </p>
+<p>C++: bool Core::capiGetIgnoreRealInput(bool* out_ignore) const C API: bool <a class="el" href="#ae0e47f35d7801651e9784478bf7514fe" title="Testing: read ignore-real-input flag.">SDOM_GetIgnoreRealInput(bool* out_ignore)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_ignore</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -859,6 +1210,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true while the DOM is actively being traversed. </p>
+<p>C++: bool Core::capiGetIsTraversing() const C API: bool <a class="el" href="#a150ed7163c889ed5d0769683efd2e19f" title="Returns true while the DOM is actively being traversed.">SDOM_GetIsTraversing(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a62762af8ce12830a03e6845c3204fcd4" name="a62762af8ce12830a03e6845c3204fcd4"></a>
@@ -875,6 +1230,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves the current keyboard focus handle. </p>
+<p>C++: bool Core::capiGetKeyboardFocus(SDOM_DisplayHandle* out_handle) C API: bool <a class="el" href="#a62762af8ce12830a03e6845c3204fcd4" title="Retrieves the current keyboard focus handle.">SDOM_GetKeyboardFocus(SDOM_DisplayHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -893,6 +1258,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Testing: retrieve keyfocus gray level. </p>
+<p>C++: bool Core::capiGetKeyfocusGray(float* out_gray) const C API: bool <a class="el" href="#a4ff026c0519cb5183f0768c1a27e4cf5" title="Testing: retrieve keyfocus gray level.">SDOM_GetKeyfocusGray(float* out_gray)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_gray</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="affe105363fe46af38832a0a9f08a5a7d" name="affe105363fe46af38832a0a9f08a5a7d"></a>
@@ -910,6 +1285,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the logical presentation mode. </p>
+<p>C++: SDL_RendererLogicalPresentation Core::capiGetLogicalPresentation() const C API: SDL_RendererLogicalPresentation <a class="el" href="#affe105363fe46af38832a0a9f08a5a7d" title="Returns the logical presentation mode.">SDOM_GetLogicalPresentation(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>SDL_RendererLogicalPresentation; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab89096c47be0c9c1158dfb830b8bf546" name="ab89096c47be0c9c1158dfb830b8bf546"></a>
@@ -926,6 +1305,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves the current mouse hover handle. </p>
+<p>C++: bool Core::capiGetMouseHover(SDOM_DisplayHandle* out_handle) C API: bool <a class="el" href="#ab89096c47be0c9c1158dfb830b8bf546" title="Retrieves the current mouse hover handle.">SDOM_GetMouseHover(SDOM_DisplayHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -953,6 +1342,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns orphaned display handles up to max_count; testing/editor only. </p>
+<p>C++: bool Core::capiGetOrphans(SDOM_DisplayHandle* out_handles, int* out_count, int max_count) C API: bool <a class="el" href="#a849844f1916d685347b9a05bcf557326" title="Returns orphaned display handles up to max_count; testing/editor only.">SDOM_GetOrphans(SDOM_DisplayHandle* out_handles, int* out_count, int max_count)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_handles</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_count</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a92fc1a198a6590b75d9340d4976e74ba" name="a92fc1a198a6590b75d9340d4976e74ba"></a>
@@ -969,6 +1369,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the pixel format. </p>
+<p>C++: SDL_PixelFormat Core::capiGetPixelFormat() const C API: SDL_PixelFormat <a class="el" href="#a92fc1a198a6590b75d9340d4976e74ba" title="Returns the pixel format.">SDOM_GetPixelFormat(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>SDL_PixelFormat; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -987,6 +1391,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the configured pixel height. </p>
+<p>C++: float Core::capiGetPixelHeight() const C API: float <a class="el" href="#af8773f49f63b24ce04676f68877bbdcf" title="Returns the configured pixel height.">SDOM_GetPixelHeight(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a979a122642ff053f2df8c60729e601ab" name="a979a122642ff053f2df8c60729e601ab"></a>
@@ -1004,6 +1412,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the configured pixel width. </p>
+<p>C++: float Core::capiGetPixelWidth() const C API: float <a class="el" href="#a979a122642ff053f2df8c60729e601ab" title="Returns the configured pixel width.">SDOM_GetPixelWidth(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a42cc8d12c8317260dc596eb945a27ef5" name="a42cc8d12c8317260dc596eb945a27ef5"></a>
@@ -1020,6 +1432,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns whether aspect ratio preservation is enabled. </p>
+<p>C++: bool Core::capiGetPreserveAspectRatio() const C API: bool <a class="el" href="#a42cc8d12c8317260dc596eb945a27ef5" title="Returns whether aspect ratio preservation is enabled.">SDOM_GetPreserveAspectRatio(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1052,6 +1468,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns property names for a type (currently stubbed). </p>
+<p>C++: bool Core::capiGetPropertyNamesForType(const char* type, const char** out_names, int* out_count, int max_count) const C API: bool <a class="el" href="#a78571f931300b4fd0031905a7cc1a7d0" title="Returns property names for a type (currently stubbed).">SDOM_GetPropertyNamesForType(const char* type, const char** out_names, int* out_count, int max_count)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_names</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_count</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a63b4e2dffb66f7814d0efd13aabd9118" name="a63b4e2dffb66f7814d0efd13aabd9118"></a>
@@ -1068,6 +1496,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Borrows the SDL_Renderer owned by Core; do not destroy it. </p>
+<p>C++: bool Core::capiGetRenderer(SDL_Renderer** out_renderer) C API: bool <a class="el" href="#a63b4e2dffb66f7814d0efd13aabd9118" title="Borrows the SDL_Renderer owned by Core; do not destroy it.">SDOM_GetRenderer(SDL_Renderer** out_renderer)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_renderer</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1086,6 +1524,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Retrieves the active stage/root node handle. </p>
+<p>C++: bool Core::capiGetRootNode(SDOM_DisplayHandle* out_handle) C API: bool <a class="el" href="#a8cb2704ee5138258e4ce7d9722b5798d" title="Retrieves the active stage/root node handle.">SDOM_GetRootNode(SDOM_DisplayHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a0ebd2166bdc61d7fccbfff44045f54d2" name="a0ebd2166bdc61d7fccbfff44045f54d2"></a>
@@ -1102,6 +1550,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Alias for GetRootNode; returns the active stage handle. </p>
+<p>C++: bool Core::capiGetStageHandle(SDOM_DisplayHandle* out_handle) C API: bool <a class="el" href="#a0ebd2166bdc61d7fccbfff44045f54d2" title="Alias for GetRootNode; returns the active stage handle.">SDOM_GetStageHandle(SDOM_DisplayHandle* out_handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1120,6 +1578,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns whether Core is configured to stop after unit tests. </p>
+<p>C++: bool Core::capiGetStopAfterUnitTests() C API: bool <a class="el" href="#a924743f664051cc410e6937c2bb5f968" title="Returns whether Core is configured to stop after unit tests.">SDOM_GetStopAfterUnitTests(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a7660518ffcebdbf7184f731e5986933b" name="a7660518ffcebdbf7184f731e5986933b"></a>
@@ -1136,6 +1598,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Borrows the SDL_Texture owned by Core; do not destroy it. </p>
+<p>C++: bool Core::capiGetTexture(SDL_Texture** out_texture) C API: bool <a class="el" href="#a7660518ffcebdbf7184f731e5986933b" title="Borrows the SDL_Texture owned by Core; do not destroy it.">SDOM_GetTexture(SDL_Texture** out_texture)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_texture</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1154,6 +1626,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns branch name. </p>
+<p>C++: const char* Core::capiGetVersionBranch() const C API: const char* <a class="el" href="#acc7953bf0a4cd535a0dea8243ac409b9" title="Returns branch name.">SDOM_GetVersionBranch(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a446bc41b4e82c909196e3e155bb2921d" name="a446bc41b4e82c909196e3e155bb2921d"></a>
@@ -1170,6 +1646,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns build identifier. </p>
+<p>C++: const char* Core::capiGetVersionBuild() const C API: const char* <a class="el" href="#a446bc41b4e82c909196e3e155bb2921d" title="Returns build identifier.">SDOM_GetVersionBuild(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1188,6 +1668,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns build date/time string. </p>
+<p>C++: const char* Core::capiGetVersionBuildDate() const C API: const char* <a class="el" href="#a704405a70e7cabfc89404ed90fe2f707" title="Returns build date/time string.">SDOM_GetVersionBuildDate(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ac03516ce39b59e70d961c221914ccf42" name="ac03516ce39b59e70d961c221914ccf42"></a>
@@ -1204,6 +1688,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns codename string. </p>
+<p>C++: const char* Core::capiGetVersionCodename() const C API: const char* <a class="el" href="#ac03516ce39b59e70d961c221914ccf42" title="Returns codename string.">SDOM_GetVersionCodename(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1222,6 +1710,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns commit hash. </p>
+<p>C++: const char* Core::capiGetVersionCommit() const C API: const char* <a class="el" href="#a721b514a729e5432adf1ac43106e208b" title="Returns commit hash.">SDOM_GetVersionCommit(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a3dd965f98240f9fc0fa1cf3f7702528d" name="a3dd965f98240f9fc0fa1cf3f7702528d"></a>
@@ -1238,6 +1730,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns compiler string. </p>
+<p>C++: const char* Core::capiGetVersionCompiler() const C API: const char* <a class="el" href="#a3dd965f98240f9fc0fa1cf3f7702528d" title="Returns compiler string.">SDOM_GetVersionCompiler(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1256,6 +1752,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns full version string including build metadata. </p>
+<p>C++: const char* Core::capiGetVersionFullString() const C API: const char* <a class="el" href="#ad44a89e096cb82a6511207ecc2471e23" title="Returns full version string including build metadata.">SDOM_GetVersionFullString(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a801367541d3f99f6f21a84ac087936f0" name="a801367541d3f99f6f21a84ac087936f0"></a>
@@ -1272,6 +1772,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns major version component. </p>
+<p>C++: int Core::capiGetVersionMajor() const C API: int <a class="el" href="#a801367541d3f99f6f21a84ac087936f0" title="Returns major version component.">SDOM_GetVersionMajor(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1290,6 +1794,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns minor version component. </p>
+<p>C++: int Core::capiGetVersionMinor() const C API: int <a class="el" href="#a678537b41141bd6fdc9f0791c7e18dfc" title="Returns minor version component.">SDOM_GetVersionMinor(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="abe37d194a4fca5dc165bb850806c50ec" name="abe37d194a4fca5dc165bb850806c50ec"></a>
@@ -1306,6 +1814,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns patch version component. </p>
+<p>C++: int Core::capiGetVersionPatch() const C API: int <a class="el" href="#abe37d194a4fca5dc165bb850806c50ec" title="Returns patch version component.">SDOM_GetVersionPatch(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1324,6 +1836,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns platform description. </p>
+<p>C++: const char* Core::capiGetVersionPlatform() const C API: const char* <a class="el" href="#aeb400e8ab9c2e6debcc3422176505771" title="Returns platform description.">SDOM_GetVersionPlatform(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a32ec2f0f2aee98aec53108ac2307d96d" name="a32ec2f0f2aee98aec53108ac2307d96d"></a>
@@ -1340,6 +1856,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns semantic version string. </p>
+<p>C++: const char* Core::capiGetVersionString() const C API: const char* <a class="el" href="#a32ec2f0f2aee98aec53108ac2307d96d" title="Returns semantic version string.">SDOM_GetVersionString(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1358,6 +1878,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Borrows the SDL_Window owned by Core; do not destroy it. </p>
+<p>C++: bool Core::capiGetWindow(SDL_Window** out_window) C API: bool <a class="el" href="#a0f8c326680d51619248fe44c77897d88" title="Borrows the SDL_Window owned by Core; do not destroy it.">SDOM_GetWindow(SDL_Window** out_window)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_window</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a7575d68cd014ab19315b7f01e9ffceb8" name="a7575d68cd014ab19315b7f01e9ffceb8"></a>
@@ -1374,6 +1904,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns current window flags. </p>
+<p>C++: SDL_WindowFlags Core::capiGetWindowFlags() const C API: SDL_WindowFlags <a class="el" href="#a7575d68cd014ab19315b7f01e9ffceb8" title="Returns current window flags.">SDOM_GetWindowFlags(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>SDL_WindowFlags; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1392,6 +1926,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the configured window height. </p>
+<p>C++: float Core::capiGetWindowHeight() const C API: float <a class="el" href="#a8679b473307b4757d26f429b9e9c491f" title="Returns the configured window height.">SDOM_GetWindowHeight(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ac4f3435b99de608b535dee079baef3e0" name="ac4f3435b99de608b535dee079baef3e0"></a>
@@ -1408,6 +1946,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the cached window title (borrowed string). </p>
+<p>C++: const char* Core::capiGetWindowTitle() const C API: const char* <a class="el" href="#ac4f3435b99de608b535dee079baef3e0" title="Returns the cached window title (borrowed string).">SDOM_GetWindowTitle(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1426,6 +1968,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the configured window width. </p>
+<p>C++: float Core::capiGetWindowWidth() const C API: float <a class="el" href="#aa18e3a4099a739f2b1013d2a92634f16" title="Returns the configured window width.">SDOM_GetWindowWidth(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ad593f65cf0df0f0202ddbc8793dcdd1d" name="ad593f65cf0df0f0202ddbc8793dcdd1d"></a>
@@ -1442,6 +1988,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Moves focus forward (testing/editor only). </p>
+<p>C++: bool Core::capiHandleTabKeyPress() C API: bool <a class="el" href="#ad593f65cf0df0f0202ddbc8793dcdd1d" title="Moves focus forward (testing/editor only).">SDOM_HandleTabKeyPress(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1460,6 +2010,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Moves focus backward (testing/editor only). </p>
+<p>C++: bool Core::capiHandleTabKeyPressReverse() C API: bool <a class="el" href="#a7624bcce32e2a80e0a52d1298a6326d7" title="Moves focus backward (testing/editor only).">SDOM_HandleTabKeyPressReverse(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a02e5651acf54666202d4f48faa0a1197" name="a02e5651acf54666202d4f48faa0a1197"></a>
@@ -1476,6 +2030,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if an asset by that name exists. </p>
+<p>C++: bool Core::capiHasAssetObject(const char* name) const C API: bool <a class="el" href="#a02e5651acf54666202d4f48faa0a1197" title="Returns true if an asset by that name exists.">SDOM_HasAssetObject(const char* name)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1494,6 +2058,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if a display object by that name exists. </p>
+<p>C++: bool Core::capiHasDisplayObject(const char* name) const C API: bool <a class="el" href="#ab095eb704ee2c85aad4da330c45d8db1" title="Returns true if a display object by that name exists.">SDOM_HasDisplayObject(const char* name)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ad4eed37dd83d400d70e53973499f5d64" name="ad4eed37dd83d400d70e53973499f5d64"></a>
@@ -1510,6 +2084,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true when Lua support is compiled in and available. </p>
+<p>C++: bool Core::capiHasLuaSupport() const C API: bool <a class="el" href="#ad4eed37dd83d400d70e53973499f5d64" title="Returns true when Lua support is compiled in and available.">SDOM_HasLuaSupport(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1528,6 +2106,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Initializes the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> Core singleton using default configuration values. </p>
+<p>C++: bool Core::capiInit(std::uint64_t flags) C API: bool <a class="el" href="#a5f09c270f3e70b498b51dd81b758ba3d" title="Initializes the SDOM Core singleton using default configuration values.">SDOM_Init(uint64_t init_flags)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab96df8c506f02676019e4eac8d78f502" name="ab96df8c506f02676019e4eac8d78f502"></a>
@@ -1544,6 +2126,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if Core is in fullscreen mode. </p>
+<p>C++: bool Core::capiIsFullscreen() const C API: bool <a class="el" href="#ab96df8c506f02676019e4eac8d78f502" title="Returns true if Core is in fullscreen mode.">SDOM_IsFullscreen(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1562,6 +2148,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if Core is windowed. </p>
+<p>C++: bool Core::capiIsWindowed() const C API: bool <a class="el" href="#a08827648c1a48bc36ddb5893803a8974" title="Returns true if Core is windowed.">SDOM_IsWindowed(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a3815964f64633175e5aab505008ec6f3" name="a3815964f64633175e5aab505008ec6f3"></a>
@@ -1578,6 +2168,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Loads Core configuration, resources, and DOM hierarchy from an in-memory JSON string. </p>
+<p>C++: bool Core::capiLoadDomFromJson(const char* json) C API: bool <a class="el" href="#a3815964f64633175e5aab505008ec6f3" title="Loads Core configuration, resources, and DOM hierarchy from an in-memory JSON string.">SDOM_LoadDomFromJson(const char* json)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1596,6 +2196,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Loads Core configuration, resources, and DOM hierarchy from the provided JSON document. </p>
+<p>C++: bool Core::capiLoadDomFromJsonFile(const char* filename) C API: bool <a class="el" href="#a8f599cda328aa0b98faf269205d2ac03" title="Loads Core configuration, resources, and DOM hierarchy from the provided JSON document.">SDOM_LoadDomFromJsonFile(const char* filename)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a1320fae8b8534ed54049baa605ed5393" name="a1320fae8b8534ed54049baa605ed5393"></a>
@@ -1612,6 +2222,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Heals the previous frame if needed then pumps a single prioritized event. </p>
+<p>C++: bool Core::capiPollEvents(SDOM_Event* evt) C API: bool <a class="el" href="#a1320fae8b8534ed54049baa605ed5393" title="Heals the previous frame if needed then pumps a single prioritized event.">SDOM_PollEvents(SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1630,6 +2250,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Manual Present phase entry point that also ensures GC. </p>
+<p>C++: bool Core::capiPresentPhase() C API: bool <a class="el" href="#a8c4d8438669668657d45698edce4408e" title="Manual Present phase entry point that also ensures GC.">SDOM_Present(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a549bb171a6fd449c163287e2ec7a6085" name="a549bb171a6fd449c163287e2ec7a6085"></a>
@@ -1646,6 +2270,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Prints registered objects (debug). </p>
+<p>C++: bool Core::capiPrintObjectRegistry() const C API: bool <a class="el" href="#a549bb171a6fd449c163287e2ec7a6085" title="Prints registered objects (debug).">SDOM_PrintObjectRegistry(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1664,6 +2292,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Pumps SDL events one iteration for headless/deterministic testing. </p>
+<p>C++: bool Core::capiPumpEventsOnce() C API: bool <a class="el" href="#adcd38e4d3756290b10ef9265c6072657" title="Pumps SDL events one iteration for headless/deterministic testing.">SDOM_PumpEventsOnce(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="aa14b9ce04d923efe56cc43b488bb5f1c" name="aa14b9ce04d923efe56cc43b488bb5f1c"></a>
@@ -1680,6 +2312,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Queues a synthetic keyboard event from a JSON description. </p>
+<p>C++: bool Core::capiPushKeyboardEvent(const char* json) C API: bool <a class="el" href="#aa14b9ce04d923efe56cc43b488bb5f1c" title="Queues a synthetic keyboard event from a JSON description.">SDOM_PushKeyboardEvent(const char* json)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1698,6 +2340,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Queues a synthetic mouse event from a JSON description. </p>
+<p>C++: bool Core::capiPushMouseEvent(const char* json) C API: bool <a class="el" href="#a15bd6efe8c1cd59c5d13f5529e6d6d17" title="Queues a synthetic mouse event from a JSON description.">SDOM_PushMouseEvent(const char* json)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a1a77a718f1e1aae22754c99ab3a33103" name="a1a77a718f1e1aae22754c99ab3a33103"></a>
@@ -1714,6 +2366,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Shuts down the <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> runtime and releases SDL resources. </p>
+<p>C++: void Core::capiQuit() C API: void <a class="el" href="#a1a77a718f1e1aae22754c99ab3a33103" title="Shuts down the SDOM runtime and releases SDL resources.">SDOM_Quit(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>void; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1732,6 +2388,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Registers a listener for raw <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> events. </p>
+<p>C++: bool Core::capiRegisterOnEvent(void (<em>fn)(const <a class="el" href="structSDOM__Event.html">SDOM_Event</a></em>)) C API: bool <a class="el" href="#a6622d91f5f6dfa7f1bc8ee6524f74dc9" title="Registers a listener for raw SDOM events.">SDOM_RegisterOnEvent(void* fn)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="af6ede5781d020efb720699de53f02d9e" name="af6ede5781d020efb720699de53f02d9e"></a>
@@ -1748,6 +2414,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Registers a C function pointer or Lua callback to run during init. </p>
+<p>C++: bool Core::capiRegisterOnInit(bool (<em>fn)(void)) C API: bool SDOM_RegisterOnInit(void</em> fn)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1766,6 +2442,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Registers a callback invoked during shutdown. </p>
+<p>C++: bool Core::capiRegisterOnQuit(void (<em>fn)(void)) C API: bool SDOM_RegisterOnQuit(void</em> fn)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="aaf289b84da78aaffce83b45995208e10" name="aaf289b84da78aaffce83b45995208e10"></a>
@@ -1782,6 +2468,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Registers a per-frame render callback. </p>
+<p>C++: bool Core::capiRegisterOnRender(void (<em>fn)(void)) C API: bool SDOM_RegisterOnRender(void</em> fn)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1800,6 +2496,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Registers a unit-test callback used by scripted tests. </p>
+<p>C++: bool Core::capiRegisterOnUnitTest(bool (<em>fn)(void)) C API: bool SDOM_RegisterOnUnitTest(void</em> fn)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a9999a8bbfdb21ae85670f9f995cbc35e" name="a9999a8bbfdb21ae85670f9f995cbc35e"></a>
@@ -1816,6 +2522,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Registers a per-frame update callback. </p>
+<p>C++: bool Core::capiRegisterOnUpdate(void (<em>fn)(float)) C API: bool SDOM_RegisterOnUpdate(void</em> fn)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1834,6 +2550,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Registers a callback for window resize notifications. </p>
+<p>C++: bool Core::capiRegisterOnWindowResize(void (<em>fn)(int,int)) C API: bool SDOM_RegisterOnWindowResize(void</em> fn)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a1b8646a51a6666395d114f8649105836" name="a1b8646a51a6666395d114f8649105836"></a>
@@ -1850,6 +2576,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Manual Render phase entry point; auto-runs missing prerequisites. </p>
+<p>C++: bool Core::capiRenderPhase() C API: bool <a class="el" href="#a1b8646a51a6666395d114f8649105836" title="Manual Render phase entry point; auto-runs missing prerequisites.">SDOM_Render(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1868,6 +2598,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Enters the Core main loop until quit or stop-after-tests is triggered. </p>
+<p>C++: bool Core::capiRun() C API: bool <a class="el" href="#ab06193a5255c66d89fb1da1f4881613b" title="Enters the Core main loop until quit or stop-after-tests is triggered.">SDOM_Run(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="aa1fa414eb1460202f75d7d0baab97452" name="aa1fa414eb1460202f75d7d0baab97452"></a>
@@ -1884,6 +2618,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Convenience helper that executes Update → Render → Present in order. </p>
+<p>C++: bool Core::capiRunFrame() C API: bool <a class="el" href="#aa1fa414eb1460202f75d7d0baab97452" title="Convenience helper that executes Update → Render → Present in order.">SDOM_RunFrame(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1902,6 +2640,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets whether texture resize is allowed. </p>
+<p>C++: bool Core::capiSetAllowTextureResize(bool allow) C API: bool <a class="el" href="#ac3a9da0a524db611a02289f11470ad76" title="Sets whether texture resize is allowed.">SDOM_SetAllowTextureResize(bool allow)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a72c13c0eb7bf6dd82863d8876ff0bb53" name="a72c13c0eb7bf6dd82863d8876ff0bb53"></a>
@@ -1918,6 +2660,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the frame border color and applies it. </p>
+<p>C++: bool Core::capiSetBorderColor(const SDL_Color* color) C API: bool <a class="el" href="#a72c13c0eb7bf6dd82863d8876ff0bb53" title="Sets the frame border color and applies it.">SDOM_SetBorderColor(const SDL_Color* color)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1936,6 +2688,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the global <a class="el" href="classSDOM.html" title="[Short one-line summary of class purpose]">SDOM</a> error string consumers read via <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a>. </p>
+<p>C++: bool Core::capiSetError(const char* message) C API: bool <a class="el" href="#af7c39bd04810fbbc819dee24bdab67cd" title="Sets the global SDOM error string consumers read via SDOM_GetError().">SDOM_SetError(const char* message)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="aac869dd24c4966e5d0259a9933a9c789" name="aac869dd24c4966e5d0259a9933a9c789"></a>
@@ -1952,6 +2714,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Toggles fullscreen. </p>
+<p>C++: bool Core::capiSetFullscreen(bool fullscreen) C API: bool <a class="el" href="#aac869dd24c4966e5d0259a9933a9c789" title="Toggles fullscreen.">SDOM_SetFullscreen(bool fullscreen)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1970,6 +2736,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Testing: ignore real input while processing synthetic events. </p>
+<p>C++: bool Core::capiSetIgnoreRealInput(bool ignore) C API: bool <a class="el" href="#a7fb5d977eebc25d1f6c5fd9a68d76143" title="Testing: ignore real input while processing synthetic events.">SDOM_SetIgnoreRealInput(bool ignore)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a4680f2525ddb053520fe1e3a14c208b4" name="a4680f2525ddb053520fe1e3a14c208b4"></a>
@@ -1986,6 +2756,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Start or stop the Core main loop without invoking a full shutdown; accepts true to run, false to pause. </p>
+<p>C++: bool Core::capiSetIsRunning(bool running) C API: bool <a class="el" href="#a4680f2525ddb053520fe1e3a14c208b4" title="Start or stop the Core main loop without invoking a full shutdown; accepts true to run,...">SDOM_SetIsRunning(bool running)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2004,6 +2778,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets traversal flag; primarily for tests/tooling. </p>
+<p>C++: bool Core::capiSetIsTraversing(bool traversing) C API: bool <a class="el" href="#a543222b036fe79c9634f8beaaeb826ed" title="Sets traversal flag; primarily for tests/tooling.">SDOM_SetIsTraversing(bool traversing)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a0655b4e5c868e015fab0fc19a9dee39b" name="a0655b4e5c868e015fab0fc19a9dee39b"></a>
@@ -2020,6 +2798,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Directly sets keyboard focus (testing/editor only). </p>
+<p>C++: bool Core::capiSetKeyboardFocus(const SDOM_DisplayHandle* handle) C API: bool <a class="el" href="#a0655b4e5c868e015fab0fc19a9dee39b" title="Directly sets keyboard focus (testing/editor only).">SDOM_SetKeyboardFocus(const SDOM_DisplayHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2038,6 +2826,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Testing: set keyfocus gray level. </p>
+<p>C++: bool Core::capiSetKeyfocusGray(float gray) C API: bool <a class="el" href="#a6e7b89e733e9d2173f8300a0ecede615" title="Testing: set keyfocus gray level.">SDOM_SetKeyfocusGray(float gray)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="af652a089837041e3d2c4b73191e96b8c" name="af652a089837041e3d2c4b73191e96b8c"></a>
@@ -2054,6 +2846,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets logical presentation mode. </p>
+<p>C++: bool Core::capiSetLogicalPresentation(SDL_RendererLogicalPresentation presentation) C API: bool <a class="el" href="#af652a089837041e3d2c4b73191e96b8c" title="Sets logical presentation mode.">SDOM_SetLogicalPresentation(SDL_RendererLogicalPresentation presentation)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2072,6 +2868,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Directly sets mouse hover (testing/editor only). </p>
+<p>C++: bool Core::capiSetMouseHover(const SDOM_DisplayHandle* handle) C API: bool <a class="el" href="#a4e8372b9df707e78b27769f7aa223e10" title="Directly sets mouse hover (testing/editor only).">SDOM_SetMouseHover(const SDOM_DisplayHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a54919e24c255f4f91ed8c561eb41fae6" name="a54919e24c255f4f91ed8c561eb41fae6"></a>
@@ -2088,6 +2894,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets pixel format. </p>
+<p>C++: bool Core::capiSetPixelFormat(SDL_PixelFormat fmt) C API: bool <a class="el" href="#a54919e24c255f4f91ed8c561eb41fae6" title="Sets pixel format.">SDOM_SetPixelFormat(SDL_PixelFormat fmt)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2106,6 +2916,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets pixel height. </p>
+<p>C++: bool Core::capiSetPixelHeight(float height) C API: bool <a class="el" href="#a78c236399c220ef7e7871e859c06ab05" title="Sets pixel height.">SDOM_SetPixelHeight(float height)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="abc4d65013c49fbc045f5513b30c6a212" name="abc4d65013c49fbc045f5513b30c6a212"></a>
@@ -2122,6 +2936,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets pixel width. </p>
+<p>C++: bool Core::capiSetPixelWidth(float width) C API: bool <a class="el" href="#abc4d65013c49fbc045f5513b30c6a212" title="Sets pixel width.">SDOM_SetPixelWidth(float width)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2140,6 +2958,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets aspect ratio preservation. </p>
+<p>C++: bool Core::capiSetPreserveAspectRatio(bool preserve) C API: bool <a class="el" href="#a6e0672c35c14ba077b7e81b6635de6b1" title="Sets aspect ratio preservation.">SDOM_SetPreserveAspectRatio(bool preserve)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a7054d6c49dab2f2161bee0b5086b6b2f" name="a7054d6c49dab2f2161bee0b5086b6b2f"></a>
@@ -2156,6 +2978,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the active stage/root node using a DisplayHandle. </p>
+<p>C++: bool Core::capiSetRootNode(const SDOM_DisplayHandle* handle) C API: bool <a class="el" href="#a7054d6c49dab2f2161bee0b5086b6b2f" title="Sets the active stage/root node using a DisplayHandle.">SDOM_SetRootNode(const SDOM_DisplayHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2174,6 +3006,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the active stage/root node by object name. </p>
+<p>C++: bool Core::capiSetRootNodeByName(const char* name) C API: bool <a class="el" href="#a7acbc61559dc809534268d1a7bcd17f7" title="Sets the active stage/root node by object name.">SDOM_SetRootNodeByName(const char* name)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="aa6e4cd32c44d0f45b21a08664097e928" name="aa6e4cd32c44d0f45b21a08664097e928"></a>
@@ -2190,6 +3032,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Alias for SetRootNode using a DisplayHandle. </p>
+<p>C++: bool Core::capiSetStage(const SDOM_DisplayHandle* handle) C API: bool <a class="el" href="#aa6e4cd32c44d0f45b21a08664097e928" title="Alias for SetRootNode using a DisplayHandle.">SDOM_SetStage(const SDOM_DisplayHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2208,6 +3060,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Alias for SetRootNodeByName using an object name. </p>
+<p>C++: bool Core::capiSetStageByName(const char* name) C API: bool <a class="el" href="#a852fb4521bc63aa47e7eb321ecc8cbc0" title="Alias for SetRootNodeByName using an object name.">SDOM_SetStageByName(const char* name)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a618865255a7bfbfae6c50abf4ed315a8" name="a618865255a7bfbfae6c50abf4ed315a8"></a>
@@ -2224,6 +3086,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Instructs the Core main loop to exit automatically after unit tests complete. </p>
+<p>C++: bool Core::capiSetStopAfterUnitTests(bool stop) C API: bool <a class="el" href="#a618865255a7bfbfae6c50abf4ed315a8" title="Instructs the Core main loop to exit automatically after unit tests complete.">SDOM_SetStopAfterUnitTests(bool stop)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2242,6 +3108,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Toggles windowed mode. </p>
+<p>C++: bool Core::capiSetWindowed(bool windowed) C API: bool <a class="el" href="#a4a65ce0397919416b81075691fe0a15a" title="Toggles windowed mode.">SDOM_SetWindowed(bool windowed)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a0ec9b38b60f16cfed10b2121600f7771" name="a0ec9b38b60f16cfed10b2121600f7771"></a>
@@ -2258,6 +3128,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets window flags. </p>
+<p>C++: bool Core::capiSetWindowFlags(SDL_WindowFlags flags) C API: bool <a class="el" href="#a0ec9b38b60f16cfed10b2121600f7771" title="Sets window flags.">SDOM_SetWindowFlags(SDL_WindowFlags flags)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2276,6 +3150,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets window height; may trigger reconfigure. </p>
+<p>C++: bool Core::capiSetWindowHeight(float height) C API: bool <a class="el" href="#abaac00111352bbac543ca0e24bbf051f" title="Sets window height; may trigger reconfigure.">SDOM_SetWindowHeight(float height)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a5b81178a76a291acbddb995a9d83fa63" name="a5b81178a76a291acbddb995a9d83fa63"></a>
@@ -2292,6 +3170,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the window title; applies immediately when window is live. </p>
+<p>C++: bool Core::capiSetWindowTitle(const char* title) C API: bool <a class="el" href="#a5b81178a76a291acbddb995a9d83fa63" title="Sets the window title; applies immediately when window is live.">SDOM_SetWindowTitle(const char* title)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">title</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -2310,6 +3198,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets window width; may trigger reconfigure. </p>
+<p>C++: bool Core::capiSetWindowWidth(float width) C API: bool <a class="el" href="#af3c1d39ad965b969594e9669ebbaa30e" title="Sets window width; may trigger reconfigure.">SDOM_SetWindowWidth(float width)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab03e61d44a912c47f7a8a2a15e357910" name="ab03e61d44a912c47f7a8a2a15e357910"></a>
@@ -2326,6 +3218,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Manual Update phase entry point with automatic healing for prior phases. </p>
+<p>C++: bool Core::capiUpdatePhase() C API: bool <a class="el" href="#ab03e61d44a912c47f7a8a2a15e357910" title="Manual Update phase entry point with automatic healing for prior phases.">SDOM_Update(void)</a></p>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>

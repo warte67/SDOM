@@ -101,7 +101,9 @@ $(function(){initNavTree('SDOM__CAPI__Handles_8cpp.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ad5afd093266d6d973eafaba7ffead870" id="r_ad5afd093266d6d973eafaba7ffead870"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5afd093266d6d973eafaba7ffead870">SDOM_AssetHandle_IsValid</a> (const <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *handle)</td></tr>
+<tr class="memdesc:ad5afd093266d6d973eafaba7ffead870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the referenced asset is still registered and resolves to a live instance.  <br /></td></tr>
 <tr class="memitem:a61f4953da69f0732fe1908d1b8a42041" id="r_a61f4953da69f0732fe1908d1b8a42041"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61f4953da69f0732fe1908d1b8a42041">SDOM_DisplayHandle_IsValid</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memdesc:a61f4953da69f0732fe1908d1b8a42041"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the referenced display object currently resolves to a live instance.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ad5afd093266d6d973eafaba7ffead870" name="ad5afd093266d6d973eafaba7ffead870"></a>
@@ -119,6 +121,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if the referenced asset is still registered and resolves to a live instance. </p>
+<p>C++: bool AssetHandle::isValid() const C API: bool <a class="el" href="SDOM__CAPI__Handles_8h.html#ad5afd093266d6d973eafaba7ffead870" title="Returns true if the referenced asset is still registered and resolves to a live instance.">SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a61f4953da69f0732fe1908d1b8a42041" name="a61f4953da69f0732fe1908d1b8a42041"></a>
@@ -135,6 +147,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if the referenced display object currently resolves to a live instance. </p>
+<p>C++: bool DisplayHandle::isValid() const C API: bool <a class="el" href="SDOM__CAPI__Handles_8h.html#a61f4953da69f0732fe1908d1b8a42041" title="Returns true if the referenced display object currently resolves to a live instance.">SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>

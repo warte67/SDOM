@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🍎_20macos_0',['🍎 macOS',['../md_README.html#autotoc_md67',1,'']]]
+  ['🍎_20macos_0',['🍎 macOS',['../md_README.html#autotoc_md66',1,'']]]
 ];

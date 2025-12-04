@@ -1,6 +1,5 @@
 var NAVTREEINDEX50 =
 {
-"structSDOM_1_1ArrowButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[2,0,0,5,0,28],
 "structSDOM_1_1ArrowButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7":[3,0,0,4,0,28],
 "structSDOM_1_1ArrowButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[2,0,0,5,0,21],
 "structSDOM_1_1ArrowButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085":[3,0,0,4,0,21],
@@ -249,5 +248,6 @@ var NAVTREEINDEX50 =
 "structSDOM_1_1CheckButton_1_1InitStruct.html":[2,0,0,10,0],
 "structSDOM_1_1CheckButton_1_1InitStruct.html":[3,0,0,9,0],
 "structSDOM_1_1CheckButton_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69":[2,0,0,10,0,18],
-"structSDOM_1_1CheckButton_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69":[3,0,0,9,0,18]
+"structSDOM_1_1CheckButton_1_1InitStruct.html#a017528495a4f046c6242a628e3ef3b69":[3,0,0,9,0,18],
+"structSDOM_1_1CheckButton_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a":[2,0,0,10,0,19]
 };

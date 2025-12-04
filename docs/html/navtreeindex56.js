@@ -1,6 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structSDOM_1_1Slider_1_1InitStruct.html#aa60435655d9a0dfffdc2b3ddd0861034":[2,0,0,48,0,0],
 "structSDOM_1_1Slider_1_1InitStruct.html#aa60435655d9a0dfffdc2b3ddd0861034":[3,0,0,47,0,0],
 "structSDOM_1_1Slider_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb":[2,0,0,48,0,23],
 "structSDOM_1_1Slider_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb":[3,0,0,47,0,23],
@@ -249,5 +248,6 @@ var NAVTREEINDEX56 =
 "structSDOM_1_1TristateButton_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2":[2,0,0,56,0,5],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2":[3,0,0,55,0,5],
 "structSDOM_1_1TristateButton_1_1InitStruct.html#aec74b5fc09572ea26053675e69e477b5":[2,0,0,56,0,16],
-"structSDOM_1_1TristateButton_1_1InitStruct.html#aec74b5fc09572ea26053675e69e477b5":[3,0,0,55,0,16]
+"structSDOM_1_1TristateButton_1_1InitStruct.html#aec74b5fc09572ea26053675e69e477b5":[3,0,0,55,0,16],
+"structSDOM_1_1TristateButton_1_1InitStruct.html#af55270f9276d8363c67bf9f7d414b75f":[2,0,0,56,0,9]
 };

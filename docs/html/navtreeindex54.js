@@ -1,6 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745":[2,0,0,40,0,9],
 "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745":[3,0,0,39,0,9],
 "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2":[2,0,0,40,0,6],
 "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2":[3,0,0,39,0,6],
@@ -249,5 +248,6 @@ var NAVTREEINDEX54 =
 "structSDOM_1_1ProgressBar_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[2,0,0,44,0,10],
 "structSDOM_1_1ProgressBar_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[3,0,0,43,0,10],
 "structSDOM_1_1ProgressBar_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[2,0,0,44,0,31],
-"structSDOM_1_1ProgressBar_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[3,0,0,43,0,31]
+"structSDOM_1_1ProgressBar_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[3,0,0,43,0,31],
+"structSDOM_1_1ProgressBar_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb":[2,0,0,44,0,23]
 };

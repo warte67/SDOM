@@ -1,8 +1,8 @@
 var searchData=
 [
   ['u_0',['u',['../structSDOM_1_1CAPI_1_1CallArg.html#a23e1116a28d4c36b8030954e22700908',1,'SDOM::CAPI::CallArg::u'],['../structSDOM_1_1CAPI_1_1CallResult.html#af6f7e1e84e2337702e5df41f143bd9c5',1,'SDOM::CAPI::CallResult::u']]],
-  ['ubuntu_1',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md64',1,'']]],
-  ['ucrt64_2',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md70',1,'']]],
+  ['ubuntu_1',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md63',1,'']]],
+  ['ucrt64_2',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md69',1,'']]],
   ['uint_3',['UInt',['../structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afa0b1291eded63143ac04709711274785a',1,'SDOM::CAPI::CallArg']]],
   ['unchecked_4',['Unchecked',['../classSDOM.html#af652715c3e637c795824fa0afedda425a881b3634f18ee4f2c2315bd19b75e0ae',1,'SDOM']]],
   ['underline_5',['UNDERLINE',['../classCLR.html#acc3a4f736db8118cef09f0f6000e6702',1,'CLR']]],

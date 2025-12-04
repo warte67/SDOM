@@ -39,32 +39,31 @@ var NAVTREE =
         [ "⚠️ Before You Build", "md_README.html#autotoc_md51", null ],
         [ "Building the SDOM Library", "md_README.html#autotoc_md52", null ],
         [ "Running the Example", "md_README.html#autotoc_md53", null ],
-        [ "Notable recent changes", "md_README.html#autotoc_md54", null ],
-        [ "Migration notes", "md_README.html#autotoc_md55", null ]
+        [ "Notable recent changes", "md_README.html#autotoc_md54", null ]
       ] ],
-      [ "Project Structure", "md_README.html#autotoc_md56", null ],
-      [ "Lua Integration and Requirements", "md_README.html#autotoc_md58", null ],
-      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md62", [
-        [ "🐧 Arch Linux", "md_README.html#autotoc_md65", null ],
-        [ "🐧 Fedora / RHEL / Alma / Rocky", "md_README.html#autotoc_md66", null ],
-        [ "🍎 macOS", "md_README.html#autotoc_md67", null ],
-        [ "🪟 Windows", "md_README.html#autotoc_md68", [
-          [ "🐧 Debian / Ubuntu", "md_README.html#autotoc_md64", null ],
-          [ "Option 1:", "md_README.html#autotoc_md69", null ],
-          [ "Option 2: MSYS2 (MinGW / UCRT64)", "md_README.html#autotoc_md70", null ],
-          [ "Option 3: vcpkg (Visual Studio / CMake Integration)", "md_README.html#autotoc_md71", null ]
+      [ "Project Structure", "md_README.html#autotoc_md55", null ],
+      [ "Lua Integration and Requirements", "md_README.html#autotoc_md57", null ],
+      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md61", [
+        [ "🐧 Arch Linux", "md_README.html#autotoc_md64", null ],
+        [ "🐧 Fedora / RHEL / Alma / Rocky", "md_README.html#autotoc_md65", null ],
+        [ "🍎 macOS", "md_README.html#autotoc_md66", null ],
+        [ "🪟 Windows", "md_README.html#autotoc_md67", [
+          [ "🐧 Debian / Ubuntu", "md_README.html#autotoc_md63", null ],
+          [ "Option 1:", "md_README.html#autotoc_md68", null ],
+          [ "Option 2: MSYS2 (MinGW / UCRT64)", "md_README.html#autotoc_md69", null ],
+          [ "Option 3: vcpkg (Visual Studio / CMake Integration)", "md_README.html#autotoc_md70", null ]
         ] ]
       ] ],
-      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md73", [
-        [ "Build per SDL3:", "md_README.html#autotoc_md74", null ],
-        [ "Build and install SDL3 libraries", "md_README.html#autotoc_md75", null ],
-        [ "Sol2 (recommended)", "md_README.html#autotoc_md76", null ],
-        [ "Documentation", "md_README.html#autotoc_md77", [
-          [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md78", null ]
+      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md72", [
+        [ "Build per SDL3:", "md_README.html#autotoc_md73", null ],
+        [ "Build and install SDL3 libraries", "md_README.html#autotoc_md74", null ],
+        [ "Sol2 (recommended)", "md_README.html#autotoc_md75", null ],
+        [ "Documentation", "md_README.html#autotoc_md76", [
+          [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md77", null ]
         ] ],
-        [ "Acknowledgments", "md_README.html#autotoc_md80", null ],
-        [ "License", "md_README.html#autotoc_md82", null ],
-        [ "Author", "md_README.html#autotoc_md83", null ]
+        [ "Acknowledgments", "md_README.html#autotoc_md79", null ],
+        [ "License", "md_README.html#autotoc_md81", null ],
+        [ "Author", "md_README.html#autotoc_md82", null ]
       ] ]
     ] ],
     [ "Namespaces", "namespaces.html", [

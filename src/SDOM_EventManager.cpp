@@ -883,40 +883,21 @@ namespace SDOM
             return;
 
         Core& core = getCore();
-        DisplayHandle focused = core.getKeyboardFocusedObject();
+        DisplayHandle target = core.getKeyboardFocusedObject();
         const float elapsed = core.getElapsedTime();
 
-        // If no focused object, broadcast to all event listeners on the stage
-        // to avoid per-object copies (stage traversal reuses a single Event).
-        if (!focused || !focused.isValid())
-        {
-            if (e.type == SDL_EVENT_KEY_DOWN)
-            {
-                auto keyDown = std::make_unique<Event>(EventType::KeyDown, getFactory().getStageHandle(), elapsed);
-                keyDown->setSDL_Event(e);
-                keyDown->setScanCode(e.key.scancode);
-                keyDown->setKeycode(e.key.key);
-                keyDown->setKeymod(e.key.mod);
-                keyDown->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
-                dispatchEventToAllEventListenersOnStage(std::move(keyDown));
-            }
-            else if (e.type == SDL_EVENT_KEY_UP)
-            {
-                auto keyUp = std::make_unique<Event>(EventType::KeyUp, getFactory().getStageHandle(), elapsed);
-                keyUp->setSDL_Event(e);
-                keyUp->setScanCode(e.key.scancode);
-                keyUp->setKeycode(e.key.key);
-                keyUp->setKeymod(e.key.mod);
-                keyUp->setAsciiCode(SDL_Utils::keyToAscii(e.key.key, e.key.mod));
-                dispatchEventToAllEventListenersOnStage(std::move(keyUp));
-            }
+        // No focused object means the stage acts as the global target so
+        // keyboard events still enter the queue and remain visible to the C API.
+        if (!target || !target.isValid())
+            target = getFactory().getStageHandle();
+
+        if (!target || !target.isValid())
             return;
-        }
 
         // --- KeyDown -------------------------------------------------------------
         if (e.type == SDL_EVENT_KEY_DOWN)
         {
-            auto keyDown = std::make_unique<Event>(EventType::KeyDown, focused, elapsed);
+            auto keyDown = std::make_unique<Event>(EventType::KeyDown, target, elapsed);
             keyDown->setSDL_Event(e);
             keyDown->setScanCode(e.key.scancode);
             keyDown->setKeycode(e.key.key);
@@ -928,7 +909,7 @@ namespace SDOM
         // --- KeyUp ---------------------------------------------------------------
         if (e.type == SDL_EVENT_KEY_UP)
         {
-            auto keyUp = std::make_unique<Event>(EventType::KeyUp, focused, elapsed);
+            auto keyUp = std::make_unique<Event>(EventType::KeyUp, target, elapsed);
             keyUp->setSDL_Event(e);
             keyUp->setScanCode(e.key.scancode);
             keyUp->setKeycode(e.key.key);

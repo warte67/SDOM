@@ -1,6 +1,5 @@
 var NAVTREEINDEX53 =
 {
-"structSDOM_1_1IDisplayObject_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[2,0,0,35,0,7],
 "structSDOM_1_1IDisplayObject_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[3,0,0,34,0,7],
 "structSDOM_1_1IDisplayObject_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[2,0,0,35,0,23],
 "structSDOM_1_1IDisplayObject_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[3,0,0,34,0,23],
@@ -249,5 +248,6 @@ var NAVTREEINDEX53 =
 "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#acda95a896651eee200d55e80ea104150":[2,0,0,40,0,18],
 "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#acda95a896651eee200d55e80ea104150":[3,0,0,39,0,18],
 "structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ace43fab6a501a23ce018b9fd43638aff":[2,0,0,40,0,2],
-"structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ace43fab6a501a23ce018b9fd43638aff":[3,0,0,39,0,2]
+"structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ace43fab6a501a23ce018b9fd43638aff":[3,0,0,39,0,2],
+"structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745":[2,0,0,40,0,9]
 };

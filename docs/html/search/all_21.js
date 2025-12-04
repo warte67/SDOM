@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['🐧_20arch_20linux_0',['🐧 Arch Linux',['../md_README.html#autotoc_md65',1,'']]],
-  ['🐧_20debian_20ubuntu_1',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md64',1,'']]],
-  ['🐧_20fedora_20rhel_20alma_20rocky_2',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md66',1,'']]]
+  ['🐧_20arch_20linux_0',['🐧 Arch Linux',['../md_README.html#autotoc_md64',1,'']]],
+  ['🐧_20debian_20ubuntu_1',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md63',1,'']]],
+  ['🐧_20fedora_20rhel_20alma_20rocky_2',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md65',1,'']]]
 ];

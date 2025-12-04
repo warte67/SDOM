@@ -50,7 +50,7 @@ var searchData=
   ['clipboardcopy_47',['ClipboardCopy',['../classSDOM_1_1EventType.html#adcd133de1939bc5e2b45f64baab7fa3f',1,'SDOM::EventType']]],
   ['clipboardpaste_48',['ClipboardPaste',['../classSDOM_1_1EventType.html#a1de6c66c960e9955f31b373ef0c34c43',1,'SDOM::EventType']]],
   ['clr_49',['CLR',['../classCLR.html',1,'']]],
-  ['cmake_20integration_50',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md71',1,'']]],
+  ['cmake_20integration_50',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md70',1,'']]],
   ['coalescekey_51',['CoalesceKey',['../classSDOM_1_1EventType.html#ac0e2fef622c15317b0221f64e6e82078',1,'SDOM::EventType']]],
   ['coalescestrategy_52',['CoalesceStrategy',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30',1,'SDOM::EventType']]],
   ['collectgarbage_53',['CollectGarbage',['../classSDOM_1_1Core.html#a8a880d7fcb0f2950db2b24c2e410678ba98e21769bfe671afc300e049f71bb034',1,'SDOM::Core']]],

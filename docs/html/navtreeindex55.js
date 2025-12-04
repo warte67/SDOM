@@ -1,6 +1,5 @@
 var NAVTREEINDEX55 =
 {
-"structSDOM_1_1ProgressBar_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb":[2,0,0,44,0,23],
 "structSDOM_1_1ProgressBar_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb":[3,0,0,43,0,23],
 "structSDOM_1_1ProgressBar_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939":[2,0,0,44,0,25],
 "structSDOM_1_1ProgressBar_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939":[3,0,0,43,0,25],
@@ -249,5 +248,6 @@ var NAVTREEINDEX55 =
 "structSDOM_1_1Slider_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[2,0,0,48,0,10],
 "structSDOM_1_1Slider_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35":[3,0,0,47,0,10],
 "structSDOM_1_1Slider_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[2,0,0,48,0,32],
-"structSDOM_1_1Slider_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[3,0,0,47,0,32]
+"structSDOM_1_1Slider_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa":[3,0,0,47,0,32],
+"structSDOM_1_1Slider_1_1InitStruct.html#aa60435655d9a0dfffdc2b3ddd0861034":[2,0,0,48,0,0]
 };

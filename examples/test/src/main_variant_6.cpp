@@ -14,8 +14,11 @@
 
 using namespace SDOM;
 
+extern bool Main_UnitTests();
+
 int SDOM_main_variant_6(int argc, char** argv)
 {
+    std::cout << "[Variant 6] Running SDL-style main loop.\n";
     // Initialize SDOM
     if (!SDOM_Init(0))
     {
@@ -40,6 +43,9 @@ int SDOM_main_variant_6(int argc, char** argv)
         return 1;
     }
 
+    // Register callbacks
+    SDOM_RegisterOnUnitTest((void*)Main_UnitTests);
+
     bool running = true;
     int exitCode = 0;
 
@@ -61,8 +67,20 @@ int SDOM_main_variant_6(int argc, char** argv)
                     std::cerr << "[Variant 6] Quit event received." << std::endl;
                     running = false;
                 }
+                if (type == SDOM_EventType_KeyDown)
+                {
+                    int key_code = SDOM_GetEventKeycode(&evt);
+                    std::cerr << "[Variant 6] KeyDown event received with key code: " << key_code << std::endl;
+                    std::cerr << "[Variant 6] SDLK_Q: " << SDLK_Q << std::endl;
+
+                    if (key_code == SDLK_Q)
+                    {
+                        std::cerr << "[Variant 6] (SDLK_Q) Quit event received." << std::endl;
+                        running = false;
+                    }
+                }
+                // std::cerr << "[Variant 6] PollEvents returned event: " << type << std::endl;
             }
-            // std::cerr << "[Variant 6] PollEvents returned event: " << type << std::endl;
         }
 
         if (!running) break;

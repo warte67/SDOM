@@ -10,6 +10,5 @@ var searchData=
   ['normalizeanchorstring_7',['normalizeAnchorString',['../namespaceSDOM.html#ada23a739293dfb38feadc632ee14bb9c',1,'SDOM']]],
   ['notable_20recent_20changes_8',['Notable recent changes',['../md_README.html#autotoc_md54',1,'']]],
   ['notes_9',['Notes',['../classSDOM_1_1ArrowButton.html#ArrowButton_Notes',1,'Notes'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Notes',1,'Notes'],['../classSDOM_1_1Button.html#Button_Notes',1,'Notes'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Notes',1,'Notes'],['../classSDOM_1_1TristateButton.html#TristateButton_Notes',1,'Notes']]],
-  ['notes_10',['Migration notes',['../md_README.html#autotoc_md55',1,'']]],
-  ['null_11',['Null',['../classSDOM.html#adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94',1,'SDOM']]]
+  ['null_10',['Null',['../classSDOM.html#adb3cee76d315de64056545773bf0d30cabbb93ef26e3c101ff11cdd21cab08a94',1,'SDOM']]]
 ];

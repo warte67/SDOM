@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['ubuntu_0',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md64',1,'']]],
-  ['ucrt64_1',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md70',1,'']]]
+  ['ubuntu_0',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md63',1,'']]],
+  ['ucrt64_1',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md69',1,'']]]
 ];

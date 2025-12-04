@@ -147,6 +147,7 @@ bool Main_UnitTests()
     done &= Variant_UnitTests();
     done &= FrontEnd_UnitTests();
     done &= Version_UnitTests();
+    done &= Core_UnitTests();
 
     return done;
 }
