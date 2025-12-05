@@ -41,13 +41,14 @@ namespace SDOM
     {
         // Example: To report an error, use this pattern:
         // errors.push_back("Description of the failure.");
-        // ok = false;
+        bool done = true;
 
         // TODO: Add test logic here
         // e.g., if (!condition) { errors.push_back("Reason for failure."); ok = false; }
 
-        return true; // ✅ finished this frame
+        // return true; // ✅ finished this frame
         // return false; // 🔄 re-entrant test
+        return done;
 
     } // END: IDisplayObject_test0(std::vector<std::string>& errors)
 

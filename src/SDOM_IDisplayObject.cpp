@@ -39,6 +39,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_IDisplayObject.hpp>
+#include <SDOM/SDOM_IDisplayObjectAPI.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/SDOM_Factory.hpp>
@@ -1717,6 +1718,18 @@ namespace SDOM
         typeInfo.subject_uses_handle = true;
         typeInfo.has_handle_override = false;
         typeInfo.dispatch_family_override = "method_table";
+
+        // setModuleBrief(typeInfo,
+        //     "Common runtime services for SDOM display objects, including layout, "
+        //     "anchoring, and event integration.");
+        setModuleBrief(typeInfo,
+            "IDisplayObject is the base class for all visible and interactive objects in SDOM, providing \
+            transform, sizing, and hierarchical parenting. It defines how an object enters the stage, \
+            participates in rendering and input, and transitions through lifecycle events. Through the \
+            generated C API, external code safely creates and manipulates display objects via handles \
+            without exposing C++ internals.");
+
+        IDisplayObjectAPI::registerBindings(*this, typeName);
     }
 
 } // namespace SDOM

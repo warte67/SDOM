@@ -5,19 +5,24 @@
 //  Module: RadioButton
 //
 //  Brief:
-//    RadioButton display object bindings
+//    IDisplayObject is the base class for all visible and interactive objects
+//    in SDOM, providing transform, sizing, and hierarchical parenting. It
+//    defines how an object enters the stage, participates in rendering and
+//    input, and transitions through lifecycle events. Through the generated C
+//    API, external code safely creates and manipulates display objects via
+//    handles without exposing C++ internals.
 // =============================================================================
 //
 //  Authors:
 //    Jay Faries (warte67) - Primary architect of SDOM
 //
 //  File Type: Header
-//  SDOM Version: 0.5.260 (early pre-alpha)
-//  Build Identifier: 2025-12-04_17:18:16_e61169ca
-//  Commit: e61169ca on branch master
+//  SDOM Version: 0.5.261 (early pre-alpha)
+//  Build Identifier: 2025-12-04_18:57:31_9b0abf93
+//  Commit: 9b0abf93 on branch master
 //  Compiler: g++ (GCC) 15.2.1 20251112
 //  Platform: Linux-x86_64
-//  Generated: 2025-12-04_17:18:16
+//  Generated: 2025-12-04_18:57:31
 //  Generator: sdom_generate_bindings
 //
 //  License Notice:
