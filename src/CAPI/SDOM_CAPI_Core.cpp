@@ -22,12 +22,12 @@
 //    Jay Faries (warte67) - Primary architect of SDOM
 //
 //  File Type: Source
-//  SDOM Version: 0.5.261 (early pre-alpha)
-//  Build Identifier: 2025-12-04_18:57:31_9b0abf93
-//  Commit: 9b0abf93 on branch master
+//  SDOM Version: 0.5.263 (early pre-alpha)
+//  Build Identifier: 2025-12-04_21:24:47_20e8cb42
+//  Commit: 20e8cb42 on branch master
 //  Compiler: g++ (GCC) 15.2.1 20251112
 //  Platform: Linux-x86_64
-//  Generated: 2025-12-04_18:57:31
+//  Generated: 2025-12-04_21:24:47
 //  Generator: sdom_generate_bindings
 //
 //  License Notice:

@@ -1,6 +1,46 @@
 {
   "functions": [
     {
+      "c_name": "SDOM_Geometry_AnchorPointFromString",
+      "c_signature": "SDOM_AnchorPoint SDOM_Geometry_AnchorPointFromString(const char* name)",
+      "dispatch_family": "singleton",
+      "name": "AnchorPointFromString",
+      "owner_type": "GeometryAPI",
+      "subject_kind": "Geometry"
+    },
+    {
+      "c_name": "SDOM_Geometry_AnchorPointToString",
+      "c_signature": "const char* SDOM_Geometry_AnchorPointToString(SDOM_AnchorPoint anchor)",
+      "dispatch_family": "singleton",
+      "name": "AnchorPointToString",
+      "owner_type": "GeometryAPI",
+      "subject_kind": "Geometry"
+    },
+    {
+      "c_name": "SDOM_Geometry_SetBounds",
+      "c_signature": "bool SDOM_Geometry_SetBounds(SDOM_Bounds* bounds, float left, float top, float right, float bottom)",
+      "dispatch_family": "singleton",
+      "name": "SetBounds",
+      "owner_type": "GeometryAPI",
+      "subject_kind": "Geometry"
+    },
+    {
+      "c_name": "SDOM_Geometry_GetBoundsWidth",
+      "c_signature": "float SDOM_Geometry_GetBoundsWidth(const SDOM_Bounds* bounds)",
+      "dispatch_family": "singleton",
+      "name": "GetBoundsWidth",
+      "owner_type": "GeometryAPI",
+      "subject_kind": "Geometry"
+    },
+    {
+      "c_name": "SDOM_Geometry_GetBoundsHeight",
+      "c_signature": "float SDOM_Geometry_GetBoundsHeight(const SDOM_Bounds* bounds)",
+      "dispatch_family": "singleton",
+      "name": "GetBoundsHeight",
+      "owner_type": "GeometryAPI",
+      "subject_kind": "Geometry"
+    },
+    {
       "c_name": "SDOM_Variant_InitNull",
       "c_signature": "bool SDOM_Variant_InitNull(SDOM_Variant* variant)",
       "dispatch_family": "singleton",
@@ -566,6 +606,38 @@
       "dispatch_family": "method_table",
       "name": "isValid",
       "owner_type": "DisplayHandle",
+      "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_IDisplayObject_CleanAll",
+      "c_signature": "bool SDOM_IDisplayObject_CleanAll(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "CleanAll",
+      "owner_type": "IDisplayObject",
+      "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_IDisplayObject_SetDirty",
+      "c_signature": "bool SDOM_IDisplayObject_SetDirty(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "SetDirty",
+      "owner_type": "IDisplayObject",
+      "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_IDisplayObject_SetDirtyState",
+      "c_signature": "bool SDOM_IDisplayObject_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty)",
+      "dispatch_family": "method_table",
+      "name": "SetDirtyState",
+      "owner_type": "IDisplayObject",
+      "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_IDisplayObject_IsDirty",
+      "c_signature": "bool SDOM_IDisplayObject_IsDirty(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "IsDirty",
+      "owner_type": "IDisplayObject",
       "subject_kind": "DisplayObject"
     },
     {
@@ -1602,6 +1674,16 @@
       "uses_handle": true
     },
     {
+      "cpp_type_id": "SDOM::GeometryAPI",
+      "dispatch_family": "singleton",
+      "file_stem": "Geometry",
+      "has_function_exports": true,
+      "name": "GeometryAPI",
+      "owns_method_table": false,
+      "subject_kind": "Geometry",
+      "uses_handle": false
+    },
+    {
       "cpp_type_id": "SDOM::Slider",
       "dispatch_family": "method_table",
       "file_stem": "Slider",
@@ -1707,6 +1789,16 @@
       "file_stem": "Frame",
       "has_function_exports": false,
       "name": "Frame",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::IDisplayObject",
+      "dispatch_family": "method_table",
+      "file_stem": "IDisplayObject",
+      "has_function_exports": true,
+      "name": "IDisplayObject",
       "owns_method_table": true,
       "subject_kind": "DisplayObject",
       "uses_handle": true

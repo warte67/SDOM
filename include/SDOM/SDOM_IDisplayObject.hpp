@@ -154,6 +154,11 @@ namespace SDOM
     class EventType;
     class EventTypeHash;
     class Stage;
+    class IDisplayObject;
+
+    namespace IDisplayObjectAPI {
+        void registerBindings(IDisplayObject& object, const std::string& typeName);
+    }
 
     // Helper: convert a JSON array to a SDL_Color  (Move to SDL related helpers?)
     static inline SDL_Color json_to_color(const nlohmann::json& j)
@@ -193,6 +198,8 @@ namespace SDOM
         using SUPER = IDataObject;
 
     public:
+        friend void IDisplayObjectAPI::registerBindings(IDisplayObject& object, const std::string& typeName);
+
         // --- Orphan Retention --- //
         enum class OrphanRetentionPolicy : int
         {

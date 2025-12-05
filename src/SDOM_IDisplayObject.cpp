@@ -46,6 +46,7 @@
 #include <SDOM/SDOM_Utils.hpp>
 #include <SDOM/SDOM_DisplayHandle.hpp>
 
+#include <array>
 #include <chrono>
 
 namespace SDOM
@@ -89,6 +90,52 @@ namespace SDOM
                 // Recurse into subtree
                 dispatchRemovedFromStageRecursive(ch, stageHandle);
             }
+        }
+
+        void registerOrphanRetentionPolicyEnum(SDOM::DataRegistry& registry)
+        {
+            static bool s_registered = false;
+            if (s_registered) {
+                return;
+            }
+
+            struct PolicyDesc {
+                IDisplayObject::OrphanRetentionPolicy value;
+                const char* name;
+                const char* doc;
+            };
+
+            constexpr std::array<PolicyDesc, 3> kPolicies = {{
+                { IDisplayObject::OrphanRetentionPolicy::RetainUntilManual,
+                  "RetainUntilManual",
+                  "Never auto-destroy; requires explicit teardown via the factory." },
+                { IDisplayObject::OrphanRetentionPolicy::AutoDestroy,
+                  "AutoDestroy",
+                  "Destroy immediately after the object becomes orphaned." },
+                { IDisplayObject::OrphanRetentionPolicy::GracePeriod,
+                  "GracePeriod",
+                  "Allow reparenting within a grace window before destruction." }
+            }};
+
+            for (const auto& policy : kPolicies) {
+                const std::string typeName = std::string("SDOM_OrphanRetentionPolicy::") + policy.name;
+                if (registry.lookupType(typeName)) {
+                    continue;
+                }
+
+                SDOM::TypeInfo enumInfo;
+                enumInfo.name        = typeName;
+                enumInfo.kind        = SDOM::EntryKind::Enum;
+                enumInfo.cpp_type_id = policy.name;
+                enumInfo.file_stem   = "IDisplayObject";
+                enumInfo.export_name = "SDOM_OrphanRetentionPolicy";
+                enumInfo.enum_value  = static_cast<std::uint32_t>(policy.value);
+                enumInfo.category    = "DisplayObjects";
+                enumInfo.doc         = policy.doc;
+                registry.registerType(enumInfo);
+            }
+
+            s_registered = true;
         }
     } // unnamed namespace
 
@@ -1697,7 +1744,6 @@ namespace SDOM
         return *this;
     }
 
-
     void IDisplayObject::registerBindingsImpl(const std::string& typeName)
     {
         SUPER::registerBindingsImpl(typeName);
@@ -1728,6 +1774,8 @@ namespace SDOM
             participates in rendering and input, and transitions through lifecycle events. Through the \
             generated C API, external code safely creates and manipulates display objects via handles \
             without exposing C++ internals.");
+
+        registerOrphanRetentionPolicyEnum(registry());
 
         IDisplayObjectAPI::registerBindings(*this, typeName);
     }

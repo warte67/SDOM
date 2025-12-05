@@ -17,6 +17,7 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
+#include <SDOM/SDOM_GeometryAPI.hpp>
 #include <SDOM/SDOM_VariantAPI.hpp>
 #include <iomanip>
 #include <algorithm>
@@ -76,6 +77,9 @@ namespace SDOM
         // Surface SDOM::Variant metadata/functions to the central registry so
         // the C API generator can emit SDOM_CAPI_Variant.{h,cpp}.
         VariantAPI::registerTypes(data_registry_);
+
+        // Make AnchorPoint/Bounds metadata + helpers available to the binding generator.
+        GeometryAPI::registerTypes(data_registry_);
 
         // Ensure EventType has a TypeInfo descriptor even though it does not expose
         // callable exports yet. The manifest consumers (C API generator + unit tests)
