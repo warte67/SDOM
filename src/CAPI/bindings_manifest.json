@@ -609,34 +609,42 @@
       "subject_kind": "DisplayObject"
     },
     {
-      "c_name": "SDOM_IDisplayObject_CleanAll",
-      "c_signature": "bool SDOM_IDisplayObject_CleanAll(const SDOM_DisplayHandle* handle)",
+      "c_name": "SDOM_CleanAll",
+      "c_signature": "bool SDOM_CleanAll(const SDOM_DisplayHandle* handle)",
       "dispatch_family": "method_table",
       "name": "CleanAll",
       "owner_type": "IDisplayObject",
       "subject_kind": "DisplayObject"
     },
     {
-      "c_name": "SDOM_IDisplayObject_SetDirty",
-      "c_signature": "bool SDOM_IDisplayObject_SetDirty(const SDOM_DisplayHandle* handle)",
+      "c_name": "SDOM_SetDirty",
+      "c_signature": "bool SDOM_SetDirty(const SDOM_DisplayHandle* handle)",
       "dispatch_family": "method_table",
       "name": "SetDirty",
       "owner_type": "IDisplayObject",
       "subject_kind": "DisplayObject"
     },
     {
-      "c_name": "SDOM_IDisplayObject_SetDirtyState",
-      "c_signature": "bool SDOM_IDisplayObject_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty)",
+      "c_name": "SDOM_SetDirtyState",
+      "c_signature": "bool SDOM_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty)",
       "dispatch_family": "method_table",
       "name": "SetDirtyState",
       "owner_type": "IDisplayObject",
       "subject_kind": "DisplayObject"
     },
     {
-      "c_name": "SDOM_IDisplayObject_IsDirty",
-      "c_signature": "bool SDOM_IDisplayObject_IsDirty(const SDOM_DisplayHandle* handle)",
+      "c_name": "SDOM_IsDirty",
+      "c_signature": "bool SDOM_IsDirty(const SDOM_DisplayHandle* handle)",
       "dispatch_family": "method_table",
       "name": "IsDirty",
+      "owner_type": "IDisplayObject",
+      "subject_kind": "DisplayObject"
+    },
+    {
+      "c_name": "SDOM_PrintTree",
+      "c_signature": "bool SDOM_PrintTree(const SDOM_DisplayHandle* handle)",
+      "dispatch_family": "method_table",
+      "name": "PrintTree",
       "owner_type": "IDisplayObject",
       "subject_kind": "DisplayObject"
     },

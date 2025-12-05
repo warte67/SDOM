@@ -13,12 +13,12 @@
 //    Jay Faries (warte67) - Primary architect of SDOM
 //
 //  File Type: Header
-//  SDOM Version: 0.5.263 (early pre-alpha)
-//  Build Identifier: 2025-12-04_21:24:47_20e8cb42
-//  Commit: 20e8cb42 on branch master
+//  SDOM Version: 0.5.264 (early pre-alpha)
+//  Build Identifier: 2025-12-04_22:07:48_ddcdaf40
+//  Commit: ddcdaf40 on branch master
 //  Compiler: g++ (GCC) 15.2.1 20251112
 //  Platform: Linux-x86_64
-//  Generated: 2025-12-04_21:24:47
+//  Generated: 2025-12-04_22:07:48
 //  Generator: sdom_generate_bindings
 //
 //  License Notice:
@@ -61,45 +61,56 @@ extern "C" {
  * @brief Clears the dirty state for the target display object and cascades to its descendants.
  *
  * C++:   void IDisplayObject::cleanAll()
- * C API: bool SDOM_IDisplayObject_CleanAll(const SDOM_DisplayHandle* handle)
+ * C API: bool SDOM_CleanAll(const SDOM_DisplayHandle* handle)
  *
  * @param handle Pointer parameter.
  * @return bool; check SDOM_GetError() for details on failure.
  */
-bool SDOM_IDisplayObject_CleanAll(const SDOM_DisplayHandle* handle);
+bool SDOM_CleanAll(const SDOM_DisplayHandle* handle);
 
 /**
  * @brief Marks the display object as dirty so it will be refreshed next frame.
  *
  * C++:   bool IDisplayObjectAPI::SetDirty(IDisplayObject* object)
- * C API: bool SDOM_IDisplayObject_SetDirty(const SDOM_DisplayHandle* handle)
+ * C API: bool SDOM_SetDirty(const SDOM_DisplayHandle* handle)
  *
  * @param handle Pointer parameter.
  * @return bool; check SDOM_GetError() for details on failure.
  */
-bool SDOM_IDisplayObject_SetDirty(const SDOM_DisplayHandle* handle);
+bool SDOM_SetDirty(const SDOM_DisplayHandle* handle);
 
 /**
  * @brief Explicitly sets the dirty flag on the target display object to the provided state.
  *
  * C++:   bool IDisplayObjectAPI::SetDirtyState(IDisplayObject* object, bool dirty)
- * C API: bool SDOM_IDisplayObject_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty)
+ * C API: bool SDOM_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty)
  *
  * @param handle Pointer parameter.
  * @return bool; check SDOM_GetError() for details on failure.
  */
-bool SDOM_IDisplayObject_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty);
+bool SDOM_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty);
 
 /**
  * @brief Returns true if the target display object is currently marked dirty.
  *
  * C++:   bool IDisplayObject::isDirty() const
- * C API: bool SDOM_IDisplayObject_IsDirty(const SDOM_DisplayHandle* handle)
+ * C API: bool SDOM_IsDirty(const SDOM_DisplayHandle* handle)
  *
  * @param handle Pointer parameter.
  * @return bool; check SDOM_GetError() for details on failure.
  */
-bool SDOM_IDisplayObject_IsDirty(const SDOM_DisplayHandle* handle);
+bool SDOM_IsDirty(const SDOM_DisplayHandle* handle);
+
+/**
+ * @brief Prints the display tree for the target object to the configured log/console.
+ *
+ * C++:   void IDisplayObject::printTree() const
+ * C API: bool SDOM_PrintTree(const SDOM_DisplayHandle* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_PrintTree(const SDOM_DisplayHandle* handle);
 
 #ifdef __cplusplus
 } // extern "C"

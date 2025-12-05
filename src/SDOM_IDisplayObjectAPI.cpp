@@ -87,11 +87,11 @@ void registerBindings(IDisplayObject& object, const std::string& typeName)
             "CleanAll",
             "void IDisplayObject::cleanAll()",
             "bool",
-            "SDOM_IDisplayObject_CleanAll",
-            "bool SDOM_IDisplayObject_CleanAll(const SDOM_DisplayHandle* handle)",
+            "SDOM_CleanAll",
+            "bool SDOM_CleanAll(const SDOM_DisplayHandle* handle)",
             "Clears the dirty state for the target display object and cascades to its descendants.",
             [](const SDOM_DisplayHandle* handle) -> bool {
-                return invokeWithSubject(handle, "SDOM_IDisplayObject_CleanAll", [](IDisplayObject& subject) {
+                return invokeWithSubject(handle, "SDOM_CleanAll", [](IDisplayObject& subject) {
                     subject.cleanAll();
                 });
             });
@@ -101,11 +101,11 @@ void registerBindings(IDisplayObject& object, const std::string& typeName)
             "SetDirty",
             "bool IDisplayObjectAPI::SetDirty(IDisplayObject* object)",
             "bool",
-            "SDOM_IDisplayObject_SetDirty",
-            "bool SDOM_IDisplayObject_SetDirty(const SDOM_DisplayHandle* handle)",
+            "SDOM_SetDirty",
+            "bool SDOM_SetDirty(const SDOM_DisplayHandle* handle)",
             "Marks the display object as dirty so it will be refreshed next frame.",
             [](const SDOM_DisplayHandle* handle) -> bool {
-                return invokeWithSubject(handle, "SDOM_IDisplayObject_SetDirty", [](IDisplayObject& subject) {
+                return invokeWithSubject(handle, "SDOM_SetDirty", [](IDisplayObject& subject) {
                     subject.setDirty();
                 });
             });
@@ -115,11 +115,11 @@ void registerBindings(IDisplayObject& object, const std::string& typeName)
             "SetDirtyState",
             "bool IDisplayObjectAPI::SetDirtyState(IDisplayObject* object, bool dirty)",
             "bool",
-            "SDOM_IDisplayObject_SetDirtyState",
-            "bool SDOM_IDisplayObject_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty)",
+            "SDOM_SetDirtyState",
+            "bool SDOM_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty)",
             "Explicitly sets the dirty flag on the target display object to the provided state.",
             [](const SDOM_DisplayHandle* handle, bool dirty) -> bool {
-                return invokeWithSubject(handle, "SDOM_IDisplayObject_SetDirtyState", [dirty](IDisplayObject& subject) {
+                return invokeWithSubject(handle, "SDOM_SetDirtyState", [dirty](IDisplayObject& subject) {
                     subject.setDirty(dirty);
                 });
             });
@@ -129,15 +129,29 @@ void registerBindings(IDisplayObject& object, const std::string& typeName)
             "IsDirty",
             "bool IDisplayObject::isDirty() const",
             "bool",
-            "SDOM_IDisplayObject_IsDirty",
-            "bool SDOM_IDisplayObject_IsDirty(const SDOM_DisplayHandle* handle)",
+            "SDOM_IsDirty",
+            "bool SDOM_IsDirty(const SDOM_DisplayHandle* handle)",
             "Returns true if the target display object is currently marked dirty.",
             [](const SDOM_DisplayHandle* handle) -> bool {
                 bool result = false;
-                invokeWithSubject(handle, "SDOM_IDisplayObject_IsDirty", [&result](IDisplayObject& subject) {
+                invokeWithSubject(handle, "SDOM_IsDirty", [&result](IDisplayObject& subject) {
                     result = subject.isDirty();
                 });
                 return result;
+            });
+
+        object.registerMethod(
+            apiTypeName,
+            "PrintTree",
+            "void IDisplayObject::printTree() const",
+            "bool",
+            "SDOM_PrintTree",
+            "bool SDOM_PrintTree(const SDOM_DisplayHandle* handle)",
+            "Prints the display tree for the target object to the configured log/console.",
+            [](const SDOM_DisplayHandle* handle) -> bool {
+                return invokeWithSubject(handle, "SDOM_PrintTree", [](IDisplayObject& subject) {
+                    subject.printTree();
+                });
             });
     });
 }

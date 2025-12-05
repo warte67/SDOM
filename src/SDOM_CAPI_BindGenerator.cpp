@@ -962,6 +962,42 @@ std::unordered_map<std::string, CAPI_BindGenerator::CustomEmitter>& customEmitte
     return registry;
 }
 
+struct BaseCollisionResult {
+    bool has_collision = false;
+    std::string symbol;
+    std::string first_owner;
+    std::string second_owner;
+};
+
+BaseCollisionResult detectCoreDisplayCollisions(const BindingManifest& manifest)
+{
+    BaseCollisionResult result;
+    std::unordered_map<std::string, std::string> owner_for_symbol;
+
+    for (const auto& fn : manifest.functions) {
+        if (fn.c_name.empty()) {
+            continue;
+        }
+
+        const bool isCore = fn.owner_type_name == "Core";
+        const bool isDisplayBase = fn.owner_type_name == "IDisplayObject";
+        if (!isCore && !isDisplayBase) {
+            continue;
+        }
+
+        auto [it, inserted] = owner_for_symbol.emplace(fn.c_name, fn.owner_type_name);
+        if (!inserted && it->second != fn.owner_type_name) {
+            result.has_collision = true;
+            result.symbol = fn.c_name;
+            result.first_owner = it->second;
+            result.second_owner = fn.owner_type_name;
+            break;
+        }
+    }
+
+    return result;
+}
+
 std::string normalizeTypeToken(std::string type)
 {
     type = trim(std::move(type));
@@ -1012,6 +1048,13 @@ bool CAPI_BindGenerator::generate(const std::unordered_map<std::string, TypeInfo
     const BindModuleMap modules = buildModuleMap(types);
 
     latest_manifest_ = buildBindingManifest(types);
+    if (const auto collision = detectCoreDisplayCollisions(latest_manifest_); collision.has_collision) {
+        std::cerr << "[CAPI_BindGenerator] Collision detected for base symbol '" << collision.symbol
+                  << "' between owners '" << collision.first_owner << "' and '"
+                  << collision.second_owner << "' (Core + IDisplayObject shared namespace).\n";
+        return false;
+    }
+
     type_descriptors_.clear();
     for (const auto& desc : latest_manifest_.type_bindings) {
         type_descriptors_.emplace(desc.name, desc);

@@ -1,11 +1,11 @@
 {
   "version": {
-    "semantic": "0.5.263",
+    "semantic": "0.5.264",
     "codename": "early pre-alpha",
-    "build": "2025-12-04_21:24:47_20e8cb42",
-    "commit": "20e8cb42",
+    "build": "2025-12-04_22:07:48_ddcdaf40",
+    "commit": "ddcdaf40",
     "branch": "master",
-    "build_date": "2025-12-04_21:24:47",
+    "build_date": "2025-12-04_22:07:48",
     "compiler": "g++ (GCC) 15.2.1 20251112",
     "platform": "Linux-x86_64"
   },

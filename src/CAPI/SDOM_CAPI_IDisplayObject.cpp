@@ -13,12 +13,12 @@
 //    Jay Faries (warte67) - Primary architect of SDOM
 //
 //  File Type: Source
-//  SDOM Version: 0.5.263 (early pre-alpha)
-//  Build Identifier: 2025-12-04_21:24:47_20e8cb42
-//  Commit: 20e8cb42 on branch master
+//  SDOM Version: 0.5.264 (early pre-alpha)
+//  Build Identifier: 2025-12-04_22:07:48_ddcdaf40
+//  Commit: ddcdaf40 on branch master
 //  Compiler: g++ (GCC) 15.2.1 20251112
 //  Platform: Linux-x86_64
-//  Generated: 2025-12-04_21:24:47
+//  Generated: 2025-12-04_22:07:48
 //  Generator: sdom_generate_bindings
 //
 //  License Notice:
@@ -49,10 +49,10 @@
 extern "C" {
 #endif
 
-bool SDOM_IDisplayObject_CleanAll(const SDOM_DisplayHandle* handle) {
+bool SDOM_CleanAll(const SDOM_DisplayHandle* handle) {
     // Dispatch family: method_table (DisplayObject)
     if (!handle) {
-        SDOM_SetError("SDOM_IDisplayObject_CleanAll: subject 'handle' is null");
+        SDOM_SetError("SDOM_CleanAll: subject 'handle' is null");
         return false;
     }
 
@@ -60,17 +60,17 @@ bool SDOM_IDisplayObject_CleanAll(const SDOM_DisplayHandle* handle) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
 
-    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IDisplayObject_CleanAll", args);
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_CleanAll", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }
     return callResult.v.b;
 }
 
-bool SDOM_IDisplayObject_SetDirty(const SDOM_DisplayHandle* handle) {
+bool SDOM_SetDirty(const SDOM_DisplayHandle* handle) {
     // Dispatch family: method_table (DisplayObject)
     if (!handle) {
-        SDOM_SetError("SDOM_IDisplayObject_SetDirty: subject 'handle' is null");
+        SDOM_SetError("SDOM_SetDirty: subject 'handle' is null");
         return false;
     }
 
@@ -78,17 +78,17 @@ bool SDOM_IDisplayObject_SetDirty(const SDOM_DisplayHandle* handle) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
 
-    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IDisplayObject_SetDirty", args);
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetDirty", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }
     return callResult.v.b;
 }
 
-bool SDOM_IDisplayObject_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty) {
+bool SDOM_SetDirtyState(const SDOM_DisplayHandle* handle, bool dirty) {
     // Dispatch family: method_table (DisplayObject)
     if (!handle) {
-        SDOM_SetError("SDOM_IDisplayObject_SetDirtyState: subject 'handle' is null");
+        SDOM_SetError("SDOM_SetDirtyState: subject 'handle' is null");
         return false;
     }
 
@@ -97,17 +97,17 @@ bool SDOM_IDisplayObject_SetDirtyState(const SDOM_DisplayHandle* handle, bool di
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
     args.push_back(SDOM::CAPI::CallArg::makeBool(dirty));
 
-    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IDisplayObject_SetDirtyState", args);
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetDirtyState", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }
     return callResult.v.b;
 }
 
-bool SDOM_IDisplayObject_IsDirty(const SDOM_DisplayHandle* handle) {
+bool SDOM_IsDirty(const SDOM_DisplayHandle* handle) {
     // Dispatch family: method_table (DisplayObject)
     if (!handle) {
-        SDOM_SetError("SDOM_IDisplayObject_IsDirty: subject 'handle' is null");
+        SDOM_SetError("SDOM_IsDirty: subject 'handle' is null");
         return false;
     }
 
@@ -115,7 +115,25 @@ bool SDOM_IDisplayObject_IsDirty(const SDOM_DisplayHandle* handle) {
     args.reserve(1);
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
 
-    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IDisplayObject_IsDirty", args);
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IsDirty", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_PrintTree(const SDOM_DisplayHandle* handle) {
+    // Dispatch family: method_table (DisplayObject)
+    if (!handle) {
+        SDOM_SetError("SDOM_PrintTree: subject 'handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_PrintTree", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }
