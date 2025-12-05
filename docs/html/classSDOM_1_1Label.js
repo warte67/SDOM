@@ -239,6 +239,7 @@ var classSDOM_1_1Label =
     [ "setLocalTop", "classSDOM_1_1Label.html#a801eb23ae1a8205b5c1c32e07000afe0", null ],
     [ "setMaxHeight", "classSDOM_1_1Label.html#acee664631009dd5c53e8e22bac21e28e", null ],
     [ "setMaxWidth", "classSDOM_1_1Label.html#a563cb5172831f9b053b455e0a37f8f89", null ],
+    [ "setModuleBrief", "classSDOM_1_1Label.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1Label.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
     [ "setOrphanGrace", "classSDOM_1_1Label.html#a9728356c70a650faae51d6bfd6dac213", null ],
     [ "setOrphanRetentionPolicy", "classSDOM_1_1Label.html#a8453e36ea5bffdbb6c57da841db2e5ab", null ],

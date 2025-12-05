@@ -156,6 +156,7 @@ var classSDOM_1_1Stage =
     [ "setLocalLeft", "classSDOM_1_1Stage.html#ae9b0ffcdace56e0b0edad6c00d38f5b3", null ],
     [ "setLocalRight", "classSDOM_1_1Stage.html#abb3234d9e98839cce304daf9f98f2081", null ],
     [ "setLocalTop", "classSDOM_1_1Stage.html#a801eb23ae1a8205b5c1c32e07000afe0", null ],
+    [ "setModuleBrief", "classSDOM_1_1Stage.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setMouseX", "classSDOM_1_1Stage.html#a1d1df023eb711ca2af66e2718f8bec43", null ],
     [ "setMouseX_lua", "classSDOM_1_1Stage.html#a29065dcb018e3af26f0138e5ebf6b1a4", null ],
     [ "setMouseY", "classSDOM_1_1Stage.html#afa71be32ca409ade3bca4254b9f33358", null ],

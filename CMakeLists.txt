@@ -221,15 +221,27 @@ target_link_libraries(sdom_generate_bindings
 set(SDOM_CAPI_HEADER_DIR "${PROJECT_SOURCE_DIR}/include/SDOM/CAPI")
 set(SDOM_CAPI_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src/CAPI")
 
-add_custom_target(generate_sdom_capi ALL
-    COMMAND sdom_generate_bindings
-            --header-dir "${SDOM_CAPI_HEADER_DIR}"
-            --source-dir "${SDOM_CAPI_SOURCE_DIR}"
-            --verbose
-    DEPENDS sdom_generate_bindings
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Generating SDOM C API bindings"
+set(SDOM_VERSION_FILE "${CMAKE_SOURCE_DIR}/.version_patch")
+set(SDOM_CAPI_VERSION_STAMP "${CMAKE_BINARY_DIR}/generated_capi.version")
+
+add_custom_command(
+    OUTPUT "${SDOM_CAPI_VERSION_STAMP}"
+    COMMAND ${CMAKE_COMMAND}
+        -DVERSION_FILE="${SDOM_VERSION_FILE}"
+        -DRECORDED_FILE="${SDOM_CAPI_VERSION_STAMP}"
+        -DHEADER_DIR="${SDOM_CAPI_HEADER_DIR}"
+        -DSOURCE_DIR="${SDOM_CAPI_SOURCE_DIR}"
+        -DGENERATOR_EXE=$<TARGET_FILE:sdom_generate_bindings>
+        -DWORKING_DIR="${CMAKE_SOURCE_DIR}"
+        -P "${CMAKE_SOURCE_DIR}/scripts/ensure_capi_bindings.cmake"
+    DEPENDS
+        sdom_generate_bindings
+        "${SDOM_VERSION_FILE}"
+        "${CMAKE_SOURCE_DIR}/scripts/ensure_capi_bindings.cmake"
+    COMMENT "Ensuring SDOM C API bindings match version"
 )
+
+add_custom_target(generate_sdom_capi DEPENDS "${SDOM_CAPI_VERSION_STAMP}")
 
 add_dependencies(${PROJECT_NAME} generate_sdom_capi)
 

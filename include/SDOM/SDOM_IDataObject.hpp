@@ -305,10 +305,14 @@ namespace SDOM
             // If there is an active registry set by the caller, use it
             if (s_active_registry_) {
                 // preserve existing behavior while using the provided registry
+                // NOTE: registerBindingsImpl() may call setModuleBrief(...) after ensureType()
+                // to control the auto-generated file banner text for this module.
                 registerBindingsImpl(typeName);
                 s_registered_types_.insert(typeName);
                 return;
             }
+            // NOTE: registerBindingsImpl() may call setModuleBrief(...) after ensureType()
+            // to control the auto-generated file banner text for this module.
             registerBindingsImpl(typeName);
             s_registered_types_.insert(typeName);
         }
@@ -319,6 +323,8 @@ namespace SDOM
             if (s_registered_types_.count(typeName)) return;
             // set thread-local active registry for duration
             s_active_registry_ = &registry;
+            // Callers that manually inject registries can still customize the generated
+            // header brief by invoking setModuleBrief(...) within registerBindingsImpl().
             registerBindingsImpl(typeName);
             s_registered_types_.insert(typeName);
             s_active_registry_ = nullptr;
@@ -373,6 +379,15 @@ namespace SDOM
 
             registry().registerType(ti);
             return registry().getMutable(typeName);
+        }
+
+        void setModuleBrief(SDOM::TypeInfo& typeInfo, std::string brief) const
+        {
+            if (brief.empty()) {
+                return;
+            }
+            typeInfo.module_brief = std::move(brief);
+            typeInfo.module_brief_explicit = true;
         }
 
         void registerOpaqueHandle(const std::string& cppType,

@@ -312,6 +312,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:adb96fab263c40f6294461886cc8c2f20" id="r_adb96fab263c40f6294461886cc8c2f20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DataRegistry.html">SDOM::DataRegistry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#adb96fab263c40f6294461886cc8c2f20">registry</a> () const</td></tr>
 <tr class="memitem:afca56a5ad6d91a523bcf65daa5360ba3" id="r_afca56a5ad6d91a523bcf65daa5360ba3"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#afca56a5ad6d91a523bcf65daa5360ba3">lookup</a> (const std::string &amp;name) const</td></tr>
 <tr class="memitem:ad222efbf8082d85c7fb136c28ea12ada" id="r_ad222efbf8082d85c7fb136c28ea12ada"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#ad222efbf8082d85c7fb136c28ea12ada">ensureType</a> (const std::string &amp;typeName, SDOM::EntryKind kind, std::string cppType, std::string fileStem, std::string exportName, std::string category, std::string doc)</td></tr>
+<tr class="memitem:a7ae52e60d987c75efed881a4d6cfab5d" id="r_a7ae52e60d987c75efed881a4d6cfab5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a7ae52e60d987c75efed881a4d6cfab5d">setModuleBrief</a> (<a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;typeInfo, std::string brief) const</td></tr>
 <tr class="memitem:a83f774ae4f2529a8c427c0cdce495098" id="r_a83f774ae4f2529a8c427c0cdce495098"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a83f774ae4f2529a8c427c0cdce495098">registerOpaqueHandle</a> (const std::string &amp;cppType, const std::string &amp;exportName, const std::string &amp;fileStem, const std::string &amp;doc)</td></tr>
 <tr class="memitem:a153f846a38f552a2a85afb8332fe8b39" id="r_a153f846a38f552a2a85afb8332fe8b39"><td class="memTemplParams" colspan="2">template&lt;typename Fn&gt; </td></tr>
 <tr class="memitem:a153f846a38f552a2a85afb8332fe8b39 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a153f846a38f552a2a85afb8332fe8b39">registerMethod</a> (const std::string &amp;typeName, const std::string &amp;name, const std::string &amp;cppSig, const std::string &amp;returnType, std::string cName, const std::string &amp;cSig, const std::string &amp;doc, Fn &amp;&amp;fn)</td></tr>
@@ -4554,6 +4555,35 @@ template&lt;typename Fn&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7ae52e60d987c75efed881a4d6cfab5d" name="a7ae52e60d987c75efed881a4d6cfab5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ae52e60d987c75efed881a4d6cfab5d">&#9670;&#160;</a></span>setModuleBrief()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::IDataObject::setModuleBrief </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM_1_1TypeInfo.html">SDOM::TypeInfo</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>typeInfo</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>brief</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel inherited">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

@@ -190,6 +190,7 @@ var classSDOM_1_1Core =
     [ "setIsTraversing", "classSDOM_1_1Core.html#a6f5fd455e9564c6e2ed61bbd09b20099", null ],
     [ "setKeyboardFocusedObject", "classSDOM_1_1Core.html#a76659927c36f26042b68327cb67a789d", null ],
     [ "setKeyfocusGray", "classSDOM_1_1Core.html#a8da007b8f60aa13db1466ebf6fc4c651", null ],
+    [ "setModuleBrief", "classSDOM_1_1Core.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setMouseHoveredObject", "classSDOM_1_1Core.html#af237f2496d16bb974f397b2ff9535d99", null ],
     [ "setName", "classSDOM_1_1Core.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
     [ "setPixelFormat", "classSDOM_1_1Core.html#a21f09c43f8d67badcf420102e5a5ff91", null ],

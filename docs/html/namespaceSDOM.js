@@ -1,5 +1,6 @@
 var namespaceSDOM =
 [
+    [ "API", "namespaceSDOM_1_1API.html", "namespaceSDOM_1_1API" ],
     [ "CoreAPI", "namespaceSDOM_1_1CoreAPI.html", [
       [ "addToFutureChildrenList", "namespaceSDOM_1_1CoreAPI.html#af4ad84e53a1c1fae99d9a443ccb3b013", null ],
       [ "addToOrphanList", "namespaceSDOM_1_1CoreAPI.html#aeb65ecb9bf5df8011cf8117e645727ec", null ],

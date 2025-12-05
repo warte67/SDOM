@@ -1,0 +1,40 @@
+{
+  "version": {
+    "semantic": "0.5.260",
+    "codename": "early pre-alpha",
+    "build": "2025-12-04_17:18:16_e61169ca",
+    "commit": "e61169ca",
+    "branch": "master",
+    "build_date": "2025-12-04_17:18:16",
+    "compiler": "g++ (GCC) 15.2.1 20251112",
+    "platform": "Linux-x86_64"
+  },
+  "generated_headers":
+  [
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_ArrowButton.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Button.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_CheckButton.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Core.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Event.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_EventType.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Frame.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Group.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Handles.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_IconButton.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Label.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_ProgressBar.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_RadioButton.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_ScrollBar.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Slider.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Stage.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_TristateButton.h",
+    "/home/jay/Documents/GitHub/SDOM/include/SDOM/CAPI/SDOM_CAPI_Version.h"
+  ],
+  "generated_sources":
+  [
+    "/home/jay/Documents/GitHub/SDOM/src/CAPI/SDOM_CAPI_Core.cpp",
+    "/home/jay/Documents/GitHub/SDOM/src/CAPI/SDOM_CAPI_Event.cpp",
+    "/home/jay/Documents/GitHub/SDOM/src/CAPI/SDOM_CAPI_Handles.cpp",
+    "/home/jay/Documents/GitHub/SDOM/src/CAPI/SDOM_CAPI_Version.cpp"
+  ]
+}

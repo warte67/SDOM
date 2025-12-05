@@ -1,4 +1,5 @@
 #include <SDOM/SDOM_CoreAPI.hpp>
+#include <SDOM/SDOM_APIRegistrar.hpp>
 
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
@@ -13,6 +14,18 @@
 namespace SDOM {
 namespace CoreAPI {
 namespace {
+
+using RegistrarBase = SDOM::API::IAPIRegistrar;
+
+SDOM::CAPI::CallResult makeBoolResult(bool value)
+{
+    return RegistrarBase::makeBoolResult(value);
+}
+
+SDOM::CAPI::CallResult makeStringResult(const std::string& value)
+{
+    return RegistrarBase::makeStringResult(value);
+}
 
 std::string& lastErrorStorage()
 {
@@ -58,16 +71,6 @@ void copyCoreConfig(const SDOM::Core::CoreConfig& src, SDOM_CoreConfig& dst)
     dst.windowFlags = src.windowFlags;
     dst.pixelFormat = src.pixelFormat;
     dst.color = src.color;
-}
-
-SDOM::CAPI::CallResult makeBoolResult(bool value)
-{
-    return SDOM::CAPI::CallResult::FromBool(value);
-}
-
-SDOM::CAPI::CallResult makeStringResult(const std::string& value)
-{
-    return SDOM::CAPI::CallResult::FromString(value);
 }
 
 bool parseSyntheticMouseEventJson(const char* jsonStr, SDL_Event& outEvent)

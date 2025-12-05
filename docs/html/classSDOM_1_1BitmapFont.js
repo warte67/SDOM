@@ -63,6 +63,7 @@ var classSDOM_1_1BitmapFont =
     [ "setFilename", "classSDOM_1_1BitmapFont.html#ab996c8629d01a716654e3125b4b0a589", null ],
     [ "setFontSize", "classSDOM_1_1BitmapFont.html#a3067e53c6ca426e88b0140840f965537", null ],
     [ "setFontStyle", "classSDOM_1_1BitmapFont.html#a64eb09a65eed5981c15bc361a842f253", null ],
+    [ "setModuleBrief", "classSDOM_1_1BitmapFont.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1BitmapFont.html#ad0998244c5f497a5ce11a534d321328d", null ],
     [ "setType", "classSDOM_1_1BitmapFont.html#a05aeca66d8a195214e0e23d5669bffd7", null ],
     [ "shutdown", "classSDOM_1_1BitmapFont.html#abf56256aea293a042562db9652ed2c61", null ],

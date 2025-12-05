@@ -20,5 +20,6 @@ var classSDOM_1_1DataRegistry =
     [ "registerFunction", "classSDOM_1_1DataRegistry.html#af817a8f4756ba472215f407baba2af8c", null ],
     [ "registerProperty", "classSDOM_1_1DataRegistry.html#a6bad54360e9e81695070a5d9b85e0bf0", null ],
     [ "registerProperty", "classSDOM_1_1DataRegistry.html#a07708dc0ebdbd8e4e252e2076cc804e4", null ],
-    [ "registerType", "classSDOM_1_1DataRegistry.html#ad60faddc2c5d88ed792e65b4b9feb40b", null ]
+    [ "registerType", "classSDOM_1_1DataRegistry.html#ad60faddc2c5d88ed792e65b4b9feb40b", null ],
+    [ "setModuleBrief", "classSDOM_1_1DataRegistry.html#a7270a871273ff6eb0cabe325860ede55", null ]
 ];

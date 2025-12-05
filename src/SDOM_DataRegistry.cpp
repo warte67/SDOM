@@ -51,7 +51,13 @@ namespace SDOM {
             return false;
         }
 
-        entries_.emplace(info.name, info);
+        TypeInfo copy = info;
+        if (copy.module_brief.empty() && !copy.doc.empty()) {
+            copy.module_brief = copy.doc;
+            copy.module_brief_explicit = false;
+        }
+
+        entries_.emplace(copy.name, std::move(copy));
         return true;
     }
 
@@ -170,6 +176,24 @@ namespace SDOM {
     {
         std::scoped_lock lk(mutex_);
         return entries_;   // simple copy of the unified map
+    }
+
+    void DataRegistry::setModuleBrief(const std::string& typeName,
+                                      std::string brief,
+                                      bool explicitBrief)
+    {
+        if (brief.empty()) {
+            return;
+        }
+
+        std::scoped_lock lk(mutex_);
+        auto it = entries_.find(typeName);
+        if (it == entries_.end()) {
+            return;
+        }
+
+        it->second.module_brief = std::move(brief);
+        it->second.module_brief_explicit = explicitBrief;
     }
 
 

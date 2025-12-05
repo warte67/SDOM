@@ -36,6 +36,8 @@ protected:
         std::vector<const TypeInfo*> globals;
         std::vector<const TypeInfo*> functions;
         std::vector<const TypeInfo*> aliases;
+        std::string module_brief;
+        bool module_brief_explicit = false;
 
         bool empty() const {
             return enums.empty() && structs.empty() && objects.empty() && globals.empty() &&

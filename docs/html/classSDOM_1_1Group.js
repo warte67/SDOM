@@ -177,6 +177,7 @@ var classSDOM_1_1Group =
     [ "setLocalLeft", "classSDOM_1_1Group.html#ae9b0ffcdace56e0b0edad6c00d38f5b3", null ],
     [ "setLocalRight", "classSDOM_1_1Group.html#abb3234d9e98839cce304daf9f98f2081", null ],
     [ "setLocalTop", "classSDOM_1_1Group.html#a801eb23ae1a8205b5c1c32e07000afe0", null ],
+    [ "setModuleBrief", "classSDOM_1_1Group.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1Group.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
     [ "setOrphanGrace", "classSDOM_1_1Group.html#a9728356c70a650faae51d6bfd6dac213", null ],
     [ "setOrphanRetentionPolicy", "classSDOM_1_1Group.html#a8453e36ea5bffdbb6c57da841db2e5ab", null ],

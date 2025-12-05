@@ -1047,6 +1047,27 @@ Tomorrow’s focus will be unifying that chain and ensuring the manifest becomes
 - Removed outdated behavior references; tightened internal terminology  
 - Clarified priority ordering: **internal SDOM events always precede SDL events**
 
+### 🛠️ Build Tooling Upgrade — Version-Aware Generation
+
+SDOM’s build pipeline now embeds **version metadata into all generated files** (C API headers, Lua stubs, etc.).  
+This gives the build system enough context to **detect when a file is truly out-of-date** — not just when its timestamp changed.
+
+**Why this matters**
+- Prevents unnecessary regeneration of large headers/sources
+- Faster incremental builds, especially after minor edits
+- Eliminates stale-file ambiguity after branch switches / clean builds
+- Lays groundwork for CI dependency tracking and cache correctness
+
+**How it works**
+- Each generated file embeds:
+  - Current SDOM semantic version (`major.minor.patch`)
+  - Build number or git commit hash (configurable)
+  - Generator schema version (so future format upgrades are trackable)
+- Build scripts compare embedded version vs current runtime registry
+- Only forced regeneration when metadata mismatches
+
+This is a small change with big productivity payoff — especially as Core, IDisplayObject, and Event bindings continue to scale.
+
 ### 🌟 **Summary**
 Today’s work elevates SDOM’s runtime loop into a *robust, self-correcting engine model* where misuse becomes nearly impossible.  
 With deterministic event pumping and a fully auto-healed phase graph, the system now properly supports C API consumers, automated tests, and future runtime reconfiguration (e.g., vsync changes).  
@@ -1076,33 +1097,32 @@ This is a major stability milestone — and a huge enabler for the next stage of
 ### 🧩 Core Subsystem — CAPI Unit Testing Blitz
 - Completed comprehensive **Core_UnitTests** coverage for metadata, window/pixel dimensions, border color, and config toggles.
 - Introduced **re-entrant state machine testing** to correctly validate properties that incur deferred renderer/window rebuilds.
-- Verified **keyboard event fallback behavior** — when no object has key focus, events now correctly route to the Stage, ensuring global input reliability.
-- Confirmed ASCII translation for key combinations (e.g., Shift + A → ‘A’) remains correct via `SDOM_GetEventAsciiCode()`.
+- Verified **global keyboard event fallback** — events reach the Stage when no object has focus, restoring expected input visibility.
+- Confirmed correct **ASCII translation** for key combos via `SDOM_GetEventAsciiCode()` — shipping reliable text input from day one.
+- Polished generated C API headers with **version stamping + automatic license injection** for professional distribution readiness.
 
 ---
 
-### 🌟 **Summary**
-Core C API primitives are now **functionally validated** (Lua bindings aside).  
-We’ve reached solid ground to begin **Lifecycle + DisplayObject** API testing next, which will exercise Stage, attach/detach behavior, and handle integrity. Lua binding verification will follow once the C++ path stabilizes.
+### 🌟 Summary
+Core C API primitives are now **functionally validated** (Lua bindings pending).  
+This unlocks the next milestone: **DisplayObject lifecycle** validation — attach/detach, stage hierarchy propagation, and handle correctness. Lua integration tests will follow once the C++ layer is fully proven.
 
 ---
 
-**🚧 ToDo Today**
-  - ☐ Add `rendererVSync` to JSON parsing  
-  - ☐ Add `rendererVSync` to C API & binding manifest  
+### 🚧 ToDo Today
+- ☐ Add `rendererVSync` to JSON parsing  
+- ☐ Add `rendererVSync` to C API & binding manifest  
 - ☐ Begin scaffolding **IDisplayObject lifecycle** tests (`Create → Attach → Detach → Destroy`)
 - ☐ Add basic Stage assertions (root validity, display tree integrity)
-- ☐ Continue expanding CAPI coverage into remaining lifecycle helpers
-- ☐ Prep Lua binding test harness parity for Core ops
+- ☐ Expand CAPI coverage into remaining lifecycle helpers
+- ☐ Prep Lua binding test harness parity for Core operations
 
 ---
 
-#### 🤔 *End of Day Reflection*
+#### 🤔 End of Day Reflection
 > *“Before you build the castle, make sure the drawbridge actually works.”* 🏰🔧
 
-
 ---
-
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 

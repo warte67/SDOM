@@ -174,6 +174,7 @@ var classSDOM_1_1CheckButton =
     [ "setLocalLeft", "classSDOM_1_1CheckButton.html#ae9b0ffcdace56e0b0edad6c00d38f5b3", null ],
     [ "setLocalRight", "classSDOM_1_1CheckButton.html#abb3234d9e98839cce304daf9f98f2081", null ],
     [ "setLocalTop", "classSDOM_1_1CheckButton.html#a801eb23ae1a8205b5c1c32e07000afe0", null ],
+    [ "setModuleBrief", "classSDOM_1_1CheckButton.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setMouseHovered", "classSDOM_1_1CheckButton.html#a30189ef3aa0649f54e00cd4b572d7f2b", null ],
     [ "setName", "classSDOM_1_1CheckButton.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
     [ "setOrphanGrace", "classSDOM_1_1CheckButton.html#a9728356c70a650faae51d6bfd6dac213", null ],

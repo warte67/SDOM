@@ -54,6 +54,7 @@ var classSDOM_1_1IFontObject =
     [ "setFilename", "classSDOM_1_1IFontObject.html#ab996c8629d01a716654e3125b4b0a589", null ],
     [ "setFontSize", "classSDOM_1_1IFontObject.html#ab5fb564a47848f3715e884375faf7198", null ],
     [ "setFontStyle", "classSDOM_1_1IFontObject.html#a7a1e1ee9dbb78c606ee72bc9f6688af1", null ],
+    [ "setModuleBrief", "classSDOM_1_1IFontObject.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1IFontObject.html#ad0998244c5f497a5ce11a534d321328d", null ],
     [ "setType", "classSDOM_1_1IFontObject.html#a05aeca66d8a195214e0e23d5669bffd7", null ],
     [ "shutdown", "classSDOM_1_1IFontObject.html#abf56256aea293a042562db9652ed2c61", null ],

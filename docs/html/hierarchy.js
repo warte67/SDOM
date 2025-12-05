@@ -43,6 +43,7 @@ var hierarchy =
       [ "SDOM::detail::FunctionTraits< R(C::*)(Args...)>", "structSDOM_1_1detail_1_1FunctionTraits_3_01R_07C_1_1_5_08_07Args_8_8_8_08_4.html", null ]
     ] ],
     [ "SDOM::GeneratorConfig", "structSDOM_1_1GeneratorConfig.html", null ],
+    [ "SDOM::API::IAPIRegistrar", "classSDOM_1_1API_1_1IAPIRegistrar.html", null ],
     [ "SDOM::IBindGenerator", "classSDOM_1_1IBindGenerator.html", [
       [ "SDOM::CAPI_BindGenerator", "classSDOM_1_1CAPI__BindGenerator.html", null ]
     ] ],

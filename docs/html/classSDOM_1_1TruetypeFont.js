@@ -62,6 +62,7 @@ var classSDOM_1_1TruetypeFont =
     [ "setFilename", "classSDOM_1_1TruetypeFont.html#ab996c8629d01a716654e3125b4b0a589", null ],
     [ "setFontSize", "classSDOM_1_1TruetypeFont.html#aba52a91b75d8bd229ae2f5fc39f923d1", null ],
     [ "setFontStyle", "classSDOM_1_1TruetypeFont.html#a00d3b7780bc579cfddea49fc2c94f36f", null ],
+    [ "setModuleBrief", "classSDOM_1_1TruetypeFont.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1TruetypeFont.html#ad0998244c5f497a5ce11a534d321328d", null ],
     [ "setType", "classSDOM_1_1TruetypeFont.html#a05aeca66d8a195214e0e23d5669bffd7", null ],
     [ "shutdown", "classSDOM_1_1TruetypeFont.html#abf56256aea293a042562db9652ed2c61", null ],

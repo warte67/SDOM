@@ -3,6 +3,7 @@
 #include <iosfwd>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <SDOM/SDOM_IBindGenerator.hpp>
 #include <SDOM/SDOM_SubjectBinding.hpp>
@@ -33,6 +34,7 @@ namespace SDOM
         void generateHeader(const BindModule& module);
         void generateSource(const BindModule& module);
         void emitBindingManifest(const BindingManifest& manifest) const;
+        void emitGeneratedFileIndex() const;
 
         const SubjectTypeDescriptor* descriptorFor(const std::string& typeName) const;
         void emitMethodTableFunction(std::ofstream& out,
@@ -72,6 +74,8 @@ namespace SDOM
 
         BindingManifest latest_manifest_;
         std::unordered_map<std::string, SubjectTypeDescriptor> type_descriptors_;
+        std::vector<std::string> generated_headers_;
+        std::vector<std::string> generated_sources_;
     };
 
 } // namespace SDOM

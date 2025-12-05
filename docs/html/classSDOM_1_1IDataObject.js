@@ -21,6 +21,7 @@ var classSDOM_1_1IDataObject =
     [ "registerMethod", "classSDOM_1_1IDataObject.html#a153f846a38f552a2a85afb8332fe8b39", null ],
     [ "registerOpaqueHandle", "classSDOM_1_1IDataObject.html#a83f774ae4f2529a8c427c0cdce495098", null ],
     [ "registry", "classSDOM_1_1IDataObject.html#adb96fab263c40f6294461886cc8c2f20", null ],
+    [ "setModuleBrief", "classSDOM_1_1IDataObject.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
     [ "name_", "classSDOM_1_1IDataObject.html#aeff0a0985efe5dae1e6aa10e5b206396", null ],
     [ "s_active_registry_", "classSDOM_1_1IDataObject.html#a8ae6a7a1fb166dfbc74a36d9bc87b9df", null ],

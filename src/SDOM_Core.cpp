@@ -2543,6 +2543,20 @@ namespace SDOM
         typeInfo.has_handle_override = true;
         typeInfo.dispatch_family_override = "singleton";
 
+        // Keep generated headers self-documenting for downstream consumers.
+        // setModuleBrief(typeInfo,
+        //     "Core runtime configuration, DOM loading, and frame execution helpers.");
+        setModuleBrief(typeInfo,
+            "The Core C API provides external applications a stable interface to initialize and \
+            control the SDOM engine without requiring direct access to C++ internals. It exposes \
+            configuration controls for window sizing, renderer behavior, and pixel scaling while \
+            also managing the main execution phases of a frame in a safe, state-correct manner. \
+            Through this module, programs can drive event polling, DOM updates, rendering, and \
+            presenting just like SDL, but with SDOM’s enhanced guarantees around ordering and \
+            implicit phase healing. It is the lowest-level entry point for embedding SDOM inside \
+            host applications or scripting environments, and serves as the foundation for all \
+            generated bindings in other languages such as Lua and (future) Rust." );
+
         CoreAPI::registerBindings(*this, typeName);
     }    
 

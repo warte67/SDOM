@@ -1,6 +1,9 @@
 var annotated_dup =
 [
     [ "SDOM", "namespaceSDOM.html", [
+      [ "API", "namespaceSDOM_1_1API.html", [
+        [ "IAPIRegistrar", "classSDOM_1_1API_1_1IAPIRegistrar.html", "classSDOM_1_1API_1_1IAPIRegistrar" ]
+      ] ],
       [ "CAPI", "namespaceSDOM_1_1CAPI.html", [
         [ "CallArg", "structSDOM_1_1CAPI_1_1CallArg.html", "structSDOM_1_1CAPI_1_1CallArg" ],
         [ "CallResult", "structSDOM_1_1CAPI_1_1CallResult.html", "structSDOM_1_1CAPI_1_1CallResult" ]

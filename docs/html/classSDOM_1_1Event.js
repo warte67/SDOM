@@ -67,6 +67,7 @@ var classSDOM_1_1Event =
     [ "setElapsedTime", "classSDOM_1_1Event.html#ac1322795a6d9f477847d8fc2ec71f667", null ],
     [ "setKeycode", "classSDOM_1_1Event.html#a162215e80e6edc2f0869b731adf1f0f0", null ],
     [ "setKeymod", "classSDOM_1_1Event.html#a4fca885c5e35c88dde3dccd5302ee339", null ],
+    [ "setModuleBrief", "classSDOM_1_1Event.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setMouseX", "classSDOM_1_1Event.html#a8825bd1d9b2b95856315053858ec2309", null ],
     [ "setMouseY", "classSDOM_1_1Event.html#afb522c197a5037591a986e2a51b244f8", null ],
     [ "setName", "classSDOM_1_1Event.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],

@@ -16,6 +16,18 @@ IBindGenerator::BindModuleMap IBindGenerator::buildModuleMap(
 
         BindModule& module = modules[type.file_stem];
         module.file_stem = type.file_stem;
+
+        if (!type.module_brief.empty()) {
+            if (type.module_brief_explicit) {
+                if (!module.module_brief_explicit) {
+                    module.module_brief = type.module_brief;
+                    module.module_brief_explicit = true;
+                }
+            } else if (!module.module_brief_explicit && module.module_brief.empty()) {
+                module.module_brief = type.module_brief;
+            }
+        }
+
         const TypeInfo* type_ptr = &type;
 
         switch (type.kind) {

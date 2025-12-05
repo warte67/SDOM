@@ -436,6 +436,12 @@ namespace SDOM
 
         std::string category;   // optional category (editor, runtime, etc.)
         std::string doc;        // comment/documentation
+
+        // Optional human-readable summary that is surfaced in generated files.
+        // Defaults to the type documentation until explicitly overridden via
+        // setModuleBrief(...).
+        std::string module_brief;
+        bool module_brief_explicit = false;
     };
 
     // ---------------------------------------------------------
@@ -548,6 +554,13 @@ namespace SDOM
         }
 
         void registerProperty(const std::string& typeName, const PropertyInfo& meta);
+
+        // Provide/override the module brief string used by generators when
+        // emitting banner comments. Designed to be called from registerBindings*
+        // implementations once the TypeInfo entry has been ensured.
+        void setModuleBrief(const std::string& typeName,
+                    std::string brief,
+                    bool explicitBrief = true);
 
         // -------------------------------
         // Lookup / Queries

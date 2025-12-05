@@ -162,6 +162,7 @@ var classSDOM_1_1ScrollBar =
     [ "setLocalTop", "classSDOM_1_1ScrollBar.html#a801eb23ae1a8205b5c1c32e07000afe0", null ],
     [ "setMax", "classSDOM_1_1ScrollBar.html#a81ea3522ce5ee81a738903cd09a12062", null ],
     [ "setMin", "classSDOM_1_1ScrollBar.html#a7afb3cdb96a9ce2b02449748fdb9e394", null ],
+    [ "setModuleBrief", "classSDOM_1_1ScrollBar.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1ScrollBar.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
     [ "setOrientation", "classSDOM_1_1ScrollBar.html#ac0d8e727dbb2c0ddd7485fa245ec78bc", null ],
     [ "setOrphanGrace", "classSDOM_1_1ScrollBar.html#a9728356c70a650faae51d6bfd6dac213", null ],

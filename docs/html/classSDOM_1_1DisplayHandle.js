@@ -40,6 +40,7 @@ var classSDOM_1_1DisplayHandle =
     [ "registerOpaqueHandle", "classSDOM_1_1DisplayHandle.html#a83f774ae4f2529a8c427c0cdce495098", null ],
     [ "registry", "classSDOM_1_1DisplayHandle.html#adb96fab263c40f6294461886cc8c2f20", null ],
     [ "reset", "classSDOM_1_1DisplayHandle.html#a63394b0a525ce4c587a5fb64b4b447f6", null ],
+    [ "setModuleBrief", "classSDOM_1_1DisplayHandle.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1DisplayHandle.html#a7ab7df0fe31a8f66b1f20bb2d07c40c3", null ],
     [ "setType", "classSDOM_1_1DisplayHandle.html#aa5431aa2ae62561212d2129cd4c86ddb", null ],
     [ "str", "classSDOM_1_1DisplayHandle.html#ab8fbb280de5de823ca666d8d50fe3395", null ],

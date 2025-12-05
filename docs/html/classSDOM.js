@@ -226,6 +226,7 @@ var classSDOM =
     [ "internal_ttf_len", "classSDOM.html#a7e5b2bb6de31dba821f656a80404ea6a", null ],
     [ "internal_ttf_len", "classSDOM.html#af894447a8326743da636f323c57c8854", null ],
     [ "kEnumCommentColumn", "classSDOM.html#a5c6b601c17f70ed77b2ca79a9bea9837", null ],
+    [ "kLicenseEnvVar", "classSDOM.html#a63ef83dba717528ae1327fd52a84cc1a", null ],
     [ "maxOutlineThickness", "classSDOM.html#aae891c3cb463a8719fa20816f7ef0ea4", null ],
     [ "orientation_to_string", "classSDOM.html#a5121ece23da73f686e3ab61c3fc63339", null ],
     [ "panelBaseIndexToString_", "classSDOM.html#af0cc30e6979fd8ef2453166a934da51c", null ],

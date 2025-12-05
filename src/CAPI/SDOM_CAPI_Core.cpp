@@ -1,3 +1,53 @@
+// =============================================================================
+//  SDOM C API binding — AUTO-GENERATED FILE. DO NOT EDIT.
+//
+//  File: SDOM_CAPI_Core.cpp
+//  Module: Core
+//
+//  Brief:
+//    The Core C API provides external applications a stable interface to
+//    initialize and control the SDOM engine without requiring direct access to
+//    C++ internals. It exposes configuration controls for window sizing,
+//    renderer behavior, and pixel scaling while also managing the main
+//    execution phases of a frame in a safe, state-correct manner. Through this
+//    module, programs can drive event polling, DOM updates, rendering, and
+//    presenting just like SDL, but with SDOM’s enhanced guarantees around
+//    ordering and implicit phase healing. It is the lowest-level entry point
+//    for embedding SDOM inside host applications or scripting environments, and
+//    serves as the foundation for all generated bindings in other languages
+//    such as Lua and (future) Rust.
+// =============================================================================
+//
+//  Authors:
+//    Jay Faries (warte67) - Primary architect of SDOM
+//
+//  File Type: Source
+//  SDOM Version: 0.5.260 (early pre-alpha)
+//  Build Identifier: 2025-12-04_17:18:16_e61169ca
+//  Commit: e61169ca on branch master
+//  Compiler: g++ (GCC) 15.2.1 20251112
+//  Platform: Linux-x86_64
+//  Generated: 2025-12-04_17:18:16
+//  Generator: sdom_generate_bindings
+//
+//  License Notice:
+//  *   This software is provided 'as-is', without any express or implied
+//  *   warranty.  In no event will the authors be held liable for any damages
+//  *   arising from the use of this software.
+//  *
+//  *   Permission is granted to anyone to use this software for any purpose,
+//  *   including commercial applications, and to alter it and redistribute it
+//  *   freely, subject to the following restrictions:
+//  *
+//  *   1. The origin of this software must not be misrepresented; you must not
+//  *       claim that you wrote the original software. If you use this software
+//  *       in a product, an acknowledgment in the product documentation would be
+//  *       appreciated but is not required.
+//  *   2. Altered source versions must be plainly marked as such, and must not be
+//  *       misrepresented as being the original software.
+//  *   3. This notice may not be removed or altered from any source distribution.
+// =============================================================================
+
 #include <SDOM/CAPI/SDOM_CAPI_Core.h>
 #include <SDOM/CAPI/SDOM_CAPI_Core.h>
 #include <SDOM/SDOM_DataRegistry.hpp>

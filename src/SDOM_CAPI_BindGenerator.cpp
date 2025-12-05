@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cctype>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -7,16 +8,152 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <vector>
 #include <utility>
 #include <unordered_map>
 #include <unordered_set>
 
 #include <SDOM/SDOM_CAPI_BindGenerator.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
+#include <SDOM/SDOM_Version.hpp>
 
 namespace SDOM {
 
 namespace {
+
+constexpr const char* kLicenseEnvVar = "SDOM_GENERATED_LICENSE_PATH";
+
+std::string semanticVersion()
+{
+    std::ostringstream oss;
+    oss << SDOM_VERSION_MAJOR << '.'
+        << SDOM_VERSION_MINOR << '.'
+        << SDOM_VERSION_PATCH;
+    return oss.str();
+}
+
+const std::string& licenseBanner()
+{
+    static const std::string banner = [] {
+        std::vector<std::string> candidates;
+        if (const char* env_path = std::getenv(kLicenseEnvVar)) {
+            if (*env_path != '\0') {
+                candidates.emplace_back(env_path);
+            }
+        }
+        candidates.emplace_back("LICENSE");
+        candidates.emplace_back("../LICENSE");
+        candidates.emplace_back("../../LICENSE");
+
+        for (const auto& path : candidates) {
+            std::ifstream in(path);
+            if (!in) {
+                continue;
+            }
+
+            std::ostringstream oss;
+            std::string line;
+            while (std::getline(in, line)) {
+                if (line.empty()) {
+                    oss << "//\n";
+                } else {
+                    oss << "// " << line << '\n';
+                }
+            }
+
+            const std::string text = oss.str();
+            if (!text.empty()) {
+                return text;
+            }
+        }
+
+        return std::string("// License notice unavailable; see LICENSE in the repository root.\n");
+    }();
+
+    return banner;
+}
+
+std::string moduleBriefFor(const CAPI_BindGenerator::BindModule& module);
+void emitWrappedComment(std::ofstream& out,
+                        const std::string& text,
+                        const std::string& prefix,
+                        std::size_t maxWidth = 80);
+
+void emitFileBanner(std::ofstream& out,
+                    const CAPI_BindGenerator::BindModule& module,
+                    bool isHeader,
+                    const std::string& filepath)
+{
+    const std::string version = semanticVersion();
+    const std::string brief = moduleBriefFor(module);
+    std::string filename = filepath;
+    const auto last_slash = filename.find_last_of("/\\");
+    if (last_slash != std::string::npos) {
+        filename = filename.substr(last_slash + 1);
+    }
+
+    const char* border = "// =============================================================================\n";
+    out << border;
+    out << "//  SDOM C API binding \xE2\x80\x94 AUTO-GENERATED FILE. DO NOT EDIT.\n";
+    out << "//\n";
+    out << "//  File: " << filename << '\n';
+    out << "//  Module: " << module.file_stem << '\n';
+    out << "//\n";
+    out << "//  Brief:\n";
+    const std::string briefText = brief.empty()
+        ? std::string("Auto-generated SDOM C bindings.")
+        : brief;
+    emitWrappedComment(out, briefText, "//    ", 80);
+    out << border;
+    out << "//\n";
+    out << "//  Authors:\n";
+    out << "//    Jay Faries (warte67) - Primary architect of SDOM\n";
+    out << "//\n";
+    out << "//  File Type: " << (isHeader ? "Header" : "Source") << '\n';
+    out << "//  SDOM Version: " << version << " (" << SDOM_VERSION_CODENAME << ")\n";
+    out << "//  Build Identifier: " << SDOM_VERSION_BUILD << '\n';
+    out << "//  Commit: " << SDOM_VERSION_COMMIT << " on branch " << SDOM_BUILD_BRANCH << '\n';
+    out << "//  Compiler: " << SDOM_BUILD_COMPILER << '\n';
+    out << "//  Platform: " << SDOM_BUILD_PLATFORM << '\n';
+    out << "//  Generated: " << SDOM_VERSION_BUILD_DATE << '\n';
+    out << "//  Generator: sdom_generate_bindings\n";
+    out << "//\n";
+    out << "//  License Notice:\n";
+
+    const std::string& banner = licenseBanner();
+    out << banner;
+    if (!banner.empty() && banner.back() != '\n') {
+        out << '\n';
+    }
+
+    out << border << '\n';
+}
+
+std::string jsonEscape(const std::string& value)
+{
+    std::ostringstream oss;
+    for (char ch : value) {
+        switch (ch) {
+            case '\\': oss << "\\\\"; break;
+            case '"': oss << "\\\""; break;
+            case '\n': oss << "\\n"; break;
+            case '\r': oss << "\\r"; break;
+            case '\t': oss << "\\t"; break;
+            default:
+                if (static_cast<unsigned char>(ch) < 0x20) {
+                    oss << "\\u"
+                        << std::hex << std::uppercase << std::setw(4) << std::setfill('0')
+                        << static_cast<int>(static_cast<unsigned char>(ch))
+                        << std::nouppercase << std::dec;
+                    oss << std::setfill(' ');
+                } else {
+                    oss << ch;
+                }
+                break;
+        }
+    }
+    return oss.str();
+}
 
 std::string trim(std::string value) {
     const auto is_space = [](unsigned char ch) { return std::isspace(ch) != 0; };
@@ -29,6 +166,132 @@ std::string trim(std::string value) {
     }).base(), value.end());
 
     return value;
+}
+
+std::string collapseWhitespace(std::string value)
+{
+    for (char& ch : value) {
+        if (ch == '\n' || ch == '\r' || ch == '\t') {
+            ch = ' ';
+        }
+    }
+
+    std::string out;
+    out.reserve(value.size());
+    bool lastSpace = false;
+    for (char ch : value) {
+        if (ch == ' ') {
+            if (lastSpace) {
+                continue;
+            }
+            lastSpace = true;
+        } else {
+            lastSpace = false;
+        }
+        out.push_back(ch);
+    }
+
+    return trim(out);
+}
+
+std::string synthesizeModuleBrief(const CAPI_BindGenerator::BindModule& module)
+{
+    auto collectNames = [](const std::vector<const TypeInfo*>& bucket,
+                           std::vector<std::string>& target) {
+        for (const TypeInfo* type : bucket) {
+            if (!type || type->name.empty()) {
+                continue;
+            }
+            target.push_back(type->name);
+        }
+    };
+
+    std::vector<std::string> names;
+    names.reserve(module.objects.size() + module.structs.size());
+    collectNames(module.objects, names);
+    collectNames(module.structs, names);
+    collectNames(module.globals, names);
+    collectNames(module.functions, names);
+
+    if (names.empty()) {
+        collectNames(module.enums, names);
+        collectNames(module.aliases, names);
+    }
+
+    if (names.empty()) {
+        return module.file_stem.empty()
+            ? std::string("Auto-generated C bindings for SDOM.")
+            : std::string("Auto-generated C bindings for module ") + module.file_stem + '.';
+    }
+
+    constexpr std::size_t kMaxMentions = 3;
+    const std::size_t mentionCount = std::min(kMaxMentions, names.size());
+
+    std::ostringstream oss;
+    oss << "C bindings for ";
+    for (std::size_t i = 0; i < mentionCount; ++i) {
+        if (i > 0) {
+            oss << (i + 1 == mentionCount ? " and " : ", ");
+        }
+        oss << names[i];
+    }
+
+    if (names.size() > mentionCount) {
+        oss << " plus " << (names.size() - mentionCount) << " more types";
+    }
+    oss << '.';
+
+    return oss.str();
+}
+
+std::string moduleBriefFor(const CAPI_BindGenerator::BindModule& module)
+{
+    std::string brief = module.module_brief;
+    if (brief.empty()) {
+        brief = synthesizeModuleBrief(module);
+    }
+    return collapseWhitespace(brief);
+}
+
+void emitWrappedComment(std::ofstream& out,
+                        const std::string& text,
+                        const std::string& prefix,
+                        std::size_t maxWidth)
+{
+    if (text.empty()) {
+        return;
+    }
+
+    const std::size_t usableWidth = maxWidth > prefix.size()
+        ? maxWidth - prefix.size()
+        : 0;
+
+    if (usableWidth == 0) {
+        out << prefix << text << '\n';
+        return;
+    }
+
+    std::istringstream words(text);
+    std::string word;
+    std::string line;
+    while (words >> word) {
+        if (line.empty()) {
+            line = word;
+            continue;
+        }
+
+        if (line.size() + 1 + word.size() > usableWidth) {
+            out << prefix << line << '\n';
+            line = word;
+        } else {
+            line += ' ';
+            line += word;
+        }
+    }
+
+    if (!line.empty()) {
+        out << prefix << line << '\n';
+    }
 }
 
 std::string normalizeTypeToken(std::string type);
@@ -659,6 +922,9 @@ bool CAPI_BindGenerator::generate(const std::unordered_map<std::string, TypeInfo
         type_descriptors_.emplace(desc.name, desc);
     }
 
+    generated_headers_.clear();
+    generated_sources_.clear();
+
     emitBindingManifest(latest_manifest_);
 
     for (const auto& [_, module] : modules) {
@@ -673,6 +939,8 @@ bool CAPI_BindGenerator::generate(const std::unordered_map<std::string, TypeInfo
             generateSource(module);
         }
     }
+
+    emitGeneratedFileIndex();
 
     return true;
 }
@@ -692,8 +960,8 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
 
     std::cout << "[CAPI_BindGenerator] Generating header: " << filename << '\n';
 
-    out << "#pragma once\n";
-    out << "// Auto-generated SDOM C API module: " << module.file_stem << "\n\n";
+    emitFileBanner(out, module, true, filename);
+    out << "#pragma once\n\n";
 
     std::vector<std::string> includes;
     const auto addInclude = [&](const std::string& line) {
@@ -764,6 +1032,8 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << "} // extern \"C\"\n";
         out << "#endif\n";
     }
+
+    generated_headers_.push_back(filename);
 }
 
 void CAPI_BindGenerator::generateSource(const BindModule& module)
@@ -781,6 +1051,7 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
 
     std::cout << "[CAPI_BindGenerator] Generating source: " << filename << '\n';
 
+    emitFileBanner(out, module, false, filename);
     out << "#include <SDOM/CAPI/SDOM_CAPI_" << module.file_stem << ".h>\n";
     out << "#include <SDOM/CAPI/SDOM_CAPI_Core.h>\n";
     out << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
@@ -808,6 +1079,8 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
     out << "#ifdef __cplusplus\n";
     out << "} // extern \"C\"\n";
     out << "#endif\n";
+
+    generated_sources_.push_back(filename);
 }
 
 void CAPI_BindGenerator::emitBindingManifest(const BindingManifest& manifest) const
@@ -825,6 +1098,61 @@ void CAPI_BindGenerator::emitBindingManifest(const BindingManifest& manifest) co
 
     out << manifestToJson(manifest, 2) << '\n';
     std::cout << "[CAPI_BindGenerator] Wrote binding manifest: " << path << '\n';
+}
+
+void CAPI_BindGenerator::emitGeneratedFileIndex() const
+{
+    if (generated_headers_.empty() && generated_sources_.empty()) {
+        return;
+    }
+
+    const std::string out_dir = source_dir_.empty() ? header_dir_ : source_dir_;
+    if (out_dir.empty()) {
+        return;
+    }
+
+    const std::string path = out_dir + "/generated_files.json";
+    std::ofstream out(path);
+    if (!out) {
+        std::cerr << "[CAPI_BindGenerator] Failed to write generated file index: " << path << '\n';
+        return;
+    }
+
+    const auto writeArray = [&](const std::vector<std::string>& items) {
+        out << "  [\n";
+        for (std::size_t i = 0; i < items.size(); ++i) {
+            out << "    \"" << jsonEscape(items[i]) << "\"";
+            if (i + 1 < items.size()) {
+                out << ',';
+            }
+            out << '\n';
+        }
+        out << "  ]";
+    };
+
+    out << "{\n";
+    out << "  \"version\": {\n";
+    out << "    \"semantic\": \"" << semanticVersion() << "\",\n";
+    out << "    \"codename\": \"" << jsonEscape(SDOM_VERSION_CODENAME) << "\",\n";
+    out << "    \"build\": \"" << jsonEscape(SDOM_VERSION_BUILD) << "\",\n";
+    out << "    \"commit\": \"" << jsonEscape(SDOM_VERSION_COMMIT) << "\",\n";
+    out << "    \"branch\": \"" << jsonEscape(SDOM_BUILD_BRANCH) << "\",\n";
+    out << "    \"build_date\": \"" << jsonEscape(SDOM_VERSION_BUILD_DATE) << "\",\n";
+    out << "    \"compiler\": \"" << jsonEscape(SDOM_BUILD_COMPILER) << "\",\n";
+    out << "    \"platform\": \"" << jsonEscape(SDOM_BUILD_PLATFORM) << "\"\n";
+    out << "  },\n";
+
+    out << "  \"generated_headers\":\n";
+    writeArray(generated_headers_);
+    out << ",\n";
+
+    out << "  \"generated_sources\":\n";
+    writeArray(generated_sources_);
+    out << '\n';
+
+    out << "}\n";
+
+    std::cout << "[CAPI_BindGenerator] Wrote generated file index: " << path << '\n';
 }
 
 bool CAPI_BindGenerator::moduleNeedsCstdint(const BindModule& module)

@@ -33,6 +33,7 @@ var classSDOM_1_1IAssetObject =
     [ "registerOpaqueHandle", "classSDOM_1_1IAssetObject.html#a83f774ae4f2529a8c427c0cdce495098", null ],
     [ "registry", "classSDOM_1_1IAssetObject.html#adb96fab263c40f6294461886cc8c2f20", null ],
     [ "setFilename", "classSDOM_1_1IAssetObject.html#ab996c8629d01a716654e3125b4b0a589", null ],
+    [ "setModuleBrief", "classSDOM_1_1IAssetObject.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1IAssetObject.html#ad0998244c5f497a5ce11a534d321328d", null ],
     [ "setType", "classSDOM_1_1IAssetObject.html#a05aeca66d8a195214e0e23d5669bffd7", null ],
     [ "shutdown", "classSDOM_1_1IAssetObject.html#abf56256aea293a042562db9652ed2c61", null ],

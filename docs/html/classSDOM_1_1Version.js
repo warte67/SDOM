@@ -33,6 +33,7 @@ var classSDOM_1_1Version =
     [ "registerMethod", "classSDOM_1_1Version.html#a153f846a38f552a2a85afb8332fe8b39", null ],
     [ "registerOpaqueHandle", "classSDOM_1_1Version.html#a83f774ae4f2529a8c427c0cdce495098", null ],
     [ "registry", "classSDOM_1_1Version.html#adb96fab263c40f6294461886cc8c2f20", null ],
+    [ "setModuleBrief", "classSDOM_1_1Version.html#a7ae52e60d987c75efed881a4d6cfab5d", null ],
     [ "setName", "classSDOM_1_1Version.html#a1de666cd76bf2ef5c77d3b0380db55fa", null ],
     [ "toString", "classSDOM_1_1Version.html#a17f0263782181bc66b5bc052505fb8a8", null ],
     [ "name_", "classSDOM_1_1Version.html#aeff0a0985efe5dae1e6aa10e5b206396", null ],
