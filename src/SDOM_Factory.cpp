@@ -17,6 +17,7 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_BitmapFont.hpp>
 #include <SDOM/SDOM_Label.hpp>
+#include <SDOM/SDOM_VariantAPI.hpp>
 #include <iomanip>
 #include <algorithm>
 #include <SDOM/SDOM_Frame.hpp>
@@ -71,6 +72,10 @@ namespace SDOM
         } catch(...) {
             ERROR("Factory::onInit: failed to register Event bindings");
         }        
+
+        // Surface SDOM::Variant metadata/functions to the central registry so
+        // the C API generator can emit SDOM_CAPI_Variant.{h,cpp}.
+        VariantAPI::registerTypes(data_registry_);
 
         // Ensure EventType has a TypeInfo descriptor even though it does not expose
         // callable exports yet. The manifest consumers (C API generator + unit tests)

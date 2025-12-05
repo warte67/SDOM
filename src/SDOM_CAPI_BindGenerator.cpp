@@ -602,6 +602,89 @@ ReturnMetadata analyzeReturnMetadata(const FunctionInfo& fn, const BindModule& m
     return meta;
 }
 
+std::string resolveEnumExportName(const TypeInfo* entry, const BindModule& module)
+{
+    if (!entry) {
+        return {};
+    }
+
+    if (!entry->export_name.empty()) {
+        return entry->export_name;
+    }
+
+    if (!module.file_stem.empty()) {
+        return "SDOM_CAPI_" + module.file_stem + "_Enum";
+    }
+
+    return "SDOM_CAPI_Enum";
+}
+
+std::string enumTokenForEntry(const TypeInfo* entry)
+{
+    if (!entry) {
+        return {};
+    }
+
+    std::string source = !entry->cpp_type_id.empty() ? entry->cpp_type_id : entry->name;
+    return sanitizeEnumToken(std::move(source));
+}
+
+std::string enumConstantLiteral(const TypeInfo* entry, const BindModule& module)
+{
+    if (!entry) {
+        return {};
+    }
+
+    const std::string export_name = resolveEnumExportName(entry, module);
+    const std::string token = enumTokenForEntry(entry);
+    if (export_name.empty() || token.empty()) {
+        return {};
+    }
+
+    return export_name + "_" + token;
+}
+
+std::string preferredEnumFallbackLiteral(const ReturnMetadata& meta, const BindModule& module)
+{
+    if (!meta.is_enum || meta.normalized.empty()) {
+        return {};
+    }
+
+    std::vector<const TypeInfo*> matches;
+    matches.reserve(module.enums.size());
+    for (const TypeInfo* entry : module.enums) {
+        if (!entry) {
+            continue;
+        }
+
+        if (resolveEnumExportName(entry, module) == meta.normalized) {
+            matches.push_back(entry);
+        }
+    }
+
+    if (matches.empty()) {
+        return {};
+    }
+
+    auto findByToken = [&](const std::string& token) -> std::string {
+        for (const TypeInfo* entry : matches) {
+            if (enumTokenForEntry(entry) == token) {
+                return enumConstantLiteral(entry, module);
+            }
+        }
+        return {};
+    };
+
+    const std::string preferredTokens[] = { "Error", "Invalid", "Unknown" };
+    for (const std::string& label : preferredTokens) {
+        if (auto literal = findByToken(label); !literal.empty()) {
+            return literal;
+        }
+    }
+
+    return {};
+}
+
 bool functionMentionsToken(const FunctionInfo& fn, const std::string& token)
 {
     if (token.empty()) {
@@ -724,7 +807,7 @@ const ParameterInfo* findSubjectParameter(const std::vector<ParameterInfo>& para
     return nullptr;
 }
 
-void emitGuardReturn(std::ofstream& out, const ReturnMetadata& meta)
+void emitGuardReturn(std::ofstream& out, const ReturnMetadata& meta, const BindModule& module)
 {
     const std::string trimmed = trim(meta.c_type);
 
@@ -744,7 +827,12 @@ void emitGuardReturn(std::ofstream& out, const ReturnMetadata& meta)
     }
 
     if (meta.is_enum && !meta.normalized.empty()) {
-        out << "        return static_cast<" << meta.normalized << ">(0);\n";
+        const std::string literal = preferredEnumFallbackLiteral(meta, module);
+        if (!literal.empty()) {
+            out << "        return " << literal << ";\n";
+        } else {
+            out << "        return static_cast<" << meta.normalized << ">(0);\n";
+        }
         return;
     }
 
@@ -754,14 +842,15 @@ void emitGuardReturn(std::ofstream& out, const ReturnMetadata& meta)
 void emitSubjectGuard(std::ofstream& out,
                       const FunctionInfo& fn,
                       const ParameterInfo& subjectParam,
-                      const ReturnMetadata& meta)
+                      const ReturnMetadata& meta,
+                      const BindModule& module)
 {
     const std::string guardName = subjectParam.name.empty() ? std::string("subject") : subjectParam.name;
     const std::string fnLabel = fn.c_name.empty() ? fn.name : fn.c_name;
 
     out << "    if (!" << guardName << ") {\n";
     out << "        SDOM_SetError(\"" << fnLabel << ": subject '" << guardName << "' is null\");\n";
-    emitGuardReturn(out, meta);
+    emitGuardReturn(out, meta, module);
     out << "    }\n\n";
 }
 
@@ -769,6 +858,7 @@ void emitInvokeCallableCore(std::ofstream& out,
                             const FunctionInfo& fn,
                             const std::vector<ParameterInfo>& params,
                             const ReturnMetadata& meta,
+                            const BindModule& module,
                             bool wrapEventHandles)
 {
     const bool hasArgs = !params.empty();
@@ -825,7 +915,12 @@ void emitInvokeCallableCore(std::ofstream& out,
         out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
         out << "        return static_cast<" << meta.normalized << ">(callResult.v.i);\n";
         out << "    }\n";
-        out << "    return static_cast<" << meta.normalized << ">(0);\n";
+        const std::string enumFallback = preferredEnumFallbackLiteral(meta, module);
+        if (!enumFallback.empty()) {
+            out << "    return " << enumFallback << ";\n";
+        } else {
+            out << "    return static_cast<" << meta.normalized << ">(0);\n";
+        }
     } else if (isSignedIntegralToken(meta.normalized)) {
         out << "    const auto callResult = " << callExpr << ";\n";
         out << "    if (callResult.kind == SDOM::CAPI::CallArg::Kind::Int) {\n";
@@ -1181,6 +1276,39 @@ bool CAPI_BindGenerator::moduleNeedsCstdint(const BindModule& module)
         }
     }
 
+    const auto bucketUsesFixedWidth = [&](const std::vector<const TypeInfo*>& bucket) {
+        for (const TypeInfo* type : bucket) {
+            if (!type) {
+                continue;
+            }
+
+            for (const auto& fn : type->functions) {
+                if (requiresCstdint(fn.return_type)) {
+                    return true;
+                }
+
+                if (fn.c_signature.empty()) {
+                    continue;
+                }
+
+                const auto params = extractParameters(fn);
+                for (const auto& param : params) {
+                    if (requiresCstdint(param.type)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    };
+
+    if (bucketUsesFixedWidth(module.objects) ||
+        bucketUsesFixedWidth(module.globals) ||
+        bucketUsesFixedWidth(module.functions) ||
+        bucketUsesFixedWidth(module.aliases)) {
+        return true;
+    }
+
     return false;
 }
 
@@ -1508,10 +1636,10 @@ void CAPI_BindGenerator::emitMethodTableFunction(std::ofstream& out,
     out << "    // Dispatch family: method_table (" << descriptor->subject_kind << ")\n";
 
     if (const ParameterInfo* subject = findSubjectParameter(params)) {
-        emitSubjectGuard(out, fn, *subject, returnMeta);
+        emitSubjectGuard(out, fn, *subject, returnMeta, module);
     }
 
-    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/false);
+    emitInvokeCallableCore(out, fn, params, returnMeta, module, /*wrapEventHandles=*/false);
 }
 
 void CAPI_BindGenerator::emitSingletonFunction(std::ofstream& out,
@@ -1528,10 +1656,10 @@ void CAPI_BindGenerator::emitSingletonFunction(std::ofstream& out,
     }
 
     if (const ParameterInfo* subject = findSubjectParameter(params)) {
-        emitSubjectGuard(out, fn, *subject, returnMeta);
+        emitSubjectGuard(out, fn, *subject, returnMeta, module);
     }
 
-    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/false);
+    emitInvokeCallableCore(out, fn, params, returnMeta, module, /*wrapEventHandles=*/false);
 }
 
 void CAPI_BindGenerator::emitEventRouterFunction(std::ofstream& out,
@@ -1548,10 +1676,10 @@ void CAPI_BindGenerator::emitEventRouterFunction(std::ofstream& out,
     }
 
     if (const ParameterInfo* subject = findSubjectParameter(params)) {
-        emitSubjectGuard(out, fn, *subject, returnMeta);
+        emitSubjectGuard(out, fn, *subject, returnMeta, module);
     }
 
-    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/true);
+    emitInvokeCallableCore(out, fn, params, returnMeta, module, /*wrapEventHandles=*/true);
 }
 
 void CAPI_BindGenerator::emitCustomFunction(std::ofstream& out,
@@ -1579,7 +1707,7 @@ void CAPI_BindGenerator::emitLegacyCallableBody(std::ofstream& out,
     const auto params = extractParameters(fn);
     const auto returnMeta = analyzeReturnMetadata(fn, module);
 
-    emitInvokeCallableCore(out, fn, params, returnMeta, /*wrapEventHandles=*/false);
+    emitInvokeCallableCore(out, fn, params, returnMeta, module, /*wrapEventHandles=*/false);
 }
 
 std::string CAPI_BindGenerator::headerPathFor(const std::string& dir, const std::string& stem)

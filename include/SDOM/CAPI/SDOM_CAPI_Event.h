@@ -41,6 +41,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 #include <SDOM/CAPI/SDOM_CAPI_Event.h>
 

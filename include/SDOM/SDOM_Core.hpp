@@ -250,8 +250,9 @@ namespace SDOM
         DisplayHandle getMouseHoveredObject() const;
         void clearMouseHoveredObject();
 
-        // // --- Lua State Access --- //
-        // sol::state& getLua() { return lua_; }
+        // --- Lua State Access --- //
+        sol::state& getLua() { return lua_; }
+        const sol::state& getLua() const { return lua_; }
 
         // --- UnitTest Wrappers --- //
         int getFrameCount() const;

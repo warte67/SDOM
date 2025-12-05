@@ -45,7 +45,8 @@ find_package(Threads REQUIRED)
 
 # Include directories
 include_directories($ENV{HOME}/.local/include)      # SDL3 Includes (local)
-include_directories(${PROJECT_SOURCE_DIR}/include)  # SDOM Includes
+include_directories(${SDOM_ROOT}/include)           # In-tree SDOM public headers (C++ + generated C API)
+include_directories(${PROJECT_SOURCE_DIR}/include)  # SDOM test harness helpers
 include_directories(${PROJECT_SOURCE_DIR}/test_include)  # test-only C API includes
 include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include)
 include_directories(${PROJECT_SOURCE_DIR}/../../sol2/include/sol)

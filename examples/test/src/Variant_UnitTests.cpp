@@ -2,6 +2,7 @@
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
 #include <SDOM/SDOM_Variant.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 #include <thread>
 #include <random>
 #include <sstream>
@@ -11,182 +12,224 @@
 
 namespace SDOM
 {
-    // Simple sample dynamic type for testing
     struct TestPoint { int x = 0; int y = 0; };
+
+    namespace {
+
+    void ensureTestPointConverterRegistered()
+    {
+        static bool registered = false;
+        if (registered)
+            return;
+
+        Variant::ConverterEntry ce;
+        ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L) -> sol::object {
+            auto p = std::static_pointer_cast<TestPoint>(dv.ptr);
+            sol::table t = L.create_table();
+            t["x"] = p ? p->x : 0;
+            t["y"] = p ? p->y : 0;
+            return t;
+        };
+        ce.fromVariant = [](const Variant& v) -> std::shared_ptr<void> {
+            auto out = std::make_shared<TestPoint>();
+            if (v.isObject()) {
+                if (const Variant* vx = v.get("x")) out->x = static_cast<int>(vx->toInt64());
+                if (const Variant* vy = v.get("y")) out->y = static_cast<int>(vy->toInt64());
+                return std::static_pointer_cast<void>(out);
+            }
+            if (v.isArray()) {
+                if (const Variant* vx = v.at(0)) out->x = static_cast<int>(vx->toInt64());
+                if (const Variant* vy = v.at(1)) out->y = static_cast<int>(vy->toInt64());
+                return std::static_pointer_cast<void>(out);
+            }
+            return nullptr;
+        };
+
+        Variant::registerConverter<TestPoint>("TestPoint", std::move(ce));
+        registered = true;
+    }
+
+    class TableStorageGuard {
+    public:
+        explicit TableStorageGuard(Variant::TableStorageMode mode)
+            : previous_(Variant::getTableStorageMode())
+        {
+            Variant::setTableStorageMode(mode);
+        }
+
+        ~TableStorageGuard()
+        {
+            Variant::setTableStorageMode(previous_);
+        }
+
+    private:
+        Variant::TableStorageMode previous_;
+    };
+
+    class CVariantHandle {
+    public:
+        CVariantHandle()
+        {
+            SDOM_Variant_InitNull(&value_);
+        }
+
+        ~CVariantHandle()
+        {
+            SDOM_Variant_Destroy(&value_);
+        }
+
+        SDOM_Variant* get() { return &value_; }
+        const SDOM_Variant* get() const { return &value_; }
+
+    private:
+        SDOM_Variant value_{};
+    };
+
+    }
 
     bool Variant_test_converter_to_lua(std::vector<std::string>& errors)
     {
-        (void)errors;
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+        ensureTestPointConverterRegistered();
+
+        auto p = std::make_shared<TestPoint>();
+        p->x = 7;
+        p->y = 11;
+        Variant v(p);
+
+        sol::object o = v.toLua(L);
+        if (!o.is<sol::table>()) {
+            errors.push_back("Variant::toLua did not produce a table for TestPoint");
+            return true;
+        }
+
+        sol::table t = o;
+        if (t["x"].get_or(0) != 7 || t["y"].get_or(0) != 11) {
+            errors.push_back("TestPoint field values mismatch from Variant::toLua");
+        }
+
         return true;
-        // Core& core = getCore();
-
-        // // Register a converter for TestPoint once
-        // static bool registered = false;
-        // if (!registered) {
-        //     Variant::ConverterEntry ce;
-        //     ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L) -> sol::object {
-        //         auto p = std::static_pointer_cast<TestPoint>(dv.ptr);
-        //         sol::table t = L.create_table();
-        //         t["x"] = p ? p->x : 0;
-        //         t["y"] = p ? p->y : 0;
-        //         return t;
-        //     };
-        //     ce.fromVariant = [](const Variant& v) -> std::shared_ptr<void> {
-        //         // Convert a Variant (object or array) back into a TestPoint instance.
-        //         auto out = std::make_shared<TestPoint>();
-        //         if (v.isObject()) {
-        //             const Variant* vx = v.get("x");
-        //             const Variant* vy = v.get("y");
-        //             if (vx) out->x = static_cast<int>(vx->toInt64());
-        //             if (vy) out->y = static_cast<int>(vy->toInt64());
-        //             return std::static_pointer_cast<void>(out);
-        //         }
-        //         if (v.isArray()) {
-        //             const Variant* vx = v.at(0);
-        //             const Variant* vy = v.at(1);
-        //             if (vx) out->x = static_cast<int>(vx->toInt64());
-        //             if (vy) out->y = static_cast<int>(vy->toInt64());
-        //             return std::static_pointer_cast<void>(out);
-        //         }
-        //         // Unsupported shape
-        //         return nullptr;
-        //     };
-
-        //     Variant::registerConverter<TestPoint>("TestPoint", std::move(ce));
-        //     registered = true;
-        // }
-
-        // // Create a dynamic Point and wrap in Variant
-        // auto p = std::make_shared<TestPoint>();
-        // p->x = 7; p->y = 11;
-        // Variant v(p);
-
-        // sol::object o = v.toLua(core.getLua());
-        // if (!o.is<sol::table>()) {
-        //     errors.push_back("Variant::toLua did not produce a table for TestPoint");
-        //     return true;
-        // }
-
-        // sol::table t = o;
-        // int x = t["x"]; int y = t["y"];
-        // if (x != 7 || y != 11) {
-        //     errors.push_back("TestPoint field values mismatch from Variant::toLua");
-        // }
-
-        // return true;
     } // END: Variant_test_converter_to_lua()
 
     bool Variant_test_converter_roundtrip(std::vector<std::string>& errors)
     {
-        (void)errors;
+        Core& core = getCore();
+        ensureTestPointConverterRegistered();
+
+        auto p = std::make_shared<TestPoint>();
+        p->x = 13;
+        p->y = 17;
+        Variant v(p);
+
+        sol::object o = v.toLua(core.getLua());
+        if (!o.is<sol::table>()) {
+            errors.push_back("Roundtrip: toLua did not produce a table");
+            return true;
+        }
+
+        Variant v2 = Variant::fromLuaObject(o);
+        auto ce = Variant::getConverter(std::type_index(typeid(TestPoint)));
+        if (!ce) {
+            errors.push_back("Roundtrip: converter missing for TestPoint");
+            return true;
+        }
+
+        std::shared_ptr<void> pv = ce->fromVariant(v2);
+        if (!pv) {
+            errors.push_back("Roundtrip: fromVariant returned null");
+            return true;
+        }
+
+        auto p2 = std::static_pointer_cast<TestPoint>(pv);
+        if (!p2) {
+            errors.push_back("Roundtrip: cast failed");
+            return true;
+        }
+        if (p2->x != 13 || p2->y != 17) {
+            errors.push_back("Roundtrip: value mismatch after conversion");
+        }
+
         return true;
-
-        // Core& core = getCore();
-
-        // // create a TestPoint, convert to Variant (dynamic), to Lua, back to Variant, then back to C++
-        // auto p = std::make_shared<TestPoint>();
-        // p->x = 13; p->y = 17;
-        // Variant v(p);
-
-        // sol::object o = v.toLua(core.getLua());
-        // if (!o.is<sol::table>()) {
-        //     errors.push_back("Roundtrip: toLua did not produce a table");
-        //     return true;
-        // }
-
-        // // Convert Lua table back to Variant
-        // Variant v2 = Variant::fromLuaObject(o);
-
-        // // Lookup converter and attempt fromVariant
-        // auto ce = Variant::getConverter(std::type_index(typeid(TestPoint)));
-        // if (!ce) {
-        //     errors.push_back("Roundtrip: converter missing for TestPoint");
-        //     return true;
-        // }
-
-        // std::shared_ptr<void> pv = ce->fromVariant(v2);
-        // if (!pv) {
-        //     errors.push_back("Roundtrip: fromVariant returned null");
-        //     return true;
-        // }
-
-        // auto p2 = std::static_pointer_cast<TestPoint>(pv);
-        // if (!p2) { errors.push_back("Roundtrip: cast failed"); return true; }
-        // if (p2->x != 13 || p2->y != 17) errors.push_back("Roundtrip: value mismatch after conversion");
-
-        // return true;
     } // END: Variant_test_converter_roundtrip()
 
     bool Variant_test_null_and_error(std::vector<std::string>& errors)
     {
-        (void)errors;
+        Core& core = getCore();
+
+        Variant v;
+        if (!v.isNull()) {
+            errors.push_back("Default-constructed Variant is not null");
+        }
+        if (v.type() != VariantType::Null) {
+            errors.push_back("Variant::type() for default Variant is not Null");
+        }
+        sol::object o = v.toLua(core.getLua());
+        if (!o.is<sol::nil_t>()) {
+            errors.push_back("Variant::toLua for null Variant did not return nil");
+        }
+
+        Variant e = Variant::makeError("boom");
+        if (!e.hasError()) {
+            errors.push_back("Variant::makeError did not set error flag");
+        }
+        if (e.errorMessage() != std::string("boom")) {
+            errors.push_back("Variant::makeError errorMessage mismatch");
+        }
+        if (e.type() != VariantType::Error) {
+            errors.push_back("Variant::type() for error Variant is not Error");
+        }
+        sol::object eo = e.toLua(core.getLua());
+        if (!eo.is<sol::nil_t>()) {
+            errors.push_back("Variant::toLua for error Variant did not return nil");
+        }
+
         return true;
-
-        // Core& core = getCore();
-
-        // // Default-constructed Variant should be null
-        // Variant v;
-        // if (!v.isNull()) {
-        //     errors.push_back("Default-constructed Variant is not null");
-        // }
-        // if (v.type() != VariantType::Null) {
-        //     errors.push_back("Variant::type() for default Variant is not Null");
-        // }
-        // sol::object o = v.toLua(core.getLua());
-        // if (!o.is<sol::nil_t>()) {
-        //     errors.push_back("Variant::toLua for null Variant did not return nil");
-        // }
-
-        // // makeError should set error flag and message and report Error type
-        // Variant e = Variant::makeError("boom");
-        // if (!e.hasError()) {
-        //     errors.push_back("Variant::makeError did not set error flag");
-        // }
-        // if (e.errorMessage() != std::string("boom")) {
-        //     errors.push_back("Variant::makeError errorMessage mismatch");
-        // }
-        // if (e.type() != VariantType::Error) {
-        //     errors.push_back("Variant::type() for error Variant is not Error");
-        // }
-        // sol::object eo = e.toLua(core.getLua());
-        // if (!eo.is<sol::nil_t>()) {
-        //     errors.push_back("Variant::toLua for error Variant did not return nil");
-        // }
-
-        // return true;
     } // END: Variant_test_null_and_error()
 
     // Separate named tests (extracted from inline lambdas) for readability
     bool Variant_test_converter_lookup_by_name(std::vector<std::string>& errors)
     {
-        (void)errors;
+        Core& core = getCore();
+        ensureTestPointConverterRegistered();
+
+        auto ce = Variant::getConverterByName("TestPoint");
+        if (!ce) {
+            errors.push_back("Converter lookup by name failed");
+            return true;
+        }
+
+        auto p = std::make_shared<TestPoint>();
+        p->x = 3;
+        p->y = 4;
+        auto dyn = Variant::makeDynamicValue<TestPoint>(p);
+        sol::object o = ce->toLua(dyn, core.getLua());
+        if (!o.is<sol::table>()) {
+            errors.push_back("Converter toLua by name did not produce table");
+            return true;
+        }
+
+        sol::table t = o;
+        if (int(t["x"]) != 3 || int(t["y"]) != 4) {
+            errors.push_back("Converter toLua by name produced wrong values");
+        }
+
+        Variant v = Variant::fromLuaObject(o);
+        auto pv = ce->fromVariant(v);
+        if (!pv) {
+            errors.push_back("Converter fromVariant by name returned null");
+            return true;
+        }
+        auto p2 = std::static_pointer_cast<TestPoint>(pv);
+        if (!p2) {
+            errors.push_back("Converter fromVariant by name cast failed");
+            return true;
+        }
+        if (p2->x != 3 || p2->y != 4) {
+            errors.push_back("Converter fromVariant by name value mismatch");
+        }
+
         return true;
-
-        // Core& core = getCore();
-        // sol::state& L = core.getLua();
-
-        // // Ensure converter was registered by previous test registration
-        // auto ce = Variant::getConverterByName("TestPoint");
-        // if (!ce) { errors.push_back("Converter lookup by name failed"); return true; }
-
-        // // Build a DynamicValue representing a TestPoint and convert via converter
-        // auto p = std::make_shared<TestPoint>(); p->x = 3; p->y = 4;
-        // auto dyn = Variant::makeDynamicValue<TestPoint>(p);
-        // sol::object o = ce->toLua(dyn, L);
-        // if (!o.is<sol::table>()) { errors.push_back("Converter toLua by name did not produce table"); return true; }
-        // sol::table t = o;
-        // int xx = t["x"]; int yy = t["y"];
-        // if (xx != 3 || yy != 4) errors.push_back("Converter toLua by name produced wrong values");
-
-        // // Now convert back via fromVariant
-        // Variant v = Variant::fromLuaObject(o);
-        // auto pv = ce->fromVariant(v);
-        // if (!pv) { errors.push_back("Converter fromVariant by name returned null"); return true; }
-        // auto p2 = std::static_pointer_cast<TestPoint>(pv);
-        // if (!p2) { errors.push_back("Converter fromVariant by name cast failed"); return true; }
-        // if (p2->x != 3 || p2->y != 4) errors.push_back("Converter fromVariant by name value mismatch");
-
-        // return true;
     }
 
     bool Variant_test_variantview_basic_access(std::vector<std::string>& errors)
@@ -214,111 +257,123 @@ namespace SDOM
 
     bool Variant_test_luaref_lifetime_validation(std::vector<std::string>& errors)
     {
-        (void)errors;
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+
+        sol::table t = L.create_table();
+        t["x"] = 5;
+        Variant v = Variant::fromLuaObject(t);
+        if (!v.isObject()) {
+            errors.push_back("Expected Variant object from table");
+        }
+        sol::object o1 = v.toLua(L);
+        if (!o1.is<sol::table>()) {
+            errors.push_back("toLua did not return table for same state");
+        } else {
+            sol::table rt = o1.as<sol::table>();
+            sol::object v_x = rt["x"];
+            if (v_x.get_type() != sol::type::number || v_x.as<int>() != 5) {
+                errors.push_back("toLua returned table missing expected key/value");
+            }
+        }
+
+        L.script("function __variant_test_fn() return 1 end");
+        sol::object fn = L["__variant_test_fn"];
+        Variant vf = Variant::fromLuaObject(fn);
+        if (!vf.isLuaRef()) {
+            errors.push_back("Expected LuaRef for function object");
+        }
+        sol::object f1 = vf.toLua(L);
+        if (!f1.is<sol::function>()) {
+            errors.push_back("toLua did not return function for same state");
+        }
+        sol::state tmp;
+        tmp.open_libraries(sol::lib::base);
+        sol::object f2 = vf.toLua(tmp);
+        if (!f2.is<sol::nil_t>()) {
+            errors.push_back("toLua returned non-nil for mismatched lua_State on LuaRef");
+        }
+
+        void* p = nullptr;
+        sol::object ud_obj = sol::make_object(L, p);
+        Variant vud = Variant::fromLuaObject(ud_obj);
+        if (!vud.isLuaRef()) {
+            errors.push_back("Expected LuaRef for lightuserdata");
+        }
+        sol::object ud_same = vud.toLua(L);
+        if (ud_same.get_type() != sol::type::lightuserdata) {
+            errors.push_back("toLua did not return lightuserdata for same state");
+        }
+        sol::state tmp2;
+        tmp2.open_libraries(sol::lib::base);
+        sol::object ud_other = vud.toLua(tmp2);
+        if (!ud_other.is<sol::nil_t>()) {
+            errors.push_back("toLua returned non-nil for mismatched lua_State on lightuserdata LuaRef");
+        }
+
+        if (L["coroutine"].valid()) {
+            L.script("th = coroutine.create(function() coroutine.yield() end)");
+            sol::object th = L["th"];
+            Variant vth = Variant::fromLuaObject(th);
+            if (!vth.isLuaRef()) {
+                errors.push_back("Expected LuaRef for thread");
+            }
+            sol::object th_same = vth.toLua(L);
+            if (th_same.get_type() != sol::type::thread) {
+                errors.push_back("toLua did not return thread for same state");
+            }
+            sol::state tmp3;
+            tmp3.open_libraries(sol::lib::base);
+            sol::object th_other = vth.toLua(tmp3);
+            if (!th_other.is<sol::nil_t>()) {
+                errors.push_back("toLua returned non-nil for mismatched lua_State on thread LuaRef");
+            }
+        }
+
         return true;
-
-        // Core& core = getCore();
-        // sol::state& L = core.getLua();
-        // // Tables are converted into Variant objects/arrays, not opaque Lua refs
-        // sol::table t = L.create_table();
-        // t["x"] = 5;
-        // Variant v = Variant::fromLuaObject(t);
-        // if (!v.isObject()) { errors.push_back("Expected Variant object from table"); }
-        // // toLua with same state should return a table with the value
-        // sol::object o1 = v.toLua(L);
-        // if (!o1.is<sol::table>()) errors.push_back("toLua did not return table for same state");
-        // if (o1.is<sol::table>()) {
-        //     sol::table rt = o1.as<sol::table>();
-        //     sol::object v_x = rt["x"];
-        //     if (v_x.get_type() != sol::type::number || v_x.as<int>() != 5)
-        //         errors.push_back("toLua returned table missing expected key/value");
-        // }
-
-        // // But opaque values (functions/userdata) are stored as LuaRef and must be validated against state
-        // // create a named function in the Lua state and retrieve it safely
-        // L.script("function __variant_test_fn() return 1 end");
-        // sol::object fn = L["__variant_test_fn"];
-        // Variant vf = Variant::fromLuaObject(fn);
-        // if (!vf.isLuaRef()) { errors.push_back("Expected LuaRef for function object"); }
-        // // toLua with same state returns the function
-        // sol::object f1 = vf.toLua(L);
-        // if (!f1.is<sol::function>()) errors.push_back("toLua did not return function for same state");
-        // // different lua_State should yield nil for stored LuaRef
-        // sol::state tmp; tmp.open_libraries(sol::lib::base);
-        // sol::object f2 = vf.toLua(tmp);
-        // if (!f2.is<sol::nil_t>()) errors.push_back("toLua returned non-nil for mismatched lua_State on LuaRef");
-
-        // // lightuserdata: create a lightuserdata value and verify LuaRef storage
-        // void* p = nullptr;
-        // sol::object ud_obj = sol::make_object(L, p);
-        // Variant vud = Variant::fromLuaObject(ud_obj);
-        // if (!vud.isLuaRef()) errors.push_back("Expected LuaRef for lightuserdata");
-        // sol::object ud_same = vud.toLua(L);
-        // if (ud_same.get_type() != sol::type::lightuserdata) errors.push_back("toLua did not return lightuserdata for same state");
-        // sol::state tmp2; tmp2.open_libraries(sol::lib::base);
-        // sol::object ud_other = vud.toLua(tmp2);
-        // if (!ud_other.is<sol::nil_t>()) errors.push_back("toLua returned non-nil for mismatched lua_State on lightuserdata LuaRef");
-
-        // // thread/coroutine: create via coroutine.create and verify LuaRef behavior
-        // // The coroutine library may not be available in the embedded Lua state; only run this test when present.
-        // if (L["coroutine"].valid()) {
-        //     L.script("th = coroutine.create(function() coroutine.yield() end)");
-        //     sol::object th = L["th"];
-        //     Variant vth = Variant::fromLuaObject(th);
-        //     if (!vth.isLuaRef()) errors.push_back("Expected LuaRef for thread");
-        //     sol::object th_same = vth.toLua(L);
-        //     if (th_same.get_type() != sol::type::thread) errors.push_back("toLua did not return thread for same state");
-        //     sol::state tmp3; tmp3.open_libraries(sol::lib::base);
-        //     sol::object th_other = vth.toLua(tmp3);
-        //     if (!th_other.is<sol::nil_t>()) errors.push_back("toLua returned non-nil for mismatched lua_State on thread LuaRef");
-        // }
-
-        // return true;
     }
 
     bool Variant_test_table_storage_and_snapshot(std::vector<std::string>& errors)
     {
-        (void)errors;
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+
+        TableStorageGuard guard(Variant::TableStorageMode::KeepLuaRef);
+
+        sol::table t = L.create_table();
+        t["a"] = 123;
+        Variant v = Variant::fromLuaObject(t);
+        if (!v.isLuaRef()) {
+            errors.push_back("Expected LuaRef when table storage mode is KeepLuaRef");
+        }
+
+        Variant snap = v.snapshot();
+        if (!snap.isObject()) {
+            errors.push_back("Snapshot did not produce an object Variant");
+        } else {
+            const Variant* pa = snap.get("a");
+            if (!pa || pa->toInt64() != 123) {
+                errors.push_back("Snapshot value mismatch");
+            }
+        }
+
         return true;
-
-        // Core& core = getCore();
-        // sol::state& L = core.getLua();
-
-        // // remember and restore previous mode
-        // auto prev = Variant::getTableStorageMode();
-        // Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
-
-        // sol::table t = L.create_table();
-        // t["a"] = 123;
-        // Variant v = Variant::fromLuaObject(t);
-        // if (!v.isLuaRef()) errors.push_back("Expected LuaRef when table storage mode is KeepLuaRef");
-
-        // // snapshot should produce an object copy of the table
-        // Variant snap = v.snapshot();
-        // if (!snap.isObject()) errors.push_back("Snapshot did not produce an object Variant");
-        // const Variant* pa = snap.get("a");
-        // if (!pa || pa->toInt64() != 123) errors.push_back("Snapshot value mismatch");
-
-        // // restore
-        // Variant::setTableStorageMode(prev);
-        // return true;
     }
 
     bool Variant_test_dynamic_metadata_accessors(std::vector<std::string>& errors)
     {
-        (void)errors;
+        ensureTestPointConverterRegistered();
+        auto p = std::make_shared<TestPoint>();
+        Variant v = Variant::makeDynamic<TestPoint>(p);
+        auto tn = v.dynamicTypeName();
+        if (!tn || *tn != std::string("TestPoint")) {
+            errors.push_back("dynamicTypeName() returned unexpected value");
+        }
+        auto ti = v.dynamicTypeIndex();
+        if (ti != std::type_index(typeid(TestPoint))) {
+            errors.push_back("dynamicTypeIndex() mismatch");
+        }
         return true;
-
-        // // Ensure TestPoint converter was registered
-        // auto ce = Variant::getConverterByName("TestPoint");
-        // if (!ce) { errors.push_back("Dynamic metadata: converter missing"); return true; }
-        // auto p = std::make_shared<TestPoint>();
-        // Variant v = Variant::makeDynamic<TestPoint>(p);
-        // auto tn = v.dynamicTypeName();
-        // if (!tn || *tn != std::string("TestPoint")) errors.push_back("dynamicTypeName() returned unexpected value");
-        // auto ti = v.dynamicTypeIndex();
-        // if (ti != std::type_index(typeid(TestPoint))) errors.push_back("dynamicTypeIndex() mismatch");
-        // return true;
     }
 
     // Additional tests requested: numeric coercion stress, deep snapshot recursion,
@@ -365,43 +420,51 @@ namespace SDOM
 
     bool Variant_test_deep_recursion_snapshot(std::vector<std::string>& errors)
     {
-        /* Commented out until after we refactor the Lua implementation. */
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+
+        sol::table t = L.create_table();
+        sol::table cur = t;
+        const int depth = 30;
+        for (int i = 0; i < depth; ++i) {
+            sol::table child = L.create_table();
+            child["__mark"] = 1;
+            cur["inner"] = child;
+            cur = child;
+        }
+
+        Variant v;
+        {
+            TableStorageGuard guard(Variant::TableStorageMode::KeepLuaRef);
+            v = Variant::fromLuaObject(t);
+        }
+
+        if (!v.isLuaRef()) {
+            errors.push_back("Deep snapshot: expected LuaRef");
+            return true;
+        }
+
+        Variant snap;
+        {
+            TableStorageGuard guard(Variant::TableStorageMode::Copy);
+            snap = v.snapshot();
+        }
+
+        if (!snap.isObject()) {
+            errors.push_back("Deep snapshot: snapshot did not produce object");
+            return true;
+        }
+
+        const Variant* node = &snap;
+        for (int i = 0; i < depth; ++i) {
+            if (!node || !node->isObject()) {
+                errors.push_back("Deep snapshot: traversal failed at depth " + std::to_string(i));
+                break;
+            }
+            node = node->get("inner");
+        }
+
         return true;
-        
-        // Core& core = getCore();
-        // sol::state& L = core.getLua();
-
-        // // Temporarily keep LuaRef mode to create a LuaRef Variant
-        // auto prev = Variant::getTableStorageMode();
-        // Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
-
-        // sol::table t = L.create_table();
-        // sol::table cur = t;
-        // const int depth = 30; // deep but safe for stack across environments
-        // for (int i = 0; i < depth; ++i) {
-        //     sol::table child = L.create_table();
-        //     // ensure child is treated as an object (non-empty) by fromLuaTable_
-        //     child["__mark"] = 1;
-        //     cur["inner"] = child;
-        //     cur = child;
-        // }
-
-        // Variant v = Variant::fromLuaObject(t);
-        // if (!v.isLuaRef()) { errors.push_back("Deep snapshot: expected LuaRef"); Variant::setTableStorageMode(prev); return true; }
-
-        // // Ensure nested tables are deep-copied by snapshot(): temporarily switch to Copy
-        // Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
-        // Variant snap = v.snapshot();
-        // if (!snap.isObject()) { errors.push_back("Deep snapshot: snapshot did not produce object"); Variant::setTableStorageMode(prev); return true; }
-
-        // const Variant* node = &snap;
-        // for (int i = 0; i < depth; ++i) {
-        //     if (!node || !node->isObject()) { errors.push_back("Deep snapshot: traversal failed at depth " + std::to_string(i)); break; }
-        //     node = node->get("inner");
-        // }
-
-        // Variant::setTableStorageMode(prev);
-        // return true;
     }
 
     bool Variant_test_threaded_converter_registration(std::vector<std::string>& errors)
@@ -576,60 +639,74 @@ namespace SDOM
     // Snapshot(sol::state_view) validity tests and TableStorageMode behavior
     bool Variant_test_snapshot_state_validity(std::vector<std::string>& errors)
     {
-        (void)errors;
-        return true;
+        Core& core = getCore();
+        sol::state& L = core.getLua();
 
-        // Core& core = getCore();
-        // sol::state& L = core.getLua();
+        sol::table t = L.create_table();
+        t["x"] = 1234;
 
-        // // create a table and ensure we can snapshot it when using KeepLuaRef
-        // auto prev = Variant::getTableStorageMode();
-        // Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
+        Variant v;
+        {
+            TableStorageGuard guard(Variant::TableStorageMode::KeepLuaRef);
+            v = Variant::fromLuaObject(t);
+        }
 
-        // sol::table t = L.create_table();
-        // t["x"] = 1234;
-        // Variant v = Variant::fromLuaObject(t);
-        // if (!v.isLuaRef()) { errors.push_back("Snapshot test: expected LuaRef when mode=KeepLuaRef"); Variant::setTableStorageMode(prev); return true; }
+        if (!v.isLuaRef()) {
+            errors.push_back("Snapshot test: expected LuaRef when mode=KeepLuaRef");
+            return true;
+        }
 
-        // Variant snap_same = v.snapshot(L);
-        // if (!snap_same.isObject()) errors.push_back("Snapshot test: snapshot(L) did not produce object for same state");
-        // else {
-        //     const Variant* vx = snap_same.get("x");
-        //     if (!vx || vx->toInt64() != 1234) errors.push_back("Snapshot test: snapshot value mismatch for same state");
-        // }
+        Variant snap_same = v.snapshot(L);
+        if (!snap_same.isObject()) {
+            errors.push_back("Snapshot test: snapshot(L) did not produce object for same state");
+        } else {
+            const Variant* vx = snap_same.get("x");
+            if (!vx || vx->toInt64() != 1234) {
+                errors.push_back("Snapshot test: snapshot value mismatch for same state");
+            }
+        }
 
-        // // snapshot to a different lua_State should fail/return null
-        // sol::state tmp; tmp.open_libraries(sol::lib::base);
-        // Variant snap_other = v.snapshot(tmp);
-        // // snapshot returns the LuaRef itself when the target state doesn't match;
-        // // toLua against the mismatched state should yield nil.
-        // if (!snap_other.isLuaRef()) errors.push_back("Snapshot test: expected LuaRef returned for mismatched lua_State");
-        // else {
-        //     sol::object maybe = snap_other.toLua(tmp);
-        //     if (!maybe.is<sol::nil_t>()) errors.push_back("Snapshot test: expected toLua(tmp) to return nil for mismatched LuaRef");
-        // }
+        sol::state tmp;
+        tmp.open_libraries(sol::lib::base);
+        Variant snap_other = v.snapshot(tmp);
+        if (!snap_other.isLuaRef()) {
+            errors.push_back("Snapshot test: expected LuaRef returned for mismatched lua_State");
+        } else {
+            sol::object maybe = snap_other.toLua(tmp);
+            if (!maybe.is<sol::nil_t>()) {
+                errors.push_back("Snapshot test: expected toLua(tmp) to return nil for mismatched LuaRef");
+            }
+        }
 
-        // // Non-table Lua object (function) should not snapshot into object
-        // L.script("function __vtest_fn() return 1 end");
-        // sol::object fn = L["__vtest_fn"];
-        // Variant vfn = Variant::fromLuaObject(fn);
-        // if (!vfn.isLuaRef()) errors.push_back("Snapshot test: expected LuaRef for function object");
-        // Variant snap_fn = vfn.snapshot(L);
-        // // snapshot of a non-table LuaRef returns the LuaRef itself
-        // if (!snap_fn.isLuaRef()) errors.push_back("Snapshot test: expected LuaRef returned for function snapshot");
-        // else {
-        //     sol::object got = snap_fn.toLua(L);
-        //     if (got.get_type() != sol::type::function) errors.push_back("Snapshot test: toLua(L) for function LuaRef did not return function");
-        // }
+        L.script("function __vtest_fn() return 1 end");
+        sol::object fn = L["__vtest_fn"];
+        Variant vfn = Variant::fromLuaObject(fn);
+        if (!vfn.isLuaRef()) {
+            errors.push_back("Snapshot test: expected LuaRef for function object");
+        }
+        Variant snap_fn = vfn.snapshot(L);
+        if (!snap_fn.isLuaRef()) {
+            errors.push_back("Snapshot test: expected LuaRef returned for function snapshot");
+        } else {
+            sol::object got = snap_fn.toLua(L);
+            if (got.get_type() != sol::type::function) {
+                errors.push_back("Snapshot test: toLua(L) for function LuaRef did not return function");
+            }
+        }
 
-        // // With TableStorageMode::Copy, fromLuaObject should produce a copied object and snapshot should be object
-        // Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
-        // Variant vcopy = Variant::fromLuaObject(t);
-        // if (!vcopy.isObject()) errors.push_back("Snapshot test: expected object when TableStorageMode::Copy");
-        // Variant snap_copy = vcopy.snapshot(L);
-        // if (!snap_copy.isObject()) errors.push_back("Snapshot test: snapshot on copied table did not produce object");
+        Variant vcopy;
+        {
+            TableStorageGuard guard(Variant::TableStorageMode::Copy);
+            vcopy = Variant::fromLuaObject(t);
+            if (!vcopy.isObject()) {
+                errors.push_back("Snapshot test: expected object when TableStorageMode::Copy");
+            }
+        }
+        Variant snap_copy = vcopy.snapshot(L);
+        if (!snap_copy.isObject()) {
+            errors.push_back("Snapshot test: snapshot on copied table did not produce object");
+        }
 
-        // Variant::setTableStorageMode(prev);
         return true;
     }
 
@@ -803,6 +880,146 @@ namespace SDOM
         return true;
     }
 
+    bool Variant_test_capi_roundtrip(std::vector<std::string>& errors)
+    {
+        CVariantHandle boolVariant;
+        if (!SDOM_Variant_InitBool(boolVariant.get(), true)) {
+            errors.push_back("C API roundtrip: InitBool failed");
+            return true;
+        }
+        bool boolOut = false;
+        if (!SDOM_Variant_ToBool(boolVariant.get(), &boolOut) || !boolOut) {
+            errors.push_back("C API roundtrip: ToBool mismatch");
+        }
+
+        CVariantHandle intVariant;
+        if (!SDOM_Variant_InitInt(intVariant.get(), 42)) {
+            errors.push_back("C API roundtrip: InitInt failed");
+            return true;
+        }
+        int64_t intOut = 0;
+        if (!SDOM_Variant_ToInt64(intVariant.get(), &intOut) || intOut != 42) {
+            errors.push_back("C API roundtrip: ToInt64 mismatch");
+        }
+
+        CVariantHandle doubleVariant;
+        if (!SDOM_Variant_InitDouble(doubleVariant.get(), 3.5)) {
+            errors.push_back("C API roundtrip: InitDouble failed");
+            return true;
+        }
+        double doubleOut = 0.0;
+        if (!SDOM_Variant_ToDouble(doubleVariant.get(), &doubleOut) || std::fabs(doubleOut - 3.5) > 1e-9) {
+            errors.push_back("C API roundtrip: ToDouble mismatch");
+        }
+
+        CVariantHandle stringVariant;
+        if (!SDOM_Variant_InitString(stringVariant.get(), "hello")) {
+            errors.push_back("C API roundtrip: InitString failed");
+            return true;
+        }
+        const char* strOut = SDOM_Variant_ToString(stringVariant.get());
+        if (!strOut || std::string(strOut) != "hello") {
+            errors.push_back("C API roundtrip: ToString mismatch");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_capi_copy_semantics(std::vector<std::string>& errors)
+    {
+        CVariantHandle source;
+        CVariantHandle dest;
+
+        if (!SDOM_Variant_InitString(source.get(), "alpha")) {
+            errors.push_back("C API copy: InitString failed");
+            return true;
+        }
+        if (!SDOM_Variant_Copy(source.get(), dest.get())) {
+            errors.push_back("C API copy: Copy failed");
+            return true;
+        }
+
+        if (!SDOM_Variant_InitInt(source.get(), 99)) {
+            errors.push_back("C API copy: re-init source failed");
+            return true;
+        }
+
+        const char* copied = SDOM_Variant_ToString(dest.get());
+        if (!copied || std::string(copied) != "alpha") {
+            errors.push_back("C API copy: destination changed unexpectedly");
+        }
+        if (SDOM_Variant_GetType(dest.get()) != SDOM_VariantType_String) {
+            errors.push_back("C API copy: destination type mismatch");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_capi_type_metadata(std::vector<std::string>& errors)
+    {
+        CVariantHandle nullVariant;
+        if (!SDOM_Variant_InitNull(nullVariant.get())) {
+            errors.push_back("C API type: InitNull failed");
+            return true;
+        }
+        if (SDOM_Variant_GetType(nullVariant.get()) != SDOM_VariantType_Null) {
+            errors.push_back("C API type: expected Null type");
+        }
+
+        CVariantHandle boolVariant;
+        SDOM_Variant_InitBool(boolVariant.get(), false);
+        if (SDOM_Variant_GetType(boolVariant.get()) != SDOM_VariantType_Bool) {
+            errors.push_back("C API type: expected Bool type");
+        }
+
+        CVariantHandle intVariant;
+        SDOM_Variant_InitInt(intVariant.get(), -7);
+        if (SDOM_Variant_GetType(intVariant.get()) != SDOM_VariantType_Int) {
+            errors.push_back("C API type: expected Int type");
+        }
+
+        CVariantHandle doubleVariant;
+        SDOM_Variant_InitDouble(doubleVariant.get(), 0.25);
+        if (SDOM_Variant_GetType(doubleVariant.get()) != SDOM_VariantType_Real) {
+            errors.push_back("C API type: expected Real type");
+        }
+
+        CVariantHandle stringVariant;
+        SDOM_Variant_InitString(stringVariant.get(), "beta");
+        if (SDOM_Variant_GetType(stringVariant.get()) != SDOM_VariantType_String) {
+            errors.push_back("C API type: expected String type");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_capi_error_paths(std::vector<std::string>& errors)
+    {
+        if (SDOM_Variant_InitBool(nullptr, true)) {
+            errors.push_back("C API error: InitBool should fail on null variant");
+        }
+
+        CVariantHandle variant;
+        SDOM_Variant_InitInt(variant.get(), 5);
+        if (SDOM_Variant_ToInt64(variant.get(), nullptr)) {
+            errors.push_back("C API error: ToInt64 should fail on null out pointer");
+        }
+
+        CVariantHandle dest;
+        if (SDOM_Variant_Copy(nullptr, dest.get())) {
+            errors.push_back("C API error: Copy should fail with null source");
+        }
+        if (SDOM_Variant_Copy(dest.get(), nullptr)) {
+            errors.push_back("C API error: Copy should fail with null destination");
+        }
+
+        if (SDOM_Variant_GetType(nullptr) != SDOM_VariantType_Error) {
+            errors.push_back("C API error: GetType should return Error for null handle");
+        }
+
+        return true;
+    }
+
     // Complex converter examples (previously a separate file). Keep with Variant tests.
     struct Inner { int a = 0; std::string name; };
     struct Outer {
@@ -813,113 +1030,132 @@ namespace SDOM
 
     bool ComplexVariant_test_outer_converter(std::vector<std::string>& errors)
     {
-        (void)errors;
+        Core& core = getCore();
+        sol::state& L = core.getLua();
+
+        static bool reg_inner = false;
+        if (!reg_inner) {
+            Variant::ConverterEntry ice;
+            ice.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
+                auto p = std::static_pointer_cast<Inner>(dv.ptr);
+                sol::table t = L.create_table();
+                t["a"] = p ? p->a : 0;
+                t["name"] = p ? p->name : std::string();
+                return t;
+            };
+            ice.fromVariant = [](const Variant& v)->std::shared_ptr<void> {
+                auto out = std::make_shared<Inner>();
+                if (v.isObject()) {
+                    if (const Variant* va = v.get("a")) out->a = static_cast<int>(va->toInt64());
+                    if (const Variant* vn = v.get("name")) out->name = vn->toString();
+                    return std::static_pointer_cast<void>(out);
+                }
+                return nullptr;
+            };
+            Variant::registerConverter<Inner>("Inner", std::move(ice));
+            reg_inner = true;
+        }
+
+        static bool reg_outer = false;
+        if (!reg_outer) {
+            Variant::ConverterEntry oce;
+            oce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
+                auto p = std::static_pointer_cast<Outer>(dv.ptr);
+                sol::table t = L.create_table();
+                sol::table inner = L.create_table();
+                inner["a"] = p ? p->inner.a : 0;
+                inner["name"] = p ? p->inner.name : std::string();
+                t["inner"] = inner;
+
+                sol::table arrtbl = L.create_table();
+                if (p) {
+                    for (size_t i = 0; i < p->arr.size(); ++i) {
+                        arrtbl[i + 1] = p->arr[i];
+                    }
+                }
+                t["arr"] = arrtbl;
+
+                sol::table mt = L.create_table();
+                if (p) {
+                    for (auto &kv : p->map) mt[kv.first] = kv.second;
+                }
+                t["map"] = mt;
+                return t;
+            };
+            oce.fromVariant = [](const Variant& v)->std::shared_ptr<void> {
+                auto out = std::make_shared<Outer>();
+                if (!v.isObject()) return nullptr;
+                if (const Variant* vin = v.get("inner")) {
+                    if (vin->isObject()) {
+                        if (const Variant* va = vin->get("a")) out->inner.a = static_cast<int>(va->toInt64());
+                        if (const Variant* vn = vin->get("name")) out->inner.name = vn->toString();
+                    }
+                }
+                if (const Variant* varr = v.get("arr")) {
+                    if (varr->isArray()) {
+                        for (size_t i = 0; i < varr->size(); ++i) {
+                            if (const Variant* e = varr->at(i)) {
+                                out->arr.push_back(static_cast<int>(e->toInt64()));
+                            }
+                        }
+                    }
+                }
+                if (const Variant* vmap = v.get("map")) {
+                    if (vmap->isObject()) {
+                        if (auto obj = vmap->object()) {
+                            for (const auto &kv : *obj) {
+                                out->map[kv.first] = static_cast<int>(kv.second->toInt64());
+                            }
+                        }
+                    }
+                }
+                return std::static_pointer_cast<void>(out);
+            };
+            Variant::registerConverter<Outer>("Outer", std::move(oce));
+            reg_outer = true;
+        }
+
+        auto out_inst = std::make_shared<Outer>();
+        out_inst->inner.a = 9;
+        out_inst->inner.name = "nine";
+        out_inst->arr = {1, 2, 3};
+        out_inst->map["one"] = 1;
+        out_inst->map["two"] = 2;
+
+        Variant v(out_inst);
+        sol::object o = v.toLua(L);
+        if (!o.is<sol::table>()) {
+            errors.push_back("Outer toLua did not produce table");
+            return true;
+        }
+
+        Variant v2 = Variant::fromLuaObject(o);
+        auto ce = Variant::getConverterByName("Outer");
+        if (!ce) {
+            errors.push_back("Outer converter missing");
+            return true;
+        }
+        auto pv = ce->fromVariant(v2);
+        if (!pv) {
+            errors.push_back("Outer fromVariant returned null");
+            return true;
+        }
+        auto p2 = std::static_pointer_cast<Outer>(pv);
+        if (!p2) {
+            errors.push_back("Outer cast failed");
+            return true;
+        }
+        if (p2->inner.a != 9 || p2->inner.name != "nine") {
+            errors.push_back("Outer.inner mismatch");
+        }
+        if (p2->arr.size() != 3 || p2->arr[0] != 1) {
+            errors.push_back("Outer.arr mismatch");
+        }
+        if (p2->map["one"] != 1 || p2->map["two"] != 2) {
+            errors.push_back("Outer.map mismatch");
+        }
+
         return true;
-        // Core& core = getCore();
-        // sol::state& L = core.getLua();
-
-        // // Register converter for Inner
-        // static bool reg_inner = false;
-        // if (!reg_inner) {
-        //     Variant::ConverterEntry ice;
-        //     ice.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
-        //         auto p = std::static_pointer_cast<Inner>(dv.ptr);
-        //         sol::table t = L.create_table();
-        //         t["a"] = p->a;
-        //         t["name"] = p->name;
-        //         return t;
-        //     };
-        //     ice.fromVariant = [](const Variant& v)->std::shared_ptr<void> {
-        //         auto out = std::make_shared<Inner>();
-        //         if (v.isObject()) {
-        //             const Variant* va = v.get("a");
-        //             const Variant* vn = v.get("name");
-        //             if (va) out->a = static_cast<int>(va->toInt64());
-        //             if (vn) out->name = vn->toString();
-        //             return std::static_pointer_cast<void>(out);
-        //         }
-        //         return nullptr;
-        //     };
-        //     Variant::registerConverter<Inner>("Inner", std::move(ice));
-        //     reg_inner = true;
-        // }
-
-        // // Register converter for Outer
-        // static bool reg_outer = false;
-        // if (!reg_outer) {
-        //     Variant::ConverterEntry oce;
-        //     oce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object {
-        //         auto p = std::static_pointer_cast<Outer>(dv.ptr);
-        //         sol::table t = L.create_table();
-        //         // inner
-        //         sol::table inner = L.create_table();
-        //         inner["a"] = p->inner.a;
-        //         inner["name"] = p->inner.name;
-        //         t["inner"] = inner;
-        //         // arr
-        //         sol::table arrtbl = L.create_table();
-        //         for (size_t i=0;i<p->arr.size();++i) arrtbl[i+1] = p->arr[i];
-        //         t["arr"] = arrtbl;
-        //         // map
-        //         sol::table mt = L.create_table();
-        //         for (auto &kv : p->map) mt[kv.first] = kv.second;
-        //         t["map"] = mt;
-        //         return t;
-        //     };
-        //     oce.fromVariant = [](const Variant& v)->std::shared_ptr<void> {
-        //         auto out = std::make_shared<Outer>();
-        //         if (!v.isObject()) return nullptr;
-        //         const Variant* vin = v.get("inner");
-        //         if (vin && vin->isObject()) {
-        //             const Variant* va = vin->get("a");
-        //             const Variant* vn = vin->get("name");
-        //             if (va) out->inner.a = static_cast<int>(va->toInt64());
-        //             if (vn) out->inner.name = vn->toString();
-        //         }
-        //         const Variant* varr = v.get("arr");
-        //         if (varr && varr->isArray()) {
-        //             for (size_t i=0;i<varr->size();++i) {
-        //                 const Variant* e = varr->at(i);
-        //                 if (e) out->arr.push_back(static_cast<int>(e->toInt64()));
-        //             }
-        //         }
-        //         const Variant* vmap = v.get("map");
-        //         if (vmap && vmap->isObject()) {
-        //             // iterate entries (object() returns a pointer to the underlying map)
-        //             if (auto obj = vmap->object()) {
-        //                 for (const auto &kv : *obj) {
-        //                     out->map[kv.first] = static_cast<int>(kv.second->toInt64());
-        //                 }
-        //             }
-        //         }
-        //         return std::static_pointer_cast<void>(out);
-        //     };
-        //     Variant::registerConverter<Outer>("Outer", std::move(oce));
-        //     reg_outer = true;
-        // }
-
-        // // Build an Outer instance and round-trip
-        // auto out_inst = std::make_shared<Outer>();
-        // out_inst->inner.a = 9; out_inst->inner.name = "nine";
-        // out_inst->arr = {1,2,3};
-        // out_inst->map["one"] = 1; out_inst->map["two"] = 2;
-
-        // Variant v(out_inst);
-        // sol::object o = v.toLua(L);
-        // if (!o.is<sol::table>()) { errors.push_back("Outer toLua did not produce table"); return true; }
-
-        // Variant v2 = Variant::fromLuaObject(o);
-        // auto ce = Variant::getConverterByName("Outer");
-        // if (!ce) { errors.push_back("Outer converter missing"); return true; }
-        // auto pv = ce->fromVariant(v2);
-        // if (!pv) { errors.push_back("Outer fromVariant returned null"); return true; }
-        // auto p2 = std::static_pointer_cast<Outer>(pv);
-        // if (!p2) { errors.push_back("Outer cast failed"); return true; }
-        // if (p2->inner.a != 9 || p2->inner.name != "nine") errors.push_back("Outer.inner mismatch");
-        // if (p2->arr.size() != 3 || p2->arr[0] != 1) errors.push_back("Outer.arr mismatch");
-        // if (p2->map["one"] != 1) errors.push_back("Outer.map mismatch");
-
-        // return true;
     }
 
     bool Variant_UnitTests()
@@ -937,9 +1173,7 @@ namespace SDOM
             ut.add_test(objName, "Numeric coercion randomized", Variant_test_numeric_coercion_randomized);
             ut.add_test(objName, "Hash consistency", Variant_test_hash_consistency);
             ut.add_test(objName, "Threaded registration stress", Variant_test_threaded_registration_stress);
-
-            ut.add_test(objName, "Deep recursion snapshot", Variant_test_deep_recursion_snapshot); // seg fault
-
+            ut.add_test(objName, "Deep recursion snapshot", Variant_test_deep_recursion_snapshot);
             ut.add_test(objName, "Threaded converter registration", Variant_test_threaded_converter_registration);
             ut.add_test(objName, "Equality: composite types", Variant_test_equality_composite_types);
             ut.add_test(objName, "Null/Error semantics", Variant_test_null_and_error);
@@ -950,6 +1184,10 @@ namespace SDOM
             ut.add_test(objName, "Copy/Move semantics and containers", Variant_test_copy_move_and_containers);
             ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
             ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
+            ut.add_test(objName, "C API: roundtrip conversions", Variant_test_capi_roundtrip);
+            ut.add_test(objName, "C API: copy semantics", Variant_test_capi_copy_semantics);
+            ut.add_test(objName, "C API: type metadata", Variant_test_capi_type_metadata);
+            ut.add_test(objName, "C API: error paths", Variant_test_capi_error_paths);
             ut.add_test(objName, "Snapshot(sol::state_view) validity and TableStorageMode", Variant_test_snapshot_state_validity);
 
             ut.add_test(objName, "Deep recursion stress", Variant_test_deep_recursion_stress);  

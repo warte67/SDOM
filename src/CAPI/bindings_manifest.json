@@ -1,6 +1,102 @@
 {
   "functions": [
     {
+      "c_name": "SDOM_Variant_InitNull",
+      "c_signature": "bool SDOM_Variant_InitNull(SDOM_Variant* variant)",
+      "dispatch_family": "singleton",
+      "name": "InitNull",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_InitBool",
+      "c_signature": "bool SDOM_Variant_InitBool(SDOM_Variant* variant, bool value)",
+      "dispatch_family": "singleton",
+      "name": "InitBool",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_InitInt",
+      "c_signature": "bool SDOM_Variant_InitInt(SDOM_Variant* variant, int64_t value)",
+      "dispatch_family": "singleton",
+      "name": "InitInt",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_InitDouble",
+      "c_signature": "bool SDOM_Variant_InitDouble(SDOM_Variant* variant, double value)",
+      "dispatch_family": "singleton",
+      "name": "InitDouble",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_InitString",
+      "c_signature": "bool SDOM_Variant_InitString(SDOM_Variant* variant, const char* utf8)",
+      "dispatch_family": "singleton",
+      "name": "InitString",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_Copy",
+      "c_signature": "bool SDOM_Variant_Copy(const SDOM_Variant* source, SDOM_Variant* destination)",
+      "dispatch_family": "singleton",
+      "name": "Copy",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_Destroy",
+      "c_signature": "bool SDOM_Variant_Destroy(SDOM_Variant* variant)",
+      "dispatch_family": "singleton",
+      "name": "Destroy",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_GetType",
+      "c_signature": "SDOM_VariantType SDOM_Variant_GetType(const SDOM_Variant* variant)",
+      "dispatch_family": "singleton",
+      "name": "GetType",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_ToBool",
+      "c_signature": "bool SDOM_Variant_ToBool(const SDOM_Variant* variant, bool* out_value)",
+      "dispatch_family": "singleton",
+      "name": "ToBool",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_ToInt64",
+      "c_signature": "bool SDOM_Variant_ToInt64(const SDOM_Variant* variant, int64_t* out_value)",
+      "dispatch_family": "singleton",
+      "name": "ToInt64",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_ToDouble",
+      "c_signature": "bool SDOM_Variant_ToDouble(const SDOM_Variant* variant, double* out_value)",
+      "dispatch_family": "singleton",
+      "name": "ToDouble",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_ToString",
+      "c_signature": "const char* SDOM_Variant_ToString(const SDOM_Variant* variant)",
+      "dispatch_family": "singleton",
+      "name": "ToString",
+      "owner_type": "VariantAPI",
+      "subject_kind": "Variant"
+    },
+    {
       "c_name": "SDOM_GetVersionString",
       "c_signature": "const char* SDOM_GetVersionString(void)",
       "dispatch_family": "singleton",
@@ -1456,16 +1552,6 @@
       "uses_handle": true
     },
     {
-      "cpp_type_id": "SDOM::Slider",
-      "dispatch_family": "method_table",
-      "file_stem": "Slider",
-      "has_function_exports": false,
-      "name": "Slider",
-      "owns_method_table": true,
-      "subject_kind": "DisplayObject",
-      "uses_handle": true
-    },
-    {
       "cpp_type_id": "SDOM::RadioButton",
       "dispatch_family": "method_table",
       "file_stem": "RadioButton",
@@ -1496,16 +1582,6 @@
       "uses_handle": true
     },
     {
-      "cpp_type_id": "SDOM::Button",
-      "dispatch_family": "method_table",
-      "file_stem": "Button",
-      "has_function_exports": false,
-      "name": "Button",
-      "owns_method_table": true,
-      "subject_kind": "DisplayObject",
-      "uses_handle": true
-    },
-    {
       "cpp_type_id": "SDOM::Label",
       "dispatch_family": "method_table",
       "file_stem": "Label",
@@ -1524,6 +1600,36 @@
       "owns_method_table": true,
       "subject_kind": "DisplayObject",
       "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Slider",
+      "dispatch_family": "method_table",
+      "file_stem": "Slider",
+      "has_function_exports": false,
+      "name": "Slider",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Button",
+      "dispatch_family": "method_table",
+      "file_stem": "Button",
+      "has_function_exports": false,
+      "name": "Button",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::VariantAPI",
+      "dispatch_family": "singleton",
+      "file_stem": "Variant",
+      "has_function_exports": true,
+      "name": "VariantAPI",
+      "owns_method_table": false,
+      "subject_kind": "Variant",
+      "uses_handle": false
     },
     {
       "cpp_type_id": "SDOM::TristateButton",
