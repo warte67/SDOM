@@ -55,6 +55,7 @@ var classSDOM_1_1Texture =
     [ "started_", "classSDOM_1_1Texture.html#aeaae334940c2e12c06f041e826891ae4", null ],
     [ "texture_", "classSDOM_1_1Texture.html#a5f5348d075450939b08f7dc5bd509d4d", null ],
     [ "textureHeight_", "classSDOM_1_1Texture.html#ac98f94389ba93e008296aac2ae07b3a3", null ],
+    [ "textureKey_", "classSDOM_1_1Texture.html#aa49c39e370b77cce75fc1574a44b6faa", null ],
     [ "textureWidth_", "classSDOM_1_1Texture.html#a9f777980f5b1951cfb765cd7c8b8ac7d", null ],
     [ "type_", "classSDOM_1_1Texture.html#acf24a17e1284129dbef77cfc229bba05", null ],
     [ "TypeName", "classSDOM_1_1Texture.html#aeae0c671509d31a3e9d15b410e4299c7", null ]

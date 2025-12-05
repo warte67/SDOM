@@ -33,6 +33,7 @@
 #include <SDOM/SDOM_ProgressBar.hpp>
 #include <SDOM/SDOM_ScrollBar.hpp>
 #include <cstdlib>
+#include <SDL3/SDL.h>
 
 namespace SDOM
 {
@@ -599,6 +600,39 @@ namespace SDOM
         std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
         asset_id_map_.erase(id);
     }
+
+    SDL_Texture* Factory::retainTexture(const std::string& key,
+                                        const std::function<SDL_Texture*()>& loader)
+    {
+        auto& rec = textureCache_[key];
+        if (rec.texture) {
+            rec.refcount++;
+            return rec.texture;
+        }
+        SDL_Texture* tex = loader ? loader() : nullptr;
+        rec.texture = tex;
+        rec.refcount = tex ? 1 : 0;
+        return tex;
+    }
+
+    void Factory::releaseTexture(const std::string& key, SDL_Texture* ptr)
+    {
+        auto it = textureCache_.find(key);
+        if (it == textureCache_.end()) {
+            return;
+        }
+        auto& rec = it->second;
+        if (rec.texture != ptr) {
+            return;
+        }
+        if (rec.refcount > 0) {
+            rec.refcount--;
+        }
+        if (rec.refcount == 0 && rec.texture) {
+            SDL_DestroyTexture(rec.texture);
+            rec.texture = nullptr;
+        }
+    }
     
     DisplayHandle Factory::getStageHandle() 
     {
@@ -1047,6 +1081,17 @@ namespace SDOM
         futureChildrenList_.clear();
         creators_.clear();
         assetCreators_.clear();
+
+        // Destroy cached textures owned by the factory
+        for (auto& kv : textureCache_) {
+            auto& rec = kv.second;
+            if (rec.texture) {
+                SDL_DestroyTexture(rec.texture);
+                rec.texture = nullptr;
+            }
+            rec.refcount = 0;
+        }
+        textureCache_.clear();
     }
 
     void Factory::printObjectRegistry() const

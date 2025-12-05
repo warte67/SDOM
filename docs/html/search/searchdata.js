@@ -9,7 +9,7 @@ var indexSectionsWithContent =
   6: "abcdgijnorstv",
   7: "abcefiklmoprstv",
   8: "abcdefghiklmnoprstuvw",
-  9: "cfv",
+  9: "cfiv",
   10: "_abdefilsw",
   11: "123abcdefghiklmnoprstuvwyz⚠🍎🐧🧠🧩🪄🪟"
 };

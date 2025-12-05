@@ -1,7 +1,6 @@
 var SDOM_8hpp =
 [
     [ "SDOM::Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
-    [ "SDOM::Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
     [ "ASSERT_EQ", "SDOM_8hpp.html#a3b2380d7733e1ed07ee0210b3aa11d50", null ],
     [ "DEBUG_ERR", "SDOM_8hpp.html#a193f5f73dcccbdbb0e76b2595db67ede", null ],
     [ "DEBUG_LOG", "SDOM_8hpp.html#a21a2c7330a04ac78200a986f66609369", null ],

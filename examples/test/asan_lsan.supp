@@ -1,0 +1,12 @@
+# Suppress known external leaks from HarfBuzz/SDL when running ASan/LSan
+# These are allocator paths owned by third-party libs; SDOM cannot free them.
+leak:hb_shape_plan_create2
+leak:hb_shape_plan_create_cached2
+leak:hb_face_create_for_tables
+leak:hb_font_funcs_create
+leak:hb_blob_create
+leak:hb_aat_layout_has_positioning
+leak:hb_aat_layout_has_substitution
+leak:SDL_malloc_REAL
+leak:SDL_calloc_REAL
+leak:SDL_realloc_REAL

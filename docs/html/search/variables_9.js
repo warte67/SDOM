@@ -8,6 +8,7 @@ var searchData=
   ['keyup_5',['KeyUp',['../classSDOM_1_1EventType.html#a625823311d8c48db0a73bc2e0042f414',1,'SDOM::EventType']]],
   ['kind_6',['kind',['../structSDOM_1_1CAPI_1_1CallArg.html#a7e9617ac44ea3ed3886d34d72b90a35a',1,'SDOM::CAPI::CallArg::kind'],['../structSDOM_1_1CAPI_1_1CallResult.html#a0cce9050c37910352159aec75668622b',1,'SDOM::CAPI::CallResult::kind'],['../structSDOM_1_1TypeInfo.html#a1ab25f7a95f70283b589139ae86576d0',1,'SDOM::TypeInfo::kind']]],
   ['klicenseenvvar_7',['kLicenseEnvVar',['../classSDOM.html#a63ef83dba717528ae1327fd52a84cc1a',1,'SDOM']]],
-  ['knob_5fblock_8',['KNOB_BLOCK',['../classCLR.html#a6fbe23d2668132d3eed18d89a7f9ff6b',1,'CLR']]],
-  ['knob_5fround_9',['KNOB_ROUND',['../classCLR.html#a90ad417a2dbc980643b3f3c9da5e59dd',1,'CLR']]]
+  ['kmaxluatabledepth_8',['kMaxLuaTableDepth',['../classSDOM.html#a82e0dd5d711e62132800d554bfa6ca63',1,'SDOM']]],
+  ['knob_5fblock_9',['KNOB_BLOCK',['../classCLR.html#a6fbe23d2668132d3eed18d89a7f9ff6b',1,'CLR']]],
+  ['knob_5fround_10',['KNOB_ROUND',['../classCLR.html#a90ad417a2dbc980643b3f3c9da5e59dd',1,'CLR']]]
 ];

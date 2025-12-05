@@ -88,6 +88,8 @@ var classSDOM_1_1Core =
     [ "getIsTraversing", "classSDOM_1_1Core.html#af4b0c1680ae0ff64e0d407c619aaf50e", null ],
     [ "getKeyboardFocusedObject", "classSDOM_1_1Core.html#a68231e4d8d9ea00df96a0ce1a0a16c0c", null ],
     [ "getKeyfocusGray", "classSDOM_1_1Core.html#a84a95365d280e5fc1ca74f26d2c2ad56", null ],
+    [ "getLua", "classSDOM_1_1Core.html#afee015872f24f92aee0fd3c83cfbe304", null ],
+    [ "getLua", "classSDOM_1_1Core.html#aa772f6394460c63b07fb25400760b4b4", null ],
     [ "getMouseHoveredObject", "classSDOM_1_1Core.html#abc9e093f0f9d472ec3bda633589faad4", null ],
     [ "getName", "classSDOM_1_1Core.html#a6c4854090319dbc681a275dada027e40", null ],
     [ "getOrphanedDisplayObjects", "classSDOM_1_1Core.html#acd4d8631d1e83b56723fa5f5c7c80e0b", null ],

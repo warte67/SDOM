@@ -19,7 +19,7 @@ var searchData=
   ['return_16',['RETURN',['../classCLR.html#a7a9eedeac52778653bca2160deea4e4d',1,'CLR']]],
   ['return_5ftype_17',['return_type',['../structSDOM_1_1FunctionInfo.html#a8cddddf8c3443c707c2cc167896e5fd7',1,'SDOM::FunctionInfo']]],
   ['reversed_18',['REVERSED',['../classCLR.html#a361b3fc2802281a419a6fa9205c0c548',1,'CLR']]],
-  ['right_19',['right',['../structSDOM_1_1Bounds.html#a7e4aba8aee2989c0b5166aebf258674f',1,'SDOM::Bounds']]],
+  ['right_19',['right',['../structSDOM__Bounds.html#a8b2fee61ddf1b87c6d4b6178a0644310',1,'SDOM_Bounds::right'],['../structSDOM_1_1Bounds.html#a7e4aba8aee2989c0b5166aebf258674f',1,'SDOM::Bounds::right']]],
   ['right_5f_20',['right_',['../classSDOM_1_1IDisplayObject.html#a514bb1586b9cf3bc4f6043669cf049b2',1,'SDOM::IDisplayObject']]],
   ['rootnode_5f_21',['rootNode_',['../classSDOM_1_1Core.html#a6d360ea59596eafb72afe4af6e15fe24',1,'SDOM::Core']]],
   ['running_22',['running',['../structSDOM_1_1UnitTests_1_1TestCase.html#aebb32a74371c9ffcff0aa7bbbd1874f6',1,'SDOM::UnitTests::TestCase']]],

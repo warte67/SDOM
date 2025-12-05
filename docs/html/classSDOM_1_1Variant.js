@@ -3,7 +3,6 @@ var classSDOM_1_1Variant =
     [ "ConverterEntry", "structSDOM_1_1Variant_1_1ConverterEntry.html", "structSDOM_1_1Variant_1_1ConverterEntry" ],
     [ "VariantRegistry", "structSDOM_1_1Variant_1_1VariantRegistry.html", "structSDOM_1_1Variant_1_1VariantRegistry" ],
     [ "VariantView", "classSDOM_1_1Variant_1_1VariantView.html", "classSDOM_1_1Variant_1_1VariantView" ],
-    [ "DynamicToLuaFn", "classSDOM_1_1Variant.html#a630de3d7769b74587aa2c3d834359734", null ],
     [ "VariantToDynamicFn", "classSDOM_1_1Variant.html#a0a5a723ed4ac2b16489588e7a565fb5e", null ],
     [ "TableStorageMode", "classSDOM_1_1Variant.html#a6b332f7c56f99f71979b74792f0fcbda", [
       [ "Copy", "classSDOM_1_1Variant.html#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea", null ],

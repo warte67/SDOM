@@ -106,7 +106,6 @@ Public Types</h2></td></tr>
 <tr class="memitem:a6b332f7c56f99f71979b74792f0fcbda" id="r_a6b332f7c56f99f71979b74792f0fcbda"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a> : uint8_t { <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea">Copy</a> = 0
 , <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbdaa31387975f345e1e5f0d11f2976b71fd0">KeepLuaRef</a>
  }</td></tr>
-<tr class="memitem:a630de3d7769b74587aa2c3d834359734" id="r_a630de3d7769b74587aa2c3d834359734"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a630de3d7769b74587aa2c3d834359734">DynamicToLuaFn</a> = std::function&lt;sol::object(const <a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">VariantStorage::DynamicValue</a>&amp;, sol::state_view)&gt;</td></tr>
 <tr class="memitem:a0a5a723ed4ac2b16489588e7a565fb5e" id="r_a0a5a723ed4ac2b16489588e7a565fb5e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a5a723ed4ac2b16489588e7a565fb5e">VariantToDynamicFn</a> = std::function&lt;std::shared_ptr&lt;void&gt;(const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&amp;)&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -196,20 +195,6 @@ Friends</h2></td></tr>
 <tr class="memitem:a6c270ae3675c2ab191e67d5ffd0dbb88" id="r_a6c270ae3675c2ab191e67d5ffd0dbb88"><td class="memItemLeft" align="right" valign="top">struct&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c270ae3675c2ab191e67d5ffd0dbb88">VariantHash</a></td></tr>
 </table>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
-<a id="a630de3d7769b74587aa2c3d834359734" name="a630de3d7769b74587aa2c3d834359734"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a630de3d7769b74587aa2c3d834359734">&#9670;&#160;</a></span>DynamicToLuaFn</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#a630de3d7769b74587aa2c3d834359734">SDOM::Variant::DynamicToLuaFn</a> = std::function&lt;sol::object(const <a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">VariantStorage::DynamicValue</a>&amp;, sol::state_view)&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a0a5a723ed4ac2b16489588e7a565fb5e" name="a0a5a723ed4ac2b16489588e7a565fb5e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0a5a723ed4ac2b16489588e7a565fb5e">&#9670;&#160;</a></span>VariantToDynamicFn</h2>
 

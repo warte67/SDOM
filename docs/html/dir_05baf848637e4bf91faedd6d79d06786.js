@@ -21,6 +21,8 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_Factory.hpp", "SDOM__Factory_8hpp.html", "SDOM__Factory_8hpp" ],
     [ "SDOM_Frame.hpp", "SDOM__Frame_8hpp.html", "SDOM__Frame_8hpp" ],
     [ "SDOM_Front.hpp", "SDOM__Front_8hpp.html", "SDOM__Front_8hpp" ],
+    [ "SDOM_Geometry.hpp", "SDOM__Geometry_8hpp.html", "SDOM__Geometry_8hpp" ],
+    [ "SDOM_GeometryAPI.hpp", "SDOM__GeometryAPI_8hpp.html", "SDOM__GeometryAPI_8hpp" ],
     [ "SDOM_Group.hpp", "SDOM__Group_8hpp.html", "SDOM__Group_8hpp" ],
     [ "SDOM_IAssetObject.hpp", "SDOM__IAssetObject_8hpp.html", "SDOM__IAssetObject_8hpp" ],
     [ "SDOM_IBindGenerator.hpp", "SDOM__IBindGenerator_8hpp.html", "SDOM__IBindGenerator_8hpp" ],
@@ -29,6 +31,7 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_IconIndex.hpp", "SDOM__IconIndex_8hpp.html", "SDOM__IconIndex_8hpp" ],
     [ "SDOM_IDataObject.hpp", "SDOM__IDataObject_8hpp.html", "SDOM__IDataObject_8hpp" ],
     [ "SDOM_IDisplayObject.hpp", "SDOM__IDisplayObject_8hpp.html", "SDOM__IDisplayObject_8hpp" ],
+    [ "SDOM_IDisplayObjectAPI.hpp", "SDOM__IDisplayObjectAPI_8hpp.html", "SDOM__IDisplayObjectAPI_8hpp" ],
     [ "SDOM_IFontObject.hpp", "SDOM__IFontObject_8hpp.html", "SDOM__IFontObject_8hpp" ],
     [ "SDOM_IPanelObject.hpp", "SDOM__IPanelObject_8hpp.html", "SDOM__IPanelObject_8hpp" ],
     [ "SDOM_IRangeControl.hpp", "SDOM__IRangeControl_8hpp.html", "SDOM__IRangeControl_8hpp" ],
@@ -51,5 +54,6 @@ var dir_05baf848637e4bf91faedd6d79d06786 =
     [ "SDOM_UnitTests.hpp", "SDOM__UnitTests_8hpp.html", "SDOM__UnitTests_8hpp" ],
     [ "SDOM_Utils.hpp", "SDOM__Utils_8hpp.html", "SDOM__Utils_8hpp" ],
     [ "SDOM_Variant.hpp", "SDOM__Variant_8hpp.html", "SDOM__Variant_8hpp" ],
+    [ "SDOM_VariantAPI.hpp", "SDOM__VariantAPI_8hpp.html", "SDOM__VariantAPI_8hpp" ],
     [ "SDOM_Version.hpp", "SDOM__Version_8hpp.html", "SDOM__Version_8hpp" ]
 ];

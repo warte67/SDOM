@@ -1187,9 +1187,9 @@ Once C++ introspection holds steady, Lua bindings get full end-to-end validation
 - ☐ Optional: Script a payload-key discovery pass  
 - 🔄 Expand DataRegistry metadata  
 - ☐ Finalize argument dispatch layer  
-- ☐ Expand UI components  
-- ☐ Validate initialization invariants  
-- ☐ Update asset loading documentation  
+- 🔄 Expand UI components  
+- 🔄 Validate initialization invariants  
+- 🔄 Update asset loading documentation  
 - 🔄 Continue binding generator redesign  
 - 🔄 Add common ABI wrapper layer  
 - 🔄 Expand unit test coverage  

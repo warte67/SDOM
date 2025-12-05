@@ -41,7 +41,7 @@ var searchData=
   ['bordercolor_38',['borderColor',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745',1,'SDOM::IDisplayObject::InitStruct::borderColor'],['../structSDOM_1_1FontStyle.html#a62b81b6edf01fa2467e338d25a8a4a35',1,'SDOM::FontStyle::borderColor']]],
   ['bordercolor_5f_39',['borderColor_',['../classSDOM_1_1IDisplayObject.html#a4d4f5976d3d6b3d6a90bc4e5496ce306',1,'SDOM::IDisplayObject']]],
   ['borderthickness_40',['borderThickness',['../structSDOM_1_1FontStyle.html#a62133c9f0eaf4c334915a98d2e95b1a2',1,'SDOM::FontStyle::borderThickness'],['../structSDOM_1_1Label_1_1InitStruct.html#a22fc366f4c2c9f0c2ffbf55369f65a4d',1,'SDOM::Label::InitStruct::borderThickness']]],
-  ['bottom_41',['bottom',['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds']]],
+  ['bottom_41',['bottom',['../structSDOM__Bounds.html#a29e8eb0046c447c82f2320eb98c2f228',1,'SDOM_Bounds::bottom'],['../structSDOM_1_1Bounds.html#a256a8ca78d4b4c32fd3d6d92e30bca99',1,'SDOM::Bounds::bottom']]],
   ['bottom_5f_42',['bottom_',['../classSDOM_1_1IDisplayObject.html#a21a0936456c85d904886bba2fa28891f',1,'SDOM::IDisplayObject']]],
   ['box_5fb_43',['BOX_B',['../classCLR.html#a85e7c083d439b8dc94a655f1316e798f',1,'CLR']]],
   ['box_5fbl_44',['BOX_BL',['../classCLR.html#acc9d8d3533c3dbe9a92099f374717900',1,'CLR']]],

@@ -63,6 +63,7 @@ namespace SDOM
     void Texture::onLoad()
     {
         onUnload();
+        textureKey_.clear();
 
         SDL_Renderer* renderer = getRenderer();
         if (!renderer) { ERROR("No valid SDL_Renderer available in Core instance."); return; }
@@ -74,71 +75,61 @@ namespace SDOM
             resolvedFilename = resolveTextureFilename(filename_);
         }
 
-        // If Factory already has an object for this filename -> reuse it
-    IAssetObject* existing = getFactory().getAssetObjectPtr(filename_);
-        if (existing)
-        {
-            // Try to reuse an already-loaded Texture asset to avoid redundant loads / null texture
-            Texture* other = dynamic_cast<Texture*>(existing);
-            if (other && other->isLoaded())
-            {
-                // Reuse the SDL_Texture* and cached size (do NOT destroy other's texture_ in this instance;
-                // prefer sharing ownership via Factory in a later refactor)
-                texture_ = other->texture_;
-                textureWidth_  = other->textureWidth_;
-                textureHeight_ = other->textureHeight_;
-                isLoaded_ = true;
-                return;
-            }
-            // If an existing asset is present but not loaded yet, fall through and attempt to load here.
+        Factory& factory = getFactory();
+        textureKey_ = resolvedFilename;
+        if (treatAsInternal) {
+            textureKey_ = filename_;
         }
 
-        // special internal names
-        if (filename_ == "internal_icon_8x8")
-        {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_icon_8x8)), internal_icon_8x8_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_icon_8x8[]"); return; }
-            texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
-            if (!texture_) { ERROR("Failed to load texture from sprite_8x8[]: " + std::string(SDL_GetError())); return; }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
-        }
-        else if (filename_ == "internal_icon_12x12")
-        {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_icon_12x12)), internal_icon_12x12_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_icon_12x12[]"); return; }
-            texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
-            if (!texture_) { ERROR("Failed to load texture from sprite_12x12[]: " + std::string(SDL_GetError())); return; }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
-        }
-        else if (filename_ == "internal_icon_16x16")
-        {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_icon_16x16)), internal_icon_16x16_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_icon_16x16[]"); return; }
-            texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
-            if (!texture_) { ERROR("Failed to load texture from sprite_16x16[]: " + std::string(SDL_GetError())); return; }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
-        }        
-        else if (filename_ == "internal_font_8x8")
-        {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_font_8x8)), internal_font_8x8_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_font_8x8[]"); return; }
-            texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
-            if (!texture_) { ERROR("Failed to load texture from font_8x8[]: " + std::string(SDL_GetError())); return; }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
-        }
-        else if (filename_ == "internal_font_8x12")
-        {
-            SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_font_8x12)), internal_font_8x12_len);
-            if (!rw) { ERROR("Failed to create SDL_IOStream from internal_font_8x12[]"); return; }
-            texture_ = IMG_LoadTexture_IO(renderer, rw, 1);
-            if (!texture_) { ERROR("Failed to load texture from font_8x12[]: " + std::string(SDL_GetError())); return; }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
-        }        
-        else
-        {
-            texture_ = IMG_LoadTexture(renderer, resolvedFilename.c_str());
-            if (!texture_) { ERROR("Failed to load texture from file: " + resolvedFilename + " - " + std::string(SDL_GetError())); return; }
-            SDL_SetTextureScaleMode(texture_, SDL_SCALEMODE_NEAREST);
+        auto loadTexture = [&]() -> SDL_Texture* {
+            if (treatAsInternal) {
+                if (filename_ == "internal_icon_8x8") {
+                    SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_icon_8x8)), internal_icon_8x8_len);
+                    if (!rw) { ERROR("Failed to create SDL_IOStream from internal_icon_8x8[]"); return nullptr; }
+                    SDL_Texture* tex = IMG_LoadTexture_IO(renderer, rw, 1);
+                    if (tex) SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
+                    return tex;
+                }
+                if (filename_ == "internal_icon_12x12") {
+                    SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_icon_12x12)), internal_icon_12x12_len);
+                    if (!rw) { ERROR("Failed to create SDL_IOStream from internal_icon_12x12[]"); return nullptr; }
+                    SDL_Texture* tex = IMG_LoadTexture_IO(renderer, rw, 1);
+                    if (tex) SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
+                    return tex;
+                }
+                if (filename_ == "internal_icon_16x16") {
+                    SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_icon_16x16)), internal_icon_16x16_len);
+                    if (!rw) { ERROR("Failed to create SDL_IOStream from internal_icon_16x16[]"); return nullptr; }
+                    SDL_Texture* tex = IMG_LoadTexture_IO(renderer, rw, 1);
+                    if (tex) SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
+                    return tex;
+                }
+                if (filename_ == "internal_font_8x8") {
+                    SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_font_8x8)), internal_font_8x8_len);
+                    if (!rw) { ERROR("Failed to create SDL_IOStream from internal_font_8x8[]"); return nullptr; }
+                    SDL_Texture* tex = IMG_LoadTexture_IO(renderer, rw, 1);
+                    if (tex) SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
+                    return tex;
+                }
+                if (filename_ == "internal_font_8x12") {
+                    SDL_IOStream* rw = SDL_IOFromMem(static_cast<void*>(const_cast<unsigned char*>(internal_font_8x12)), internal_font_8x12_len);
+                    if (!rw) { ERROR("Failed to create SDL_IOStream from internal_font_8x12[]"); return nullptr; }
+                    SDL_Texture* tex = IMG_LoadTexture_IO(renderer, rw, 1);
+                    if (tex) SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
+                    return tex;
+                }
+            }
+
+            SDL_Texture* tex = IMG_LoadTexture(renderer, resolvedFilename.c_str());
+            if (!tex) { ERROR("Failed to load texture from file: " + resolvedFilename + " - " + std::string(SDL_GetError())); return nullptr; }
+            SDL_SetTextureScaleMode(tex, SDL_SCALEMODE_NEAREST);
+            return tex;
+        };
+
+        texture_ = factory.retainTexture(textureKey_, loadTexture);
+        if (!texture_) {
+            textureKey_.clear();
+            return;
         }
 
         if (!texture_) {
@@ -160,9 +151,10 @@ namespace SDOM
         // Free the texture and clear sprite metadata
         if (texture_)
         {
-            SDL_DestroyTexture(texture_);
+            getFactory().releaseTexture(textureKey_.empty() ? filename_ : textureKey_, texture_);
             texture_ = nullptr;
         }
+        textureKey_.clear();
         isLoaded_ = false;    
     }
 

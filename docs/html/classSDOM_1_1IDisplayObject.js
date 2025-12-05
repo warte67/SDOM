@@ -179,6 +179,7 @@ var classSDOM_1_1IDisplayObject =
     [ "startup", "classSDOM_1_1IDisplayObject.html#a815b824ead08e6a74c782d9f59f94daa", null ],
     [ "triggerEventListeners", "classSDOM_1_1IDisplayObject.html#a20ec88bd7b74e55076b20b37b6178079", null ],
     [ "Factory", "classSDOM_1_1IDisplayObject.html#a328c093d609680cca505905c6d49901a", null ],
+    [ "IDisplayObjectAPI::registerBindings", "classSDOM_1_1IDisplayObject.html#a3c17a7757ec7ff7717c9b103c4aaa1a7", null ],
     [ "anchorBottom_", "classSDOM_1_1IDisplayObject.html#ab3b87f6350ce8b2272d54888fb26bcc9", null ],
     [ "anchorLeft_", "classSDOM_1_1IDisplayObject.html#a60d1c916d6cadc5c8edd47cb12af7f06", null ],
     [ "anchorRight_", "classSDOM_1_1IDisplayObject.html#a606ab9bf41b5c61e3469b92fe69eeddc", null ],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['varianthash_0',['VariantHash',['../classSDOM_1_1Variant.html#a6c270ae3675c2ab191e67d5ffd0dbb88',1,'SDOM::Variant']]]
+  ['idisplayobjectapi_3a_3aregisterbindings_0',['registerBindings',['../classSDOM_1_1IDisplayObject.html#a3c17a7757ec7ff7717c9b103c4aaa1a7',1,'SDOM::IDisplayObject']]]
 ];

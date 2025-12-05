@@ -101,6 +101,7 @@ namespace SDOM
         SDL_Texture* texture_ = nullptr;
         float textureWidth_ = 0;
         float textureHeight_ = 0;
+        std::string textureKey_;
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

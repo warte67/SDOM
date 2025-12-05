@@ -9,14 +9,16 @@
 #include <variant>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 #include <typeindex>
 #include <optional>
 
-// SDOM ships with Lua/sol; Variant integrates directly
-#include <sol/sol.hpp>
 #include <mutex>
 #include <functional>
+
+// SDOM ships with Lua/sol; Variant integrates directly
+#include <sol/sol.hpp>
 
 namespace SDOM {
 
@@ -227,23 +229,19 @@ public:
         return dv.type;
     }
 
-    // Converter API (minimal): allow registering per-type converters for
-    // converting DynamicValue -> Lua and Variant -> DynamicValue
-    using DynamicToLuaFn = std::function<sol::object(const VariantStorage::DynamicValue&, sol::state_view)>;
+    // Minimal converter API stub for Dynamic -> native conversions (Lua disabled).
+    // Only `fromVariant` is kept so callers can map Variants to native pointers.
     using VariantToDynamicFn = std::function<std::shared_ptr<void>(const Variant&)>;
 
     struct ConverterEntry {
-        DynamicToLuaFn toLua;
         VariantToDynamicFn fromVariant;
     };
 
-    // Register a converter for a C++ type T
+    // Register a converter for a C++ type T (native-only)
     template<typename T>
     static void registerConverter(const std::string& typeName, ConverterEntry entry) {
         VariantRegistry::registerType<T>(typeName);
         std::lock_guard<std::mutex> lk(VariantRegistry::getMutex());
-        // Populate both type_index->converter and name->converter maps. ConverterEntry
-        // uses std::function which is copyable, so copy-insert into both maps.
         VariantRegistry::getConverterMap()[std::type_index(typeid(T))] = entry;
         VariantRegistry::getConverterMapByName()[typeName] = entry;
     }
@@ -281,12 +279,11 @@ public:
             static std::mutex mtx;
             return mtx;
         }
-        // Converter map accessors
+        // Converter map accessors (native only)
         static std::unordered_map<std::type_index, ConverterEntry>& getConverterMap() {
             static std::unordered_map<std::type_index, ConverterEntry> conv;
             return conv;
         }
-        // Name-based converter map (allows lookup by registered type name)
         static std::unordered_map<std::string, ConverterEntry>& getConverterMapByName() {
             static std::unordered_map<std::string, ConverterEntry> convByName;
             return convByName;
@@ -316,13 +313,6 @@ public:
     // -------------------- Inline API usage notes --------------------
     // The following short examples are intended to live close to the API so
     // future readers can quickly understand common usage patterns.
-    //
-    // Registering a converter (type-based)
-    // ----------------------------------
-    // Variant::ConverterEntry ce;
-    // ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { ... };
-    // ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { ... };
-    // Variant::registerConverter<MyType>("MyTypeName", std::move(ce));
     //
     // Registering a converter by name only
     // ------------------------------------
@@ -459,9 +449,12 @@ private:
     std::string errorMsg_;
 
     // helpers
-    static Variant fromLuaTable_(const sol::table& t);
+    static Variant fromLuaTable_(const sol::table& t, int depth = 0, std::unordered_set<const void*>* visited = nullptr);
     static Variant fromLuaNumber_(double n);
     static bool    numericEqual_(const Variant& a, const Variant& b);
+
+    // Internal helper used by fromLuaObject to track recursion depth.
+    static Variant fromLuaObject(const sol::object& o, int depth, std::unordered_set<const void*>* visited);
 };
 
 // Hash support for Variant: best-effort, consistent with operator== for

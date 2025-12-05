@@ -151,6 +151,10 @@ namespace SDOM
         // Helper: find a SpriteSheet asset matching filename and sprite dimensions
         AssetHandle findSpriteSheetByParams(const std::string& filename, int spriteW, int spriteH) const;
 
+        // Texture cache (factory-owned SDL_Texture resources)
+        SDL_Texture* retainTexture(const std::string& key, const std::function<SDL_Texture*()>& loader);
+        void releaseTexture(const std::string& key, SDL_Texture* ptr);
+
         // Helper: Unload Asset Objects
         void unloadAllAssetObjects() 
         {
@@ -220,6 +224,12 @@ namespace SDOM
         std::unordered_map<std::string, std::unique_ptr<DisplayRecord>> displayObjects_;
         // Use shared_ptr inside AssetRecord so multiple registry names can alias the same underlying asset
         std::unordered_map<std::string, std::unique_ptr<AssetRecord>> assetObjects_;
+        // SDL_Texture cache owned by the factory (filename -> texture + refcount)
+        struct TextureRecord {
+            SDL_Texture* texture = nullptr;
+            int refcount = 0;
+        };
+        std::unordered_map<std::string, TextureRecord> textureCache_;
 
         std::unordered_map<std::string, TypeCreators> creators_;            // are these now needed?
         std::unordered_map<std::string, AssetTypeCreators> assetCreators_;  // are these now needed?

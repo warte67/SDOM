@@ -4,6 +4,7 @@
 #include <cmath>
 #include <limits>
 #include <mutex>
+#include <unordered_set>
 
 // Nothing to implement out-of-line here; registry helpers are inline in header.
 
@@ -242,7 +243,34 @@ Variant Variant::fromLuaNumber_(double n) {
     return Variant(n);
 }
 
-Variant Variant::fromLuaTable_(const sol::table& t) {
+namespace {
+constexpr int kMaxLuaTableDepth = 64;
+}
+
+Variant Variant::fromLuaTable_(const sol::table& t, int depth, std::unordered_set<const void*>* visited) {
+    if (depth > kMaxLuaTableDepth) {
+        return Variant::makeError("Lua table recursion depth exceeded");
+    }
+    thread_local std::unordered_set<const void*> tlsVisited;
+    std::unordered_set<const void*>* useVisited = visited ? visited : &tlsVisited;
+    const bool isRoot = (!visited && depth == 0);
+    if (isRoot) {
+        useVisited->clear();
+    }
+    const void* ptr = nullptr;
+    {
+        sol::state_view sv = t.lua_state();
+        sol::stack::push(sv, t);
+        ptr = lua_topointer(sv.lua_state(), -1);
+        lua_pop(sv.lua_state(), 1);
+    }
+    if (ptr) {
+        if (useVisited->find(ptr) != useVisited->end()) {
+            return Variant::makeError("Lua table recursion cycle detected");
+        }
+        useVisited->insert(ptr);
+    }
+
     // Decide array vs object
     bool isArray = true;
     size_t maxIndex = 0;
@@ -268,7 +296,7 @@ Variant Variant::fromLuaTable_(const sol::table& t) {
         arr->reserve(maxIndex);
         for (size_t i = 1; i <= maxIndex; ++i) {
             sol::object elem = t[i];
-            arr->push_back(std::make_shared<Variant>(Variant::fromLuaObject(elem)));
+            arr->push_back(std::make_shared<Variant>(Variant::fromLuaObject(elem, depth + 1, useVisited)));
         }
         return v;
     } else {
@@ -290,13 +318,20 @@ Variant Variant::fromLuaTable_(const sol::table& t) {
                     default: key = "<key>"; break;
                 }
             }
-            (*obj)[key] = std::make_shared<Variant>(Variant::fromLuaObject(kv.second));
+            (*obj)[key] = std::make_shared<Variant>(Variant::fromLuaObject(kv.second, depth + 1, useVisited));
         }
         return v;
     }
 }
 
 Variant Variant::fromLuaObject(const sol::object& o) {
+    return fromLuaObject(o, 0, nullptr);
+}
+
+Variant Variant::fromLuaObject(const sol::object& o, int depth, std::unordered_set<const void*>* visited) {
+    if (depth > kMaxLuaTableDepth) {
+        return Variant::makeError("Lua object recursion depth exceeded");
+    }
     if (!o.valid())            return Variant(); // Null
     switch (o.get_type()) {
         case sol::type::nil:       return Variant();
@@ -308,7 +343,7 @@ Variant Variant::fromLuaObject(const sol::object& o) {
             if (Variant::getTableStorageMode() == Variant::TableStorageMode::KeepLuaRef) {
                 return Variant(o); // store as LuaRefValue
             }
-            return fromLuaTable_(o.as<sol::table>());
+            return fromLuaTable_(o.as<sol::table>(), depth + 1, visited);
         case sol::type::userdata:
         case sol::type::lightuserdata:
         case sol::type::thread:
@@ -361,7 +396,8 @@ Variant Variant::snapshot(sol::state_view L) const {
                 auto saved = Variant::getTableStorageMode();
                 Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
 
-                Variant out = fromLuaTable_(t);
+                std::unordered_set<const void*> visited;
+                Variant out = fromLuaTable_(t, 0, &visited);
 
                 Variant::setTableStorageMode(saved);
                 // --- end critical section ---
@@ -454,13 +490,8 @@ sol::object Variant::toLua(sol::state_view L) const {
         return sol::make_object(L, sol::lua_nil);
     }
     if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
-        // If a converter exists for this dynamic type, call it
-        auto conv = Variant::getConverter(p->type);
-        if (conv && conv->toLua) {
-            try {
-                return conv->toLua(*p, L);
-            } catch(...) { /* fallthrough to nil */ }
-        }
+        // No Lua converters registered in the native-only build; return nil.
+        (void)p;
     }
     // No conversion available: return nil
     return sol::make_object(L, sol::lua_nil);

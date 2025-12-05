@@ -18,12 +18,14 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_EventType.cpp", "SDOM__EventType_8cpp.html", "SDOM__EventType_8cpp" ],
     [ "SDOM_Factory.cpp", "SDOM__Factory_8cpp.html", null ],
     [ "SDOM_Frame.cpp", "SDOM__Frame_8cpp.html", null ],
+    [ "SDOM_GeometryAPI.cpp", "SDOM__GeometryAPI_8cpp.html", "SDOM__GeometryAPI_8cpp" ],
     [ "SDOM_Group.cpp", "SDOM__Group_8cpp.html", null ],
     [ "SDOM_IAssetObject.cpp", "SDOM__IAssetObject_8cpp.html", null ],
     [ "SDOM_IBindGenerator.cpp", "SDOM__IBindGenerator_8cpp.html", null ],
     [ "SDOM_IconButton.cpp", "SDOM__IconButton_8cpp.html", null ],
     [ "SDOM_IDataObject.cpp", "SDOM__IDataObject_8cpp.html", null ],
     [ "SDOM_IDisplayObject.cpp", "SDOM__IDisplayObject_8cpp.html", null ],
+    [ "SDOM_IDisplayObjectAPI.cpp", "SDOM__IDisplayObjectAPI_8cpp.html", "SDOM__IDisplayObjectAPI_8cpp" ],
     [ "SDOM_IFontObject.cpp", "SDOM__IFontObject_8cpp.html", null ],
     [ "SDOM_internal_font_8x12.cpp", "SDOM__internal__font__8x12_8cpp.html", null ],
     [ "SDOM_internal_font_8x8.cpp", "SDOM__internal__font__8x8_8cpp.html", null ],
@@ -50,5 +52,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_TTFAsset.cpp", "SDOM__TTFAsset_8cpp.html", null ],
     [ "SDOM_UnitTests.cpp", "SDOM__UnitTests_8cpp.html", null ],
     [ "SDOM_Utils.cpp", "SDOM__Utils_8cpp.html", "SDOM__Utils_8cpp" ],
-    [ "SDOM_Variant.cpp", "SDOM__Variant_8cpp.html", null ]
+    [ "SDOM_Variant.cpp", "SDOM__Variant_8cpp.html", null ],
+    [ "SDOM_VariantAPI.cpp", "SDOM__VariantAPI_8cpp.html", "SDOM__VariantAPI_8cpp" ]
 ];

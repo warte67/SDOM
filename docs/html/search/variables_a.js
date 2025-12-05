@@ -13,7 +13,7 @@ var searchData=
   ['last_5fupdate_5fns_10',['last_update_ns',['../structSDOM_1_1Factory_1_1PerfStats.html#a5d65c1765a2b30d84252cf51d6cdb7b1',1,'SDOM::Factory::PerfStats']]],
   ['lasttokenizedtext_5f_11',['lastTokenizedText_',['../classSDOM_1_1Label.html#a75e455bcf7917a37f3536b94c177fa80',1,'SDOM::Label']]],
   ['leavefullscreen_12',['LeaveFullscreen',['../classSDOM_1_1EventType.html#aed0d07f388f2fc133dfe7fffcd9e2735',1,'SDOM::EventType']]],
-  ['left_13',['left',['../structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4',1,'SDOM::Bounds']]],
+  ['left_13',['left',['../structSDOM__Bounds.html#a2a841f1846344a7c84f795007d983a2c',1,'SDOM_Bounds::left'],['../structSDOM_1_1Bounds.html#a5268f1526e83122173b7de40f83ac7c4',1,'SDOM::Bounds::left']]],
   ['left_5f_14',['left_',['../classSDOM_1_1IDisplayObject.html#aff25b187c79d6b229d57fba2ae34a3d3',1,'SDOM::IDisplayObject']]],
   ['lineindex_15',['lineIndex',['../structSDOM_1_1Label_1_1PhraseToken.html#a889d0c315deeb35f97ceaf11688add5e',1,'SDOM::Label::PhraseToken']]],
   ['liney_16',['lineY',['../structSDOM_1_1Label_1_1PhraseToken.html#ab4e7e5ead39e0e8539a5e2f8cffbeb16',1,'SDOM::Label::PhraseToken']]],

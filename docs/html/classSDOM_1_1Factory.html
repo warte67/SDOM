@@ -141,6 +141,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a19ec0e9ac0de1f7ba855a801e1566b53" id="r_a19ec0e9ac0de1f7ba855a801e1566b53"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19ec0e9ac0de1f7ba855a801e1566b53">printAssetTreeGrouped</a> () const</td></tr>
 <tr class="memitem:a7c9bd4705f8a020c7d3581c5ed3ff1e9" id="r_a7c9bd4705f8a020c7d3581c5ed3ff1e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c9bd4705f8a020c7d3581c5ed3ff1e9">findAssetByFilename</a> (const std::string &amp;filename, const std::string &amp;typeName=&quot;&quot;) const</td></tr>
 <tr class="memitem:aac735a001aaf43f7d410d20d8e69810b" id="r_aac735a001aaf43f7d410d20d8e69810b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac735a001aaf43f7d410d20d8e69810b">findSpriteSheetByParams</a> (const std::string &amp;filename, int spriteW, int spriteH) const</td></tr>
+<tr class="memitem:a9bc0a2ddb93a23355e21f605110a25af" id="r_a9bc0a2ddb93a23355e21f605110a25af"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9bc0a2ddb93a23355e21f605110a25af">retainTexture</a> (const std::string &amp;key, const std::function&lt; SDL_Texture *()&gt; &amp;loader)</td></tr>
+<tr class="memitem:a958e5f40bfec96da84df8a9d235690ea" id="r_a958e5f40bfec96da84df8a9d235690ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a958e5f40bfec96da84df8a9d235690ea">releaseTexture</a> (const std::string &amp;key, SDL_Texture *ptr)</td></tr>
 <tr class="memitem:a92857a9cfdd74f81608f52781a5c2e17" id="r_a92857a9cfdd74f81608f52781a5c2e17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92857a9cfdd74f81608f52781a5c2e17">unloadAllAssetObjects</a> ()</td></tr>
 <tr class="memitem:a3ff6a57510d03de98a68eafa91759b13" id="r_a3ff6a57510d03de98a68eafa91759b13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ff6a57510d03de98a68eafa91759b13">reloadAllAssetObjects</a> ()</td></tr>
 <tr class="memitem:a713fe69e21d206b31b6c11b334a5895d" id="r_a713fe69e21d206b31b6c11b334a5895d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a713fe69e21d206b31b6c11b334a5895d">start_update_timer</a> (const <a class="el" href="classSDOM_1_1IDisplayObject.html">IDisplayObject</a> *obj)</td></tr>
@@ -1030,6 +1032,27 @@ Friends</h2></td></tr>
 
 </div>
 </div>
+<a id="a958e5f40bfec96da84df8a9d235690ea" name="a958e5f40bfec96da84df8a9d235690ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a958e5f40bfec96da84df8a9d235690ea">&#9670;&#160;</a></span>releaseTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Factory::releaseTexture </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SDL_Texture *</td>          <td class="paramname"><span class="paramname"><em>ptr</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a3ff6a57510d03de98a68eafa91759b13" name="a3ff6a57510d03de98a68eafa91759b13"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3ff6a57510d03de98a68eafa91759b13">&#9670;&#160;</a></span>reloadAllAssetObjects()</h2>
 
@@ -1117,6 +1140,27 @@ Friends</h2></td></tr>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9bc0a2ddb93a23355e21f605110a25af" name="a9bc0a2ddb93a23355e21f605110a25af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bc0a2ddb93a23355e21f605110a25af">&#9670;&#160;</a></span>retainTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Texture * SDOM::Factory::retainTexture </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::function&lt; SDL_Texture *()&gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>loader</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

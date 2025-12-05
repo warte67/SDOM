@@ -39,7 +39,6 @@ var annotated_dup =
         [ "ResultEncoder&lt; std::string, void &gt;", "structSDOM_1_1detail_1_1ResultEncoder_3_01std_1_1string_00_01void_01_4.html", "structSDOM_1_1detail_1_1ResultEncoder_3_01std_1_1string_00_01void_01_4" ]
       ] ],
       [ "Exception", "classSDOM_1_1Exception.html", "classSDOM_1_1Exception" ],
-      [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
       [ "ArrowButton", "classSDOM_1_1ArrowButton.html", "classSDOM_1_1ArrowButton" ],
       [ "AssetHandle", "classSDOM_1_1AssetHandle.html", "classSDOM_1_1AssetHandle" ],
       [ "BitmapFont", "classSDOM_1_1BitmapFont.html", "classSDOM_1_1BitmapFont" ],
@@ -64,6 +63,7 @@ var annotated_dup =
       [ "AssetRecord", "structSDOM_1_1AssetRecord.html", "structSDOM_1_1AssetRecord" ],
       [ "Factory", "classSDOM_1_1Factory.html", "classSDOM_1_1Factory" ],
       [ "Frame", "classSDOM_1_1Frame.html", "classSDOM_1_1Frame" ],
+      [ "Bounds", "structSDOM_1_1Bounds.html", "structSDOM_1_1Bounds" ],
       [ "Group", "classSDOM_1_1Group.html", "classSDOM_1_1Group" ],
       [ "IAssetObject", "classSDOM_1_1IAssetObject.html", "classSDOM_1_1IAssetObject" ],
       [ "IBindGenerator", "classSDOM_1_1IBindGenerator.html", "classSDOM_1_1IBindGenerator" ],
@@ -103,8 +103,10 @@ var annotated_dup =
     [ "CLR", "classCLR.html", "classCLR" ],
     [ "SDOM", "classSDOM.html", "classSDOM" ],
     [ "SDOM_AssetHandle", "structSDOM__AssetHandle.html", "structSDOM__AssetHandle" ],
+    [ "SDOM_Bounds", "structSDOM__Bounds.html", "structSDOM__Bounds" ],
     [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", "structSDOM__CoreConfig" ],
     [ "SDOM_DisplayHandle", "structSDOM__DisplayHandle.html", "structSDOM__DisplayHandle" ],
     [ "SDOM_Event", "structSDOM__Event.html", "structSDOM__Event" ],
+    [ "SDOM_Variant", "structSDOM__Variant.html", "structSDOM__Variant" ],
     [ "SDOM_Version", "structSDOM__Version.html", "structSDOM__Version" ]
 ];
