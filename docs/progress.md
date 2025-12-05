@@ -1119,6 +1119,8 @@ It was a day of **reflection, retention, and readiness** — the calm before the
 
 > 💬 *Today was about validating the foundation rather than expanding the frontier — shoring up SDOM’s Core and Variant systems so everything built on top has bedrock under it.*
 
+---
+
 ### 🧩 Core Subsystem — CAPI Unit Testing Blitz
 - Completed comprehensive **Core_UnitTests** coverage for metadata, window/pixel dimensions, border color, and config toggles.
 - Introduced **re-entrant state machine testing** to validate properties that incur deferred renderer/window rebuilds.
@@ -1126,34 +1128,44 @@ It was a day of **reflection, retention, and readiness** — the calm before the
 - Confirmed reliable **ASCII translation** for modifier+key combos via `SDOM_GetEventAsciiCode()`.
 - Polished generated C API headers with **version stamping + automatic license injection** — professional, traceable artifacts.
 
-### 🧩 SDOM_Variant — Full ABI Verification & Stress Trials
-- Passed **100%** of Variant test coverage, including:
-  - Numeric coercion cross-type equivalence (int ↔ double ↔ string)
-  - Deep structural equality for arrays & objects
-  - Dynamic pointer metadata & type-name lookup
-  - Hash-consistency for use as **unordered_map keys**
-  - Lua reference lifetime safety across mismatched states
-  - Snapshot correctness for deep tables (**120+ nested levels**)
-- Confirmed correct **copy/move semantics** inside STL containers
-- Multi-threaded registry stress tests validated mutex-guarded safety with:
-  - Concurrent converter registration
-  - High-volume converter lookups
-  - Zero data races, zero UB, zero nondeterminism
+---
 
-**Outcome** → `Variant` is now a fully **locked ABI**.  
-It becomes the universal InitStruct representation for all DisplayObjects going forward.
+### 🧩 SDOM_Variant — Full ABI Verification & Stress Trials
+- C API round-trip tests confirmed correct conversion between:
+  - Null ↔ Bool ↔ Int64 ↔ Double ↔ UTF-8 Strings
+- **Copy semantics validated** — source mutation no longer affects destination.
+- Type introspection via `SDOM_Variant_GetType()` verified for all base kinds.
+- Error-path coverage:
+  - Null handles and null-out-params now cleanly signal failure + set `SDOM_GetError()`
+  - `GetType(nullptr)` returns `SDOM_VariantType_Error` as documented
+- Added a **C++ RAII wrapper** (`CVariantHandle`) for deterministic cleanup in tests
+
+**Outcome** → The **Variant C API is now fully reliable** as the universal InitStruct for DisplayObject creation.
+
+---
 
 ### 🌟 Summary
-With both **Core C API** behavior validated and **Variant** fully proven, SDOM’s foundation is now rock-solid.  
-Next up: binding the **DisplayObject lifecycle**, attach/detach testing, and verifying handle correctness throughout the display tree. Lua path will follow once C++ introspection settles.
+With both **Core C API** validated and the **Variant C API** fully exercised across success and failure paths, SDOM’s lowest binding layer is officially **production-ready** for downstream binding expansion.
 
-### 🚧 ToDo Today
+This clears the runway for tomorrow:
+- Binding & testing the **IDisplayObject** lifecycle  
+- Validating Stage hierarchy assumptions  
+- Enabling real **DisplayObject creation** through the C API  
+
+Once C++ introspection holds steady, Lua bindings get full end-to-end validation.
+
+---
+
+### 🚧 ToDo Tomorrow
 - ☐ Add `rendererVSync` to JSON parsing  
 - ☐ Add `rendererVSync` to C API & binding manifest  
-- ☐ Begin scaffolding **IDisplayObject lifecycle** tests (`Create → Attach → Detach → Destroy`)
-- ☐ Add basic Stage assertions (root validity, display tree integrity)
-- ☐ Expand CAPI coverage into remaining lifecycle helpers
-- ☐ Prep Lua binding test harness parity for Core operations
+- ☐ Scaffold **IDisplayObject lifecycle** tests  
+  → `Create → Attach → Detach → Destroy`  
+- ☐ Add Stage assertions (root validity, orphan handling)  
+- ☐ Expand CAPI coverage into remaining lifecycle helpers  
+- ☐ Begin Lua test harness parity for Core+Variant operations
+
+---
 
 #### 🤔 End of Day Reflection
 > *“Before you build the castle, make sure the drawbridge actually works.”* 🏰🔧
