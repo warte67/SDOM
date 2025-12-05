@@ -12,6 +12,49 @@ Legend
 > **Naming rule:** Core C API functions must not repeat the word “Core.” Use `SDOM_<Verb>` (e.g., `SDOM_Reconfigure`, `SDOM_SetStage`) because the singleton context is implied once you invoke the SDOM prefix.
 > **Signature guidance:** Prefer the common `bool` return value for pass/fail, but treat it as a guideline—capability queries like `SDOM_HasLuaSupport()` or state getters such as `SDOM_IsWindowed()` / `SDOM_IsFullscreen()` may return `true`/`false` strictly to report availability or mode, not success/failure.
 
+### **Extended C API naming convention:**
+SDOM C API identifiers follow a three-domain rule:
+
+| Subject omitted | Identifier Form      | First Param                    | Valid Domain                   | Notes                                        |
+|-----------------|----------------------|--------------------------------|--------------------------------|----------------------------------------------|
+| ✔               | `SDOM_<Verb>`        | *(none)*                       | Core singleton only            | Global system state or renderer/window ops   |
+| ✔               | `SDOM_<Verb>`        | `SDOM_DisplayHandle*` (const) | Base IDisplayObject            | Universal display-object behavior            |
+| ✔               | `SDOM_<Verb>`        | `SDOM_AssetHandle*` (const)   | Base IAssetObject              | Universal asset behavior                     |
+| ✘               | `SDOM_<Type>_<Verb>` | `SDOM_DisplayHandle*` (const) | Derived DisplayObject          | Subtype-only or virtual overrides            |
+| ✘               | `SDOM_<Type>_<Verb>` | `SDOM_AssetHandle*` (const)   | Derived AssetObject            | Subtype-only behaviors                       |
+
+**Interpretation**
+- If the identifier **does not** include a concrete type name (`Label`, `Button`, `SpriteSheet`, etc.),
+  it must represent an operation that is **universally valid** for *all* objects of that handle category.
+  - Example: `SDOM_SetDirty(SDOM_DisplayHandle*)`, `SDOM_SetFilename(SDOM_AssetHandle*)`
+- Any operation that applies only to a specific subtype — or models a C++ virtual override — must
+  declare that type explicitly:
+  `SDOM_<Type>_<Verb>(Handle*)`
+  - Example: `SDOM_Label_SetText(SDOM_DisplayHandle*)`
+
+**Symbol Namespace**
+All **subject-omitted identifiers** (`SDOM_<Verb>`) share **one global symbol namespace** spanning:
+  - Core API
+  - Base DisplayObject API
+  - Base AssetObject API
+
+The **binding generator enforces uniqueness** in this namespace at generation time and will emit an
+error if any collision is detected (e.g. Core accidentally introducing `SDOM_SetDirty()`).
+**Handle Spelling & Constness**
+- Always use the exact typedef names:  
+  `SDOM_DisplayHandle*` and `SDOM_AssetHandle*`
+- Parameters are **`const` pointers** when callers are *observing* state:
+  `bool SDOM_IsVisible(const SDOM_DisplayHandle* h)`
+- Drop `const` only when the function will mutate the target object’s state:
+  `bool SDOM_SetVisible(SDOM_DisplayHandle* h, bool visible)`
+  (mutation is explicit in the function name)
+
+**Rationale**
+- Shortest identifiers are reserved for highest-traffic, universal operations
+- ABI clarity and type-safety are automatically maintained via handle type
+- Subtype-qualified names make polymorphic behavior explicit and discoverable
+- Collision rules ensure forward-compatibility as Core and the object hierarchies evolve
+
 Lifecycle & Main Loop
 ---------------------
 
@@ -464,7 +507,6 @@ Open Questions / Follow-ups
 1. **Handle exposure vs. raw pointers** – functions currently returning `Stage*`, `IDisplayObject*`, `IAssetObject*`, or SDL pointers should either stay internal or gain safe handle-based wrappers before generating bindings.
 2. **Config mutation granularity** – decide whether per-field getters/setters are needed in C, or if manipulating an `SDOM_CoreConfig` blob suffices.
 3. **Async safety** – some proposed APIs (`SetIsRunning`, focus setters) mutate state that is only safe on the main thread; generation should embed thread-safety warnings.
-
 
 
 
