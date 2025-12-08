@@ -465,6 +465,126 @@
       "subject_kind": "AssetObject"
     },
     {
+      "c_name": "SDOM_Type",
+      "c_signature": "uint8_t SDOM_Type(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_Type",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_IsNull",
+      "c_signature": "bool SDOM_IsNull(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_IsNull",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_IsBool",
+      "c_signature": "bool SDOM_IsBool(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_IsBool",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_IsInt",
+      "c_signature": "bool SDOM_IsInt(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_IsInt",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_IsFloat",
+      "c_signature": "bool SDOM_IsFloat(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_IsFloat",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_IsString",
+      "c_signature": "bool SDOM_IsString(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_IsString",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_MakeNull",
+      "c_signature": "SDOM_Variant SDOM_MakeNull(void)",
+      "dispatch_family": "custom",
+      "name": "SDOM_MakeNull",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_MakeBool",
+      "c_signature": "SDOM_Variant SDOM_MakeBool(bool b)",
+      "dispatch_family": "custom",
+      "name": "SDOM_MakeBool",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_MakeInt",
+      "c_signature": "SDOM_Variant SDOM_MakeInt(int64_t i)",
+      "dispatch_family": "custom",
+      "name": "SDOM_MakeInt",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_MakeFloat",
+      "c_signature": "SDOM_Variant SDOM_MakeFloat(double f)",
+      "dispatch_family": "custom",
+      "name": "SDOM_MakeFloat",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_MakeCString",
+      "c_signature": "SDOM_Variant SDOM_MakeCString(const char* utf8)",
+      "dispatch_family": "custom",
+      "name": "SDOM_MakeCString",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_AsBool",
+      "c_signature": "bool SDOM_AsBool(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_AsBool",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_AsInt",
+      "c_signature": "int64_t SDOM_AsInt(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_AsInt",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_AsFloat",
+      "c_signature": "double SDOM_AsFloat(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_AsFloat",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_AsString",
+      "c_signature": "const char* SDOM_AsString(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_AsString",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
       "c_name": "SDOM_DisplayHandle_IsValid",
       "c_signature": "bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)",
       "dispatch_family": "method_table",
@@ -1564,6 +1684,16 @@
       "owns_method_table": true,
       "subject_kind": "AssetObject",
       "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Variant",
+      "dispatch_family": "custom",
+      "file_stem": "Variant",
+      "has_function_exports": true,
+      "name": "Variant",
+      "owns_method_table": false,
+      "subject_kind": "Variant",
+      "uses_handle": false
     },
     {
       "cpp_type_id": "SDOM::DisplayHandle",

@@ -6,42 +6,106 @@
 #include <mutex>
 #include <json.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Variant.h>
+
+extern "C" {
+uint8_t SDOM_Type(const SDOM_Variant* v);
+bool SDOM_IsNull(const SDOM_Variant* v);
+bool SDOM_IsBool(const SDOM_Variant* v);
+bool SDOM_IsInt(const SDOM_Variant* v);
+bool SDOM_IsFloat(const SDOM_Variant* v);
+bool SDOM_IsString(const SDOM_Variant* v);
+
+SDOM_Variant SDOM_MakeNull(void);
+SDOM_Variant SDOM_MakeBool(bool b);
+SDOM_Variant SDOM_MakeInt(int64_t i);
+SDOM_Variant SDOM_MakeFloat(double f);
+SDOM_Variant SDOM_MakeCString(const char* utf8);
+
+bool SDOM_AsBool(const SDOM_Variant* v);
+int64_t SDOM_AsInt(const SDOM_Variant* v);
+double SDOM_AsFloat(const SDOM_Variant* v);
+const char* SDOM_AsString(const SDOM_Variant* v);
+}
 
 // Nothing to implement out-of-line here; registry helpers are inline in header.
 
 namespace SDOM {
 
 void Variant::registerBindings(DataRegistry& registry) {
-    if (registry.lookupType("SDOM_Variant")) {
-        return;
+    // Ensure a TypeInfo entry for the C++ Variant type so functions can attach.
+    if (!registry.lookupType("Variant")) {
+        SDOM::TypeInfo ti;
+        ti.name        = "Variant";
+        ti.kind        = SDOM::EntryKind::Object;
+        ti.cpp_type_id = "SDOM::Variant";
+        ti.file_stem   = "Variant";
+        ti.export_name = ""; // no direct C handle yet
+        ti.subject_kind = "Variant";
+        ti.subject_uses_handle = false;
+        ti.has_handle_override = true;
+        ti.doc = "Reflectable SDOM::Variant value type (no ABI surface yet).";
+        registry.registerType(ti);
     }
 
-    SDOM::TypeInfo ti;
-    ti.name        = "SDOM_Variant";
-    ti.kind        = SDOM::EntryKind::Struct;
-    ti.cpp_type_id = "SDOM::Variant";
-    ti.file_stem   = "Variant";
-    ti.export_name = "SDOM_Variant";
-    ti.category    = "Variant";
-    ti.doc         = "Provisional ABI view of SDOM::Variant; layout may change.";
+    if (!registry.lookupType("SDOM_Variant")) {
+        SDOM::TypeInfo ti;
+        ti.name        = "SDOM_Variant";
+        ti.kind        = SDOM::EntryKind::Struct;
+        ti.cpp_type_id = "SDOM::Variant";
+        ti.file_stem   = "Variant";
+        ti.export_name = "SDOM_Variant";
+        ti.category    = "Variant";
+        ti.doc         = "Provisional ABI view of SDOM::Variant; layout may change.";
 
-    auto addField = [&](const std::string& fieldName,
-                        const std::string& cppType,
-                        const std::string& doc) {
-        SDOM::PropertyInfo p;
-        p.name      = fieldName;
-        p.cpp_type  = cppType;
-        p.read_only = false;
-        p.doc       = doc;
-        ti.properties.push_back(std::move(p));
+        auto addField = [&](const std::string& fieldName,
+                            const std::string& cppType,
+                            const std::string& doc) {
+            SDOM::PropertyInfo p;
+            p.name      = fieldName;
+            p.cpp_type  = cppType;
+            p.read_only = false;
+            p.doc       = doc;
+            ti.properties.push_back(std::move(p));
+        };
+
+        addField("type", "uint8_t", "Variant kind tag; mirrors SDOM_VariantType." );
+        addField("reserved", "uint8_t[3]", "Reserved bytes; must be zero when passed across the ABI." );
+        addField("flags", "uint32_t", "Future use bitmask; currently must be zero." );
+        addField("data", "uint64_t", "Inline payload or handle depending on type/flags; provisional semantics." );
+
+        registry.registerType(ti);
+    }
+
+    // --- Register Variant C API Functions ---
+    // These attach behavior to the Variant type for C ABI bindings.
+    auto registerFn = [&](const std::string& name, const std::string& ret, const std::string& sig) {
+        SDOM::FunctionInfo fi;
+        fi.name         = name;
+        fi.c_name       = name;
+        fi.c_signature  = sig;
+        fi.return_type  = ret;
+        fi.exported     = true;
+        registry.registerFunction("Variant", fi);
     };
 
-    addField("type", "uint8_t", "Variant kind tag; mirrors SDOM_VariantType." );
-    addField("reserved", "uint8_t[3]", "Reserved bytes; must be zero when passed across the ABI." );
-    addField("flags", "uint32_t", "Future use bitmask; currently must be zero." );
-    addField("data", "uint64_t", "Inline payload or handle depending on type/flags; provisional semantics." );
+    registerFn("SDOM_Type", "uint8_t", "uint8_t SDOM_Type(const SDOM_Variant* v)");
+    registerFn("SDOM_IsNull", "bool", "bool SDOM_IsNull(const SDOM_Variant* v)");
+    registerFn("SDOM_IsBool", "bool", "bool SDOM_IsBool(const SDOM_Variant* v)");
+    registerFn("SDOM_IsInt", "bool", "bool SDOM_IsInt(const SDOM_Variant* v)");
+    registerFn("SDOM_IsFloat", "bool", "bool SDOM_IsFloat(const SDOM_Variant* v)");
+    registerFn("SDOM_IsString", "bool", "bool SDOM_IsString(const SDOM_Variant* v)");
 
-    registry.registerType(ti);
+    registerFn("SDOM_MakeNull", "SDOM_Variant", "SDOM_Variant SDOM_MakeNull(void)");
+    registerFn("SDOM_MakeBool", "SDOM_Variant", "SDOM_Variant SDOM_MakeBool(bool b)");
+    registerFn("SDOM_MakeInt", "SDOM_Variant", "SDOM_Variant SDOM_MakeInt(int64_t i)");
+    registerFn("SDOM_MakeFloat", "SDOM_Variant", "SDOM_Variant SDOM_MakeFloat(double f)");
+    registerFn("SDOM_MakeCString", "SDOM_Variant", "SDOM_Variant SDOM_MakeCString(const char* utf8)");
+
+    registerFn("SDOM_AsBool", "bool", "bool SDOM_AsBool(const SDOM_Variant* v)");
+    registerFn("SDOM_AsInt", "int64_t", "int64_t SDOM_AsInt(const SDOM_Variant* v)");
+    registerFn("SDOM_AsFloat", "double", "double SDOM_AsFloat(const SDOM_Variant* v)");
+    registerFn("SDOM_AsString", "const char*", "const char* SDOM_AsString(const SDOM_Variant* v)");
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

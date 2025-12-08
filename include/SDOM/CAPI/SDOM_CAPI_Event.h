@@ -94,7 +94,7 @@ extern "C" {
 
 // Opaque C handle for SDOM::Event.
 typedef struct SDOM_Event {
-    void* impl;                                     ///< Opaque pointer to underlying C++ instance.
+    void* impl;     ///< Opaque pointer to underlying C++ instance.
 } SDOM_Event;
 
 // Callable bindings

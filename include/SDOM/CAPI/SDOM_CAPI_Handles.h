@@ -11,16 +11,16 @@ extern "C" {
 
 // Opaque ABI struct describing an SDOM asset handle.
 typedef struct SDOM_AssetHandle {
-    uint64_t object_id;                             ///< Factory-assigned identifier (0 == invalid). 
-    const char* name;                               ///< Stable asset name token.
-    const char* type;                               ///< Asset type string (Texture, Font, …). 
+    uint64_t object_id;     ///< Factory-assigned identifier (0 == invalid). 
+    const char* name;       ///< Stable asset name token.
+    const char* type;       ///< Asset type string (Texture, Font, …). 
 } SDOM_AssetHandle;
 
 // Opaque ABI struct describing an SDOM display handle.
 typedef struct SDOM_DisplayHandle {
-    uint64_t object_id;                             ///< Factory-assigned identifier (0 == invalid). 
-    const char* name;                               ///< Stable display object name token.
-    const char* type;                               ///< Display object type string (Button, Label, …). 
+    uint64_t object_id;     ///< Factory-assigned identifier (0 == invalid). 
+    const char* name;       ///< Stable display object name token.
+    const char* type;       ///< Display object type string (Button, Label, …). 
 } SDOM_DisplayHandle;
 
 // Callable bindings

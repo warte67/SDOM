@@ -725,6 +725,23 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << '\n';
     }
 
+    // Special-case Variant: emit the VariantType constants up front so both
+    // struct definitions and function stubs can reference them without
+    // duplicating fallback enums in sources.
+    if (module.file_stem == "Variant") {
+        out << "typedef enum SDOM_VariantType {\n";
+        out << "    SDOM_VARIANT_TYPE_NULL   = 0,\n";
+        out << "    SDOM_VARIANT_TYPE_BOOL   = 1,\n";
+        out << "    SDOM_VARIANT_TYPE_INT    = 2,\n";
+        out << "    SDOM_VARIANT_TYPE_FLOAT  = 3,\n";
+        out << "    SDOM_VARIANT_TYPE_STRING = 4,\n";
+        out << "    SDOM_VARIANT_TYPE_ARRAY  = 5,\n";
+        out << "    SDOM_VARIANT_TYPE_OBJECT = 6,\n";
+        out << "    SDOM_VARIANT_TYPE_DYNAMIC= 7,\n";
+        out << "    SDOM_VARIANT_TYPE_ERROR  = 8\n";
+        out << "} SDOM_VariantType;\n\n";
+    }
+
     emitEnums(out, module);
 
     if (module.file_stem == "Core") {
@@ -914,6 +931,15 @@ void CAPI_BindGenerator::emitStructs(std::ofstream& out, const BindModule& modul
         if (type->properties.empty()) {
             out << "    void* _opaque; ///< Placeholder for opaque struct.\n";
         } else {
+            struct FieldLine {
+                std::string line;
+                std::string comment;
+            };
+            std::vector<FieldLine> rendered;
+            rendered.reserve(type->properties.size());
+
+            std::size_t longest = 0;
+
             for (const auto& prop : type->properties) {
                 std::string raw_cpp_type = trim(prop.cpp_type);
                 std::string array_suffix;
@@ -935,25 +961,38 @@ void CAPI_BindGenerator::emitStructs(std::ofstream& out, const BindModule& modul
                     line += " = " + *prop.default_value + ";";
                 }
 
+                std::string comment;
                 if (!prop.doc.empty() || field_type == "void*" || field_type == "const void*") {
-                    if (line.size() < 52) {
-                        line.append(52 - line.size(), ' ');
-                    } else {
-                        line.push_back(' ');
-                    }
-
-                    std::string comment = prop.doc;
+                    comment = prop.doc;
                     if (comment.empty() && prop.cpp_type.find("SDOM::") != std::string::npos) {
                         comment = "Pointer to underlying C++ type (" + prop.cpp_type + ")";
                     }
-
-                    if (!comment.empty()) {
-                        std::replace(comment.begin(), comment.end(), '\n', ' ');
-                        line += "///< " + comment;
-                    }
+                    std::replace(comment.begin(), comment.end(), '\n', ' ');
                 }
 
-                out << line << '\n';
+                longest = std::max(longest, line.size());
+                rendered.push_back(FieldLine{std::move(line), std::move(comment)});
+            }
+
+            // Align comments to the next tab stop after (longest + 2)
+            constexpr std::size_t kTabStop = 4;
+            const std::size_t baseWidth = longest + 2;
+            const std::size_t alignmentWidth = ((baseWidth + kTabStop - 1) / kTabStop) * kTabStop;
+
+            for (const auto& fld : rendered) {
+                if (fld.comment.empty()) {
+                    out << fld.line << '\n';
+                    continue;
+                }
+
+                std::string padded = fld.line;
+                if (padded.size() < alignmentWidth) {
+                    padded.append(alignmentWidth - padded.size(), ' ');
+                } else {
+                    padded.push_back(' ');
+                }
+
+                out << padded << "///< " << fld.comment << '\n';
             }
         }
 
