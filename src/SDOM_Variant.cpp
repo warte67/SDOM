@@ -4,6 +4,7 @@
 #include <cmath>
 #include <limits>
 #include <mutex>
+#include <json.hpp>
 
 // Nothing to implement out-of-line here; registry helpers are inline in header.
 
@@ -80,9 +81,9 @@ Variant::Variant(std::unordered_map<std::string, Variant>&& obj)
     storage_->data = std::move(o);
 }
 
-Variant::Variant(const sol::object& o)
+Variant::Variant(const nlohmann::json& j)
 : storage_(std::make_shared<VariantStorage>()) {
-    storage_->data = VariantStorage::LuaRefValue{o};
+    *this = Variant::fromJson(j);
 }
 
 // (templated dynamic constructor is defined in the header)
@@ -122,7 +123,6 @@ VariantType Variant::type() const noexcept {
     if (std::holds_alternative<VariantStorage::Array>(d))          return VariantType::Array;
     if (std::holds_alternative<VariantStorage::Object>(d))         return VariantType::Object;
     if (std::holds_alternative<VariantStorage::DynamicValue>(d))     return VariantType::Dynamic;
-    if (std::holds_alternative<VariantStorage::LuaRefValue>(d))    return VariantType::LuaRef;
     return VariantType::Error;
 }
 
@@ -228,156 +228,73 @@ Variant* Variant::get(const std::string& key) noexcept {
     return nullptr;
 }
 
-// Lua integration
-Variant Variant::fromLuaNumber_(double n) {
-    // Prefer int when representable exactly
-    double intpart;
-    if (std::modf(n, &intpart) == 0.0) {
-        // fits into 64-bit?
-        if (n >= static_cast<double>(std::numeric_limits<int64_t>::min()) &&
-            n <= static_cast<double>(std::numeric_limits<int64_t>::max())) {
-            return Variant(static_cast<int64_t>(n));
+// JSON integration
+nlohmann::json Variant::toJson() const {
+    const auto& d = storage_->data;
+    if (std::holds_alternative<std::monostate>(d)) return nlohmann::json(nullptr);
+    if (auto p = std::get_if<bool>(&d))            return *p;
+    if (auto p = std::get_if<int64_t>(&d))         return *p;
+    if (auto p = std::get_if<double>(&d))          return *p;
+    if (auto p = std::get_if<std::string>(&d))     return *p;
+    if (auto p = std::get_if<VariantStorage::Array>(&d)) {
+        nlohmann::json arr = nlohmann::json::array();
+        for (const auto& elem : *p) {
+            if (!elem) { arr.push_back(nullptr); continue; }
+            arr.push_back(elem->toJson());
+        }
+        return arr;
+    }
+    if (auto p = std::get_if<VariantStorage::Object>(&d)) {
+        nlohmann::json obj = nlohmann::json::object();
+        for (const auto& [k, v] : *p) {
+            if (!v) { obj[k] = nullptr; continue; }
+            obj[k] = v->toJson();
+        }
+        return obj;
+    }
+    if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
+        auto conv = Variant::getConverter(p->type);
+        if (conv && conv->toJson) {
+            try {
+                return conv->toJson(*p);
+            } catch(...) { /* fallthrough to null */ }
         }
     }
-    return Variant(n);
+    return nlohmann::json(nullptr);
 }
 
-Variant Variant::fromLuaTable_(const sol::table& t) {
-    // Decide array vs object
-    bool isArray = true;
-    size_t maxIndex = 0;
-    size_t count = 0;
-    for (auto& kv : t) {
-        count++;
-        if (kv.first.get_type() == sol::type::number) {
-            double idxd = kv.first.as<double>();
-            double ip;
-            if (std::modf(idxd, &ip) != 0.0 || idxd <= 0) { isArray = false; break; }
-            size_t idx = static_cast<size_t>(idxd);
-            if (idx > maxIndex) maxIndex = idx;
-        } else {
-            isArray = false;
-            break;
+Variant Variant::fromJson(const nlohmann::json& j) {
+    if (j.is_null()) return Variant();
+    if (j.is_boolean()) return Variant(j.get<bool>());
+    if (j.is_number_integer()) return Variant(j.get<int64_t>());
+    if (j.is_number_unsigned()) {
+        auto u = j.get<uint64_t>();
+        if (u <= static_cast<uint64_t>(std::numeric_limits<int64_t>::max())) {
+            return Variant(static_cast<int64_t>(u));
         }
+        return Variant(static_cast<double>(u));
     }
-
-    if (isArray && (maxIndex == count || count == 0)) {
-        // packed array 1..n
+    if (j.is_number_float()) return Variant(j.get<double>());
+    if (j.is_string()) return Variant(j.get<std::string>());
+    if (j.is_array()) {
         Variant v = Variant::makeArray();
         auto* arr = v.array();
-        arr->reserve(maxIndex);
-        for (size_t i = 1; i <= maxIndex; ++i) {
-            sol::object elem = t[i];
-            arr->push_back(std::make_shared<Variant>(Variant::fromLuaObject(elem)));
+        arr->reserve(j.size());
+        for (const auto& elem : j) {
+            arr->push_back(std::make_shared<Variant>(Variant::fromJson(elem)));
         }
         return v;
-    } else {
+    }
+    if (j.is_object()) {
         Variant v = Variant::makeObject();
         auto* obj = v.object();
-        for (auto& kv : t) {
-            std::string key;
-            if (kv.first.get_type() == sol::type::string) {
-                key = std::string(kv.first.as<std::string_view>());
-            } else {
-                // stringify non-string keys
-                sol::object k = kv.first;
-                sol::state_view L = t.lua_state();
-                sol::object s = sol::make_object(L, k);
-                // fallback textualization
-                switch (k.get_type()) {
-                    case sol::type::number: key = std::to_string(k.as<double>()); break;
-                    case sol::type::boolean: key = k.as<bool>() ? "true" : "false"; break;
-                    default: key = "<key>"; break;
-                }
-            }
-            (*obj)[key] = std::make_shared<Variant>(Variant::fromLuaObject(kv.second));
+        for (auto it = j.begin(); it != j.end(); ++it) {
+            (*obj)[it.key()] = std::make_shared<Variant>(Variant::fromJson(it.value()));
         }
         return v;
     }
-}
 
-Variant Variant::fromLuaObject(const sol::object& o) {
-    if (!o.valid())            return Variant(); // Null
-    switch (o.get_type()) {
-        case sol::type::nil:       return Variant();
-        case sol::type::boolean:   return Variant(o.as<bool>());
-        case sol::type::number:    return fromLuaNumber_(o.as<double>());
-        case sol::type::string:    return Variant(std::string(o.as<std::string_view>()));
-        case sol::type::table:
-            // Respect global table storage mode: copy (default) or keep as LuaRef
-            if (Variant::getTableStorageMode() == Variant::TableStorageMode::KeepLuaRef) {
-                return Variant(o); // store as LuaRefValue
-            }
-            return fromLuaTable_(o.as<sol::table>());
-        case sol::type::userdata:
-        case sol::type::lightuserdata:
-        case sol::type::thread:
-        case sol::type::function:
-            // Hold opaque reference for now
-            return Variant(o);
-        default:
-            // Opaque fallback
-            return Variant(o);
-    }
-}
-
-
-Variant Variant::snapshot() const {
-    const auto& d = storage_->data;
-
-    if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
-        if (!p->obj.valid() || p->L == nullptr)
-            return *this;
-
-        sol::state_view sv(p->L);
-
-        // enforce Copy during snapshot
-        auto saved = Variant::getTableStorageMode();
-        Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
-
-        Variant out = snapshot(sv);
-
-        Variant::setTableStorageMode(saved);
-
-        return out;
-    }
-
-    return *this;
-}
-
-
-Variant Variant::snapshot(sol::state_view L) const {
-    const auto& d = storage_->data;
-
-    if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
-        if (!p->obj.valid()) return *this;
-        if (!p->validFor(L)) return *this;
-
-        try {
-            if (p->obj.get_type() == sol::type::table) {
-                sol::table t = p->obj.as<sol::table>();
-
-                // --- critical section: force Copy mode during deep-copy ---
-                auto saved = Variant::getTableStorageMode();
-                Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
-
-                Variant out = fromLuaTable_(t);
-
-                Variant::setTableStorageMode(saved);
-                // --- end critical section ---
-
-                return out;
-            }
-        }
-        catch (...) {
-            // restore mode even if exception (robust)
-            // but since your code swallows exceptions anyway, no need for
-            // a second try/catch
-            return *this;
-        }
-    }
-
-    return *this;
+    return Variant();
 }
 
 
@@ -420,50 +337,8 @@ std::string Variant::toDebugString(int depth) const {
             return s;
         }
         case VariantType::Dynamic: return "<dynamic>";
-        case VariantType::LuaRef: return "<luaref>";
         default: return "<error>";
     }
-}
-
-sol::object Variant::toLua(sol::state_view L) const {
-    const auto& d = storage_->data;
-    if (std::holds_alternative<std::monostate>(d)) return sol::make_object(L, sol::lua_nil);
-    if (auto p = std::get_if<bool>(&d))            return sol::make_object(L, *p);
-    if (auto p = std::get_if<int64_t>(&d))         return sol::make_object(L, *p);
-    if (auto p = std::get_if<double>(&d))          return sol::make_object(L, *p);
-    if (auto p = std::get_if<std::string>(&d))     return sol::make_object(L, *p);
-    if (auto p = std::get_if<VariantStorage::Array>(&d)) {
-        sol::table t = L.create_table(static_cast<int>(p->size()), 0);
-        int i = 1;
-        for (const auto& elem : *p) {
-            if (!elem) { t[i++] = sol::make_object(L, sol::lua_nil); continue; }
-            t[i++] = elem->toLua(L);
-        }
-        return t;
-    }
-    if (auto p = std::get_if<VariantStorage::Object>(&d)) {
-        sol::table t = L.create_table(0, static_cast<int>(p->size()));
-        for (const auto& [k, v] : *p) {
-            if (!v) { t[k] = sol::make_object(L, sol::lua_nil); continue; }
-            t[k] = v->toLua(L);
-        }
-        return t;
-    }
-    if (auto p = std::get_if<VariantStorage::LuaRefValue>(&d)) {
-        if (p->validFor(L)) return p->obj;
-        return sol::make_object(L, sol::lua_nil);
-    }
-    if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
-        // If a converter exists for this dynamic type, call it
-        auto conv = Variant::getConverter(p->type);
-        if (conv && conv->toLua) {
-            try {
-                return conv->toLua(*p, L);
-            } catch(...) { /* fallthrough to nil */ }
-        }
-    }
-    // No conversion available: return nil
-    return sol::make_object(L, sol::lua_nil);
 }
 
 // Operators

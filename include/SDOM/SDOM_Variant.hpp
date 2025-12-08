@@ -13,8 +13,8 @@
 #include <typeindex>
 #include <optional>
 
-// SDOM ships with Lua/sol; Variant integrates directly
-#include <sol/sol.hpp>
+// SDOM bundles nlohmann/json; Variant integrates directly
+#include <json.hpp>
 #include <mutex>
 #include <functional>
 
@@ -32,7 +32,6 @@ enum class VariantType : uint8_t {
     Array,      // std::vector<Variant>
     Object,     // std::unordered_map<std::string, Variant>
     Dynamic,    // std::shared_ptr<void> (extensible user type)
-    LuaRef,     // sol::object (opaque reference)
     Error
 };
 
@@ -60,34 +59,6 @@ struct VariantStorage {
         }
     };
 
-    struct LuaRefValue {
-        sol::object obj;
-        lua_State* L = nullptr;
-
-        LuaRefValue() = default;
-        LuaRefValue(const sol::object& o)
-            : obj(o)
-            , L(o.lua_state())
-        {}
-        bool operator==(const LuaRefValue& o) const noexcept {
-            return L == o.L && obj == o.obj;
-        }
-        bool validFor(sol::state_view sv) const noexcept {
-            return L == sv.lua_state() && obj.valid();
-        }
-    };
-
-    // Note: Variant stores Lua references in a small wrapper (LuaRefValue)
-    // which keeps the `sol::object` and the originating `lua_State*` so
-    // accesses can validate the reference against the target state. This
-    // prevents returning a `sol::object` bound to a different `lua_State`.
-    //
-    // Tables are treated specially: by default they are converted (deep
-    // copied) into Variant `Array`/`Object` structures (this acts as a
-    // snapshot of the table contents). A global table storage mode allows
-    // callers to request that tables be stored as Lua references instead
-    // (i.e. kept as `LuaRefValue`) when desired.
-
         using Data = std::variant<
             std::monostate, // Null
             bool,
@@ -96,8 +67,7 @@ struct VariantStorage {
             std::string,
             Array,
             Object,
-            DynamicValue,
-            LuaRefValue
+            DynamicValue
         >;
 
     Data data{};
@@ -121,7 +91,7 @@ public:
     explicit Variant(std::vector<Variant>&& arr);
     explicit Variant(const std::unordered_map<std::string, Variant>& obj);
     explicit Variant(std::unordered_map<std::string, Variant>&& obj);
-    explicit Variant(const sol::object& o);
+    explicit Variant(const nlohmann::json& j);
 
     // Explicitly opt into move semantics to document intent and allow
     // noexcept move operations for container optimizations.
@@ -153,7 +123,6 @@ public:
     bool isString() const noexcept { return std::holds_alternative<std::string>(storage_->data); }
     bool isArray()  const noexcept { return std::holds_alternative<VariantStorage::Array>(storage_->data); }
     bool isObject() const noexcept { return std::holds_alternative<VariantStorage::Object>(storage_->data); }
-    bool isLuaRef() const noexcept { return std::holds_alternative<VariantStorage::LuaRefValue>(storage_->data); }
     bool isDynamic()const noexcept { return std::holds_alternative<VariantStorage::DynamicValue>(storage_->data); }
 
     // Conversions (safe, no-throw; return default on mismatch)
@@ -228,12 +197,12 @@ public:
     }
 
     // Converter API (minimal): allow registering per-type converters for
-    // converting DynamicValue -> Lua and Variant -> DynamicValue
-    using DynamicToLuaFn = std::function<sol::object(const VariantStorage::DynamicValue&, sol::state_view)>;
+    // converting DynamicValue -> JSON and Variant -> DynamicValue
+    using DynamicToJsonFn = std::function<nlohmann::json(const VariantStorage::DynamicValue&)>;
     using VariantToDynamicFn = std::function<std::shared_ptr<void>(const Variant&)>;
 
     struct ConverterEntry {
-        DynamicToLuaFn toLua;
+        DynamicToJsonFn toJson;
         VariantToDynamicFn fromVariant;
     };
 
@@ -242,8 +211,6 @@ public:
     static void registerConverter(const std::string& typeName, ConverterEntry entry) {
         VariantRegistry::registerType<T>(typeName);
         std::lock_guard<std::mutex> lk(VariantRegistry::getMutex());
-        // Populate both type_index->converter and name->converter maps. ConverterEntry
-        // uses std::function which is copyable, so copy-insert into both maps.
         VariantRegistry::getConverterMap()[std::type_index(typeid(T))] = entry;
         VariantRegistry::getConverterMapByName()[typeName] = entry;
     }
@@ -320,7 +287,7 @@ public:
     // Registering a converter (type-based)
     // ----------------------------------
     // Variant::ConverterEntry ce;
-    // ce.toLua = [](const VariantStorage::DynamicValue& dv, sol::state_view L)->sol::object { ... };
+    // ce.toJson = [](const VariantStorage::DynamicValue& dv)->nlohmann::json { ... };
     // ce.fromVariant = [](const Variant& v)->std::shared_ptr<void> { ... };
     // Variant::registerConverter<MyType>("MyTypeName", std::move(ce));
     //
@@ -334,33 +301,13 @@ public:
     // auto v2 = Variant::makeDynamic<MyType>(/* constructor args for MyType */);
     // auto dv = Variant::makeDynamicValue<MyType>(shared_ptr<MyType>);
     //
-    // Snapshotting & Lua table ownership
-    // ----------------------------------
-    // Variant::setTableStorageMode(Variant::TableStorageMode::KeepLuaRef);
-    // Variant luaRef = Variant::fromLuaObject(some_table);
-    // Variant copy = luaRef.snapshot(); // deep-copied Variant::Object/Array
-    // Variant::setTableStorageMode(Variant::TableStorageMode::Copy);
+    // JSON ownership is value-based; snapshots are plain copies.
     //
     // VariantView read-only traversal
     // -------------------------------
     // Variant::VariantView view(variant_instance);
     // if (view.isObject()) { if (const Variant* v = view.get("key")) { /* inspect v */ } }
     // ------------------------------------------------------------------------------
-
-    // Table storage mode controls how incoming Lua tables are handled:
-    // - Copy (default): tables are converted into Variant::Array/Object (a snapshot)
-    // - KeepLuaRef: tables are stored as a LuaRefValue (opaque reference tied to the lua_State)
-    enum class TableStorageMode : uint8_t {
-        Copy = 0,
-        KeepLuaRef
-    };
-
-    // Global table storage mode. Inline static ensures internal linkage and
-    // avoids needing an out-of-line definition.
-    inline static TableStorageMode tableStorageMode = TableStorageMode::Copy;
-
-    static void setTableStorageMode(TableStorageMode m) { tableStorageMode = m; }
-    static TableStorageMode getTableStorageMode() { return tableStorageMode; }
 
     // Structured helpers
     // Array
@@ -374,18 +321,9 @@ public:
     const Variant* get(const std::string& key) const noexcept;
     Variant*       get(const std::string& key) noexcept;
 
-    // Lua integration
-    sol::object toLua(sol::state_view L) const;
-    static Variant fromLuaObject(const sol::object& o);
-    // If this Variant holds a LuaRef to a table, produce a deep-copied
-    // Variant (Array/Object) snapshot of that table's contents. If this
-    // Variant is not a LuaRef to a table, returns a copy of *this.
-    Variant snapshot() const;
-    // Snapshot into a deep-copied Variant using the provided Lua state.
-    // If this Variant holds a LuaRefValue, the snapshot will only be
-    // produced when the LuaRef is valid for the provided state; otherwise
-    // a copy of *this is returned.
-    Variant snapshot(sol::state_view L) const;
+    // JSON integration
+    nlohmann::json toJson() const;
+    static Variant fromJson(const nlohmann::json& j);
 
     // Non-noexcept structured stringifier for debugging that limits
     // recursion by depth. Depth=0 yields "..." for nested structures.
@@ -399,7 +337,6 @@ public:
 
         VariantType type() const noexcept {
             if (!storage) return VariantType::Error;
-            // reuse Variant::type semantics without errorFlag
             const auto& d = storage->data;
             if (std::holds_alternative<std::monostate>(d)) return VariantType::Null;
             if (std::holds_alternative<bool>(d)) return VariantType::Bool;
@@ -409,14 +346,12 @@ public:
             if (std::holds_alternative<VariantStorage::Array>(d)) return VariantType::Array;
             if (std::holds_alternative<VariantStorage::Object>(d)) return VariantType::Object;
             if (std::holds_alternative<VariantStorage::DynamicValue>(d)) return VariantType::Dynamic;
-            if (std::holds_alternative<VariantStorage::LuaRefValue>(d)) return VariantType::LuaRef;
             return VariantType::Error;
         }
 
         bool isNull() const noexcept { return storage && std::holds_alternative<std::monostate>(storage->data); }
         bool isArray() const noexcept { return storage && std::holds_alternative<VariantStorage::Array>(storage->data); }
         bool isObject() const noexcept { return storage && std::holds_alternative<VariantStorage::Object>(storage->data); }
-        bool isLuaRef() const noexcept { return storage && std::holds_alternative<VariantStorage::LuaRefValue>(storage->data); }
 
         size_t size() const noexcept {
             if (!storage) return 0;
@@ -459,8 +394,6 @@ private:
     std::string errorMsg_;
 
     // helpers
-    static Variant fromLuaTable_(const sol::table& t);
-    static Variant fromLuaNumber_(double n);
     static bool    numericEqual_(const Variant& a, const Variant& b);
 };
 
@@ -508,14 +441,6 @@ struct VariantHash {
                     size_t p = std::hash<const void*>()(dv->ptr.get());
                     size_t t = dv->type.hash_code();
                     return p ^ (t + 0x9e3779b97f4a7c15ULL + (p<<6) + (p>>2));
-                }
-                return 0;
-            }
-            case VariantType::LuaRef: {
-                if (auto lr = std::get_if<VariantStorage::LuaRefValue>(&v.storage_->data)) {
-                    size_t Lp = std::hash<const void*>()(lr->L);
-                    size_t tp = std::hash<int>()(static_cast<int>(lr->obj.get_type()));
-                    return Lp ^ (tp + 0x9e3779b97f4a7c15ULL + (Lp<<6) + (Lp>>2));
                 }
                 return 0;
             }

@@ -10,7 +10,7 @@
 
 // Default variant if user does not specify one
 #ifndef MAIN_VARIANT
-#define MAIN_VARIANT 6
+#define MAIN_VARIANT 2
 #endif
 
 // -----------------------------------------------------------------------------
