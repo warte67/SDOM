@@ -3,6 +3,7 @@
 #ifndef SDOM_VARIANT_HPP
 #define SDOM_VARIANT_HPP
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <string_view>
@@ -21,6 +22,38 @@
 namespace SDOM {
 
 class DataRegistry;
+
+// Light-weight representation of a parsed dotted/bracket path (e.g. foo.bar[0]).
+struct PathElement {
+    enum class Kind { Key, Index };
+
+    Kind kind = Kind::Key;
+    std::string key;      // valid when kind == Key
+    std::int64_t index{}; // valid when kind == Index
+};
+
+struct PathOptions {
+    bool create_intermediates = false;
+    bool extend_arrays_with_null = false;
+};
+
+class PathView {
+public:
+    PathView() = default;
+    explicit PathView(std::vector<PathElement> elems)
+    : elements_(std::move(elems)) {}
+
+    bool empty() const noexcept { return elements_.empty(); }
+    std::size_t size() const noexcept { return elements_.size(); }
+
+    const PathElement& operator[](std::size_t i) const { return elements_[i]; }
+    const std::vector<PathElement>& elements() const noexcept { return elements_; }
+
+private:
+    std::vector<PathElement> elements_;
+};
+
+PathView parsePath(std::string_view path, std::string* outErrorMessage = nullptr);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Variant type tag
@@ -326,6 +359,17 @@ public:
     void set(const std::string& key, Variant v);  // ensures Object
     const Variant* get(const std::string& key) const noexcept;
     Variant*       get(const std::string& key) noexcept;
+
+    // Path-based helpers
+    bool getPath(const PathView& path, Variant& out) const;
+    bool getPath(const std::string& path, Variant& out) const;
+    Variant getPathOr(const std::string& path, const Variant& fallback = Variant{}) const;
+    bool pathExists(const PathView& path) const;
+    bool pathExists(const std::string& path) const;
+    bool setPath(const PathView& path, const Variant& value, const PathOptions& opts = {});
+    bool setPath(const std::string& path, const Variant& value, const PathOptions& opts = {});
+    bool erasePath(const PathView& path);
+    bool erasePath(const std::string& path);
 
     // JSON integration
     nlohmann::json toJson() const;

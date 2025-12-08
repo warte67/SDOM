@@ -1,6 +1,7 @@
 // Variant_UnitTests.cpp
 #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_Core.hpp>
+#include <SDOM/SDOM_CoreAPI.hpp>
 #include <SDOM/SDOM_Variant.hpp>
 #include <thread>
 #include <random>
@@ -784,6 +785,315 @@ namespace SDOM
         return true;
     }
 
+    bool Variant_test_parsePath_success(std::vector<std::string>& errors)
+    {
+        auto expect = [&](std::string_view path, const std::vector<PathElement>& expected) {
+            std::string err;
+            PathView view = parsePath(path, &err);
+            if (view.empty()) {
+                errors.push_back(std::string("parsePath unexpectedly failed for ") + std::string(path) + ": " + err);
+                return;
+            }
+            if (view.size() != expected.size()) {
+                errors.push_back(std::string("parsePath element count mismatch for ") + std::string(path));
+                return;
+            }
+            for (size_t i = 0; i < expected.size(); ++i) {
+                const auto& got = view[i];
+                const auto& exp = expected[i];
+                if (got.kind != exp.kind) {
+                    errors.push_back(std::string("parsePath kind mismatch at index ") + std::to_string(i));
+                    continue;
+                }
+                if (exp.kind == PathElement::Kind::Key && got.key != exp.key) {
+                    errors.push_back(std::string("parsePath key mismatch for ") + std::string(path));
+                }
+                if (exp.kind == PathElement::Kind::Index && got.index != exp.index) {
+                    errors.push_back(std::string("parsePath index mismatch for ") + std::string(path));
+                }
+            }
+        };
+
+        expect("foo", { PathElement{PathElement::Kind::Key, "foo", 0} });
+        expect("foo.bar", {
+            PathElement{PathElement::Kind::Key, "foo", 0},
+            PathElement{PathElement::Kind::Key, "bar", 0}
+        });
+        expect("items[0]", {
+            PathElement{PathElement::Kind::Key, "items", 0},
+            PathElement{PathElement::Kind::Index, "", 0}
+        });
+        expect("player.inventory[12].count", {
+            PathElement{PathElement::Kind::Key, "player", 0},
+            PathElement{PathElement::Kind::Key, "inventory", 0},
+            PathElement{PathElement::Kind::Index, "", 12},
+            PathElement{PathElement::Kind::Key, "count", 0}
+        });
+
+        return true;
+    }
+
+    bool Variant_test_parsePath_failure(std::vector<std::string>& errors)
+    {
+        auto expect_fail = [&](std::string_view path, std::string_view expected_substr) {
+            std::string err;
+            PathView view = parsePath(path, &err);
+            if (!view.empty()) {
+                errors.push_back(std::string("parsePath succeeded unexpectedly for ") + std::string(path));
+                return;
+            }
+            if (err.find(expected_substr) == std::string::npos) {
+                errors.push_back(std::string("parsePath error mismatch for ") + std::string(path) +
+                                 " (expected to contain '" + std::string(expected_substr) +
+                                 "', got '" + err + "')");
+            }
+        };
+
+        expect_fail("", "empty");
+        expect_fail(".", "empty path segment");
+        expect_fail("foo..", "empty path segment");
+        expect_fail("items[]", "missing digits");
+        expect_fail("items[abc]", "missing digits");
+
+        return true;
+    }
+
+    // Helper to build a simple object/array hierarchy for path tests
+    static Variant make_path_root()
+    {
+        Variant item0 = Variant::makeObject(); item0.set("count", Variant(int64_t(5)));
+        Variant item1 = Variant::makeObject(); item1.set("count", Variant(int64_t(7)));
+
+        Variant inventory = Variant::makeArray();
+        inventory.push(item0);
+        inventory.push(item1);
+
+        Variant player = Variant::makeObject();
+        player.set("inventory", inventory);
+
+        Variant root = Variant::makeObject();
+        root.set("player", player);
+        return root;
+    }
+
+    bool Variant_test_path_simple_object(std::vector<std::string>& errors)
+    {
+        Variant root = Variant::makeObject();
+        root.set("x", Variant(int64_t(10)));
+        root.set("y", Variant(int64_t(20)));
+
+        Variant out;
+        if (!root.getPath("x", out) || out.toInt64(-1) != 10) {
+            errors.push_back("getPath failed for object key 'x'");
+        }
+        if (!root.getPath("y", out) || out.toInt64(-1) != 20) {
+            errors.push_back("getPath failed for object key 'y'");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_object_array_chain(std::vector<std::string>& errors)
+    {
+        Variant root = Variant::makeObject();
+        Variant items = Variant::makeArray();
+        items.push(Variant(int64_t(1)));
+        items.push(Variant(int64_t(2)));
+        items.push(Variant(int64_t(3)));
+        root.set("items", items);
+
+        Variant out;
+        if (!root.getPath("items[0]", out) || out.toInt64(-1) != 1) {
+            errors.push_back("getPath failed for items[0]");
+        }
+        if (!root.getPath("items[2]", out) || out.toInt64(-1) != 3) {
+            errors.push_back("getPath failed for items[2]");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_missing_key(std::vector<std::string>& errors)
+    {
+        Variant root = Variant::makeObject();
+        Variant items = Variant::makeArray();
+        items.push(Variant(int64_t(1)));
+        items.push(Variant(int64_t(2)));
+        root.set("items", items);
+
+        CoreAPI::clearError();
+        Variant out;
+        if (root.pathExists("items[2]")) {
+            errors.push_back("pathExists reported true for missing index");
+        }
+        if (root.getPath("missing", out)) {
+            errors.push_back("getPath unexpectedly succeeded for missing key");
+        } else {
+            const std::string err = CoreAPI::getErrorString();
+            if (err.find("Path not found") == std::string::npos) {
+                errors.push_back("Missing key error did not mention 'Path not found'");
+            }
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_type_mismatch(std::vector<std::string>& errors)
+    {
+        Variant root = Variant::makeObject();
+        Variant items = Variant::makeArray();
+        items.push(Variant(int64_t(1)));
+        root.set("items", items);
+
+        CoreAPI::clearError();
+        Variant out;
+        if (root.getPath("items.key", out)) {
+            errors.push_back("getPath unexpectedly succeeded for array field access");
+        } else {
+            const std::string err = CoreAPI::getErrorString();
+            if (err.find("Expected object for field access") == std::string::npos) {
+                errors.push_back("Type mismatch error did not mention expected object access");
+            }
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_index_oob(std::vector<std::string>& errors)
+    {
+        Variant root = Variant::makeObject();
+        Variant items = Variant::makeArray();
+        items.push(Variant(int64_t(1)));
+        items.push(Variant(int64_t(2)));
+        root.set("items", items);
+
+        CoreAPI::clearError();
+        Variant out;
+        if (root.getPath("items[3]", out)) {
+            errors.push_back("getPath unexpectedly succeeded for out-of-range index");
+        } else {
+            const std::string err = CoreAPI::getErrorString();
+            if (err.find("Index out of range") == std::string::npos) {
+                errors.push_back("Out-of-range error did not mention index issue");
+            }
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_scalar_traverse(std::vector<std::string>& errors)
+    {
+        Variant root(int64_t(42));
+
+        CoreAPI::clearError();
+        Variant out;
+        if (root.getPath("child", out)) {
+            errors.push_back("getPath unexpectedly succeeded on scalar root");
+        } else {
+            const std::string err = CoreAPI::getErrorString();
+            if (err.find("Cannot traverse into scalar type") == std::string::npos) {
+                errors.push_back("Scalar traversal error did not mention scalar type");
+            }
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_get_and_exists(std::vector<std::string>& errors)
+    {
+        Variant root = make_path_root();
+
+        Variant out;
+        if (!root.getPath("player.inventory[1].count", out) || out.toInt64(-1) != 7) {
+            errors.push_back("getPath failed to retrieve nested value");
+        }
+
+        if (!root.pathExists("player.inventory[0]")) errors.push_back("pathExists reported false for valid path");
+        if (root.pathExists("player.inventory[2]")) errors.push_back("pathExists reported true for missing index");
+
+        return true;
+    }
+
+    bool Variant_test_path_set_strict(std::vector<std::string>& errors)
+    {
+        Variant root = make_path_root();
+
+        Variant value(int64_t(9));
+        if (root.setPath("player.inventory[2].count", value)) {
+            errors.push_back("setPath unexpectedly created path without opts");
+        }
+
+        Variant out;
+        if (!root.getPath("player.inventory[1].count", out) || out.toInt64(-1) != 7) {
+            errors.push_back("setPath strict altered existing value unexpectedly");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_set_create(std::vector<std::string>& errors)
+    {
+        Variant root = make_path_root();
+        PathOptions opts; opts.create_intermediates = true; opts.extend_arrays_with_null = true;
+
+        Variant value(int64_t(9));
+        if (!root.setPath("player.inventory[2].count", value, opts)) {
+            errors.push_back("setPath with creation failed to append array");
+        }
+
+        Variant out;
+        if (!root.getPath("player.inventory[2].count", out) || out.toInt64(-1) != 9) {
+            errors.push_back("setPath with creation did not store expected value");
+        }
+
+        Variant hp(int64_t(15));
+        if (!root.setPath("player.stats.hp", hp, opts)) {
+            errors.push_back("setPath with creation failed to build object chain");
+        }
+        if (!root.getPath("player.stats.hp", out) || out.toInt64(-1) != 15) {
+            errors.push_back("setPath with creation did not set object leaf");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_path_erase(std::vector<std::string>& errors)
+    {
+        Variant root = make_path_root();
+        PathOptions opts; opts.create_intermediates = true; opts.extend_arrays_with_null = true;
+        // ensure three inventory entries
+        root.setPath("player.inventory[2].count", Variant(int64_t(9)), opts);
+
+        if (!root.erasePath("player.stats")) {
+            // stats not present yet; erase should fail quietly
+        }
+
+        if (!root.erasePath("player.inventory[1]")) {
+            errors.push_back("erasePath failed to remove array slot");
+        }
+
+        if (root.pathExists("player.inventory[2]")) {
+            errors.push_back("erasePath did not compact array after erase");
+        }
+
+        Variant out;
+        if (!root.getPath("player.inventory[1].count", out) || out.toInt64(-1) != 9) {
+            errors.push_back("erasePath did not shift elements as expected");
+        }
+
+        if (!root.setPath("player.stats.hp", Variant(int64_t(12)), opts)) {
+            errors.push_back("setPath failed before erasePath key removal");
+        }
+        if (!root.erasePath("player.stats.hp")) {
+            errors.push_back("erasePath failed to remove object key");
+        }
+        if (root.pathExists("player.stats.hp")) {
+            errors.push_back("erasePath left object key present");
+        }
+
+        return true;
+    }
+
     bool Variant_UnitTests()
     {
         const std::string objName = "Variant";
@@ -812,6 +1122,18 @@ namespace SDOM
             ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
             ut.add_test(objName, "Deep recursion stress", Variant_test_deep_recursion_stress);  
             ut.add_test(objName, "Threaded converter safety stress", Variant_test_threaded_converter_safety);
+            ut.add_test(objName, "parsePath success cases", Variant_test_parsePath_success);
+            ut.add_test(objName, "parsePath failure cases", Variant_test_parsePath_failure);
+            ut.add_test(objName, "path API: simple object get", Variant_test_path_simple_object);
+            ut.add_test(objName, "path API: object + array chain", Variant_test_path_object_array_chain);
+            ut.add_test(objName, "path API: missing key error", Variant_test_path_missing_key);
+            ut.add_test(objName, "path API: type mismatch error", Variant_test_path_type_mismatch);
+            ut.add_test(objName, "path API: index out of range", Variant_test_path_index_oob);
+            ut.add_test(objName, "path API: scalar traversal", Variant_test_path_scalar_traverse);
+            ut.add_test(objName, "path API: get & exists", Variant_test_path_get_and_exists);
+            ut.add_test(objName, "path API: strict set", Variant_test_path_set_strict);
+            ut.add_test(objName, "path API: create set", Variant_test_path_set_create);
+            ut.add_test(objName, "path API: erase", Variant_test_path_erase);
 
             
 

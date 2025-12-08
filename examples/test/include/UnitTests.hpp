@@ -28,6 +28,7 @@ namespace SDOM
     bool DataRegistry_UnitTests();
     bool Event_CAPI_UnitTests();
     bool EventType_CAPI_UnitTests();    
+    bool Variant_CAPI_UnitTests();
     bool Variant_UnitTests();
 
     bool FrontEnd_UnitTests();

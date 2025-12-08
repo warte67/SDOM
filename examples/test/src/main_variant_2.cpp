@@ -143,6 +143,7 @@ bool Main_UnitTests()
     done &= IDisplayObject_UnitTests();
     done &= Event_CAPI_UnitTests();
     done &= EventType_CAPI_UnitTests();
+    done &= Variant_CAPI_UnitTests();
     done &= DataRegistry_UnitTests();
     done &= Variant_UnitTests();
     done &= FrontEnd_UnitTests();

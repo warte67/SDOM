@@ -601,6 +601,38 @@
       "subject_kind": "Variant"
     },
     {
+      "c_name": "SDOM_Variant_GetPath",
+      "c_signature": "bool SDOM_Variant_GetPath(const SDOM_Variant* root, const char* path, SDOM_Variant* out_value)",
+      "dispatch_family": "custom",
+      "name": "SDOM_Variant_GetPath",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_SetPath",
+      "c_signature": "bool SDOM_Variant_SetPath(SDOM_Variant* root, const char* path, const SDOM_Variant* value)",
+      "dispatch_family": "custom",
+      "name": "SDOM_Variant_SetPath",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_PathExists",
+      "c_signature": "bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path)",
+      "dispatch_family": "custom",
+      "name": "SDOM_Variant_PathExists",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_Variant_ErasePath",
+      "c_signature": "bool SDOM_Variant_ErasePath(SDOM_Variant* root, const char* path)",
+      "dispatch_family": "custom",
+      "name": "SDOM_Variant_ErasePath",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
       "c_name": "SDOM_DisplayHandle_IsValid",
       "c_signature": "bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)",
       "dispatch_family": "method_table",

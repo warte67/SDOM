@@ -197,6 +197,60 @@ const char* SDOM_AsString(const SDOM_Variant* v) {
     return s_result.c_str();
 }
 
+bool SDOM_Variant_GetPath(const SDOM_Variant* root, const char* path, SDOM_Variant* out_value) {
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(3);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(root))));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(path));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_value)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Variant_GetPath", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Variant_SetPath(SDOM_Variant* root, const char* path, const SDOM_Variant* value) {
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(3);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(root)));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(path));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(value))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Variant_SetPath", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path) {
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(root))));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(path));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Variant_PathExists", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Variant_ErasePath(SDOM_Variant* root, const char* path) {
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(root)));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(path));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Variant_ErasePath", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

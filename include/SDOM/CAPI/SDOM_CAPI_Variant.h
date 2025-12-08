@@ -191,6 +191,56 @@ double SDOM_AsFloat(const SDOM_Variant* v);
  */
 const char* SDOM_AsString(const SDOM_Variant* v);
 
+/**
+ * @brief 
+ *
+ * C++:   
+ * C API: bool SDOM_Variant_GetPath(const SDOM_Variant* root, const char* path, SDOM_Variant* out_value)
+ *
+ * @param root Pointer parameter.
+ * @param path Pointer parameter.
+ * @param out_value Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_Variant_GetPath(const SDOM_Variant* root, const char* path, SDOM_Variant* out_value);
+
+/**
+ * @brief 
+ *
+ * C++:   
+ * C API: bool SDOM_Variant_SetPath(SDOM_Variant* root, const char* path, const SDOM_Variant* value)
+ *
+ * @param root Pointer parameter.
+ * @param path Pointer parameter.
+ * @param value Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_Variant_SetPath(SDOM_Variant* root, const char* path, const SDOM_Variant* value);
+
+/**
+ * @brief 
+ *
+ * C++:   
+ * C API: bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path)
+ *
+ * @param root Pointer parameter.
+ * @param path Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path);
+
+/**
+ * @brief 
+ *
+ * C++:   
+ * C API: bool SDOM_Variant_ErasePath(SDOM_Variant* root, const char* path)
+ *
+ * @param root Pointer parameter.
+ * @param path Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_Variant_ErasePath(SDOM_Variant* root, const char* path);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

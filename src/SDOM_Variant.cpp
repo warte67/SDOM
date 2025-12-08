@@ -2,31 +2,242 @@
 #include <SDOM/SDOM_Variant.hpp>
 
 #include <cmath>
+#include <cctype>
+#include <cstddef>
+#include <cstring>
 #include <limits>
 #include <mutex>
 #include <json.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
+#include <SDOM/SDOM_CoreAPI.hpp>
 #include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 
-extern "C" {
-uint8_t SDOM_Type(const SDOM_Variant* v);
-bool SDOM_IsNull(const SDOM_Variant* v);
-bool SDOM_IsBool(const SDOM_Variant* v);
-bool SDOM_IsInt(const SDOM_Variant* v);
-bool SDOM_IsFloat(const SDOM_Variant* v);
-bool SDOM_IsString(const SDOM_Variant* v);
+namespace {
 
-SDOM_Variant SDOM_MakeNull(void);
-SDOM_Variant SDOM_MakeBool(bool b);
-SDOM_Variant SDOM_MakeInt(int64_t i);
-SDOM_Variant SDOM_MakeFloat(double f);
-SDOM_Variant SDOM_MakeCString(const char* utf8);
-
-bool SDOM_AsBool(const SDOM_Variant* v);
-int64_t SDOM_AsInt(const SDOM_Variant* v);
-double SDOM_AsFloat(const SDOM_Variant* v);
-const char* SDOM_AsString(const SDOM_Variant* v);
+double bitsToDouble(std::uint64_t bits) {
+    double d = 0.0;
+    std::memcpy(&d, &bits, sizeof(double));
+    return d;
 }
+
+std::uint64_t doubleToBits(double d) {
+    std::uint64_t bits = 0;
+    std::memcpy(&bits, &d, sizeof(double));
+    return bits;
+}
+
+// Variant marshaling helpers (scalar-only ABI view for now).
+thread_local std::string s_variantStringScratch;
+thread_local SDOM::Variant s_variantValueScratch;
+
+bool importVariantFromC(const SDOM_Variant* in, SDOM::Variant& out)
+{
+    out = SDOM::Variant{};
+    if (!in) return false;
+
+    switch (static_cast<SDOM_VariantType>(in->type)) {
+        case SDOM_VARIANT_TYPE_NULL:
+            out = SDOM::Variant{};
+            return true;
+        case SDOM_VARIANT_TYPE_BOOL:
+            out = SDOM::Variant(static_cast<bool>(in->data != 0));
+            return true;
+        case SDOM_VARIANT_TYPE_INT:
+            out = SDOM::Variant(static_cast<std::int64_t>(in->data));
+            return true;
+        case SDOM_VARIANT_TYPE_FLOAT: {
+            const double f = bitsToDouble(static_cast<std::uint64_t>(in->data));
+            out = SDOM::Variant(f);
+            return true;
+        }
+        case SDOM_VARIANT_TYPE_STRING: {
+            const char* s = reinterpret_cast<const char*>(static_cast<std::uintptr_t>(in->data));
+            out = SDOM::Variant(s ? std::string{s} : std::string{});
+            return true;
+        }
+        case SDOM_VARIANT_TYPE_ARRAY:
+        case SDOM_VARIANT_TYPE_OBJECT:
+        case SDOM_VARIANT_TYPE_DYNAMIC: {
+            const auto* ptr = reinterpret_cast<const SDOM::Variant*>(static_cast<std::uintptr_t>(in->data));
+            if (!ptr) {
+                SDOM::CoreAPI::setErrorMessage("Unsupported Variant type for ABI import");
+                return false;
+            }
+            out = *ptr; // borrow/copy the pointed-to variant
+            return true;
+        }
+        default:
+            SDOM::CoreAPI::setErrorMessage("Unsupported Variant type for ABI import");
+            return false;
+    }
+}
+
+SDOM_Variant exportVariantToC(const SDOM::Variant& v)
+{
+    SDOM_Variant out{};
+    switch (v.type()) {
+        case SDOM::VariantType::Null:
+            out.type = SDOM_VARIANT_TYPE_NULL;
+            break;
+        case SDOM::VariantType::Bool:
+            out.type = SDOM_VARIANT_TYPE_BOOL;
+            out.data = static_cast<std::uint64_t>(v.toBool());
+            break;
+        case SDOM::VariantType::Int:
+            out.type = SDOM_VARIANT_TYPE_INT;
+            out.data = static_cast<std::uint64_t>(v.toInt64());
+            break;
+        case SDOM::VariantType::Real:
+            out.type = SDOM_VARIANT_TYPE_FLOAT;
+            out.data = doubleToBits(static_cast<double>(v.toDouble()));
+            break;
+        case SDOM::VariantType::String:
+            out.type = SDOM_VARIANT_TYPE_STRING;
+            s_variantStringScratch = v.toString();
+            out.data = reinterpret_cast<std::uint64_t>(s_variantStringScratch.c_str());
+            break;
+        case SDOM::VariantType::Array:
+            out.type = SDOM_VARIANT_TYPE_ARRAY;
+            s_variantValueScratch = v;
+            out.data = reinterpret_cast<std::uint64_t>(&s_variantValueScratch);
+            break;
+        case SDOM::VariantType::Object:
+            out.type = SDOM_VARIANT_TYPE_OBJECT;
+            s_variantValueScratch = v;
+            out.data = reinterpret_cast<std::uint64_t>(&s_variantValueScratch);
+            break;
+        case SDOM::VariantType::Dynamic:
+            out.type = SDOM_VARIANT_TYPE_DYNAMIC;
+            s_variantValueScratch = v;
+            out.data = reinterpret_cast<std::uint64_t>(&s_variantValueScratch);
+            break;
+        default:
+            SDOM::CoreAPI::setErrorMessage("Unsupported Variant type for ABI export");
+            return out; // defaults to zeroed/null
+    }
+    return out;
+}
+
+} // namespace
+
+extern "C" {
+
+// Basic Variant C API surface (scalar-only ABI view) ----------------------
+
+uint8_t SDOM_Type(const SDOM_Variant* v) {
+    if (!v) return 0;
+    return v->type;
+}
+
+bool SDOM_IsNull(const SDOM_Variant* v)   { return SDOM_Type(v) == SDOM_VARIANT_TYPE_NULL; }
+bool SDOM_IsBool(const SDOM_Variant* v)   { return SDOM_Type(v) == SDOM_VARIANT_TYPE_BOOL; }
+bool SDOM_IsInt(const SDOM_Variant* v)    { return SDOM_Type(v) == SDOM_VARIANT_TYPE_INT; }
+bool SDOM_IsFloat(const SDOM_Variant* v)  { return SDOM_Type(v) == SDOM_VARIANT_TYPE_FLOAT; }
+bool SDOM_IsString(const SDOM_Variant* v) { return SDOM_Type(v) == SDOM_VARIANT_TYPE_STRING; }
+
+SDOM_Variant SDOM_MakeNull(void) {
+    SDOM_Variant v { SDOM_VARIANT_TYPE_NULL, {0,0,0}, 0, 0 };
+    return v;
+}
+
+SDOM_Variant SDOM_MakeBool(bool b) {
+    SDOM_Variant v { SDOM_VARIANT_TYPE_BOOL, {0,0,0}, 0, static_cast<uint64_t>(b) };
+    return v;
+}
+
+SDOM_Variant SDOM_MakeInt(int64_t i) {
+    SDOM_Variant v { SDOM_VARIANT_TYPE_INT, {0,0,0}, 0, static_cast<uint64_t>(i) };
+    return v;
+}
+
+SDOM_Variant SDOM_MakeFloat(double f) {
+    uint64_t d = doubleToBits(f);
+    SDOM_Variant v { SDOM_VARIANT_TYPE_FLOAT, {0,0,0}, 0, d };
+    return v;
+}
+
+SDOM_Variant SDOM_MakeCString(const char* utf8) {
+    SDOM_Variant v { SDOM_VARIANT_TYPE_STRING, {0,0,0}, 0, reinterpret_cast<uint64_t>(utf8) };
+    return v;
+}
+
+bool SDOM_AsBool(const SDOM_Variant* v) {
+    return SDOM_IsBool(v) ? static_cast<bool>(v->data) : false;
+}
+
+int64_t SDOM_AsInt(const SDOM_Variant* v) {
+    return SDOM_IsInt(v) ? static_cast<int64_t>(v->data) : 0;
+}
+
+double SDOM_AsFloat(const SDOM_Variant* v) {
+    if (!SDOM_IsFloat(v)) return 0.0;
+    return bitsToDouble(static_cast<std::uint64_t>(v->data));
+}
+
+const char* SDOM_AsString(const SDOM_Variant* v) {
+    return SDOM_IsString(v) ? reinterpret_cast<const char*>(v->data) : "";
+}
+
+// Path helpers -------------------------------------------------------------
+
+bool SDOM_Variant_GetPath(const SDOM_Variant* root, const char* path, SDOM_Variant* out_value) {
+    if (!root || !path || !out_value) return false;
+
+    SDOM::Variant v_root;
+    if (!importVariantFromC(root, v_root)) {
+        *out_value = SDOM_MakeNull();
+        return false; // import already set Core error
+    }
+
+    SDOM::Variant result;
+    if (!v_root.getPath(path, result)) {
+        *out_value = SDOM_MakeNull();
+        return false; // getPath sets Core error on parse/semantic failure
+    }
+
+    *out_value = exportVariantToC(result);
+    return true;
+}
+
+bool SDOM_Variant_SetPath(SDOM_Variant* root, const char* path, const SDOM_Variant* value) {
+    if (!root || !path || !value) return false;
+
+    SDOM::Variant v_root;
+    if (!importVariantFromC(root, v_root)) return false;
+
+    SDOM::Variant v_value;
+    if (!importVariantFromC(value, v_value)) return false;
+
+    if (!v_root.setPath(path, v_value)) {
+        return false; // setPath sets Core error on failure
+    }
+
+    *root = exportVariantToC(v_root);
+    return true;
+}
+
+bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path) {
+    if (!root || !path) return false;
+
+    SDOM::Variant v_root;
+    if (!importVariantFromC(root, v_root)) return false;
+
+    return v_root.pathExists(path);
+}
+
+bool SDOM_Variant_ErasePath(SDOM_Variant* root, const char* path) {
+    if (!root || !path) return false;
+
+    SDOM::Variant v_root;
+    if (!importVariantFromC(root, v_root)) return false;
+
+    if (!v_root.erasePath(path)) return false;
+
+    *root = exportVariantToC(v_root);
+    return true;
+}
+
+} // extern "C"
 
 // Nothing to implement out-of-line here; registry helpers are inline in header.
 
@@ -106,6 +317,11 @@ void Variant::registerBindings(DataRegistry& registry) {
     registerFn("SDOM_AsInt", "int64_t", "int64_t SDOM_AsInt(const SDOM_Variant* v)");
     registerFn("SDOM_AsFloat", "double", "double SDOM_AsFloat(const SDOM_Variant* v)");
     registerFn("SDOM_AsString", "const char*", "const char* SDOM_AsString(const SDOM_Variant* v)");
+
+    registerFn("SDOM_Variant_GetPath", "bool", "bool SDOM_Variant_GetPath(const SDOM_Variant* root, const char* path, SDOM_Variant* out_value)");
+    registerFn("SDOM_Variant_SetPath", "bool", "bool SDOM_Variant_SetPath(SDOM_Variant* root, const char* path, const SDOM_Variant* value)");
+    registerFn("SDOM_Variant_PathExists", "bool", "bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path)");
+    registerFn("SDOM_Variant_ErasePath", "bool", "bool SDOM_Variant_ErasePath(SDOM_Variant* root, const char* path)");
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -326,6 +542,223 @@ Variant* Variant::get(const std::string& key) noexcept {
     return nullptr;
 }
 
+bool Variant::getPath(const PathView& path, Variant& out) const {
+    if (path.empty()) {
+        SDOM::CoreAPI::setErrorMessage("Path is empty");
+        return false;
+    }
+    const Variant* cur = this;
+    for (const auto& elem : path.elements()) {
+        if (elem.kind == PathElement::Kind::Key) {
+            if (!cur->isObject()) {
+                if (cur->isArray()) {
+                    SDOM::CoreAPI::setErrorMessage("Expected object for field access");
+                } else {
+                    SDOM::CoreAPI::setErrorMessage("Cannot traverse into scalar type");
+                }
+                return false;
+            }
+            const auto* obj = cur->object();
+            if (!obj) {
+                SDOM::CoreAPI::setErrorMessage("Path not found");
+                return false;
+            }
+            auto it = obj->find(elem.key);
+            if (it == obj->end() || !it->second) {
+                SDOM::CoreAPI::setErrorMessage("Path not found");
+                return false;
+            }
+            cur = it->second.get();
+        } else {
+            if (!cur->isArray()) {
+                if (cur->isObject()) {
+                    SDOM::CoreAPI::setErrorMessage("Expected array for index access");
+                } else {
+                    SDOM::CoreAPI::setErrorMessage("Cannot traverse into scalar type");
+                }
+                return false;
+            }
+            const auto* arr = cur->array();
+            if (!arr) {
+                SDOM::CoreAPI::setErrorMessage("Path not found");
+                return false;
+            }
+            if (elem.index < 0 || static_cast<size_t>(elem.index) >= arr->size()) {
+                SDOM::CoreAPI::setErrorMessage("Index out of range");
+                return false;
+            }
+            const auto& ptr = (*arr)[static_cast<size_t>(elem.index)];
+            if (!ptr) {
+                SDOM::CoreAPI::setErrorMessage("Path not found");
+                return false;
+            }
+            cur = ptr.get();
+        }
+    }
+    out = *cur;
+    return true;
+}
+
+bool Variant::getPath(const std::string& path, Variant& out) const {
+    std::string err;
+    PathView pv = parsePath(path, &err);
+    if (pv.empty()) {
+        SDOM::CoreAPI::setErrorMessage(err.c_str());
+        return false;
+    }
+    return getPath(pv, out);
+}
+
+Variant Variant::getPathOr(const std::string& path, const Variant& fallback) const {
+    Variant out;
+    if (getPath(path, out)) return out;
+    return fallback;
+}
+
+bool Variant::pathExists(const PathView& path) const {
+    if (path.empty()) return false;
+    const Variant* cur = this;
+    for (const auto& elem : path.elements()) {
+        if (elem.kind == PathElement::Kind::Key) {
+            if (!cur->isObject()) return false;
+            const auto* obj = cur->object();
+            if (!obj) return false;
+            auto it = obj->find(elem.key);
+            if (it == obj->end() || !it->second) return false;
+            cur = it->second.get();
+        } else {
+            if (!cur->isArray()) return false;
+            const auto* arr = cur->array();
+            if (!arr || elem.index < 0 || static_cast<size_t>(elem.index) >= arr->size()) return false;
+            const auto& ptr = (*arr)[static_cast<size_t>(elem.index)];
+            if (!ptr) return false;
+            cur = ptr.get();
+        }
+    }
+    return true;
+}
+
+bool Variant::pathExists(const std::string& path) const {
+    std::string err;
+    PathView pv = parsePath(path, &err);
+    if (pv.empty()) return false;
+    return pathExists(pv);
+}
+
+bool Variant::setPath(const PathView& path, const Variant& value, const PathOptions& opts) {
+    if (path.empty()) return false;
+    Variant* cur = this;
+    const auto& elems = path.elements();
+
+    for (size_t i = 0; i < elems.size(); ++i) {
+        const bool last = (i + 1 == elems.size());
+        const auto& elem = elems[i];
+
+        if (elem.kind == PathElement::Kind::Key) {
+            if (!cur->isObject()) {
+                if (!opts.create_intermediates) return false;
+                cur->storage_->data = VariantStorage::Object{};
+            }
+            auto* obj = cur->object();
+            if (last) {
+                (*obj)[elem.key] = std::make_shared<Variant>(value);
+                return true;
+            }
+
+            auto it = obj->find(elem.key);
+            if (it == obj->end() || !it->second) {
+                if (!opts.create_intermediates) return false;
+                Variant next = (elems[i + 1].kind == PathElement::Kind::Key) ? Variant::makeObject() : Variant::makeArray();
+                auto sp = std::make_shared<Variant>(std::move(next));
+                (*obj)[elem.key] = sp;
+                cur = sp.get();
+            } else {
+                cur = it->second.get();
+            }
+        } else {
+            if (!cur->isArray()) {
+                if (!opts.create_intermediates) return false;
+                cur->storage_->data = VariantStorage::Array{};
+            }
+            auto* arr = cur->array();
+            if (!arr || elem.index < 0) return false;
+            size_t idx = static_cast<size_t>(elem.index);
+            if (idx >= arr->size()) {
+                if (!(opts.create_intermediates && opts.extend_arrays_with_null)) return false;
+                while (arr->size() <= idx) arr->push_back(std::make_shared<Variant>(Variant()));
+            }
+            if (last) {
+                (*arr)[idx] = std::make_shared<Variant>(value);
+                return true;
+            }
+            if (!(*arr)[idx]) {
+                if (!opts.create_intermediates) return false;
+                Variant next = (elems[i + 1].kind == PathElement::Kind::Key) ? Variant::makeObject() : Variant::makeArray();
+                (*arr)[idx] = std::make_shared<Variant>(std::move(next));
+            }
+            cur = (*arr)[idx].get();
+        }
+    }
+
+    return false;
+}
+
+bool Variant::setPath(const std::string& path, const Variant& value, const PathOptions& opts) {
+    std::string err;
+    PathView pv = parsePath(path, &err);
+    if (pv.empty()) {
+        SDOM::CoreAPI::setErrorMessage(err.c_str());
+        return false;
+    }
+    return setPath(pv, value, opts);
+}
+
+bool Variant::erasePath(const PathView& path) {
+    if (path.empty()) return false;
+    Variant* cur = this;
+    const auto& elems = path.elements();
+
+    for (size_t i = 0; i < elems.size(); ++i) {
+        const bool last = (i + 1 == elems.size());
+        const auto& elem = elems[i];
+
+        if (elem.kind == PathElement::Kind::Key) {
+            if (!cur->isObject()) return false;
+            auto* obj = cur->object();
+            if (last) {
+                return obj && obj->erase(elem.key) > 0;
+            }
+            auto it = obj ? obj->find(elem.key) : obj->end();
+            if (it == obj->end() || !it->second) return false;
+            cur = it->second.get();
+        } else {
+            if (!cur->isArray()) return false;
+            auto* arr = cur->array();
+            if (!arr || elem.index < 0 || static_cast<size_t>(elem.index) >= arr->size()) return false;
+            size_t idx = static_cast<size_t>(elem.index);
+            if (last) {
+                arr->erase(arr->begin() + static_cast<std::ptrdiff_t>(idx));
+                return true;
+            }
+            const auto& ptr = (*arr)[idx];
+            if (!ptr) return false;
+            cur = ptr.get();
+        }
+    }
+
+    return false;
+}
+
+bool Variant::erasePath(const std::string& path) {
+    std::string err;
+    PathView pv = parsePath(path, &err);
+    if (pv.empty()) {
+        SDOM::CoreAPI::setErrorMessage(err.c_str());
+        return false;
+    }
+    return erasePath(pv);
+}
+
 // JSON integration
 nlohmann::json Variant::toJson() const {
     const auto& d = storage_->data;
@@ -511,6 +944,98 @@ bool Variant::operator==(const Variant& rhs) const {
     }
 
     return false;
+}
+
+PathView parsePath(std::string_view path, std::string* outErrorMessage) {
+    if (outErrorMessage) outErrorMessage->clear();
+
+    auto fail = [&](std::string msg) {
+        if (outErrorMessage) *outErrorMessage = std::move(msg);
+        return PathView();
+    };
+
+    if (path.empty()) return fail("path is empty");
+
+    std::vector<PathElement> elems;
+    size_t i = 0;
+
+    auto is_ident_start = [](char c) {
+        const unsigned char uc = static_cast<unsigned char>(c);
+        return std::isalpha(uc) || c == '_';
+    };
+
+    auto is_ident_body = [](char c) {
+        const unsigned char uc = static_cast<unsigned char>(c);
+        return std::isalnum(uc) || c == '_';
+    };
+
+    while (i < path.size()) {
+        const char ch = path[i];
+
+        if (ch == '.') {
+            return fail("empty path segment");
+        }
+
+        if (ch == '[') {
+            if (elems.empty()) return fail("index cannot appear first");
+            ++i;
+            if (i >= path.size()) return fail("unterminated index");
+
+            const size_t num_start = i;
+            while (i < path.size() && std::isdigit(static_cast<unsigned char>(path[i]))) {
+                ++i;
+            }
+            if (num_start == i) return fail("index missing digits");
+            if (i >= path.size() || path[i] != ']') return fail("missing closing bracket");
+
+            const std::string num_str(path.substr(num_start, i - num_start));
+            int64_t idx = 0;
+            try {
+                idx = std::stoll(num_str);
+            } catch (...) {
+                return fail("index is not a valid integer");
+            }
+            if (idx < 0) return fail("negative indices are not supported");
+
+            elems.push_back(PathElement{PathElement::Kind::Index, {}, idx});
+            ++i; // consume ']'
+
+            if (i == path.size()) break;
+            if (path[i] == '.') {
+                ++i;
+                if (i == path.size()) return fail("trailing dot");
+                continue;
+            }
+
+            // allow chained indices like arr[0][1]
+            continue;
+        }
+
+        if (!is_ident_start(ch)) return fail("invalid identifier start");
+
+        const size_t start = i;
+        ++i;
+        while (i < path.size() && is_ident_body(path[i])) ++i;
+
+        elems.push_back(PathElement{PathElement::Kind::Key, std::string(path.substr(start, i - start)), 0});
+
+        if (i == path.size()) break;
+
+        if (path[i] == '.') {
+            ++i;
+            if (i == path.size()) return fail("trailing dot");
+            continue;
+        }
+
+        if (path[i] == '[') {
+            continue; // index handled in next iteration
+        }
+
+        return fail("unexpected character in path");
+    }
+
+    if (elems.empty()) return fail("path is empty");
+    return PathView(std::move(elems));
 }
 
 } // namespace SDOM

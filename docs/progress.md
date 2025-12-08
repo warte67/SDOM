@@ -1201,8 +1201,8 @@ Tomorrow: begin **Variant path access** to unlock nested data and runtime editor
 
 ### 🚧 **To-Do — Active Work**
 #### ☐ Complete SDOM_Variant JSON refactor
-- 🕓 Remove Lua remnants (`LuaRef`, etc.)
-- 🕓 Introduce native JSON storage for Array/Object Types
+- ✅ Remove Lua remnants (`LuaRef`, etc.)
+- 🔄 Introduce native JSON storage for Array/Object Types
 - ☐ Add stable VariantType semantics for handles, events, etc.
 - ☐ Enforce safe up/down-casting rules
 - ☐ Expand ABI for container types once semantics are locked
@@ -1214,14 +1214,14 @@ Tomorrow: begin **Variant path access** to unlock nested data and runtime editor
 - ☐ Guarantee safe error-flag patterns everywhere
 
 #### ☐ Unit Testing Improvements
-- ✔ Missing key → error + Null variant
+- ✅ Missing key → error + Null variant
 - ☐ Existing scalar key → success
 - ☐ Container key → unsupported type error
 - ☐ Null payload stored intentionally should pass
 
 #### ☐ Runtime Editor groundwork
 - ☐ Expose Variant metadata for UI inspection
-- 🕓 Ensure JSON⇆Variant round-trip is stable for persistence
+- 🔄 Ensure JSON⇆Variant round-trip is stable for persistence
 
 ---
 

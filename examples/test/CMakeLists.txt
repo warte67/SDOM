@@ -44,6 +44,7 @@ find_library(LUA_LIB lua5.4)
 find_package(Threads REQUIRED)
 
 # Include directories
+include_directories(${SDOM_ROOT}/include)           # In-tree SDOM headers (preferred)
 include_directories($ENV{HOME}/.local/include)      # SDL3 Includes (local)
 include_directories(${PROJECT_SOURCE_DIR}/include)  # SDOM Includes
 include_directories(${PROJECT_SOURCE_DIR}/test_include)  # test-only C API includes
