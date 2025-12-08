@@ -30,6 +30,7 @@
 #include <SDOM/SDOM_Slider.hpp>
 #include <SDOM/SDOM_ProgressBar.hpp>
 #include <SDOM/SDOM_ScrollBar.hpp>
+#include <SDOM/SDOM_Variant.hpp>
 #include <cstdlib>
 
 namespace SDOM
@@ -71,24 +72,11 @@ namespace SDOM
         } catch(...) {
             ERROR("Factory::onInit: failed to register Event bindings");
         }        
-
-        // Ensure EventType has a TypeInfo descriptor even though it does not expose
-        // callable exports yet. The manifest consumers (C API generator + unit tests)
-        // rely on this descriptor to confirm dispatch-family metadata for the
-        // event_router subject.
-        if (!data_registry_.lookupType("EventType")) {
-            SDOM::TypeInfo ti;
-            ti.name        = "EventType";
-            ti.kind        = SDOM::EntryKind::Object;
-            ti.cpp_type_id = "SDOM::EventType";
-            ti.file_stem   = "EventType";
-            ti.export_name = "SDOM_EventType";
-            ti.subject_kind = "EventType";
-            ti.subject_uses_handle = false;
-            ti.has_handle_override = true;
-            ti.dispatch_family_override = "event_router";
-            ti.doc = "Logical subject descriptor for SDOM::EventType dispatch metadata.";
-            data_registry_.registerType(ti);
+        // Register the provisional ABI view for Variant (TypeInfo only, no callables)
+        try {
+            Variant::registerBindings(data_registry_);
+        } catch(...) {
+            ERROR("Factory::onInit: failed to register Variant bindings");
         }
 
         // register the Stage

@@ -751,15 +751,20 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << "}\n\n";
     }
 
-    emitStructs(out, module);
-
-    if (moduleHasFunctions(module)) {
+    const bool needsExtern = moduleHasFunctions(module) || !module.structs.empty();
+    if (needsExtern) {
         out << "#ifdef __cplusplus\n";
         out << "extern \"C\" {\n";
         out << "#endif\n\n";
+    }
 
+    emitStructs(out, module);
+
+    if (moduleHasFunctions(module)) {
         emitFunctionPrototypes(out, module);
+    }
 
+    if (needsExtern) {
         out << "#ifdef __cplusplus\n";
         out << "} // extern \"C\"\n";
         out << "#endif\n";
@@ -898,14 +903,32 @@ void CAPI_BindGenerator::emitStructs(std::ofstream& out, const BindModule& modul
             continue;
         }
 
+        if (!type->doc.empty()) {
+            std::string docLine = "// " + type->doc;
+            std::replace(docLine.begin(), docLine.end(), '\n', ' ');
+            out << docLine << '\n';
+        }
+
         out << "typedef struct " << export_name << " {\n";
 
         if (type->properties.empty()) {
             out << "    void* _opaque; ///< Placeholder for opaque struct.\n";
         } else {
             for (const auto& prop : type->properties) {
-                const std::string field_type = cFriendlyType(prop.cpp_type);
+                std::string raw_cpp_type = trim(prop.cpp_type);
+                std::string array_suffix;
+                const auto bracket_pos = raw_cpp_type.find('[');
+                if (bracket_pos != std::string::npos && raw_cpp_type.back() == ']') {
+                    array_suffix = raw_cpp_type.substr(bracket_pos);
+                    raw_cpp_type = trim(raw_cpp_type.substr(0, bracket_pos));
+                }
+
+                const std::string field_type = cFriendlyType(raw_cpp_type);
                 std::string line = "    " + field_type + " " + prop.name;
+                if (!array_suffix.empty()) {
+                    line += array_suffix;
+                }
+
                 if (!prop.default_value || prop.default_value->empty()) {
                     line += ";";
                 } else {

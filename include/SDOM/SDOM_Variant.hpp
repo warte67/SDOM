@@ -20,6 +20,8 @@
 
 namespace SDOM {
 
+class DataRegistry;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Variant type tag
 // ─────────────────────────────────────────────────────────────────────────────
@@ -108,6 +110,10 @@ public:
     // Factories for composite
     static Variant makeArray();
     static Variant makeObject();
+
+    // Register reflection metadata for the provisional C ABI view of Variant.
+    // This is a no-op if the entry already exists.
+    static void registerBindings(DataRegistry& registry);
 
     // Error helpers
     static Variant makeError(const std::string& msg);

@@ -3,13 +3,14 @@
 
 #include <stdbool.h>
 
-typedef struct SDOM_Version {
-    void* impl;                                     ///< Opaque pointer to underlying C++ instance.
-} SDOM_Version;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Opaque C handle for SDOM::Version singleton data.
+typedef struct SDOM_Version {
+    void* impl;                                     ///< Opaque pointer to underlying C++ instance.
+} SDOM_Version;
 
 // Callable bindings
 

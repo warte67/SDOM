@@ -5,10 +5,44 @@
 #include <limits>
 #include <mutex>
 #include <json.hpp>
+#include <SDOM/SDOM_DataRegistry.hpp>
 
 // Nothing to implement out-of-line here; registry helpers are inline in header.
 
 namespace SDOM {
+
+void Variant::registerBindings(DataRegistry& registry) {
+    if (registry.lookupType("SDOM_Variant")) {
+        return;
+    }
+
+    SDOM::TypeInfo ti;
+    ti.name        = "SDOM_Variant";
+    ti.kind        = SDOM::EntryKind::Struct;
+    ti.cpp_type_id = "SDOM::Variant";
+    ti.file_stem   = "Variant";
+    ti.export_name = "SDOM_Variant";
+    ti.category    = "Variant";
+    ti.doc         = "Provisional ABI view of SDOM::Variant; layout may change.";
+
+    auto addField = [&](const std::string& fieldName,
+                        const std::string& cppType,
+                        const std::string& doc) {
+        SDOM::PropertyInfo p;
+        p.name      = fieldName;
+        p.cpp_type  = cppType;
+        p.read_only = false;
+        p.doc       = doc;
+        ti.properties.push_back(std::move(p));
+    };
+
+    addField("type", "uint8_t", "Variant kind tag; mirrors SDOM_VariantType." );
+    addField("reserved", "uint8_t[3]", "Reserved bytes; must be zero when passed across the ABI." );
+    addField("flags", "uint32_t", "Future use bitmask; currently must be zero." );
+    addField("data", "uint64_t", "Inline payload or handle depending on type/flags; provisional semantics." );
+
+    registry.registerType(ti);
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constructors

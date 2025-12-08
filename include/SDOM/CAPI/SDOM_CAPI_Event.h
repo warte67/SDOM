@@ -88,13 +88,14 @@ typedef enum SDOM_EventType {
     SDOM_EventType_User = 0x0902                    ///< Reserved for custom or user-defined events created at runtime.
 } SDOM_EventType;
 
-typedef struct SDOM_Event {
-    void* impl;                                     ///< Opaque pointer to underlying C++ instance.
-} SDOM_Event;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Opaque C handle for SDOM::Event.
+typedef struct SDOM_Event {
+    void* impl;                                     ///< Opaque pointer to underlying C++ instance.
+} SDOM_Event;
 
 // Callable bindings
 

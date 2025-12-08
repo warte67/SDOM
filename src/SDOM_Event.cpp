@@ -417,6 +417,27 @@ namespace SDOM
 
 
         // -------------------------------------------------------------------------
+        // Ensure EventType TypeInfo Exists
+        // -------------------------------------------------------------------------
+        // EventType is used by Event but does not expose callables; register its
+        // descriptor here so binding generators and tests can rely on the metadata.
+        if (!lookup("EventType")) {
+            SDOM::TypeInfo ti;
+            ti.name        = "EventType";
+            ti.kind        = SDOM::EntryKind::Object;
+            ti.cpp_type_id = "SDOM::EventType";
+            ti.file_stem   = "EventType";
+            ti.export_name = "SDOM_EventType";
+            ti.subject_kind = "EventType";
+            ti.subject_uses_handle = false;
+            ti.has_handle_override = true;
+            ti.dispatch_family_override = "event_router";
+            ti.doc = "Logical subject descriptor for SDOM::EventType dispatch metadata.";
+            registry().registerType(ti);
+        }
+
+
+        // -------------------------------------------------------------------------
         // Ensure Primary TypeInfo Exists
         // -------------------------------------------------------------------------
         // Creates (or retrieves) the canonical TypeInfo entry for SDOM::Event.
