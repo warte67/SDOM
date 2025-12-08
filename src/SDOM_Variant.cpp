@@ -30,6 +30,103 @@ std::uint64_t doubleToBits(double d) {
 thread_local std::string s_variantStringScratch;
 thread_local SDOM::Variant s_variantValueScratch;
 
+// Traversal helper that stays pure by default; caller may opt-in to an
+// error string when needed (e.g., string-based getPath entry point).
+bool getPathImpl(const SDOM::Variant& root,
+                 const SDOM::PathView& path,
+                 SDOM::Variant& out,
+                 std::string* errMessage)
+{
+    auto setErr = [&](const char* msg) {
+        if (errMessage && msg) *errMessage = msg;
+    };
+
+    if (path.empty()) {
+        setErr("Path is empty");
+        return false;
+    }
+
+    const auto isScalar = [](const SDOM::Variant& v) {
+        const auto t = v.type();
+        return t == SDOM::VariantType::Null ||
+               t == SDOM::VariantType::Bool ||
+               t == SDOM::VariantType::Int ||
+               t == SDOM::VariantType::Real ||
+               t == SDOM::VariantType::String ||
+               t == SDOM::VariantType::Dynamic;
+    };
+
+    // Prevent multi-segment traversal into a scalar root before iterating.
+    if (isScalar(root) && path.size() > 1) {
+        setErr("Cannot traverse into scalar type");
+        return false;
+    }
+
+    const SDOM::Variant* cur = &root;
+    const auto& elems = path.elements();
+
+    for (std::size_t i = 0; i < elems.size(); ++i) {
+        const bool last = (i + 1 == elems.size());
+        const auto& elem = elems[i];
+
+        if (elem.kind == SDOM::PathElement::Kind::Key) {
+            if (!cur->isObject()) {
+                if (cur->isArray()) {
+                    setErr("Expected object for field access");
+                } else {
+                    setErr("Cannot traverse into scalar type");
+                }
+                return false;
+            }
+            const auto* obj = cur->object();
+            if (!obj) {
+                setErr("Path not found");
+                return false;
+            }
+            auto it = obj->find(elem.key);
+            if (it == obj->end() || !it->second) {
+                setErr("Path not found");
+                return false;
+            }
+            cur = it->second.get();
+        } else {
+            if (!cur->isArray()) {
+                if (cur->isObject()) {
+                    setErr("Expected array for index access");
+                } else {
+                    setErr("Cannot traverse into scalar type");
+                }
+                return false;
+            }
+            const auto* arr = cur->array();
+            if (!arr) {
+                setErr("Path not found");
+                return false;
+            }
+            if (elem.index < 0 || static_cast<size_t>(elem.index) >= arr->size()) {
+                setErr("Index out of range");
+                return false;
+            }
+            const auto& ptr = (*arr)[static_cast<size_t>(elem.index)];
+            if (!ptr) {
+                setErr("Path not found");
+                return false;
+            }
+            cur = ptr.get();
+        }
+
+        // If we have more segments after landing on a scalar, stop early with
+        // the scalar-specific error to avoid mismatched messaging.
+        if (!last && isScalar(*cur)) {
+            setErr("Cannot traverse into scalar type");
+            return false;
+        }
+    }
+
+    out = *cur;
+    return true;
+}
+
 bool importVariantFromC(const SDOM_Variant* in, SDOM::Variant& out)
 {
     out = SDOM::Variant{};
@@ -68,6 +165,46 @@ bool importVariantFromC(const SDOM_Variant* in, SDOM::Variant& out)
         }
         default:
             SDOM::CoreAPI::setErrorMessage("Unsupported Variant type for ABI import");
+            return false;
+    }
+}
+
+// Import variant without touching global error state (used for query-only flows
+// like PathExists where callers expect no side effects on errors).
+bool importVariantFromCNoError(const SDOM_Variant* in, SDOM::Variant& out)
+{
+    out = SDOM::Variant{};
+    if (!in) return false;
+
+    switch (static_cast<SDOM_VariantType>(in->type)) {
+        case SDOM_VARIANT_TYPE_NULL:
+            out = SDOM::Variant{};
+            return true;
+        case SDOM_VARIANT_TYPE_BOOL:
+            out = SDOM::Variant(static_cast<bool>(in->data != 0));
+            return true;
+        case SDOM_VARIANT_TYPE_INT:
+            out = SDOM::Variant(static_cast<std::int64_t>(in->data));
+            return true;
+        case SDOM_VARIANT_TYPE_FLOAT: {
+            const double f = bitsToDouble(static_cast<std::uint64_t>(in->data));
+            out = SDOM::Variant(f);
+            return true;
+        }
+        case SDOM_VARIANT_TYPE_STRING: {
+            const char* s = reinterpret_cast<const char*>(static_cast<std::uintptr_t>(in->data));
+            out = SDOM::Variant(s ? std::string{s} : std::string{});
+            return true;
+        }
+        case SDOM_VARIANT_TYPE_ARRAY:
+        case SDOM_VARIANT_TYPE_OBJECT:
+        case SDOM_VARIANT_TYPE_DYNAMIC: {
+            const auto* ptr = reinterpret_cast<const SDOM::Variant*>(static_cast<std::uintptr_t>(in->data));
+            if (!ptr) return false;
+            out = *ptr;
+            return true;
+        }
+        default:
             return false;
     }
 }
@@ -181,17 +318,17 @@ const char* SDOM_AsString(const SDOM_Variant* v) {
 // Path helpers -------------------------------------------------------------
 
 bool SDOM_Variant_GetPath(const SDOM_Variant* root, const char* path, SDOM_Variant* out_value) {
-    if (!root || !path || !out_value) return false;
+    if (!out_value) return false;
+    *out_value = SDOM_MakeNull();
+    if (!root || !path) return false;
 
     SDOM::Variant v_root;
     if (!importVariantFromC(root, v_root)) {
-        *out_value = SDOM_MakeNull();
         return false; // import already set Core error
     }
 
     SDOM::Variant result;
     if (!v_root.getPath(path, result)) {
-        *out_value = SDOM_MakeNull();
         return false; // getPath sets Core error on parse/semantic failure
     }
 
@@ -220,7 +357,7 @@ bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path) {
     if (!root || !path) return false;
 
     SDOM::Variant v_root;
-    if (!importVariantFromC(root, v_root)) return false;
+    if (!importVariantFromCNoError(root, v_root)) return false;
 
     return v_root.pathExists(path);
 }
@@ -543,60 +680,7 @@ Variant* Variant::get(const std::string& key) noexcept {
 }
 
 bool Variant::getPath(const PathView& path, Variant& out) const {
-    if (path.empty()) {
-        SDOM::CoreAPI::setErrorMessage("Path is empty");
-        return false;
-    }
-    const Variant* cur = this;
-    for (const auto& elem : path.elements()) {
-        if (elem.kind == PathElement::Kind::Key) {
-            if (!cur->isObject()) {
-                if (cur->isArray()) {
-                    SDOM::CoreAPI::setErrorMessage("Expected object for field access");
-                } else {
-                    SDOM::CoreAPI::setErrorMessage("Cannot traverse into scalar type");
-                }
-                return false;
-            }
-            const auto* obj = cur->object();
-            if (!obj) {
-                SDOM::CoreAPI::setErrorMessage("Path not found");
-                return false;
-            }
-            auto it = obj->find(elem.key);
-            if (it == obj->end() || !it->second) {
-                SDOM::CoreAPI::setErrorMessage("Path not found");
-                return false;
-            }
-            cur = it->second.get();
-        } else {
-            if (!cur->isArray()) {
-                if (cur->isObject()) {
-                    SDOM::CoreAPI::setErrorMessage("Expected array for index access");
-                } else {
-                    SDOM::CoreAPI::setErrorMessage("Cannot traverse into scalar type");
-                }
-                return false;
-            }
-            const auto* arr = cur->array();
-            if (!arr) {
-                SDOM::CoreAPI::setErrorMessage("Path not found");
-                return false;
-            }
-            if (elem.index < 0 || static_cast<size_t>(elem.index) >= arr->size()) {
-                SDOM::CoreAPI::setErrorMessage("Index out of range");
-                return false;
-            }
-            const auto& ptr = (*arr)[static_cast<size_t>(elem.index)];
-            if (!ptr) {
-                SDOM::CoreAPI::setErrorMessage("Path not found");
-                return false;
-            }
-            cur = ptr.get();
-        }
-    }
-    out = *cur;
-    return true;
+    return getPathImpl(*this, path, out, nullptr);
 }
 
 bool Variant::getPath(const std::string& path, Variant& out) const {
@@ -606,7 +690,12 @@ bool Variant::getPath(const std::string& path, Variant& out) const {
         SDOM::CoreAPI::setErrorMessage(err.c_str());
         return false;
     }
-    return getPath(pv, out);
+    std::string traversalErr;
+    if (!getPathImpl(*this, pv, out, &traversalErr)) {
+        SDOM::CoreAPI::setErrorMessage(traversalErr.c_str());
+        return false;
+    }
+    return true;
 }
 
 Variant Variant::getPathOr(const std::string& path, const Variant& fallback) const {

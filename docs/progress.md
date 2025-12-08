@@ -1160,73 +1160,57 @@ After confirming several intermediate commits, we performed a `git bisect` to lo
 <a id="december-8-2025"></a>
 <a id="latest-update"></a>
 
-## 🗓️ December 8, 2025 — **SDOM learns to *speak Variant* across the ABI**
+## 🗓️ December 8, 2025 — **Variant C API: duplicates gone, paths fixed**
 
-> 💬 *Today SDOM’s event system finally became JSON-native, Variant-backed, and ABI-accessible — the foundation of the future runtime editor.*
+> 💬 *Today was about making Variant’s C API link cleanly and behave predictably along nested paths.*
 
-### 🧩 **Event Payloads → Variant Unification**
-- Event payload access no longer uses ad-hoc JSON lookups  
-- All scalar payloads (null/bool/int/real/string) are now transported via `SDOM_Variant`
-- Added C API surface accessors:
-  - `SDOM_GetEventPayloadValue(...)`
-  - `SDOM_SetEventPayloadValue(...)`
-- Ensured robust error handling when keys are missing or unsupported
-- ABI marshalling helpers in place for safe cross-language translation  
+### 🧩 **Duplicate symbol purge**
+- Removed the generated `SDOM_CAPI_Variant.cpp` from all build lists so the hand-written implementations in `SDOM_Variant.cpp` are the single source of truth.
+- Rebuilt `libSDOM.a` and `examples/test/prog` without duplicate symbol errors.
 
-### 🧩 **Error Semantics Become ABI-Stable**
-- Added `SDOM_HasError()` / `SDOM_GetError()` / `SDOM_ClearError()` to CoreAPI
-- Ensured:
-  - Always safe defaults
-  - No silent failures
-  - Null Variant returned on error
-  - Human-readable error messages for debugging
-- Error state isolation supports re-entrant test harness execution
+### 🧩 **Path traversal semantics tightened**
+- Added a pure `getPathImpl` with a scalar-root guard to emit the exact required messages:
+  - Missing key → contains "Path not found"
+  - Dot on array → "Expected object for field access"
+  - Index OOB → "Index out of range"
+  - Scalar traverse → "Cannot traverse into scalar type"
+- `SDOM_Variant_GetPath` now always nulls `*out_value` on failure before returning.
+- `SDOM_Variant_PathExists` now imports without touching global error state (query-only is side-effect free).
 
-### 🧩 **Structural Encapsulation + Future-Proofing**
-- Binding lambda no longer touches Event internals
-  - No private JSON calls
-  - No mutex misuse
-- Missing key and unsupported type checks delegated to Event logic
-- Clean forward path toward:
-  - Nested Variant payloads
-  - `"cursor.x"` path lookups
-  - Pure Variant storage in SDOM_Event
+### 🌟 **Summary**
+Builds are clean again and Variant path helpers now return deterministic errors with no stray global error writes from existence checks.
 
-### 🌟 **Summary**  
-SDOM now exposes Variant payload values over the ABI safely and consistently.  
-Scalar types are fully functional today — complex types are cleanly deferred.  
-Error messaging and event payloads now follow unified semantics across C++, C API, and scripting.
-
-Tomorrow: begin **Variant path access** to unlock nested data and runtime editor workflows. 🚀
+---
 
 ### 🚧 **To-Do — Active Work**
-#### ☐ Complete SDOM_Variant JSON refactor
-- ✅ Remove Lua remnants (`LuaRef`, etc.)
-- 🔄 Introduce native JSON storage for Array/Object Types
-- ☐ Add stable VariantType semantics for handles, events, etc.
-- ☐ Enforce safe up/down-casting rules
-- ☐ Expand ABI for container types once semantics are locked
 
-#### ☐ Expand Variant C API Surface
-- ✔ Scalar constructors + extractors
-- ☐ Add object & array creation helpers
-- ☐ Add path-based access (`GetField`, `SetField`, `GetPath`)
-- ☐ Guarantee safe error-flag patterns everywhere
+#### ☐ Complete SDOM_Variant JSON refactor  
+- 🔄 Introduce native JSON storage for Array/Object types  
+- ☐ Add stable `VariantType` semantics for handles, events, and other runtime references  
+- ☐ Enforce safe up/down-casting rules between numeric/string/dynamic forms  
+- ☐ Expand ABI once container semantics are fully defined  
 
-#### ☐ Unit Testing Improvements
-- ✅ Missing key → error + Null variant
-- ☐ Existing scalar key → success
-- ☐ Container key → unsupported type error
-- ☐ Null payload stored intentionally should pass
+#### ☐ Expand Variant C API Surface  
+- ☐ Add object & array creation helpers — required for handle/event payloads  
+- ☐ Add path-based access helpers beyond get/set/exists/erase where needed  
+- ☐ Guarantee consistent error-flag semantics everywhere  
 
-#### ☐ Runtime Editor groundwork
-- ☐ Expose Variant metadata for UI inspection
-- 🔄 Ensure JSON⇆Variant round-trip is stable for persistence
+#### ☐ Unit Testing Improvements  
+- ☐ Add explicit tests for: scalar key success, container key mismatch error, intentional null payload (no error), scalar traversal guard, and PathExists side-effect neutrality  
+
+#### ☐ Runtime Editor groundwork  
+- ☐ Expose Variant metadata for inspection  
+- 🔄 Ensure JSON⇆Variant round-trip stability  
+
+---
+
+### 🔍 Planning Notes
+> Next major unlock is handles → events: DisplayHandle/AssetHandle ABI structs, Variant support for handles, and dead-handle detection to enable payload references like `"target.position"`.
 
 ---
 
 ### 🤔 **End of Day Reflection**
-> *“ABI safety isn’t a feature — it’s a promise future me shouldn’t have to rewrite.”*
+> *“Deterministic paths and single definitions beat mystery linker errors every time.”*
 
 ---
 
