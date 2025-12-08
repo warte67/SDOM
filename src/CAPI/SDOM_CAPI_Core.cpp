@@ -25,6 +25,24 @@ const char* SDOM_GetError(void) {
     return s_result.c_str();
 }
 
+bool SDOM_ClearError(void) {
+    // Dispatch family: singleton (Core)
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_ClearError", {});
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_HasError(void) {
+    // Dispatch family: singleton (Core)
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_HasError", {});
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 bool SDOM_SetError(const char* message) {
     // Dispatch family: singleton (Core)
     std::vector<SDOM::CAPI::CallArg> args;

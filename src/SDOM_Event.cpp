@@ -50,9 +50,12 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
+#include <SDOM/CAPI/SDOM_CAPI_Variant.h>
+#include <SDOM/SDOM_CoreAPI.hpp>
 #include <string>
 #include <string_view>
 #include <cstdint>
+#include <cstring>
 // #include <SDOM/SDOM_CAPI_Events_runtime.h>
 
 
@@ -67,6 +70,20 @@ namespace SDOM
         thread_local DisplayHandleScratch s_eventTargetScratch;
         thread_local DisplayHandleScratch s_eventCurrentTargetScratch;
         thread_local DisplayHandleScratch s_eventRelatedTargetScratch;
+
+        inline double bitsToDouble(std::uint64_t bits)
+        {
+            double out{};
+            std::memcpy(&out, &bits, sizeof(double));
+            return out;
+        }
+
+        inline std::uint64_t doubleToBits(double d)
+        {
+            std::uint64_t out{};
+            std::memcpy(&out, &d, sizeof(double));
+            return out;
+        }
 
         bool exportDisplayHandleToC(const DisplayHandle& handle,
                                     SDOM_DisplayHandle* out,
@@ -95,6 +112,76 @@ namespace SDOM
             result.setName(in->name ? in->name : "");
             result.setType(in->type ? in->type : "");
             return result;
+        }
+
+        // Variant marshaling helpers for the provisional C ABI view. Only scalar
+        // kinds are supported here; complex containers are deferred until their
+        // ownership semantics are defined.
+        thread_local std::string s_variantStringScratch;
+
+        bool importVariantFromC(const SDOM_Variant* in, Variant& out)
+        {
+            out = Variant{};
+            if (!in) {
+                return false;
+            }
+
+            switch (static_cast<SDOM_VariantType>(in->type)) {
+                case SDOM_VARIANT_TYPE_NULL:
+                    out = Variant{};
+                    return true;
+                case SDOM_VARIANT_TYPE_BOOL:
+                    out = Variant(static_cast<bool>(in->data != 0));
+                    return true;
+                case SDOM_VARIANT_TYPE_INT:
+                    out = Variant(static_cast<std::int64_t>(in->data));
+                    return true;
+                case SDOM_VARIANT_TYPE_FLOAT: {
+                    const double f = bitsToDouble(static_cast<std::uint64_t>(in->data));
+                    out = Variant(f);
+                    return true;
+                }
+                case SDOM_VARIANT_TYPE_STRING: {
+                    const char* s = reinterpret_cast<const char*>(static_cast<std::uintptr_t>(in->data));
+                    out = Variant(s ? std::string{s} : std::string{});
+                    return true;
+                }
+                default:
+                    SDOM::CoreAPI::setErrorMessage("Unsupported Variant type for ABI import");
+                    return false;
+            }
+        }
+
+        SDOM_Variant exportVariantToC(const Variant& v)
+        {
+            SDOM_Variant out{};
+            switch (v.type()) {
+                case VariantType::Null:
+                    out.type = SDOM_VARIANT_TYPE_NULL;
+                    break;
+                case VariantType::Bool:
+                    out.type = SDOM_VARIANT_TYPE_BOOL;
+                    out.data = static_cast<std::uint64_t>(v.toBool());
+                    break;
+                case VariantType::Int:
+                    out.type = SDOM_VARIANT_TYPE_INT;
+                    out.data = static_cast<std::uint64_t>(v.toInt64());
+                    break;
+                case VariantType::Real:
+                    out.type = SDOM_VARIANT_TYPE_FLOAT;
+                    out.data = doubleToBits(static_cast<double>(v.toDouble()));
+                    break;
+                case VariantType::String:
+                    out.type = SDOM_VARIANT_TYPE_STRING;
+                    s_variantStringScratch = v.toString();
+                    out.data = reinterpret_cast<std::uint64_t>(s_variantStringScratch.c_str());
+                    break;
+                default:
+                    // Unsupported container/dynamic types signal an error for now.
+                    SDOM::CoreAPI::setErrorMessage("Unsupported Variant type for ABI export");
+                    return out; // defaults to null/zeroed
+            }
+            return out;
         }
     } // namespace
 
@@ -214,6 +301,39 @@ namespace SDOM
     std::string Event::getPayloadString() const {
         std::lock_guard<std::mutex> lock(event_mutex_);
         return payload_.dump();
+    }
+
+    bool Event::payloadKeyExists(const std::string& key) const {
+        if (!payload_.is_object()) {
+            return false;
+        }
+        return payload_.contains(key);
+    }
+
+    Variant Event::getPayloadValueVariant(const std::string& key) const {
+        std::lock_guard<std::mutex> lock(event_mutex_);
+        if (!payload_.is_object()) {
+            SDOM::CoreAPI::setErrorMessage("Payload key not found");
+            return Variant{};
+        }
+
+        auto it = payload_.find(key);
+        if (it == payload_.end()) {
+            SDOM::CoreAPI::setErrorMessage("Payload key not found");
+            return Variant{};
+        }
+
+        return Variant::fromJson(*it);
+    }
+
+    Event& Event::setPayloadValueVariant(const std::string& key, const Variant& value) {
+        std::lock_guard<std::mutex> lock(event_mutex_);
+        if (!payload_.is_object()) {
+            payload_ = nlohmann::json::object();
+        }
+
+        payload_[key] = value.toJson();
+        return *this;
     }
 
 
@@ -703,6 +823,65 @@ namespace SDOM
                 }
 
                 evt->setSDL_EventJson(json);
+                return true;
+            });
+
+        // Variant-backed payload access (scalar-only for now)
+        registerMethod(
+            typeName,
+            "getPayloadValueVariant",
+            "Variant Event::getPayloadValueVariant(const std::string& key) const",
+            "bool",
+            "SDOM_GetEventPayloadValue",
+            "bool SDOM_GetEventPayloadValue(const SDOM_Event* evt, const char* key, SDOM_Variant* out_value)",
+            "Retrieves a payload entry as an SDOM_Variant (null/bool/int/float/string).",
+            [](const Event* evt, const char* key, SDOM_Variant* outValue) -> bool {
+                if (!evt || !key || !outValue) {
+                    return false;
+                }
+
+                const Variant v = evt->getPayloadValueVariant(key);
+                if (!evt->payloadKeyExists(key)) {
+                    SDOM::CoreAPI::setErrorMessage("Payload key not found");
+                    *outValue = exportVariantToC(Variant{});
+                    return false;
+                }
+
+                switch (v.type()) {
+                    case VariantType::Null:
+                    case VariantType::Bool:
+                    case VariantType::Int:
+                    case VariantType::Real:
+                    case VariantType::String:
+                        break;
+                    default:
+                        SDOM::CoreAPI::setErrorMessage("Unsupported payload type for ABI access");
+                        return false;
+                }
+
+                *outValue = exportVariantToC(v);
+                return true;
+            });
+
+        registerMethod(
+            typeName,
+            "setPayloadValueVariant",
+            "Event& Event::setPayloadValueVariant(const std::string& key, const Variant& value)",
+            "bool",
+            "SDOM_SetEventPayloadValue",
+            "bool SDOM_SetEventPayloadValue(SDOM_Event* evt, const char* key, const SDOM_Variant* value)",
+            "Sets a payload entry from an SDOM_Variant (null/bool/int/float/string).",
+            [](Event* evt, const char* key, const SDOM_Variant* value) -> bool {
+                if (!evt || !key || !value) {
+                    return false;
+                }
+
+                Variant v;
+                if (!importVariantFromC(value, v)) {
+                    return false;
+                }
+
+                evt->setPayloadValueVariant(key, v);
                 return true;
             });
 

@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 
 typedef enum SDOM_VariantType {
     SDOM_VARIANT_TYPE_NULL   = 0,

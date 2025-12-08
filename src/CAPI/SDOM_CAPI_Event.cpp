@@ -268,6 +268,46 @@ bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json) {
     return callResult.v.b;
 }
 
+bool SDOM_GetEventPayloadValue(const SDOM_Event* evt, const char* key, SDOM_Variant* out_value) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_GetEventPayloadValue: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(3);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(key));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_value)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetEventPayloadValue", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetEventPayloadValue(SDOM_Event* evt, const char* key, const SDOM_Variant* value) {
+    // Dispatch family: event_router (Event)
+    if (!evt) {
+        SDOM_SetError("SDOM_SetEventPayloadValue: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(3);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(eventImplPtr(evt)));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(key));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(value))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetEventPayloadValue", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt) {
     // Dispatch family: event_router (Event)
     if (!evt) {

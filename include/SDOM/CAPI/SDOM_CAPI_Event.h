@@ -2,6 +2,7 @@
 // Auto-generated SDOM C API module: Event
 
 #include <stdbool.h>
+#include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 #include <SDOM/CAPI/SDOM_CAPI_Event.h>
 
@@ -249,6 +250,32 @@ const char* SDOM_GetEventSDLJson(const SDOM_Event* evt);
  * @return bool; check SDOM_GetError() for details on failure.
  */
 bool SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json);
+
+/**
+ * @brief Retrieves a payload entry as an SDOM_Variant (null/bool/int/float/string).
+ *
+ * C++:   Variant Event::getPayloadValueVariant(const std::string& key) const
+ * C API: bool SDOM_GetEventPayloadValue(const SDOM_Event* evt, const char* key, SDOM_Variant* out_value)
+ *
+ * @param evt Pointer parameter.
+ * @param key Pointer parameter.
+ * @param out_value Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_GetEventPayloadValue(const SDOM_Event* evt, const char* key, SDOM_Variant* out_value);
+
+/**
+ * @brief Sets a payload entry from an SDOM_Variant (null/bool/int/float/string).
+ *
+ * C++:   Event& Event::setPayloadValueVariant(const std::string& key, const Variant& value)
+ * C API: bool SDOM_SetEventPayloadValue(SDOM_Event* evt, const char* key, const SDOM_Variant* value)
+ *
+ * @param evt Pointer parameter.
+ * @param key Pointer parameter.
+ * @param value Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_SetEventPayloadValue(SDOM_Event* evt, const char* key, const SDOM_Variant* value);
 
 /**
  * @brief Returns true if propagation has been stopped for this event.

@@ -201,6 +201,22 @@
       "subject_kind": "Event"
     },
     {
+      "c_name": "SDOM_GetEventPayloadValue",
+      "c_signature": "bool SDOM_GetEventPayloadValue(const SDOM_Event* evt, const char* key, SDOM_Variant* out_value)",
+      "dispatch_family": "event_router",
+      "name": "getPayloadValueVariant",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
+      "c_name": "SDOM_SetEventPayloadValue",
+      "c_signature": "bool SDOM_SetEventPayloadValue(SDOM_Event* evt, const char* key, const SDOM_Variant* value)",
+      "dispatch_family": "event_router",
+      "name": "setPayloadValueVariant",
+      "owner_type": "Event",
+      "subject_kind": "Event"
+    },
+    {
       "c_name": "SDOM_IsEventPropagationStopped",
       "c_signature": "bool SDOM_IsEventPropagationStopped(const SDOM_Event* evt)",
       "dispatch_family": "event_router",
@@ -597,6 +613,22 @@
       "c_signature": "const char* SDOM_GetError(void)",
       "dispatch_family": "singleton",
       "name": "GetError",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_ClearError",
+      "c_signature": "bool SDOM_ClearError(void)",
+      "dispatch_family": "singleton",
+      "name": "ClearError",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_HasError",
+      "c_signature": "bool SDOM_HasError(void)",
+      "dispatch_family": "singleton",
+      "name": "HasError",
       "owner_type": "Core",
       "subject_kind": "Core"
     },

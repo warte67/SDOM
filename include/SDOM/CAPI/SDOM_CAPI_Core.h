@@ -47,6 +47,26 @@ extern "C" {
 const char* SDOM_GetError(void);
 
 /**
+ * @brief Clears the global SDOM error state (and SDL error) to an empty value.
+ *
+ * C++:   bool Core::capiClearError()
+ * C API: bool SDOM_ClearError(void)
+ *
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_ClearError(void);
+
+/**
+ * @brief Returns true if an SDOM error string is currently set (or SDL has one).
+ *
+ * C++:   bool Core::capiHasError() const
+ * C API: bool SDOM_HasError(void)
+ *
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_HasError(void);
+
+/**
  * @brief Sets the global SDOM error string consumers read via SDOM_GetError().
  *
  * C++:   bool Core::capiSetError(const char* message)

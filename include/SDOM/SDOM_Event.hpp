@@ -43,6 +43,7 @@
 #include <SDL3/SDL.h>
 #include <SDOM/SDOM_IDataObject.hpp>
 #include <SDOM/SDOM_EventType.hpp>
+#include <SDOM/SDOM_Variant.hpp>
 #include <mutex>
 #include <string>
 #include <SDOM/SDOM_DisplayHandle.hpp>
@@ -123,6 +124,11 @@ namespace SDOM
         Event& setPayload(const nlohmann::json& j);
         Event& setPayloadString(const std::string& jsonStr);
         std::string getPayloadString() const;
+
+        bool payloadKeyExists(const std::string& key) const;
+
+        Variant getPayloadValueVariant(const std::string& key) const;
+        Event& setPayloadValueVariant(const std::string& key, const Variant& value);
 
         template<typename T>
         Event& setPayloadValue(const std::string& key, const T& value) {

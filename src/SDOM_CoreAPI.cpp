@@ -291,6 +291,16 @@ public:
                 return makeStringResult(CoreAPI::getErrorString());
             });
 
+        SDOM::CAPI::registerCallable("SDOM_ClearError",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::clearError());
+            });
+
+        SDOM::CAPI::registerCallable("SDOM_HasError",
+            [](const std::vector<CallArg>&) -> CallResult {
+                return makeBoolResult(CoreAPI::hasError());
+            });
+
         SDOM::CAPI::registerCallable("SDOM_SetError",
             [](const std::vector<CallArg>& args) -> CallResult {
                 const char* message = nullptr;
@@ -1357,6 +1367,26 @@ std::string getErrorString()
     }
     const char* fallback = SDL_GetError();
     return fallback ? std::string(fallback) : std::string();
+}
+
+bool clearError()
+{
+    {
+        std::lock_guard<std::mutex> lock(errorMutex());
+        lastErrorStorage().clear();
+    }
+    SDL_ClearError();
+    return true;
+}
+
+bool hasError()
+{
+    std::lock_guard<std::mutex> lock(errorMutex());
+    if (!lastErrorStorage().empty()) {
+        return true;
+    }
+    const char* fallback = SDL_GetError();
+    return fallback && fallback[0] != '\0';
 }
 
 bool setErrorMessage(const char* message)
@@ -3306,6 +3336,30 @@ void registerBindings(Core& core, const std::string& typeName)
         "Returns the most recent SDOM error string (or SDL_GetError when none).",
         []() -> std::string {
             return CoreAPI::getErrorString();
+        });
+
+    core.registerMethod(
+        typeName,
+        "ClearError",
+        "bool Core::capiClearError()",
+        "bool",
+        "SDOM_ClearError",
+        "bool SDOM_ClearError(void)",
+        "Clears the global SDOM error state (and SDL error) to an empty value.",
+        []() -> bool {
+            return CoreAPI::clearError();
+        });
+
+    core.registerMethod(
+        typeName,
+        "HasError",
+        "bool Core::capiHasError() const",
+        "bool",
+        "SDOM_HasError",
+        "bool SDOM_HasError(void)",
+        "Returns true if an SDOM error string is currently set (or SDL has one).",
+        []() -> bool {
+            return CoreAPI::hasError();
         });
 
     core.registerMethod(

@@ -8,6 +8,8 @@
 #include <SDOM/SDOM_SDL_Utils.hpp>
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_SubjectBinding.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Core.h>
+#include <SDOM/CAPI/SDOM_CAPI_Event.h>
 
 #include <json.hpp>
 
@@ -218,6 +220,49 @@ namespace SDOM
         return true;
     }
 
+    bool Event_CAPI_payload_missing_key_returns_null(std::vector<std::string>& errors)
+    {
+        // Verify SDOM_GetEventPayloadValue reports an error and returns a null SDOM_Variant when the key is missing.
+        SDOM_Event handle{};
+        SDOM::Event backing;
+        handle.impl = &backing;
+
+        // Seed out_value with non-null data to ensure the call overwrites it on failure.
+        SDOM_Variant out_value{};
+        out_value.type = SDOM_VARIANT_TYPE_INT;
+        out_value.data = 0xDEADBEEF;
+
+        // Reset error state before test (re-entrant safety)
+        SDOM_ClearError();
+        if (SDOM_HasError()) {
+            errors.push_back("Failed to clear prior error state before test");
+            return true;
+        }
+
+        // Execute payload lookup on missing key
+        const bool ok = SDOM_GetEventPayloadValue(&handle, "missing_key", &out_value);
+        if (ok) {
+            errors.push_back("SDOM_GetEventPayloadValue unexpectedly succeeded for missing key");
+            return true;
+        }
+
+        // Check output variant is null type
+        if (out_value.type != SDOM_VARIANT_TYPE_NULL) {
+            errors.push_back("Missing-key payload lookup did not return a null SDOM_Variant");
+        }
+
+        // Verify error message was set and contains correct reason
+        const char* err = SDOM_GetError();
+        if (!err || std::string(err).find("Payload key not found") == std::string::npos) {
+            errors.push_back(std::string("Unexpected error message: '") + (err ? err : "<null>") + "'");
+        }
+
+        // Restore error state for re-entrant safety
+        SDOM_ClearError();
+
+        return true;
+    }
+
 
 
 
@@ -242,6 +287,7 @@ namespace SDOM
             ut.add_test(objName, "Test Scaffold", Event_CAPI_test0);
             ut.add_test(objName, "Event Manifest", Event_CAPI_test1);
             ut.add_test(objName, "SDL_Event JSON Roundtrip", Event_CAPI_test2);
+            ut.add_test(objName, "Payload missing key -> null Variant + error", Event_CAPI_payload_missing_key_returns_null);
 
             // ut.add_test(objName, "Lua: src/Event_CAPI_UnitTests.lua", Event_CAPI_LUA_Tests, false);
 

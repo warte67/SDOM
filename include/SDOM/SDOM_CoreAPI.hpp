@@ -20,6 +20,8 @@ namespace CoreAPI {
 // Runtime helpers
 const char* getErrorCString();
 std::string getErrorString();
+bool clearError();
+bool hasError();
 bool setErrorMessage(const char* message);
 bool init(uint64_t flags);
 bool configure(const SDOM_CoreConfig* cfg);

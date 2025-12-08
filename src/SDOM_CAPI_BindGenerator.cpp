@@ -414,7 +414,8 @@ std::vector<std::string> collectDependencyIncludes(const BindModule& module)
     static constexpr TokenInclude requirements[] = {
         { "SDOM_AssetHandle", "#include <SDOM/CAPI/SDOM_CAPI_Handles.h>" },
         { "SDOM_DisplayHandle", "#include <SDOM/CAPI/SDOM_CAPI_Handles.h>" },
-        { "SDOM_Event", "#include <SDOM/CAPI/SDOM_CAPI_Event.h>" }
+        { "SDOM_Event", "#include <SDOM/CAPI/SDOM_CAPI_Event.h>" },
+        { "SDOM_Variant", "#include <SDOM/CAPI/SDOM_CAPI_Variant.h>" }
     };
 
     std::vector<std::string> includes;
@@ -711,6 +712,9 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
     }
     if (module.file_stem == "Core") {
         addInclude("#include <SDL3/SDL.h>");
+    }
+    if (module.file_stem == "Event") {
+        addInclude("#include <SDOM/CAPI/SDOM_CAPI_Variant.h>");
     }
 
     const auto dependencyIncludes = collectDependencyIncludes(module);

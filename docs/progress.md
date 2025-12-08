@@ -1160,69 +1160,80 @@ After confirming several intermediate commits, we performed a `git bisect` to lo
 <a id="december-8-2025"></a>
 <a id="latest-update"></a>
 
-## 🗓️ December 8, 2025 — [Title Placeholder]
+## 🗓️ December 8, 2025 — **SDOM learns to *speak Variant* across the ABI**
 
-> 💬 *[Brief summary of today’s focus or achievements.]*
+> 💬 *Today SDOM’s event system finally became JSON-native, Variant-backed, and ABI-accessible — the foundation of the future runtime editor.*
 
-### 🧩 [Subsystem or Feature Group]
-- [Key change or feature accomplished.]
-- [Supporting details, design notes, or rationale.]
+### 🧩 **Event Payloads → Variant Unification**
+- Event payload access no longer uses ad-hoc JSON lookups  
+- All scalar payloads (null/bool/int/real/string) are now transported via `SDOM_Variant`
+- Added C API surface accessors:
+  - `SDOM_GetEventPayloadValue(...)`
+  - `SDOM_SetEventPayloadValue(...)`
+- Ensured robust error handling when keys are missing or unsupported
+- ABI marshalling helpers in place for safe cross-language translation  
 
-### 🌟 **Summary:**
-_[Short summary of results and next direction.]_
+### 🧩 **Error Semantics Become ABI-Stable**
+- Added `SDOM_HasError()` / `SDOM_GetError()` / `SDOM_ClearError()` to CoreAPI
+- Ensured:
+  - Always safe defaults
+  - No silent failures
+  - Null Variant returned on error
+  - Human-readable error messages for debugging
+- Error state isolation supports re-entrant test harness execution
 
-**🚧 ToDo Today**
-### ☐ Refactor SDOM_Variant
-- ☐ Remove `LuaRef` and any remaining Lua-specific payload types  
-- ☐ Introduce JSON-native dynamic storage for Object/Array variants  
-- ☐ Ensure all variant types (bool/int/real/string/etc.) serialize directly to JSON  
-- ☐ Add semantic type tracking (DisplayObject, AssetHandle, Event, SDL types, etc.)  
-- ☐ Ensure safe conversion & validation for type mismatches  
-- ☐ Confirm Variant is fully cross-language and reflects the runtime truth  
+### 🧩 **Structural Encapsulation + Future-Proofing**
+- Binding lambda no longer touches Event internals
+  - No private JSON calls
+  - No mutex misuse
+- Missing key and unsupported type checks delegated to Event logic
+- Clean forward path toward:
+  - Nested Variant payloads
+  - `"cursor.x"` path lookups
+  - Pure Variant storage in SDOM_Event
 
-### ☐ Add the Variant API to the C API surface
-- ☐ Publicly expose **Variant** as the universal SDOM value type  
-- ☐ Add constructors: `Int()`, `Real()`, `String()`, `Bool()`, `Object()`, `Array()`  
-- ☐ Add extractors: `AsInt()`, `AsReal()`, `AsString()`, `AsBool()`  
-- ☐ Add RTTI helpers: `IsInt()`, `IsString()`, `IsDisplayObject()`, etc.  
-- ☐ Add object access helpers: `GetField()`, `SetField()`  
-- ☐ Add range utilities for array fields  
-- ☐ Guarantee fail-safe return codes (**false + error message**), never exceptions  
+### 🌟 **Summary**  
+SDOM now exposes Variant payload values over the ABI safely and consistently.  
+Scalar types are fully functional today — complex types are cleanly deferred.  
+Error messaging and event payloads now follow unified semantics across C++, C API, and scripting.
 
-### ☐ Introduce Variant Legends / Man Pages
-- ☐ `const char* SDOM_Variant_GetLegend(Variant v)`  
-- ☐ Return dynamic property/command metadata for any Variant  
-- ☐ Include semantic type, property list, command list, and current values  
-- ☐ Use as built-in documentation, debugging aid, and for future UI editors  
+Tomorrow: begin **Variant path access** to unlock nested data and runtime editor workflows. 🚀
 
-### ☐ Enforce Unified API Surface via Schema
-- ☐ All DisplayObjects share all inheritance properties & commands  
-- ☐ Unsupported calls → **false + SDOM_GetError() + Legend for guidance**  
-- ☐ Autocomplete remains fully discoverable, runtime remains fully validated  
+### 🚧 **To-Do — Active Work**
+#### ☐ Complete SDOM_Variant JSON refactor
+- 🕓 Remove Lua remnants (`LuaRef`, etc.)
+- 🕓 Introduce native JSON storage for Array/Object Types
+- ☐ Add stable VariantType semantics for handles, events, etc.
+- ☐ Enforce safe up/down-casting rules
+- ☐ Expand ABI for container types once semantics are locked
 
-### ☐ Lay groundwork for Runtime Editor Mode
-- ☐ Variant Legend becomes the inspector data source  
-- ☐ Ensure DOM nodes maintain stable names for persistence  
-- ☐ Confirm `Variant ⇆ JSON` conversion round-trips cleanly  
-- ☐ Guarantee that setters update underlying asset files when desired  
+#### ☐ Expand Variant C API Surface
+- ✔ Scalar constructors + extractors
+- ☐ Add object & array creation helpers
+- ☐ Add path-based access (`GetField`, `SetField`, `GetPath`)
+- ☐ Guarantee safe error-flag patterns everywhere
 
-### ☐ Begin main-loop function isolation (Core static functions)
-- ☐ Prepare for later C API main loop bindings (Poll/Update/Render/Present)  
-- ☐ Keep pointerless API for safety across languages  
-- ☐ Validate event delivery using the Variant model  
+#### ☐ Unit Testing Improvements
+- ✔ Missing key → error + Null variant
+- ☐ Existing scalar key → success
+- ☐ Container key → unsupported type error
+- ☐ Null payload stored intentionally should pass
 
-
-#### 🤔 *End of Day Reflection*
-> *"_reflechion quote"*
+#### ☐ Runtime Editor groundwork
+- ☐ Expose Variant metadata for UI inspection
+- 🕓 Ensure JSON⇆Variant round-trip is stable for persistence
 
 ---
 
+### 🤔 **End of Day Reflection**
+> *“ABI safety isn’t a feature — it’s a promise future me shouldn’t have to rewrite.”*
+
+---
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 #### end-of-day
 
 ---
-
 
 ### 🚧 **To-Do (Ongoing)** -- “A ten-day: a period of time scientifically defined as ‘when I get around to it.’
 - ☐ Audit all existing `Event` payload writers  

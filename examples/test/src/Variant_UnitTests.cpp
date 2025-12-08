@@ -799,9 +799,7 @@ namespace SDOM
             ut.add_test(objName, "Numeric coercion randomized", Variant_test_numeric_coercion_randomized);
             ut.add_test(objName, "Hash consistency", Variant_test_hash_consistency);
             ut.add_test(objName, "Threaded registration stress", Variant_test_threaded_registration_stress);
-
-            ut.add_test(objName, "Deep recursion snapshot", Variant_test_deep_recursion_snapshot); // seg fault
-
+            ut.add_test(objName, "Deep recursion snapshot", Variant_test_deep_recursion_snapshot);
             ut.add_test(objName, "Threaded converter registration", Variant_test_threaded_converter_registration);
             ut.add_test(objName, "Equality: composite types", Variant_test_equality_composite_types);
             ut.add_test(objName, "Null/Error semantics", Variant_test_null_and_error);
@@ -813,8 +811,9 @@ namespace SDOM
             ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
             ut.add_test(objName, "VariantHash & unordered_map usage", Variant_test_varianthash_and_map);
             ut.add_test(objName, "Deep recursion stress", Variant_test_deep_recursion_stress);  
-
             ut.add_test(objName, "Threaded converter safety stress", Variant_test_threaded_converter_safety);
+
+            
 
             registered = true;
         }
