@@ -1013,8 +1013,8 @@ Tomorrow’s focus will be unifying that chain and ensuring the manifest becomes
 
 ---
 
-<a id="december-2-2025"></a>
-<a id="latest-update"></a>
+
+
 
 ## 🗓️ **December 2, 2025 — “The Day the Loop Became Unbreakable”**
 
@@ -1090,9 +1090,116 @@ This is a major stability milestone — and a huge enabler for the next stage of
 > *“A well-behaved loop doesn’t demand obedience — it quietly fixes your mistakes.”*
 
 ---
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
 
+---
+
+<a id="december-5-2025"></a>
+<a id="latest-update"></a>
+
+## 🗓️ December 3–5, 2025 — The Great Regression Hunt
+
+### 🧩 Summary
+We attempted to introduce new low-level main loop phase functions (C API equivalents of `Core::run()`), alongside enhancements to the Variant API and C-API bindings.  
+However, somewhere during this work, **DOM event propagation regressed**, affecting all main loop variants.
+
+After confirming several intermediate commits, we performed a `git bisect` to locate the regression. It was traced to the commit introducing the first round of Variant bindings (`20e8cb42`). Ultimately, the safest path forward was to **roll the repo back** to the last known-good state on **Dec 2**, preserving working event pipeline behavior. This recovery restores us to stable ground and sets up a cleaner foundation for continuing the C-API rebuild.
+
+> **Interpretation:** _"The neighbors cow fell into a deep pit and mister llama was trapped in the mud trying to rescue her. I just took 500mg of Fukitol... I am feeling much better now."_
+
+---
+
+### 🚨 Issue Identified
+- Event dispatch was occurring **twice** for the same event frame
+- Shared global state (hover, drag, focus, framePhaseState) became **contradictory**
+- Result: all variants lost reliable event propagation
+
+### 🔍 Troubleshooting Path
+- Verified multiple commits from Dec 4 backward
+- Checked both manual test harness and Variant 2
+- Confirmed the bug impacted even unmodified variants
+- Used `git bisect` to isolate the regression range
+- Confirmed that Dec 2 commit (`8fc03c82…`) still works perfectly
+
+### 🔁 Recovery Actions
+- Hard reset `master` to **Dec 2** commit
+- Rebuilt everything from that baseline
+- Verified DOM event propagation is fully functional
+- Planned a controlled incremental re-introduction of new C-API features
+
+### 📌 Lessons Learned
+- New event pipeline entrypoints must **enqueue**, not dispatch
+- All event flows must converge through the **same dispatcher**
+- **Generated code is off-limits** — fix the generator, not the output files
+- Mandatory UnitTests needed for:
+  - `SDOM_PollEvents`
+  - `SDOM_DispatchEvent` (new design)
+  - `SDOM_DispatchQueuedEvents`
+  - Phase-order integrity checks
+
+### 🚧 Next Focus
+- Re-introduce C-API Variant bindings **but keep event pipeline untouched**
+- Add a test that proves:
+  - One SDL event → exactly one dispatch
+  - No frame can end in a “partially dispatched” state
+- Extend progress.md with *daily snapshots* going forward
+
+---
+
+### 😅 Fun Fact of the Day
+> “Today’s bug report:  
+>  **Cow dispatched twice. Llama stuck.**  
+>  Patch applied. System stable. 🍀”
+
+---
+
+## 🧭 Tomorrow’s Focus — “Variants First, Everything Follows”
+
+### ☐ Refactor SDOM_Variant
+- ☐ Remove `LuaRef` and any remaining Lua-specific payload types  
+- ☐ Introduce JSON-native dynamic storage for Object/Array variants  
+- ☐ Ensure all variant types (bool/int/real/string/etc.) serialize directly to JSON  
+- ☐ Add semantic type tracking (DisplayObject, AssetHandle, Event, SDL types, etc.)  
+- ☐ Ensure safe conversion & validation for type mismatches  
+- ☐ Confirm Variant is fully cross-language and reflects the runtime truth  
+
+### ☐ Add the Variant API to the C API surface
+- ☐ Publicly expose **Variant** as the universal SDOM value type  
+- ☐ Add constructors: `Int()`, `Real()`, `String()`, `Bool()`, `Object()`, `Array()`  
+- ☐ Add extractors: `AsInt()`, `AsReal()`, `AsString()`, `AsBool()`  
+- ☐ Add RTTI helpers: `IsInt()`, `IsString()`, `IsDisplayObject()`, etc.  
+- ☐ Add object access helpers: `GetField()`, `SetField()`  
+- ☐ Add range utilities for array fields  
+- ☐ Guarantee fail-safe return codes (**false + error message**), never exceptions  
+
+### ☐ Introduce Variant Legends / Man Pages
+- ☐ `const char* SDOM_Variant_GetLegend(Variant v)`  
+- ☐ Return dynamic property/command metadata for any Variant  
+- ☐ Include semantic type, property list, command list, and current values  
+- ☐ Use as built-in documentation, debugging aid, and for future UI editors  
+
+### ☐ Enforce Unified API Surface via Schema
+- ☐ All DisplayObjects share all inheritance properties & commands  
+- ☐ Unsupported calls → **false + SDOM_GetError() + Legend for guidance**  
+- ☐ Autocomplete remains fully discoverable, runtime remains fully validated  
+
+### ☐ Lay groundwork for Runtime Editor Mode
+- ☐ Variant Legend becomes the inspector data source  
+- ☐ Ensure DOM nodes maintain stable names for persistence  
+- ☐ Confirm `Variant ⇆ JSON` conversion round-trips cleanly  
+- ☐ Guarantee that setters update underlying asset files when desired  
+
+### ☐ Begin main-loop function isolation (Core static functions)
+- ☐ Prepare for later C API main loop bindings (Poll/Update/Render/Present)  
+- ☐ Keep pointerless API for safety across languages  
+- ☐ Validate event delivery using the Variant model  
+
+---
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
 #### end-of-day
 
 ---
