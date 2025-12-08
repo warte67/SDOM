@@ -12,8 +12,7 @@ typedef enum SDOM_VariantType {
     SDOM_VARIANT_TYPE_STRING = 4,
     SDOM_VARIANT_TYPE_ARRAY  = 5,
     SDOM_VARIANT_TYPE_OBJECT = 6,
-    SDOM_VARIANT_TYPE_DYNAMIC= 7,
-    SDOM_VARIANT_TYPE_ERROR  = 8
+    SDOM_VARIANT_TYPE_DYNAMIC= 7
 } SDOM_VariantType;
 
 #ifdef __cplusplus

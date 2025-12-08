@@ -737,8 +737,7 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << "    SDOM_VARIANT_TYPE_STRING = 4,\n";
         out << "    SDOM_VARIANT_TYPE_ARRAY  = 5,\n";
         out << "    SDOM_VARIANT_TYPE_OBJECT = 6,\n";
-        out << "    SDOM_VARIANT_TYPE_DYNAMIC= 7,\n";
-        out << "    SDOM_VARIANT_TYPE_ERROR  = 8\n";
+        out << "    SDOM_VARIANT_TYPE_DYNAMIC= 7\n";
         out << "} SDOM_VariantType;\n\n";
     }
 
