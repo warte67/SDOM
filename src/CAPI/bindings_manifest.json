@@ -1201,6 +1201,22 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_SetKeyboardFocus_V",
+      "c_signature": "bool SDOM_SetKeyboardFocus_V(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetKeyboardFocus_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetKeyboardFocus_V",
+      "c_signature": "bool SDOM_GetKeyboardFocus_V(SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetKeyboardFocus_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_SetMouseHover",
       "c_signature": "bool SDOM_SetMouseHover(const SDOM_DisplayHandle* handle)",
       "dispatch_family": "singleton",
@@ -1221,6 +1237,22 @@
       "c_signature": "bool SDOM_ClearMouseHover(void)",
       "dispatch_family": "singleton",
       "name": "ClearMouseHover",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetMouseHover_V",
+      "c_signature": "bool SDOM_SetMouseHover_V(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetMouseHover_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetMouseHover_V",
+      "c_signature": "bool SDOM_GetMouseHover_V(SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetMouseHover_V",
       "owner_type": "Core",
       "subject_kind": "Core"
     },
@@ -1265,6 +1297,22 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_GetDisplayObject_V",
+      "c_signature": "bool SDOM_GetDisplayObject_V(const char* name, SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetDisplayObject_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_DestroyDisplayObject_V",
+      "c_signature": "bool SDOM_DestroyDisplayObject_V(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "DestroyDisplayObject_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_GetAssetObject",
       "c_signature": "bool SDOM_GetAssetObject(const char* name, SDOM_AssetHandle* out_handle)",
       "dispatch_family": "singleton",
@@ -1293,6 +1341,22 @@
       "c_signature": "bool SDOM_DestroyAssetObject(const SDOM_AssetHandle* handle)",
       "dispatch_family": "singleton",
       "name": "DestroyAssetObject",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetAssetObject_V",
+      "c_signature": "bool SDOM_GetAssetObject_V(const char* name, SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetAssetObject_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_DestroyAssetObject_V",
+      "c_signature": "bool SDOM_DestroyAssetObject_V(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "DestroyAssetObject_V",
       "owner_type": "Core",
       "subject_kind": "Core"
     },
@@ -1449,6 +1513,22 @@
       "subject_kind": "Core"
     },
     {
+      "c_name": "SDOM_CreateDisplayObjectFromJson_V",
+      "c_signature": "bool SDOM_CreateDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "CreateDisplayObjectFromJson_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_CreateAssetObjectFromJson_V",
+      "c_signature": "bool SDOM_CreateAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "CreateAssetObjectFromJson_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_PollEvents",
       "c_signature": "bool SDOM_PollEvents(SDOM_Event* evt)",
       "dispatch_family": "singleton",
@@ -1557,6 +1637,38 @@
       "c_signature": "bool SDOM_GetStageHandle(SDOM_DisplayHandle* out_handle)",
       "dispatch_family": "singleton",
       "name": "GetStageHandle",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetRootNode_V",
+      "c_signature": "bool SDOM_SetRootNode_V(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetRootNode_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_SetStage_V",
+      "c_signature": "bool SDOM_SetStage_V(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SetStage_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetRootNode_V",
+      "c_signature": "bool SDOM_GetRootNode_V(SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetRootNode_V",
+      "owner_type": "Core",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_GetStageHandle_V",
+      "c_signature": "bool SDOM_GetStageHandle_V(SDOM_Variant* out_handle)",
+      "dispatch_family": "singleton",
+      "name": "GetStageHandle_V",
       "owner_type": "Core",
       "subject_kind": "Core"
     },

@@ -5,6 +5,7 @@
 #include <SDL3/SDL.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 #include <SDOM/CAPI/SDOM_CAPI_Event.h>
+#include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 
 
 typedef struct SDOM_CoreConfig {
@@ -703,6 +704,28 @@ bool SDOM_GetKeyboardFocus(SDOM_DisplayHandle* out_handle);
 bool SDOM_ClearKeyboardFocus(void);
 
 /**
+ * @brief Directly sets keyboard focus using a variant display handle (testing/editor only).
+ *
+ * C++:   bool Core::capiSetKeyboardFocus_V(const SDOM_Variant* handle)
+ * C API: bool SDOM_SetKeyboardFocus_V(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_SetKeyboardFocus_V(const SDOM_Variant* handle);
+
+/**
+ * @brief Retrieves the current keyboard focus as a variant display handle.
+ *
+ * C++:   bool Core::capiGetKeyboardFocus_V(SDOM_Variant* out_handle)
+ * C API: bool SDOM_GetKeyboardFocus_V(SDOM_Variant* out_handle)
+ *
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_GetKeyboardFocus_V(SDOM_Variant* out_handle);
+
+/**
  * @brief Directly sets mouse hover (testing/editor only).
  *
  * C++:   bool Core::capiSetMouseHover(const SDOM_DisplayHandle* handle)
@@ -733,6 +756,28 @@ bool SDOM_GetMouseHover(SDOM_DisplayHandle* out_handle);
  * @return bool; check SDOM_GetError() for details on failure.
  */
 bool SDOM_ClearMouseHover(void);
+
+/**
+ * @brief Directly sets mouse hover using a variant display handle (testing/editor only).
+ *
+ * C++:   bool Core::capiSetMouseHover_V(const SDOM_Variant* handle)
+ * C API: bool SDOM_SetMouseHover_V(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_SetMouseHover_V(const SDOM_Variant* handle);
+
+/**
+ * @brief Retrieves the current mouse hover as a variant display handle.
+ *
+ * C++:   bool Core::capiGetMouseHover_V(SDOM_Variant* out_handle)
+ * C API: bool SDOM_GetMouseHover_V(SDOM_Variant* out_handle)
+ *
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_GetMouseHover_V(SDOM_Variant* out_handle);
 
 /**
  * @brief Returns the current frame count (testing/tooling).
@@ -790,6 +835,29 @@ bool SDOM_DestroyDisplayObjectByName(const char* name);
 bool SDOM_DestroyDisplayObject(const SDOM_DisplayHandle* handle);
 
 /**
+ * @brief Lookup a display object by name and return a variant handle.
+ *
+ * C++:   bool Core::capiGetDisplayObject_V(const char* name, SDOM_Variant* out_handle)
+ * C API: bool SDOM_GetDisplayObject_V(const char* name, SDOM_Variant* out_handle)
+ *
+ * @param name Pointer parameter.
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_GetDisplayObject_V(const char* name, SDOM_Variant* out_handle);
+
+/**
+ * @brief Destroys a display object using a variant handle.
+ *
+ * C++:   bool Core::capiDestroyDisplayObject_V(const SDOM_Variant* handle)
+ * C API: bool SDOM_DestroyDisplayObject_V(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_DestroyDisplayObject_V(const SDOM_Variant* handle);
+
+/**
  * @brief Lookup an asset by name and return its handle.
  *
  * C++:   bool Core::capiGetAssetObject(const char* name, SDOM_AssetHandle* out_handle)
@@ -833,6 +901,29 @@ bool SDOM_DestroyAssetObjectByName(const char* name);
  * @return bool; check SDOM_GetError() for details on failure.
  */
 bool SDOM_DestroyAssetObject(const SDOM_AssetHandle* handle);
+
+/**
+ * @brief Lookup an asset by name and return a variant handle.
+ *
+ * C++:   bool Core::capiGetAssetObject_V(const char* name, SDOM_Variant* out_handle)
+ * C API: bool SDOM_GetAssetObject_V(const char* name, SDOM_Variant* out_handle)
+ *
+ * @param name Pointer parameter.
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_GetAssetObject_V(const char* name, SDOM_Variant* out_handle);
+
+/**
+ * @brief Destroys an asset using a variant handle.
+ *
+ * C++:   bool Core::capiDestroyAssetObject_V(const SDOM_Variant* handle)
+ * C API: bool SDOM_DestroyAssetObject_V(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_DestroyAssetObject_V(const SDOM_Variant* handle);
 
 /**
  * @brief Counts orphaned display objects (testing/editor).
@@ -1049,6 +1140,32 @@ bool SDOM_CreateDisplayObjectFromJson(const char* type, const char* json, SDOM_D
 bool SDOM_CreateAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle);
 
 /**
+ * @brief Creates a display object from JSON and returns a variant display handle.
+ *
+ * C++:   bool Core::capiCreateDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)
+ * C API: bool SDOM_CreateDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)
+ *
+ * @param type Pointer parameter.
+ * @param json Pointer parameter.
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_CreateDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle);
+
+/**
+ * @brief Creates an asset object from JSON and returns a variant asset handle.
+ *
+ * C++:   bool Core::capiCreateAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)
+ * C API: bool SDOM_CreateAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)
+ *
+ * @param type Pointer parameter.
+ * @param json Pointer parameter.
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_CreateAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle);
+
+/**
  * @brief Heals the previous frame if needed then pumps a single prioritized event.
  *
  * C++:   bool Core::capiPollEvents(SDOM_Event* evt)
@@ -1194,6 +1311,50 @@ bool SDOM_GetRootNode(SDOM_DisplayHandle* out_handle);
  * @return bool; check SDOM_GetError() for details on failure.
  */
 bool SDOM_GetStageHandle(SDOM_DisplayHandle* out_handle);
+
+/**
+ * @brief Sets the active stage/root node using a variant display handle.
+ *
+ * C++:   bool Core::capiSetRootNode_V(const SDOM_Variant* handle)
+ * C API: bool SDOM_SetRootNode_V(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_SetRootNode_V(const SDOM_Variant* handle);
+
+/**
+ * @brief Alias for SetRootNode_V using a variant display handle.
+ *
+ * C++:   bool Core::capiSetStage_V(const SDOM_Variant* handle)
+ * C API: bool SDOM_SetStage_V(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_SetStage_V(const SDOM_Variant* handle);
+
+/**
+ * @brief Retrieves the active stage/root node as a variant display handle.
+ *
+ * C++:   bool Core::capiGetRootNode_V(SDOM_Variant* out_handle)
+ * C API: bool SDOM_GetRootNode_V(SDOM_Variant* out_handle)
+ *
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_GetRootNode_V(SDOM_Variant* out_handle);
+
+/**
+ * @brief Alias for GetRootNode_V; returns the active stage as a variant handle.
+ *
+ * C++:   bool Core::capiGetStageHandle_V(SDOM_Variant* out_handle)
+ * C API: bool SDOM_GetStageHandle_V(SDOM_Variant* out_handle)
+ *
+ * @param out_handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_GetStageHandle_V(SDOM_Variant* out_handle);
 
 /**
  * @brief Registers a C function pointer or Lua callback to run during init.

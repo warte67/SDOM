@@ -817,6 +817,42 @@ bool SDOM_ClearKeyboardFocus(void) {
     return callResult.v.b;
 }
 
+bool SDOM_SetKeyboardFocus_V(const SDOM_Variant* handle) {
+    // Dispatch family: singleton (Core)
+    if (!handle) {
+        SDOM_SetError("SDOM_SetKeyboardFocus_V: subject 'handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetKeyboardFocus_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetKeyboardFocus_V(SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_GetKeyboardFocus_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetKeyboardFocus_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 bool SDOM_SetMouseHover(const SDOM_DisplayHandle* handle) {
     // Dispatch family: singleton (Core)
     if (!handle) {
@@ -856,6 +892,42 @@ bool SDOM_GetMouseHover(SDOM_DisplayHandle* out_handle) {
 bool SDOM_ClearMouseHover(void) {
     // Dispatch family: singleton (Core)
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_ClearMouseHover", {});
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetMouseHover_V(const SDOM_Variant* handle) {
+    // Dispatch family: singleton (Core)
+    if (!handle) {
+        SDOM_SetError("SDOM_SetMouseHover_V: subject 'handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetMouseHover_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetMouseHover_V(SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_GetMouseHover_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetMouseHover_V", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }
@@ -940,6 +1012,43 @@ bool SDOM_DestroyDisplayObject(const SDOM_DisplayHandle* handle) {
     return callResult.v.b;
 }
 
+bool SDOM_GetDisplayObject_V(const char* name, SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_GetDisplayObject_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makeCString(name));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetDisplayObject_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_DestroyDisplayObject_V(const SDOM_Variant* handle) {
+    // Dispatch family: singleton (Core)
+    if (!handle) {
+        SDOM_SetError("SDOM_DestroyDisplayObject_V: subject 'handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_DestroyDisplayObject_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 bool SDOM_GetAssetObject(const char* name, SDOM_AssetHandle* out_handle) {
     // Dispatch family: singleton (Core)
     if (!out_handle) {
@@ -997,6 +1106,43 @@ bool SDOM_DestroyAssetObject(const SDOM_AssetHandle* handle) {
     args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_DestroyAssetObject", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetAssetObject_V(const char* name, SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_GetAssetObject_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makeCString(name));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetAssetObject_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_DestroyAssetObject_V(const SDOM_Variant* handle) {
+    // Dispatch family: singleton (Core)
+    if (!handle) {
+        SDOM_SetError("SDOM_DestroyAssetObject_V: subject 'handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_DestroyAssetObject_V", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }
@@ -1278,6 +1424,46 @@ bool SDOM_CreateAssetObjectFromJson(const char* type, const char* json, SDOM_Ass
     return callResult.v.b;
 }
 
+bool SDOM_CreateDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_CreateDisplayObjectFromJson_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(3);
+    args.push_back(SDOM::CAPI::CallArg::makeCString(type));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(json));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_CreateDisplayObjectFromJson_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_CreateAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_CreateAssetObjectFromJson_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(3);
+    args.push_back(SDOM::CAPI::CallArg::makeCString(type));
+    args.push_back(SDOM::CAPI::CallArg::makeCString(json));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_CreateAssetObjectFromJson_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 bool SDOM_PollEvents(SDOM_Event* evt) {
     // Dispatch family: singleton (Core)
     if (!evt) {
@@ -1448,6 +1634,78 @@ bool SDOM_GetStageHandle(SDOM_DisplayHandle* out_handle) {
     args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
 
     const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetStageHandle", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetRootNode_V(const SDOM_Variant* handle) {
+    // Dispatch family: singleton (Core)
+    if (!handle) {
+        SDOM_SetError("SDOM_SetRootNode_V: subject 'handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetRootNode_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_SetStage_V(const SDOM_Variant* handle) {
+    // Dispatch family: singleton (Core)
+    if (!handle) {
+        SDOM_SetError("SDOM_SetStage_V: subject 'handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(handle))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_SetStage_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetRootNode_V(SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_GetRootNode_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetRootNode_V", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_GetStageHandle_V(SDOM_Variant* out_handle) {
+    // Dispatch family: singleton (Core)
+    if (!out_handle) {
+        SDOM_SetError("SDOM_GetStageHandle_V: subject 'out_handle' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_handle)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_GetStageHandle_V", args);
     if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
         return false;
     }

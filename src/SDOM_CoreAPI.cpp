@@ -5,9 +5,15 @@
 #include <SDOM/SDOM_Factory.hpp>
 #include <SDOM/SDOM_Stage.hpp>
 #include <SDOM/SDOM_EventManager.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Handles.h>
+#include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
 #include <cstring>
 #include <mutex>
+#include <string>
 #include <vector>
 
 namespace SDOM {
@@ -24,6 +30,21 @@ std::mutex& errorMutex()
 {
     static std::mutex mtx;
     return mtx;
+}
+
+bool variantSiblingsEnabled()
+{
+    const char* env = std::getenv("SDOM_CAPI_EMIT_VARIANT_SIBLINGS");
+    if (!env) {
+        return true; // default: emit variants
+    }
+
+    std::string value(env);
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char ch) {
+        return static_cast<char>(std::tolower(ch));
+    });
+
+    return !(value == "0" || value == "false" || value == "off");
 }
 
 SDOM::Core::CoreConfig toCoreConfig(const SDOM_CoreConfig* cfg)
@@ -58,6 +79,90 @@ void copyCoreConfig(const SDOM::Core::CoreConfig& src, SDOM_CoreConfig& dst)
     dst.windowFlags = src.windowFlags;
     dst.pixelFormat = src.pixelFormat;
     dst.color = src.color;
+}
+
+bool variantToDisplayHandle(const SDOM_Variant* handle,
+                            SDOM_DisplayHandle& out,
+                            const char* ctx)
+{
+    if (!handle) {
+        setErrorMessage(ctx ? ctx : "display variant handle is null");
+        return false;
+    }
+    const SDOM_Handle_Variant* hv = reinterpret_cast<const SDOM_Handle_Variant*>(handle);
+    if (!SDOM_Handle_IsDisplay(hv)) {
+        setErrorMessage(ctx ? ctx : "handle is not a display variant");
+        return false;
+    }
+    const std::uint64_t id = SDOM_Handle_ObjectId(hv);
+    if (id == 0) {
+        setErrorMessage(ctx ? ctx : "display variant object id is zero");
+        return false;
+    }
+    out.object_id = id;
+    out.name = nullptr;
+    out.type = nullptr;
+    return true;
+}
+
+bool variantToAssetHandle(const SDOM_Variant* handle,
+                          SDOM_AssetHandle& out,
+                          const char* ctx)
+{
+    if (!handle) {
+        setErrorMessage(ctx ? ctx : "asset variant handle is null");
+        return false;
+    }
+    const SDOM_Handle_Variant* hv = reinterpret_cast<const SDOM_Handle_Variant*>(handle);
+    if (!SDOM_Handle_IsAsset(hv)) {
+        setErrorMessage(ctx ? ctx : "handle is not an asset variant");
+        return false;
+    }
+    const std::uint64_t id = SDOM_Handle_ObjectId(hv);
+    if (id == 0) {
+        setErrorMessage(ctx ? ctx : "asset variant object id is zero");
+        return false;
+    }
+    out.object_id = id;
+    out.name = nullptr;
+    out.type = nullptr;
+    return true;
+}
+
+// Forward declarations for POD out marshalling helpers used by variant helpers
+bool writeDisplayHandleOut(const DisplayHandle& src, SDOM_DisplayHandle* dst);
+bool writeAssetHandleOut(const AssetHandle& src, SDOM_AssetHandle* dst, const char* errCtx = nullptr);
+
+bool writeDisplayVariantOut(const DisplayHandle& src,
+                            SDOM_Variant* out,
+                            const char* ctx)
+{
+    if (!out) {
+        setErrorMessage(ctx ? ctx : "out_handle is null");
+        return false;
+    }
+    SDOM_DisplayHandle pod{};
+    if (!writeDisplayHandleOut(src, &pod)) {
+        return false;
+    }
+    *out = SDOM_MakeDisplayHandle(&pod);
+    return true;
+}
+
+bool writeAssetVariantOut(const AssetHandle& src,
+                          SDOM_Variant* out,
+                          const char* ctx)
+{
+    if (!out) {
+        setErrorMessage(ctx ? ctx : "out_handle is null");
+        return false;
+    }
+    SDOM_AssetHandle pod{};
+    if (!writeAssetHandleOut(src, &pod, ctx)) {
+        return false;
+    }
+    *out = SDOM_MakeAssetHandle(&pod);
+    return true;
 }
 
 SDOM::CAPI::CallResult makeBoolResult(bool value)
@@ -1730,6 +1835,41 @@ bool setStageByName(const char* name)
     }
 }
 
+bool setRootNode_V(const SDOM_Variant* handle)
+{
+    SDOM_DisplayHandle pod{};
+    if (!variantToDisplayHandle(handle, pod, "SDOM_SetRootNode_V: handle is null or invalid")) {
+        return false;
+    }
+    return setRootNode(&pod);
+}
+
+bool setStage_V(const SDOM_Variant* handle)
+{
+    return setRootNode_V(handle);
+}
+
+bool getRootNode_V(SDOM_Variant* out_handle)
+{
+    if (!out_handle) {
+        setErrorMessage("SDOM_GetRootNode_V: out_handle is null");
+        return false;
+    }
+
+    SDOM_DisplayHandle pod{};
+    if (!getRootNode(&pod)) {
+        return false;
+    }
+
+    *out_handle = SDOM_MakeDisplayHandle(&pod);
+    return true;
+}
+
+bool getStageHandle_V(SDOM_Variant* out_handle)
+{
+    return getRootNode_V(out_handle);
+}
+
 bool getRootNode(SDOM_DisplayHandle* out_handle)
 {
     try {
@@ -2369,6 +2509,31 @@ bool clearKeyboardFocus()
     }
 }
 
+bool setKeyboardFocus_V(const SDOM_Variant* handle)
+{
+    SDOM_DisplayHandle pod{};
+    if (!variantToDisplayHandle(handle, pod, "SDOM_SetKeyboardFocus_V: handle is null or invalid")) {
+        return false;
+    }
+    return setKeyboardFocus(&pod);
+}
+
+bool getKeyboardFocus_V(SDOM_Variant* out_handle)
+{
+    if (!out_handle) {
+        setErrorMessage("SDOM_GetKeyboardFocus_V: out_handle is null");
+        return false;
+    }
+
+    SDOM_DisplayHandle pod{};
+    if (!getKeyboardFocus(&pod)) {
+        return false;
+    }
+
+    *out_handle = SDOM_MakeDisplayHandle(&pod);
+    return true;
+}
+
 bool setMouseHover(const SDOM_DisplayHandle* handle)
 {
     if (!handle) {
@@ -2440,6 +2605,31 @@ bool clearMouseHover()
     }
 }
 
+bool setMouseHover_V(const SDOM_Variant* handle)
+{
+    SDOM_DisplayHandle pod{};
+    if (!variantToDisplayHandle(handle, pod, "SDOM_SetMouseHover_V: handle is null or invalid")) {
+        return false;
+    }
+    return setMouseHover(&pod);
+}
+
+bool getMouseHover_V(SDOM_Variant* out_handle)
+{
+    if (!out_handle) {
+        setErrorMessage("SDOM_GetMouseHover_V: out_handle is null");
+        return false;
+    }
+
+    SDOM_DisplayHandle pod{};
+    if (!getMouseHover(&pod)) {
+        return false;
+    }
+
+    *out_handle = SDOM_MakeDisplayHandle(&pod);
+    return true;
+}
+
 int getFrameCount()
 {
     try {
@@ -2482,6 +2672,22 @@ bool createDisplayObjectFromJson(const char* type, const char* json, SDOM_Displa
     }
 }
 
+bool createDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)
+{
+    if (!out_handle) {
+        setErrorMessage("SDOM_CreateDisplayObjectFromJson_V: out_handle is null");
+        return false;
+    }
+
+    SDOM_DisplayHandle pod{};
+    if (!createDisplayObjectFromJson(type, json, &pod)) {
+        return false;
+    }
+
+    *out_handle = SDOM_MakeDisplayHandle(&pod);
+    return true;
+}
+
 bool createAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHandle* out_handle)
 {
     if (!type) {
@@ -2515,6 +2721,22 @@ bool createAssetObjectFromJson(const char* type, const char* json, SDOM_AssetHan
     }
 }
 
+bool createAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)
+{
+    if (!out_handle) {
+        setErrorMessage("SDOM_CreateAssetObjectFromJson_V: out_handle is null");
+        return false;
+    }
+
+    SDOM_AssetHandle pod{};
+    if (!createAssetObjectFromJson(type, json, &pod)) {
+        return false;
+    }
+
+    *out_handle = SDOM_MakeAssetHandle(&pod);
+    return true;
+}
+
 bool getDisplayObject(const char* name, SDOM_DisplayHandle* out_handle)
 {
     if (!name) {
@@ -2543,6 +2765,22 @@ bool getDisplayObject(const char* name, SDOM_DisplayHandle* out_handle)
         setErrorMessage("SDOM_GetDisplayObject unknown error");
         return false;
     }
+}
+
+bool getDisplayObject_V(const char* name, SDOM_Variant* out_handle)
+{
+    if (!out_handle) {
+        setErrorMessage("SDOM_GetDisplayObject_V: out_handle is null");
+        return false;
+    }
+
+    SDOM_DisplayHandle pod{};
+    if (!getDisplayObject(name, &pod)) {
+        return false;
+    }
+
+    *out_handle = SDOM_MakeDisplayHandle(&pod);
+    return true;
 }
 
 bool hasDisplayObject(const char* name)
@@ -2603,6 +2841,15 @@ bool destroyDisplayObject(const SDOM_DisplayHandle* handle)
     }
 }
 
+bool destroyDisplayObject_V(const SDOM_Variant* handle)
+{
+    SDOM_DisplayHandle pod{};
+    if (!variantToDisplayHandle(handle, pod, "SDOM_DestroyDisplayObject_V: handle is null or invalid")) {
+        return false;
+    }
+    return destroyDisplayObject(&pod);
+}
+
 bool getAssetObject(const char* name, SDOM_AssetHandle* out_handle)
 {
     if (!name) {
@@ -2631,6 +2878,22 @@ bool getAssetObject(const char* name, SDOM_AssetHandle* out_handle)
         setErrorMessage("SDOM_GetAssetObject unknown error");
         return false;
     }
+}
+
+bool getAssetObject_V(const char* name, SDOM_Variant* out_handle)
+{
+    if (!out_handle) {
+        setErrorMessage("SDOM_GetAssetObject_V: out_handle is null");
+        return false;
+    }
+
+    SDOM_AssetHandle pod{};
+    if (!getAssetObject(name, &pod)) {
+        return false;
+    }
+
+    *out_handle = SDOM_MakeAssetHandle(&pod);
+    return true;
 }
 
 bool hasAssetObject(const char* name)
@@ -2689,6 +2952,15 @@ bool destroyAssetObject(const SDOM_AssetHandle* handle)
         setErrorMessage("SDOM_DestroyAssetObject unknown error");
         return false;
     }
+}
+
+bool destroyAssetObject_V(const SDOM_Variant* handle)
+{
+    SDOM_AssetHandle pod{};
+    if (!variantToAssetHandle(handle, pod, "SDOM_DestroyAssetObject_V: handle is null or invalid")) {
+        return false;
+    }
+    return destroyAssetObject(&pod);
 }
 
 int countOrphanedDisplayObjects()
@@ -3353,6 +3625,8 @@ bool registerOnWindowResize(void* fnptr)
 
 void registerBindings(Core& core, const std::string& typeName)
 {
+    const bool emitVariantSiblings = variantSiblingsEnabled();
+
     core.registerMethod(
         typeName,
         "GetError",
@@ -4145,6 +4419,32 @@ void registerBindings(Core& core, const std::string& typeName)
             return CoreAPI::clearKeyboardFocus();
         });
 
+    if (emitVariantSiblings) {
+        core.registerMethod(
+            typeName,
+            "SetKeyboardFocus_V",
+            "bool Core::capiSetKeyboardFocus_V(const SDOM_Variant* handle)",
+            "bool",
+            "SDOM_SetKeyboardFocus_V",
+            "bool SDOM_SetKeyboardFocus_V(const SDOM_Variant* handle)",
+            "Directly sets keyboard focus using a variant display handle (testing/editor only).",
+            [](const SDOM_Variant* handle) -> bool {
+                return CoreAPI::setKeyboardFocus_V(handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "GetKeyboardFocus_V",
+            "bool Core::capiGetKeyboardFocus_V(SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_GetKeyboardFocus_V",
+            "bool SDOM_GetKeyboardFocus_V(SDOM_Variant* out_handle)",
+            "Retrieves the current keyboard focus as a variant display handle.",
+            [](SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::getKeyboardFocus_V(out_handle);
+            });
+    }
+
     core.registerMethod(
         typeName,
         "SetMouseHover",
@@ -4180,6 +4480,32 @@ void registerBindings(Core& core, const std::string& typeName)
         []() -> bool {
             return CoreAPI::clearMouseHover();
         });
+
+    if (emitVariantSiblings) {
+        core.registerMethod(
+            typeName,
+            "SetMouseHover_V",
+            "bool Core::capiSetMouseHover_V(const SDOM_Variant* handle)",
+            "bool",
+            "SDOM_SetMouseHover_V",
+            "bool SDOM_SetMouseHover_V(const SDOM_Variant* handle)",
+            "Directly sets mouse hover using a variant display handle (testing/editor only).",
+            [](const SDOM_Variant* handle) -> bool {
+                return CoreAPI::setMouseHover_V(handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "GetMouseHover_V",
+            "bool Core::capiGetMouseHover_V(SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_GetMouseHover_V",
+            "bool SDOM_GetMouseHover_V(SDOM_Variant* out_handle)",
+            "Retrieves the current mouse hover as a variant display handle.",
+            [](SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::getMouseHover_V(out_handle);
+            });
+    }
 
     core.registerMethod(
         typeName,
@@ -4241,6 +4567,32 @@ void registerBindings(Core& core, const std::string& typeName)
             return CoreAPI::destroyDisplayObject(handle);
         });
 
+    if (emitVariantSiblings) {
+        core.registerMethod(
+            typeName,
+            "GetDisplayObject_V",
+            "bool Core::capiGetDisplayObject_V(const char* name, SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_GetDisplayObject_V",
+            "bool SDOM_GetDisplayObject_V(const char* name, SDOM_Variant* out_handle)",
+            "Lookup a display object by name and return a variant handle.",
+            [](const char* name, SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::getDisplayObject_V(name, out_handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "DestroyDisplayObject_V",
+            "bool Core::capiDestroyDisplayObject_V(const SDOM_Variant* handle)",
+            "bool",
+            "SDOM_DestroyDisplayObject_V",
+            "bool SDOM_DestroyDisplayObject_V(const SDOM_Variant* handle)",
+            "Destroys a display object using a variant handle.",
+            [](const SDOM_Variant* handle) -> bool {
+                return CoreAPI::destroyDisplayObject_V(handle);
+            });
+    }
+
     core.registerMethod(
         typeName,
         "GetAssetObject",
@@ -4288,6 +4640,32 @@ void registerBindings(Core& core, const std::string& typeName)
         [](const SDOM_AssetHandle* handle) -> bool {
             return CoreAPI::destroyAssetObject(handle);
         });
+
+    if (emitVariantSiblings) {
+        core.registerMethod(
+            typeName,
+            "GetAssetObject_V",
+            "bool Core::capiGetAssetObject_V(const char* name, SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_GetAssetObject_V",
+            "bool SDOM_GetAssetObject_V(const char* name, SDOM_Variant* out_handle)",
+            "Lookup an asset by name and return a variant handle.",
+            [](const char* name, SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::getAssetObject_V(name, out_handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "DestroyAssetObject_V",
+            "bool Core::capiDestroyAssetObject_V(const SDOM_Variant* handle)",
+            "bool",
+            "SDOM_DestroyAssetObject_V",
+            "bool SDOM_DestroyAssetObject_V(const SDOM_Variant* handle)",
+            "Destroys an asset using a variant handle.",
+            [](const SDOM_Variant* handle) -> bool {
+                return CoreAPI::destroyAssetObject_V(handle);
+            });
+    }
 
     core.registerMethod(
         typeName,
@@ -4517,6 +4895,32 @@ void registerBindings(Core& core, const std::string& typeName)
             return CoreAPI::createAssetObjectFromJson(type, json, out_handle);
         });
 
+    if (emitVariantSiblings) {
+        core.registerMethod(
+            typeName,
+            "CreateDisplayObjectFromJson_V",
+            "bool Core::capiCreateDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_CreateDisplayObjectFromJson_V",
+            "bool SDOM_CreateDisplayObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)",
+            "Creates a display object from JSON and returns a variant display handle.",
+            [](const char* type, const char* json, SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::createDisplayObjectFromJson_V(type, json, out_handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "CreateAssetObjectFromJson_V",
+            "bool Core::capiCreateAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_CreateAssetObjectFromJson_V",
+            "bool SDOM_CreateAssetObjectFromJson_V(const char* type, const char* json, SDOM_Variant* out_handle)",
+            "Creates an asset object from JSON and returns a variant asset handle.",
+            [](const char* type, const char* json, SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::createAssetObjectFromJson_V(type, json, out_handle);
+            });
+    }
+
     core.registerMethod(
         typeName,
         "PollEvents",
@@ -4684,6 +5088,56 @@ void registerBindings(Core& core, const std::string& typeName)
         [](SDOM_DisplayHandle* out_handle) -> bool {
             return CoreAPI::getStageHandle(out_handle);
         });
+
+    if (emitVariantSiblings) {
+        core.registerMethod(
+            typeName,
+            "SetRootNode_V",
+            "bool Core::capiSetRootNode_V(const SDOM_Variant* handle)",
+            "bool",
+            "SDOM_SetRootNode_V",
+            "bool SDOM_SetRootNode_V(const SDOM_Variant* handle)",
+            "Sets the active stage/root node using a variant display handle.",
+            [](const SDOM_Variant* handle) -> bool {
+                return CoreAPI::setRootNode_V(handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "SetStage_V",
+            "bool Core::capiSetStage_V(const SDOM_Variant* handle)",
+            "bool",
+            "SDOM_SetStage_V",
+            "bool SDOM_SetStage_V(const SDOM_Variant* handle)",
+            "Alias for SetRootNode_V using a variant display handle.",
+            [](const SDOM_Variant* handle) -> bool {
+                return CoreAPI::setStage_V(handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "GetRootNode_V",
+            "bool Core::capiGetRootNode_V(SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_GetRootNode_V",
+            "bool SDOM_GetRootNode_V(SDOM_Variant* out_handle)",
+            "Retrieves the active stage/root node as a variant display handle.",
+            [](SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::getRootNode_V(out_handle);
+            });
+
+        core.registerMethod(
+            typeName,
+            "GetStageHandle_V",
+            "bool Core::capiGetStageHandle_V(SDOM_Variant* out_handle)",
+            "bool",
+            "SDOM_GetStageHandle_V",
+            "bool SDOM_GetStageHandle_V(SDOM_Variant* out_handle)",
+            "Alias for GetRootNode_V; returns the active stage as a variant handle.",
+            [](SDOM_Variant* out_handle) -> bool {
+                return CoreAPI::getStageHandle_V(out_handle);
+            });
+    }
 
     // Callback registration methods (exposed to binding generator / Lua)
     core.registerMethod(

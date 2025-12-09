@@ -146,6 +146,9 @@ list(REMOVE_ITEM SDOM_CAPI_SOURCES ${SDOM_GENERATED_CAPI_SOURCE})
 # Variant CAPI is implemented manually in src/SDOM_Variant.cpp; exclude generated stub.
 list(REMOVE_ITEM SDOM_CAPI_SOURCES "${PROJECT_SOURCE_DIR}/src/CAPI/SDOM_CAPI_Variant.cpp")
 
+set(SDOM_CAPI_GENERATOR_SOURCES ${SDOM_CAPI_SOURCES})
+list(REMOVE_ITEM SDOM_CAPI_GENERATOR_SOURCES "${PROJECT_SOURCE_DIR}/src/CAPI/SDOM_CAPI_Version.cpp")
+
 set(SDOM_CORE_SOURCES ${SDOM_ALL_SOURCES})
 list(REMOVE_ITEM SDOM_CORE_SOURCES ${SDOM_GENERATED_CAPI_SOURCE})
 list(REMOVE_ITEM SDOM_CORE_SOURCES "${PROJECT_SOURCE_DIR}/src/CAPI/SDOM_CAPI_Variant.cpp")
@@ -207,6 +210,8 @@ target_link_libraries(${PROJECT_NAME}
 # ======================================================
 add_executable(sdom_generate_bindings
     tools/sdom_generate_bindings.cpp
+    ${SDOM_GENERATED_CAPI_SOURCE}
+    ${SDOM_CAPI_GENERATOR_SOURCES}
     $<TARGET_OBJECTS:sdom_core_obj>
 )
 

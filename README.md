@@ -132,6 +132,7 @@ cd examples/test
 ### Migration notes
 - If you maintain scripts that referenced the old names, search & replace DisplayObject / AssetObject -> DisplayHandle / AssetHandle.
 - The repository includes transitional aliases during migration for staged rollouts (if present); prefer the new names in new code.
+- Binding changes must go through data registration and the generator; do not hand-edit generated C API outputs.
 
 ## Project Structure
 - `src/` — Core SDOM source code
