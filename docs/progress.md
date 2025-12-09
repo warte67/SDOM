@@ -1205,12 +1205,17 @@ Builds are clean again and Variant path helpers now return deterministic errors 
 - Added null/size guards in both `drawSprite` overloads to bail out cleanly when a texture is missing or `SDL_GetTextureSize` fails, restoring the render target before returning.
 - Eliminated the intermittent “Failed to get texture size: Parameter 'texture' is invalid” error observed during sprite draws.
 
+### 🧩 Variant & Handle Support
+- Added Variant type support for `DisplayHandle`, `AssetHandle`, and `Event` objects to enable handle-aware payloads and C API interop.
+- Updated Variant converters so handle types round-trip cleanly through the C API and test harness.
+
 ### 🧪 Validation
 - Rebuilt and ran the full suite (`./prog --stop-after-tests`): 88/88 passing with the new SpriteSheet guard in place.
 - ASan/Debug/Release builds remain clean after the guard change.
+- Added and refreshed unit tests to cover the new Variant handle/event paths alongside the SpriteSheet guard scenarios.
 
 ### 🌟 **Summary:**
-SpriteSheet rendering now fails safely when fed bad textures, and all regression tests are green across build configs.
+SpriteSheet rendering now fails safely when fed bad textures, Variant gains handle/event support, new tests cover the changes, and all regression tests are green across build configs.
 
 **🚧 ToDo Today**
 - ☐ Add targeted logging for SpriteSheet failures to capture source texture names/paths.
