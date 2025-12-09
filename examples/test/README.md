@@ -38,7 +38,6 @@ SDOM is engineered for **extensibility without bloat**. Optional modules — run
 
 **Note:** This is still a very early pre-alpha version.  All APIs are subject to change.  
 
-
 ## Features
 - Simple, composable API for UI and document structures
 - Modern C++23 codebase
