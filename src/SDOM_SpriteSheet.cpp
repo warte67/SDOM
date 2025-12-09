@@ -450,7 +450,10 @@ namespace SDOM
     {
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
-        if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
+        if (!texture_) {
+            ERROR("No texture loaded in SpriteSheet to draw sprite.");
+            return;
+        }
 
         SDL_Renderer* renderer = getRenderer();
         SDL_Texture* prevTarget = nullptr;
@@ -465,8 +468,11 @@ namespace SDOM
         }
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH))
+        if (!SDL_GetTextureSize(texture_, &texW, &texH)) {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+            return;
+        }
 
         if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
 
@@ -523,7 +529,10 @@ namespace SDOM
     {
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
-        if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
+        if (!texture_) {
+            ERROR("No texture loaded in SpriteSheet to draw sprite.");
+            return;
+        }
 
         SDL_Renderer* renderer = getRenderer();
         SDL_Texture* prevTarget = nullptr;
@@ -538,8 +547,11 @@ namespace SDOM
         }
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH))
+        if (!SDL_GetTextureSize(texture_, &texW, &texH)) {
             ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+            return;
+        }
 
         if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
 

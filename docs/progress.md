@@ -1157,9 +1157,6 @@ After confirming several intermediate commits, we performed a `git bisect` to lo
 
 ---
 
-<a id="december-8-2025"></a>
-<a id="latest-update"></a>
-
 ## 🗓️ December 8, 2025 — **Variant C API: duplicates gone, paths fixed**
 
 > 💬 *Today was about making Variant’s C API link cleanly and behave predictably along nested paths.*
@@ -1182,28 +1179,6 @@ Builds are clean again and Variant path helpers now return deterministic errors 
 
 ---
 
-### 🚧 **To-Do — Active Work**
-
-#### ☐ Complete SDOM_Variant JSON refactor  
-- 🔄 Introduce native JSON storage for Array/Object types  
-- ☐ Add stable `VariantType` semantics for handles, events, and other runtime references  
-- ☐ Enforce safe up/down-casting rules between numeric/string/dynamic forms  
-- ☐ Expand ABI once container semantics are fully defined  
-
-#### ☐ Expand Variant C API Surface  
-- ☐ Add object & array creation helpers — required for handle/event payloads  
-- ☐ Add path-based access helpers beyond get/set/exists/erase where needed  
-- ☐ Guarantee consistent error-flag semantics everywhere  
-
-#### ☐ Unit Testing Improvements  
-- ☐ Add explicit tests for: scalar key success, container key mismatch error, intentional null payload (no error), scalar traversal guard, and PathExists side-effect neutrality  
-
-#### ☐ Runtime Editor groundwork  
-- ☐ Expose Variant metadata for inspection  
-- 🔄 Ensure JSON⇆Variant round-trip stability  
-
----
-
 ### 🔍 Planning Notes
 > Next major unlock is handles → events: DisplayHandle/AssetHandle ABI structs, Variant support for handles, and dead-handle detection to enable payload references like `"target.position"`.
 
@@ -1213,6 +1188,45 @@ Builds are clean again and Variant path helpers now return deterministic errors 
 > *“Deterministic paths and single definitions beat mystery linker errors every time.”*
 
 ---
+
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
+
+<a id="december-9-2025"></a>
+<a id="latest-update"></a>
+
+## 🗓️ December 9, 2025 — SpriteSheet Guards & Quiet Logs
+
+> 💬 *“Guard the pixels first; the tests will thank you.”*
+
+### 🧩 Rendering & SpriteSheet Safety
+- Added null/size guards in both `drawSprite` overloads to bail out cleanly when a texture is missing or `SDL_GetTextureSize` fails, restoring the render target before returning.
+- Eliminated the intermittent “Failed to get texture size: Parameter 'texture' is invalid” error observed during sprite draws.
+
+### 🧪 Validation
+- Rebuilt and ran the full suite (`./prog --stop-after-tests`): 88/88 passing with the new SpriteSheet guard in place.
+- ASan/Debug/Release builds remain clean after the guard change.
+
+### 🌟 **Summary:**
+SpriteSheet rendering now fails safely when fed bad textures, and all regression tests are green across build configs.
+
+**🚧 ToDo Today**
+- ☐ Add targeted logging for SpriteSheet failures to capture source texture names/paths.
+- ☐ Extend SpriteSheet unit coverage for missing-texture and size-query error cases.
+
+**Carryover — Active Work (from Dec 8)**
+- ☐ Complete SDOM_Variant JSON refactor (native JSON storage for Array/Object; finalize container semantics for handles/events; safe up/down-casting rules; expanded ABI once stable).
+- ☐ Expand Variant C API surface (object/array creation helpers; additional path helpers; consistent error-flag semantics).
+- ☐ Unit testing improvements (scalar key success, container key mismatch error, intentional null payload, scalar traversal guard, PathExists side-effect neutrality).
+- ☐ Runtime editor groundwork (Variant metadata exposure; JSON⇆Variant round-trip stability).
+
+#### 🤔 *End of Day Reflection*
+> *“A silent log is earned, not assumed.”*
+
+---
+
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 #### end-of-day
