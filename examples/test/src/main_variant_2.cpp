@@ -140,6 +140,7 @@ bool Main_UnitTests()
 {
     bool done = true;
 
+    done &= Core_UnitTests();
     done &= IDisplayObject_UnitTests();
     done &= Event_CAPI_UnitTests();
     done &= EventType_CAPI_UnitTests();

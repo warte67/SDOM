@@ -2482,7 +2482,7 @@ bool getKeyboardFocus(SDOM_DisplayHandle* out_handle)
         static thread_local std::string s_type;
         s_name = focused.getName();
         s_type = focused.getType();
-        out_handle->object_id = 0;
+        out_handle->object_id = focused.getId();
         out_handle->name = s_name.c_str();
         out_handle->type = s_type.c_str();
         return true;
@@ -2578,7 +2578,7 @@ bool getMouseHover(SDOM_DisplayHandle* out_handle)
         static thread_local std::string s_type;
         s_name = hovered.getName();
         s_type = hovered.getType();
-        out_handle->object_id = 0;
+        out_handle->object_id = hovered.getId();
         out_handle->name = s_name.c_str();
         out_handle->type = s_type.c_str();
         return true;
