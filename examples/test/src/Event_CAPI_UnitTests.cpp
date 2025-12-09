@@ -263,6 +263,70 @@ namespace SDOM
         return true;
     }
 
+    bool Event_CAPI_variant_roundtrip(std::vector<std::string>& errors)
+    {
+        SDOM::Event backing;
+        SDOM_Event handle{&backing};
+
+        SDOM_Variant v{};
+        SDOM_ClearError();
+
+        if (!SDOM_MakeEvent(&handle, &v)) {
+            errors.push_back("SDOM_MakeEvent failed for valid event");
+            return true;
+        }
+
+        if (v.type != SDOM_VARIANT_TYPE_EVENT) {
+            errors.push_back("SDOM_MakeEvent produced non-event variant");
+        }
+
+        if (!SDOM_Event_IsEvent(&v)) {
+            errors.push_back("SDOM_Event_IsEvent returned false for event variant");
+        }
+
+        SDOM_Event out_evt{};
+        if (!SDOM_Event_FromVariant(&v, &out_evt)) {
+            errors.push_back("SDOM_Event_FromVariant failed for event variant");
+            return true;
+        }
+
+        if (out_evt.impl != handle.impl) {
+            errors.push_back("SDOM_Event_FromVariant did not preserve event pointer (non-owning semantics broken)");
+        }
+
+        if (const char* err = SDOM_GetError(); err && *err) {
+            errors.push_back(std::string("Unexpected error after event roundtrip: ") + err);
+        }
+
+        return true;
+    }
+
+    bool Event_CAPI_variant_wrong_tag(std::vector<std::string>& errors)
+    {
+        SDOM_Variant not_event{};
+        not_event.type = SDOM_VARIANT_TYPE_DISPLAY_HANDLE;
+        not_event.data = 1234;
+
+        SDOM_ClearError();
+
+        if (SDOM_Event_IsEvent(&not_event)) {
+            errors.push_back("SDOM_Event_IsEvent incorrectly accepted non-event variant");
+        }
+
+        SDOM_Event out_evt{};
+        if (SDOM_Event_FromVariant(&not_event, &out_evt)) {
+            errors.push_back("SDOM_Event_FromVariant unexpectedly succeeded for non-event variant");
+        }
+
+        const char* err = SDOM_GetError();
+        if (!err || std::string(err).find("variant is not an event") == std::string::npos) {
+            errors.push_back(std::string("Missing or unexpected error for non-event variant: '") + (err ? err : "<null>") + "'");
+        }
+
+        SDOM_ClearError();
+        return true;
+    }
+
 
 
 
@@ -288,6 +352,8 @@ namespace SDOM
             ut.add_test(objName, "Event Manifest", Event_CAPI_test1);
             ut.add_test(objName, "SDL_Event JSON Roundtrip", Event_CAPI_test2);
             ut.add_test(objName, "Payload missing key -> null Variant + error", Event_CAPI_payload_missing_key_returns_null);
+            ut.add_test(objName, "Event Variant roundtrip", Event_CAPI_variant_roundtrip);
+            ut.add_test(objName, "Event Variant wrong tag", Event_CAPI_variant_wrong_tag);
 
             // ut.add_test(objName, "Lua: src/Event_CAPI_UnitTests.lua", Event_CAPI_LUA_Tests, false);
 
