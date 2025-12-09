@@ -13,7 +13,7 @@
 
 - GitHub Wiki: https://github.com/warte67/SDOM/wiki
 
-> ⚠️ **Development Status:** SDOM is an **early pre-alpha prototype**.  
+> ⚠️ **Development Status:** SDOM is a **very early pre-alpha prototype**.  
 > It is not feature-complete, APIs are unstable, and design work is ongoing.  
 > This repository is public for collaboration and early feedback.
 
