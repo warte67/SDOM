@@ -1356,6 +1356,9 @@ Each **UnitTest module** in SDOM represents a focused validation target for a sp
 - ✅ **Verified** — Test has passed all validation modes (synthetic, lifecycle, Lua); stable and reliable.  
 - 📜 **Lua Binding Tests Only** — Verified via Lua API calls; assumes C++ implementation correctness because bindings directly invoke the native methods.
 
+
+---
+
 [🔝 **Back to Table of Contents**](#table-of-contents)
 
 
