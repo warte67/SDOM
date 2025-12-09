@@ -65,6 +65,7 @@
 
 #pragma once
 #include <SDOM/SDOM_IDataObject.hpp>
+#include <cstdint>
 
 namespace SDOM
 {
@@ -88,11 +89,11 @@ namespace SDOM
         AssetHandle()
             : name_(AssetHandleName), type_(AssetHandleName), filename_(AssetHandleName)
         {}        
-        AssetHandle(const std::string& name, const std::string& type, const std::string& filename)
-            : name_(name), type_(type), filename_(filename)
+        AssetHandle(const std::string& name, const std::string& type, const std::string& filename, uint64_t id = 0)
+            : name_(name), type_(type), filename_(filename), id_(id)
         {}
         AssetHandle(const AssetHandle& other)
-            : name_(other.name_), type_(other.type_), filename_(other.filename_)
+            : name_(other.name_), type_(other.type_), filename_(other.filename_), id_(other.id_)
         {}
         virtual ~AssetHandle();
 
@@ -106,7 +107,7 @@ namespace SDOM
         // ---------------------------------------------------------------------
         // 🧩 Core Handle Management
         // ---------------------------------------------------------------------
-        void reset() { name_.clear(); }
+        void reset() { name_.clear(); id_ = 0; }
         IAssetObject* get() const;
         template<typename T> T* as() const { return dynamic_cast<T*>(get()); }
         IAssetObject& operator*() const { return *get(); }
@@ -122,7 +123,8 @@ namespace SDOM
         {
             return name_ == other.name_ &&
                    type_ == other.type_ &&
-                   filename_ == other.filename_;
+                   filename_ == other.filename_ &&
+                   id_ == other.id_;
         }
         bool operator!=(const AssetHandle& other) const { return !(*this == other); }
 
@@ -137,6 +139,8 @@ namespace SDOM
         const std::string& getName() const { return name_; }
         const std::string& getType() const { return type_; }
         const std::string& getFilename() const { return filename_; }
+        uint64_t getId() const { return id_; }
+        void setId(uint64_t id) { id_ = id; }
 
     public:
         inline static Factory* factory_ = nullptr;
@@ -151,6 +155,7 @@ namespace SDOM
         std::string name_;
         std::string type_;
         std::string filename_;
+        uint64_t id_ = 0;
 
         // -----------------------------------------------------------------
         // 📜 Data Registry Integration

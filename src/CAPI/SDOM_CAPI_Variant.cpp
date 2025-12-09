@@ -88,6 +88,30 @@ bool SDOM_IsString(const SDOM_Variant* v) {
     return callResult.v.b;
 }
 
+bool SDOM_IsDisplayHandle(const SDOM_Variant* v) {
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(v))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IsDisplayHandle", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_IsAssetHandle(const SDOM_Variant* v) {
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(v))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_IsAssetHandle", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 SDOM_Variant SDOM_MakeNull(void) {
     // TODO: marshal return type 'SDOM_Variant'.
     (void)SDOM::CAPI::invokeCallable("SDOM_MakeNull", {});

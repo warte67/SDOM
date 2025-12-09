@@ -116,6 +116,10 @@ namespace SDOM
         AssetHandle getAssetObject(const std::string& name);
         DisplayHandle getStageHandle();
 
+        // Stable-id resolution helpers (public so ABI marshaling can resolve handles)
+        DisplayHandle resolveDisplayHandleById(uint64_t id) const;
+        AssetHandle resolveAssetHandleById(uint64_t id) const;
+
         // --- Display Object Management --- //
 
         void addDisplayObject(const std::string& name, std::unique_ptr<IDisplayObject> displayObject); // Deprecated: Consider refactoring/removal
@@ -251,11 +255,11 @@ namespace SDOM
         mutable std::shared_mutex id_map_mutex_;
 
         // ID registry helpers (private)
-        uint64_t registerDisplayObject(const std::string& name, const DisplayHandle& handle);
+        uint64_t registerDisplayObject(const std::string& name, DisplayHandle handle);
         DisplayHandle resolveDisplayObject(uint64_t id) const;
         void unregisterDisplayObject(uint64_t id);
 
-        uint64_t registerAssetObject(const std::string& name, const AssetHandle& handle);
+        uint64_t registerAssetObject(const std::string& name, AssetHandle handle);
         AssetHandle resolveAssetObject(uint64_t id) const;
         void unregisterAssetObject(uint64_t id);
 

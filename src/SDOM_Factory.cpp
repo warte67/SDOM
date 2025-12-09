@@ -490,7 +490,7 @@ namespace SDOM
         if (it != displayObjects_.end()) 
         {
             // Use the resource's type for the DisplayHandle
-            return DisplayHandle(name, it->second->type);
+            return DisplayHandle(name, it->second->type, it->second->id);
         }
         // Return an empty DisplayHandle if not found
         return DisplayHandle();
@@ -501,31 +501,50 @@ namespace SDOM
         auto it = assetObjects_.find(name);
         if (it != assetObjects_.end()) 
         {
-            AssetHandle out;
-            out.name_ = name;
-            out.type_ = it->second->type;
-            return out;
+            const auto filename = (it->second && it->second->obj) ? it->second->obj->getFilename() : std::string{};
+            return AssetHandle(name, it->second->type, filename, it->second->id);
         }
         // Return an empty AssetHandle if not found
         return AssetHandle();
     }
 
+    DisplayHandle Factory::resolveDisplayHandleById(uint64_t id) const
+    {
+        return resolveDisplayObject(id);
+    }
+
+    AssetHandle Factory::resolveAssetHandleById(uint64_t id) const
+    {
+        return resolveAssetObject(id);
+    }
+
     // ID registry helpers
-    uint64_t Factory::registerDisplayObject(const std::string& name, const DisplayHandle& handle)
+    uint64_t Factory::registerDisplayObject(const std::string& name, DisplayHandle handle)
     {
         auto it = displayObjects_.find(name);
         if (it != displayObjects_.end()) {
             uint64_t existing = it->second->id;
             if (existing != 0) {
                 // Already has an id; ensure mapping exists
-                std::shared_lock<std::shared_mutex> rlock(id_map_mutex_);
-                if (display_id_map_.find(existing) != display_id_map_.end()) return existing;
-                // fall through to register new mapping
+                {
+                    std::shared_lock<std::shared_mutex> rlock(id_map_mutex_);
+                    auto found = display_id_map_.find(existing);
+                    if (found != display_id_map_.end()) {
+                        handle.setId(existing);
+                        return existing;
+                    }
+                }
+                // Recreate the mapping if it was missing
+                std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+                handle.setId(existing);
+                display_id_map_[existing] = handle;
+                return existing;
             }
         }
         uint64_t id = next_object_id_.fetch_add(1);
         {
             std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+            handle.setId(id);
             display_id_map_[id] = handle;
         }
         if (it != displayObjects_.end()) it->second->id = id;
@@ -546,19 +565,29 @@ namespace SDOM
         display_id_map_.erase(id);
     }
 
-    uint64_t Factory::registerAssetObject(const std::string& name, const AssetHandle& handle)
+    uint64_t Factory::registerAssetObject(const std::string& name, AssetHandle handle)
     {
         auto it = assetObjects_.find(name);
         if (it != assetObjects_.end()) {
             uint64_t existing = it->second->id;
             if (existing != 0) {
                 std::shared_lock<std::shared_mutex> rlock(id_map_mutex_);
-                if (asset_id_map_.find(existing) != asset_id_map_.end()) return existing;
+                auto found = asset_id_map_.find(existing);
+                if (found != asset_id_map_.end()) {
+                    handle.setId(existing);
+                    return existing;
+                }
+                rlock.unlock();
+                std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+                handle.setId(existing);
+                asset_id_map_[existing] = handle;
+                return existing;
             }
         }
         uint64_t id = next_object_id_.fetch_add(1);
         {
             std::unique_lock<std::shared_mutex> lock(id_map_mutex_);
+            handle.setId(id);
             asset_id_map_[id] = handle;
         }
         if (it != assetObjects_.end()) it->second->id = id;
@@ -620,22 +649,25 @@ namespace SDOM
                 // Run initialization callback now that registry entry exists
                 if (entry->obj) entry->obj->startup();
 
+                // Issue a stable id for this object before dispatching events so handles carry ids.
+                DisplayHandle handle(name, typeName);
+                try {
+                    uint64_t id = registerDisplayObject(name, handle);
+                    handle.setId(id);
+                } catch(...) {}
+
                 // Dispatch OnInit event
                 auto& eventManager = getCore().getEventManager();
                 std::unique_ptr<Event> initEvent =
-                    std::make_unique<Event>(EventType::OnInit, DisplayHandle{name, typeName});
+                    std::make_unique<Event>(EventType::OnInit, handle);
 
                 DisplayHandle stageHandle = getCore().getRootNode();
                 if (stageHandle)
                     initEvent->setRelatedTarget(stageHandle);
 
-                eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, typeName));
+                eventManager.dispatchEvent(std::move(initEvent), handle);
 
-                try {
-                    registerDisplayObject(name, DisplayHandle(name, typeName));
-                } catch(...) {}
-
-                return DisplayHandle(name, typeName);
+                return handle;
             }
         }
 
@@ -737,10 +769,12 @@ namespace SDOM
                 ERROR("Factory::createAsset(init): load() threw for asset: " + init.name + " (unknown cause)");
             }
 
+            AssetHandle handle(init.name, typeName, init.filename);
             try {
-                registerAssetObject(init.name, AssetHandle(init.name, typeName, init.filename));
+                uint64_t id = registerAssetObject(init.name, handle);
+                handle.setId(id);
             } catch(...) {}
-            return AssetHandle(init.name, typeName, init.filename);
+            return handle;
         }
 
         return AssetHandle(); // invalid
@@ -802,17 +836,17 @@ namespace SDOM
             }
         }
 
+        AssetHandle handle(name, typeName, entry && entry->obj ? entry->obj->getFilename() : std::string{});
         try
         {
-            registerAssetObject(name, AssetHandle(name, typeName,
-                entry && entry->obj ? entry->obj->getFilename() : std::string{}));
+            uint64_t id = registerAssetObject(name, handle);
+            handle.setId(id);
         }
         catch (...)
         {
         }
 
-        const std::string filename = (entry && entry->obj) ? entry->obj->getFilename() : std::string{};
-        return AssetHandle(name, typeName, filename);
+        return handle;
     }
 
 
@@ -843,20 +877,22 @@ namespace SDOM
 
             entry->obj->startup();
 
+            DisplayHandle handle(name, type);
+            try {
+                uint64_t id = registerDisplayObject(name, handle);
+                handle.setId(id);
+            } catch(...) {}
+
             auto& eventManager = getCore().getEventManager();
             std::unique_ptr<Event> initEvent =
-                std::make_unique<Event>(EventType::OnInit, DisplayHandle{name, type});
+                std::make_unique<Event>(EventType::OnInit, handle);
 
             DisplayHandle stageHandle = getCore().getRootNode();
             if (stageHandle)
                 initEvent->setRelatedTarget(stageHandle);
 
-            eventManager.dispatchEvent(std::move(initEvent), DisplayHandle(name, type));
+            eventManager.dispatchEvent(std::move(initEvent), handle);
         }
-
-        try {
-            registerDisplayObject(name, DisplayHandle(name, type));
-        } catch(...) {}
     }
     
     void Factory::destroyDisplayObject(const std::string& name) 
@@ -955,10 +991,7 @@ namespace SDOM
                 std::string fn = entry->obj->getFilename();
                 if (fn == filename) {
                     if (typeName.empty() || entry->obj->getType() == typeName) {
-                        AssetHandle out;
-                        out.name_ = name;
-                        out.type_ = entry->obj->getType();
-                        out.filename_ = fn;
+                        AssetHandle out(name, entry->obj->getType(), fn, entry->id);
                         return out;
                     }
                 }
@@ -980,10 +1013,7 @@ namespace SDOM
                     const SpriteSheet* ss = dynamic_cast<const SpriteSheet*>(entry->obj.get());
                     if (!ss) continue;
                     if (ss->getSpriteWidth() == spriteW && ss->getSpriteHeight() == spriteH) {
-                        AssetHandle out;
-                        out.name_ = name;
-                        out.type_ = ss->getType();
-                        out.filename_ = ss->getFilename();
+                        AssetHandle out(name, ss->getType(), ss->getFilename(), entry->id);
                         return out;
                     }
                 }

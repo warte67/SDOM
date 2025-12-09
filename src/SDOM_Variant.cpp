@@ -1,6 +1,10 @@
 
 #include <SDOM/SDOM_Variant.hpp>
 
+#include <SDOM/SDOM_DisplayHandle.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
+#include <SDOM/SDOM_Factory.hpp>
+
 #include <cmath>
 #include <cctype>
 #include <cstddef>
@@ -10,6 +14,7 @@
 #include <json.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
 #include <SDOM/SDOM_CoreAPI.hpp>
+#include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 #include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 
 namespace {
@@ -25,6 +30,21 @@ std::uint64_t doubleToBits(double d) {
     std::memcpy(&bits, &d, sizeof(double));
     return bits;
 }
+
+struct DisplayHandleScratch {
+    std::string name;
+    std::string type;
+};
+
+struct AssetHandleScratch {
+    std::string name;
+    std::string type;
+};
+
+thread_local DisplayHandleScratch s_variantDisplayHandleScratch;
+thread_local AssetHandleScratch s_variantAssetHandleScratch;
+thread_local SDOM_DisplayHandle s_variantDisplayHandleOut;
+thread_local SDOM_AssetHandle s_variantAssetHandleOut;
 
 // Variant marshaling helpers (scalar-only ABI view for now).
 thread_local std::string s_variantStringScratch;
@@ -152,6 +172,26 @@ bool importVariantFromC(const SDOM_Variant* in, SDOM::Variant& out)
             out = SDOM::Variant(s ? std::string{s} : std::string{});
             return true;
         }
+        case SDOM_VARIANT_TYPE_DISPLAY_HANDLE: {
+            const uint64_t id = static_cast<uint64_t>(in->data);
+            SDOM::DisplayHandle h;
+            if (id != 0 && SDOM::DisplayHandle::factory_) {
+                h = SDOM::DisplayHandle::factory_->resolveDisplayHandleById(id);
+            }
+            if (!h.getId()) h.setId(id);
+            out = SDOM::Variant(std::move(h));
+            return true;
+        }
+        case SDOM_VARIANT_TYPE_ASSET_HANDLE: {
+            const uint64_t id = static_cast<uint64_t>(in->data);
+            SDOM::AssetHandle h;
+            if (id != 0 && SDOM::AssetHandle::factory_) {
+                h = SDOM::AssetHandle::factory_->resolveAssetHandleById(id);
+            }
+            if (!h.getId()) h.setId(id);
+            out = SDOM::Variant(std::move(h));
+            return true;
+        }
         case SDOM_VARIANT_TYPE_ARRAY:
         case SDOM_VARIANT_TYPE_OBJECT:
         case SDOM_VARIANT_TYPE_DYNAMIC: {
@@ -196,6 +236,26 @@ bool importVariantFromCNoError(const SDOM_Variant* in, SDOM::Variant& out)
             out = SDOM::Variant(s ? std::string{s} : std::string{});
             return true;
         }
+        case SDOM_VARIANT_TYPE_DISPLAY_HANDLE: {
+            const uint64_t id = static_cast<uint64_t>(in->data);
+            SDOM::DisplayHandle h;
+            if (id != 0 && SDOM::DisplayHandle::factory_) {
+                h = SDOM::DisplayHandle::factory_->resolveDisplayHandleById(id);
+            }
+            if (!h.getId()) h.setId(id);
+            out = SDOM::Variant(std::move(h));
+            return true;
+        }
+        case SDOM_VARIANT_TYPE_ASSET_HANDLE: {
+            const uint64_t id = static_cast<uint64_t>(in->data);
+            SDOM::AssetHandle h;
+            if (id != 0 && SDOM::AssetHandle::factory_) {
+                h = SDOM::AssetHandle::factory_->resolveAssetHandleById(id);
+            }
+            if (!h.getId()) h.setId(id);
+            out = SDOM::Variant(std::move(h));
+            return true;
+        }
         case SDOM_VARIANT_TYPE_ARRAY:
         case SDOM_VARIANT_TYPE_OBJECT:
         case SDOM_VARIANT_TYPE_DYNAMIC: {
@@ -233,6 +293,18 @@ SDOM_Variant exportVariantToC(const SDOM::Variant& v)
             s_variantStringScratch = v.toString();
             out.data = reinterpret_cast<std::uint64_t>(s_variantStringScratch.c_str());
             break;
+        case SDOM::VariantType::DisplayHandle: {
+            out.type = SDOM_VARIANT_TYPE_DISPLAY_HANDLE;
+            const auto* dh = v.displayHandle();
+            out.data = dh ? dh->getId() : 0;
+            break;
+        }
+        case SDOM::VariantType::AssetHandle: {
+            out.type = SDOM_VARIANT_TYPE_ASSET_HANDLE;
+            const auto* ah = v.assetHandle();
+            out.data = ah ? ah->getId() : 0;
+            break;
+        }
         case SDOM::VariantType::Array:
             out.type = SDOM_VARIANT_TYPE_ARRAY;
             s_variantValueScratch = v;
@@ -271,6 +343,8 @@ bool SDOM_IsBool(const SDOM_Variant* v)   { return SDOM_Type(v) == SDOM_VARIANT_
 bool SDOM_IsInt(const SDOM_Variant* v)    { return SDOM_Type(v) == SDOM_VARIANT_TYPE_INT; }
 bool SDOM_IsFloat(const SDOM_Variant* v)  { return SDOM_Type(v) == SDOM_VARIANT_TYPE_FLOAT; }
 bool SDOM_IsString(const SDOM_Variant* v) { return SDOM_Type(v) == SDOM_VARIANT_TYPE_STRING; }
+bool SDOM_IsDisplayHandle(const SDOM_Variant* v) { return SDOM_Type(v) == SDOM_VARIANT_TYPE_DISPLAY_HANDLE; }
+bool SDOM_IsAssetHandle(const SDOM_Variant* v)   { return SDOM_Type(v) == SDOM_VARIANT_TYPE_ASSET_HANDLE; }
 
 SDOM_Variant SDOM_MakeNull(void) {
     SDOM_Variant v { SDOM_VARIANT_TYPE_NULL, {0,0,0}, 0, 0 };
@@ -298,21 +372,81 @@ SDOM_Variant SDOM_MakeCString(const char* utf8) {
     return v;
 }
 
+static bool SDOM_Handle_IsDisplay_Impl(const SDOM_Variant* handle)
+{
+    return handle && static_cast<SDOM_VariantType>(handle->type) == SDOM_VARIANT_TYPE_DISPLAY_HANDLE;
+}
+
+static bool SDOM_Handle_IsAsset_Impl(const SDOM_Variant* handle)
+{
+    return handle && static_cast<SDOM_VariantType>(handle->type) == SDOM_VARIANT_TYPE_ASSET_HANDLE;
+}
+
+static uint64_t SDOM_Handle_ObjectId_Impl(const SDOM_Variant* handle)
+{
+    if (!handle) {
+        return 0;
+    }
+
+    if (SDOM_Handle_IsDisplay_Impl(handle) || SDOM_Handle_IsAsset_Impl(handle)) {
+        return static_cast<uint64_t>(handle->data);
+    }
+
+    return 0;
+}
+
+static bool SDOM_Handle_IsValid_Impl(const SDOM_Variant* handle)
+{
+    if (!handle) {
+        SDOM::CoreAPI::setErrorMessage("SDOM_Handle_IsValid: subject 'handle' is null");
+        return false;
+    }
+
+    const uint64_t id = SDOM_Handle_ObjectId_Impl(handle);
+    if (id == 0) {
+        return false;
+    }
+
+    if (SDOM_Handle_IsDisplay_Impl(handle)) {
+        if (SDOM::DisplayHandle::factory_) {
+            return SDOM::DisplayHandle::factory_->resolveDisplayHandleById(id).isValid();
+        }
+        SDOM::CoreAPI::setErrorMessage("SDOM_Handle_IsValid: no display factory registered");
+        return false;
+    }
+
+    if (SDOM_Handle_IsAsset_Impl(handle)) {
+        if (SDOM::AssetHandle::factory_) {
+            return SDOM::AssetHandle::factory_->resolveAssetHandleById(id).isValid();
+        }
+        SDOM::CoreAPI::setErrorMessage("SDOM_Handle_IsValid: no asset factory registered");
+        return false;
+    }
+
+    SDOM::CoreAPI::setErrorMessage("SDOM_Handle_IsValid: variant is not a handle");
+    return false;
+}
+
+SDOM_Variant SDOM_MakeDisplayHandle(const SDOM_DisplayHandle* handle) {
+    SDOM_Variant v { SDOM_VARIANT_TYPE_DISPLAY_HANDLE, {0,0,0}, 0, 0 };
+    if (!handle) return v;
+    v.data = handle->object_id;
+    return v;
+}
+
+SDOM_Variant SDOM_MakeAssetHandle(const SDOM_AssetHandle* handle) {
+    SDOM_Variant v { SDOM_VARIANT_TYPE_ASSET_HANDLE, {0,0,0}, 0, 0 };
+    if (!handle) return v;
+    v.data = handle->object_id;
+    return v;
+}
+
 bool SDOM_AsBool(const SDOM_Variant* v) {
     return SDOM_IsBool(v) ? static_cast<bool>(v->data) : false;
 }
 
 int64_t SDOM_AsInt(const SDOM_Variant* v) {
     return SDOM_IsInt(v) ? static_cast<int64_t>(v->data) : 0;
-}
-
-double SDOM_AsFloat(const SDOM_Variant* v) {
-    if (!SDOM_IsFloat(v)) return 0.0;
-    return bitsToDouble(static_cast<std::uint64_t>(v->data));
-}
-
-const char* SDOM_AsString(const SDOM_Variant* v) {
-    return SDOM_IsString(v) ? reinterpret_cast<const char*>(v->data) : "";
 }
 
 // Path helpers -------------------------------------------------------------
@@ -425,6 +559,19 @@ void Variant::registerBindings(DataRegistry& registry) {
         registry.registerType(ti);
     }
 
+    if (!registry.lookupType("Handle")) {
+        SDOM::TypeInfo ti;
+        ti.name        = "Handle";
+        ti.kind        = SDOM::EntryKind::Function;
+        ti.cpp_type_id = "SDOM::Variant";
+        ti.file_stem   = "Handles";
+        ti.export_name = "";
+        ti.category    = "Handles";
+        ti.subject_kind = "Core";
+        ti.doc         = "Variant-backed handle helpers (no struct ABI).";
+        registry.registerType(ti);
+    }
+
     // --- Register Variant C API Functions ---
     // These attach behavior to the Variant type for C ABI bindings.
     auto registerFn = [&](const std::string& name, const std::string& ret, const std::string& sig) {
@@ -443,13 +590,14 @@ void Variant::registerBindings(DataRegistry& registry) {
     registerFn("SDOM_IsInt", "bool", "bool SDOM_IsInt(const SDOM_Variant* v)");
     registerFn("SDOM_IsFloat", "bool", "bool SDOM_IsFloat(const SDOM_Variant* v)");
     registerFn("SDOM_IsString", "bool", "bool SDOM_IsString(const SDOM_Variant* v)");
+    registerFn("SDOM_IsDisplayHandle", "bool", "bool SDOM_IsDisplayHandle(const SDOM_Variant* v)");
+    registerFn("SDOM_IsAssetHandle", "bool", "bool SDOM_IsAssetHandle(const SDOM_Variant* v)");
 
     registerFn("SDOM_MakeNull", "SDOM_Variant", "SDOM_Variant SDOM_MakeNull(void)");
     registerFn("SDOM_MakeBool", "SDOM_Variant", "SDOM_Variant SDOM_MakeBool(bool b)");
     registerFn("SDOM_MakeInt", "SDOM_Variant", "SDOM_Variant SDOM_MakeInt(int64_t i)");
     registerFn("SDOM_MakeFloat", "SDOM_Variant", "SDOM_Variant SDOM_MakeFloat(double f)");
     registerFn("SDOM_MakeCString", "SDOM_Variant", "SDOM_Variant SDOM_MakeCString(const char* utf8)");
-
     registerFn("SDOM_AsBool", "bool", "bool SDOM_AsBool(const SDOM_Variant* v)");
     registerFn("SDOM_AsInt", "int64_t", "int64_t SDOM_AsInt(const SDOM_Variant* v)");
     registerFn("SDOM_AsFloat", "double", "double SDOM_AsFloat(const SDOM_Variant* v)");
@@ -459,6 +607,45 @@ void Variant::registerBindings(DataRegistry& registry) {
     registerFn("SDOM_Variant_SetPath", "bool", "bool SDOM_Variant_SetPath(SDOM_Variant* root, const char* path, const SDOM_Variant* value)");
     registerFn("SDOM_Variant_PathExists", "bool", "bool SDOM_Variant_PathExists(const SDOM_Variant* root, const char* path)");
     registerFn("SDOM_Variant_ErasePath", "bool", "bool SDOM_Variant_ErasePath(SDOM_Variant* root, const char* path)");
+
+    auto registerHandleFn = [&](const std::string& name,
+                                const std::string& ret,
+                                const std::string& sig,
+                                const std::string& doc,
+                                auto* fnPtr) {
+        SDOM::FunctionInfo fi;
+        fi.name        = name;
+        fi.c_name      = name;
+        fi.c_signature = sig;
+        fi.return_type = ret;
+        fi.doc         = doc;
+        fi.exported    = true;
+        registry.registerFunction("Handle", fi, fnPtr);
+    };
+
+    registerHandleFn("SDOM_Handle_IsDisplay",
+                     "bool",
+                     "bool SDOM_Handle_IsDisplay(const SDOM_Variant* handle)",
+                     "Returns true when the variant tags a display handle.",
+                     &SDOM_Handle_IsDisplay_Impl);
+
+    registerHandleFn("SDOM_Handle_IsAsset",
+                     "bool",
+                     "bool SDOM_Handle_IsAsset(const SDOM_Variant* handle)",
+                     "Returns true when the variant tags an asset handle.",
+                     &SDOM_Handle_IsAsset_Impl);
+
+    registerHandleFn("SDOM_Handle_IsValid",
+                     "bool",
+                     "bool SDOM_Handle_IsValid(const SDOM_Variant* handle)",
+                     "Resolves the tagged handle and reports whether it maps to a live object.",
+                     &SDOM_Handle_IsValid_Impl);
+
+    registerHandleFn("SDOM_Handle_ObjectId",
+                     "uint64_t",
+                     "uint64_t SDOM_Handle_ObjectId(const SDOM_Variant* handle)",
+                     "Returns the underlying object identifier for display or asset handles; returns 0 otherwise.",
+                     &SDOM_Handle_ObjectId_Impl);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -537,6 +724,26 @@ Variant::Variant(const nlohmann::json& j)
     *this = Variant::fromJson(j);
 }
 
+Variant::Variant(const DisplayHandle& handle)
+: storage_(std::make_shared<VariantStorage>()) {
+    storage_->data = handle;
+}
+
+Variant::Variant(DisplayHandle&& handle)
+: storage_(std::make_shared<VariantStorage>()) {
+    storage_->data = std::move(handle);
+}
+
+Variant::Variant(const AssetHandle& handle)
+: storage_(std::make_shared<VariantStorage>()) {
+    storage_->data = handle;
+}
+
+Variant::Variant(AssetHandle&& handle)
+: storage_(std::make_shared<VariantStorage>()) {
+    storage_->data = std::move(handle);
+}
+
 // (templated dynamic constructor is defined in the header)
 
 // Factories
@@ -573,6 +780,8 @@ VariantType Variant::type() const noexcept {
     if (std::holds_alternative<std::string>(d))                    return VariantType::String;
     if (std::holds_alternative<VariantStorage::Array>(d))          return VariantType::Array;
     if (std::holds_alternative<VariantStorage::Object>(d))         return VariantType::Object;
+    if (std::holds_alternative<DisplayHandle>(d))                  return VariantType::DisplayHandle;
+    if (std::holds_alternative<AssetHandle>(d))                    return VariantType::AssetHandle;
     if (std::holds_alternative<VariantStorage::DynamicValue>(d))     return VariantType::Dynamic;
     return VariantType::Error;
 }
@@ -584,6 +793,8 @@ bool Variant::toBool(bool def) const noexcept {
     if (auto pi = std::get_if<int64_t>(&d)) return *pi != 0;
     if (auto pr = std::get_if<double>(&d))  return *pr != 0.0;
     if (auto ps = std::get_if<std::string>(&d)) return (*ps == "true") || (*ps == "1");
+    if (auto pdh = std::get_if<DisplayHandle>(&d)) return pdh->isValid();
+    if (auto pah = std::get_if<AssetHandle>(&d)) return pah->isValid();
     return def;
 }
 
@@ -615,7 +826,28 @@ std::string Variant::toString(std::string def) const noexcept {
     if (auto pi = std::get_if<int64_t>(&d))    return std::to_string(*pi);
     if (auto pr = std::get_if<double>(&d))     return std::to_string(*pr);
     if (auto pb = std::get_if<bool>(&d))       return *pb ? "true" : "false";
+    if (auto pdh = std::get_if<DisplayHandle>(&d)) return pdh->str();
+    if (auto pah = std::get_if<AssetHandle>(&d)) {
+        std::string s = pah->getName();
+        if (!pah->getType().empty()) {
+            s += " (" + pah->getType() + ")";
+        }
+        if (!pah->getFilename().empty()) {
+            s += " @" + pah->getFilename();
+        }
+        return s;
+    }
     if (std::holds_alternative<std::monostate>(d)) return "null";
+    return def;
+}
+
+DisplayHandle Variant::toDisplayHandle(DisplayHandle def) const noexcept {
+    if (auto p = std::get_if<DisplayHandle>(&storage_->data)) return *p;
+    return def;
+}
+
+AssetHandle Variant::toAssetHandle(AssetHandle def) const noexcept {
+    if (auto p = std::get_if<AssetHandle>(&storage_->data)) return *p;
     return def;
 }
 
@@ -631,6 +863,22 @@ const VariantStorage::Object* Variant::object() const noexcept {
 }
 VariantStorage::Object* Variant::object() noexcept {
     return std::get_if<VariantStorage::Object>(&storage_->data);
+}
+
+const DisplayHandle* Variant::displayHandle() const noexcept {
+    return std::get_if<DisplayHandle>(&storage_->data);
+}
+
+DisplayHandle* Variant::displayHandle() noexcept {
+    return std::get_if<DisplayHandle>(&storage_->data);
+}
+
+const AssetHandle* Variant::assetHandle() const noexcept {
+    return std::get_if<AssetHandle>(&storage_->data);
+}
+
+AssetHandle* Variant::assetHandle() noexcept {
+    return std::get_if<AssetHandle>(&storage_->data);
 }
 
 size_t Variant::size() const noexcept {
@@ -872,6 +1120,19 @@ nlohmann::json Variant::toJson() const {
         }
         return obj;
     }
+    if (auto p = std::get_if<DisplayHandle>(&d)) {
+        nlohmann::json obj = nlohmann::json::object();
+        obj["name"] = p->getName();
+        obj["type"] = p->getType();
+        return obj;
+    }
+    if (auto p = std::get_if<AssetHandle>(&d)) {
+        nlohmann::json obj = nlohmann::json::object();
+        obj["name"] = p->getName();
+        obj["type"] = p->getType();
+        obj["filename"] = p->getFilename();
+        return obj;
+    }
     if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
         auto conv = Variant::getConverter(p->type);
         if (conv && conv->toJson) {
@@ -955,6 +1216,19 @@ std::string Variant::toDebugString(int depth) const {
             }
             s += "}";
             return s;
+        }
+        case VariantType::DisplayHandle: {
+            if (const auto* h = displayHandle()) return h->str();
+            return "<display-handle-null>";
+        }
+        case VariantType::AssetHandle: {
+            if (const auto* h = assetHandle()) {
+                std::string s = h->getName();
+                if (!h->getType().empty()) s += " (" + h->getType() + ")";
+                if (!h->getFilename().empty()) s += " @" + h->getFilename();
+                return s;
+            }
+            return "<asset-handle-null>";
         }
         case VariantType::Dynamic: return "<dynamic>";
         default: return "<error>";

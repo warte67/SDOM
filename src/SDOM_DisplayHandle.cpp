@@ -26,7 +26,28 @@ namespace SDOM
     IDisplayObject* DisplayHandle::get() const
     {
         if (!factory_) return nullptr;
-        return factory_->getDisplayObjectPtr(name_);
+
+        if (id_ != 0) {
+            DisplayHandle resolved = factory_->resolveDisplayHandleById(id_);
+            if (resolved.getId() != 0) {
+                if (name_.empty()) {
+                    const_cast<DisplayHandle*>(this)->name_ = resolved.getName();
+                }
+                if (type_.empty()) {
+                    const_cast<DisplayHandle*>(this)->type_ = resolved.getType();
+                }
+                const_cast<DisplayHandle*>(this)->id_ = resolved.getId();
+                if (auto* ptr = factory_->getDisplayObjectPtr(resolved.getName())) {
+                    return ptr;
+                }
+            }
+        }
+
+        if (!name_.empty()) {
+            return factory_->getDisplayObjectPtr(name_);
+        }
+
+        return nullptr;
     }
 
     void DisplayHandle::registerBindingsImpl(const std::string& typeName)
@@ -44,49 +65,6 @@ namespace SDOM
                  "Handles",
                  "Lightweight proxy used to reference display objects by name/type.");
 
-        // Register the C-facing opaque struct only once.  The struct conveys
-        // the minimal identity data (id + metadata) necessary for generated
-        // bindings to marshal handles across ABI boundaries.
-        const std::string exportName = "SDOM_DisplayHandle";
-        if (!lookup(exportName)) {
-            SDOM::TypeInfo ti;
-            ti.name        = exportName;
-            ti.kind        = SDOM::EntryKind::Struct;
-            ti.cpp_type_id = "SDOM::DisplayHandle";
-            ti.file_stem   = "Handles";
-            ti.export_name = exportName;
-            ti.category    = "Handles";
-            ti.doc         = "Opaque ABI struct describing an SDOM display handle.";
-
-            auto addField = [&](const std::string& fieldName,
-                                const std::string& cppType,
-                                const std::string& doc) {
-                SDOM::PropertyInfo p;
-                p.name      = fieldName;
-                p.cpp_type  = cppType;
-                p.read_only = false;
-                p.doc       = doc;
-                ti.properties.push_back(std::move(p));
-            };
-
-            addField("object_id", "uint64_t", "Factory-assigned identifier (0 == invalid). ");
-            addField("name", "const char*", "Stable display object name token.");
-            addField("type", "const char*", "Display object type string (Button, Label, …). ");
-
-            registry().registerType(ti);
-        }
-
-        registerMethod(
-            typeName,
-            "isValid",
-            "bool DisplayHandle::isValid() const",
-            "bool",
-            "SDOM_DisplayHandle_IsValid",
-            "bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)",
-            "Returns true if the referenced display object currently resolves to a live instance.",
-            [](const DisplayHandle* handle) -> bool {
-                return handle && handle->isValid();
-            });
     }    
 
 } // namespace SDOM

@@ -96,7 +96,7 @@ namespace SDOM
             scratch.name = handle.getName();
             scratch.type = handle.getType();
 
-            out->object_id = 0; // TODO: populate once DisplayHandle exposes stable IDs
+            out->object_id = handle.getId();
             out->name = scratch.name.c_str();
             out->type = scratch.type.c_str();
             return true;
@@ -111,6 +111,7 @@ namespace SDOM
             DisplayHandle result;
             result.setName(in->name ? in->name : "");
             result.setType(in->type ? in->type : "");
+            result.setId(in->object_id);
             return result;
         }
 

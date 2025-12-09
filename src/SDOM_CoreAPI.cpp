@@ -195,10 +195,37 @@ DisplayHandle resolveDisplayHandle(const SDOM_DisplayHandle* handle)
     SDOM::Core& core = SDOM::Core::getInstance();
     SDOM::Factory& factory = core.getFactory();
 
+    if (handle->object_id != 0) {
+        DisplayHandle resolved = factory.resolveDisplayHandleById(handle->object_id);
+        if (resolved.isValid()) {
+            return resolved;
+        }
+    }
+
     if (handle->name) {
         return factory.getDisplayObject(handle->name);
     }
     return DisplayHandle();
+}
+
+AssetHandle resolveAssetHandle(const SDOM_AssetHandle* handle)
+{
+    if (!handle) return AssetHandle();
+
+    SDOM::Core& core = SDOM::Core::getInstance();
+    SDOM::Factory& factory = core.getFactory();
+
+    if (handle->object_id != 0) {
+        AssetHandle resolved = factory.resolveAssetHandleById(handle->object_id);
+        if (resolved.isValid()) {
+            return resolved;
+        }
+    }
+
+    if (handle->name) {
+        return factory.getAssetObject(handle->name);
+    }
+    return AssetHandle();
 }
 
 bool writeDisplayHandleOut(const DisplayHandle& src, SDOM_DisplayHandle* dst)
@@ -216,7 +243,7 @@ bool writeDisplayHandleOut(const DisplayHandle& src, SDOM_DisplayHandle* dst)
         return false;
     }
 
-    dst->object_id = 0;
+    dst->object_id = src.getId();
     static thread_local std::string s_name;
     static thread_local std::string s_type;
     s_name = src.getName();
@@ -241,7 +268,7 @@ bool writeAssetHandleOut(const SDOM::AssetHandle& src, SDOM_AssetHandle* dst, co
         return false;
     }
 
-    dst->object_id = 0;
+    dst->object_id = src.getId();
     static thread_local std::string s_name;
     static thread_local std::string s_type;
     s_name = src.getName();
@@ -2648,12 +2675,12 @@ bool destroyAssetObject(const SDOM_AssetHandle* handle)
         return false;
     }
     try {
-        const char* name = handle->name;
-        if (!name || std::string(name).empty()) {
-            setErrorMessage("SDOM_DestroyAssetObject: handle name is empty");
+        AssetHandle resolved = resolveAssetHandle(handle);
+        if (!resolved.isValid()) {
+            setErrorMessage("SDOM_DestroyAssetObject: handle is invalid");
             return false;
         }
-        SDOM::Core::getInstance().destroyAssetObject(name);
+        SDOM::Core::getInstance().destroyAssetObject(resolved.getName());
         return true;
     } catch (const std::exception& e) {
         setErrorMessage(e.what());

@@ -14,6 +14,9 @@
 #include <typeindex>
 #include <optional>
 
+#include <SDOM/SDOM_DisplayHandle.hpp>
+#include <SDOM/SDOM_AssetHandle.hpp>
+
 // SDOM bundles nlohmann/json; Variant integrates directly
 #include <json.hpp>
 #include <mutex>
@@ -67,6 +70,8 @@ enum class VariantType : uint8_t {
     Array,      // std::vector<Variant>
     Object,     // std::unordered_map<std::string, Variant>
     Dynamic,    // std::shared_ptr<void> (extensible user type)
+    DisplayHandle,
+    AssetHandle,
     Error
 };
 
@@ -102,6 +107,8 @@ struct VariantStorage {
             std::string,
             Array,
             Object,
+            DisplayHandle,
+            AssetHandle,
             DynamicValue
         >;
 
@@ -127,6 +134,10 @@ public:
     explicit Variant(const std::unordered_map<std::string, Variant>& obj);
     explicit Variant(std::unordered_map<std::string, Variant>&& obj);
     explicit Variant(const nlohmann::json& j);
+    explicit Variant(const DisplayHandle& handle);
+    explicit Variant(DisplayHandle&& handle);
+    explicit Variant(const AssetHandle& handle);
+    explicit Variant(AssetHandle&& handle);
 
     // Explicitly opt into move semantics to document intent and allow
     // noexcept move operations for container optimizations.
@@ -163,18 +174,26 @@ public:
     bool isArray()  const noexcept { return std::holds_alternative<VariantStorage::Array>(storage_->data); }
     bool isObject() const noexcept { return std::holds_alternative<VariantStorage::Object>(storage_->data); }
     bool isDynamic()const noexcept { return std::holds_alternative<VariantStorage::DynamicValue>(storage_->data); }
+    bool isDisplayHandle() const noexcept { return std::holds_alternative<DisplayHandle>(storage_->data); }
+    bool isAssetHandle() const noexcept { return std::holds_alternative<AssetHandle>(storage_->data); }
 
     // Conversions (safe, no-throw; return default on mismatch)
     bool                toBool(bool def=false) const noexcept;
     int64_t             toInt64(int64_t def=0) const noexcept;
     double              toDouble(double def=0.0) const noexcept;
     std::string         toString(std::string def={}) const noexcept;
+    DisplayHandle       toDisplayHandle(DisplayHandle def = DisplayHandle{}) const noexcept;
+    AssetHandle         toAssetHandle(AssetHandle def = AssetHandle{}) const noexcept;
 
     // Array/Object helpers (return nullptr if not that type)
     const VariantStorage::Array*  array()  const noexcept;
     VariantStorage::Array*        array()  noexcept;
     const VariantStorage::Object* object() const noexcept;
     VariantStorage::Object*       object() noexcept;
+    const DisplayHandle*          displayHandle() const noexcept;
+    DisplayHandle*                displayHandle() noexcept;
+    const AssetHandle*            assetHandle() const noexcept;
+    AssetHandle*                  assetHandle() noexcept;
 
     // Dynamic helpers
     template<typename T>
@@ -395,6 +414,8 @@ public:
             if (std::holds_alternative<std::string>(d)) return VariantType::String;
             if (std::holds_alternative<VariantStorage::Array>(d)) return VariantType::Array;
             if (std::holds_alternative<VariantStorage::Object>(d)) return VariantType::Object;
+            if (std::holds_alternative<DisplayHandle>(d)) return VariantType::DisplayHandle;
+            if (std::holds_alternative<AssetHandle>(d)) return VariantType::AssetHandle;
             if (std::holds_alternative<VariantStorage::DynamicValue>(d)) return VariantType::Dynamic;
             return VariantType::Error;
         }
@@ -485,6 +506,24 @@ struct VariantHash {
                     h ^= o->size() + 0x9e3779b97f4a7c15ULL;
                 }
                 return h;
+            }
+            case VariantType::DisplayHandle: {
+                if (auto dh = v.displayHandle()) {
+                    return hash<std::string>()(dh->getName());
+                }
+                return 0;
+            }
+            case VariantType::AssetHandle: {
+                if (auto ah = v.assetHandle()) {
+                    size_t h1 = hash<std::string>()(ah->getName());
+                    size_t h2 = hash<std::string>()(ah->getType());
+                    size_t h3 = hash<std::string>()(ah->getFilename());
+                    size_t h = h1;
+                    h ^= h2 + 0x9e3779b97f4a7c15ULL + (h<<6) + (h>>2);
+                    h ^= h3 + 0x9e3779b97f4a7c15ULL + (h<<6) + (h>>2);
+                    return h;
+                }
+                return 0;
             }
             case VariantType::Dynamic: {
                 if (auto dv = std::get_if<VariantStorage::DynamicValue>(&v.storage_->data)) {

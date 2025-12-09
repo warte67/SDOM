@@ -1,6 +1,38 @@
 {
   "functions": [
     {
+      "c_name": "SDOM_Handle_IsDisplay",
+      "c_signature": "bool SDOM_Handle_IsDisplay(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SDOM_Handle_IsDisplay",
+      "owner_type": "Handle",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Handle_IsAsset",
+      "c_signature": "bool SDOM_Handle_IsAsset(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SDOM_Handle_IsAsset",
+      "owner_type": "Handle",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Handle_IsValid",
+      "c_signature": "bool SDOM_Handle_IsValid(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SDOM_Handle_IsValid",
+      "owner_type": "Handle",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Handle_ObjectId",
+      "c_signature": "uint64_t SDOM_Handle_ObjectId(const SDOM_Variant* handle)",
+      "dispatch_family": "singleton",
+      "name": "SDOM_Handle_ObjectId",
+      "owner_type": "Handle",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_GetVersionString",
       "c_signature": "const char* SDOM_GetVersionString(void)",
       "dispatch_family": "singleton",
@@ -473,14 +505,6 @@
       "subject_kind": "Event"
     },
     {
-      "c_name": "SDOM_AssetHandle_IsValid",
-      "c_signature": "bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)",
-      "dispatch_family": "method_table",
-      "name": "isValid",
-      "owner_type": "AssetHandle",
-      "subject_kind": "AssetObject"
-    },
-    {
       "c_name": "SDOM_Type",
       "c_signature": "uint8_t SDOM_Type(const SDOM_Variant* v)",
       "dispatch_family": "custom",
@@ -525,6 +549,22 @@
       "c_signature": "bool SDOM_IsString(const SDOM_Variant* v)",
       "dispatch_family": "custom",
       "name": "SDOM_IsString",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_IsDisplayHandle",
+      "c_signature": "bool SDOM_IsDisplayHandle(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_IsDisplayHandle",
+      "owner_type": "Variant",
+      "subject_kind": "Variant"
+    },
+    {
+      "c_name": "SDOM_IsAssetHandle",
+      "c_signature": "bool SDOM_IsAssetHandle(const SDOM_Variant* v)",
+      "dispatch_family": "custom",
+      "name": "SDOM_IsAssetHandle",
       "owner_type": "Variant",
       "subject_kind": "Variant"
     },
@@ -631,14 +671,6 @@
       "name": "SDOM_Variant_ErasePath",
       "owner_type": "Variant",
       "subject_kind": "Variant"
-    },
-    {
-      "c_name": "SDOM_DisplayHandle_IsValid",
-      "c_signature": "bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)",
-      "dispatch_family": "method_table",
-      "name": "isValid",
-      "owner_type": "DisplayHandle",
-      "subject_kind": "DisplayObject"
     },
     {
       "c_name": "SDOM_GetError",
@@ -1720,6 +1752,16 @@
       "uses_handle": true
     },
     {
+      "cpp_type_id": "SDOM::Variant",
+      "dispatch_family": "singleton",
+      "file_stem": "Handles",
+      "has_function_exports": true,
+      "name": "Handle",
+      "owns_method_table": true,
+      "subject_kind": "Core",
+      "uses_handle": false
+    },
+    {
       "cpp_type_id": "SDOM::Version",
       "dispatch_family": "singleton",
       "file_stem": "Version",
@@ -1743,7 +1785,7 @@
       "cpp_type_id": "SDOM::AssetHandle",
       "dispatch_family": "method_table",
       "file_stem": "Handles",
-      "has_function_exports": true,
+      "has_function_exports": false,
       "name": "AssetHandle",
       "owns_method_table": true,
       "subject_kind": "AssetObject",
@@ -1758,26 +1800,6 @@
       "owns_method_table": false,
       "subject_kind": "Variant",
       "uses_handle": false
-    },
-    {
-      "cpp_type_id": "SDOM::DisplayHandle",
-      "dispatch_family": "method_table",
-      "file_stem": "Handles",
-      "has_function_exports": true,
-      "name": "DisplayHandle",
-      "owns_method_table": true,
-      "subject_kind": "DisplayObject",
-      "uses_handle": true
-    },
-    {
-      "cpp_type_id": "SDOM::IconButton",
-      "dispatch_family": "method_table",
-      "file_stem": "IconButton",
-      "has_function_exports": false,
-      "name": "IconButton",
-      "owns_method_table": true,
-      "subject_kind": "DisplayObject",
-      "uses_handle": true
     },
     {
       "cpp_type_id": "SDOM::CheckButton",
@@ -1795,6 +1817,16 @@
       "file_stem": "Frame",
       "has_function_exports": false,
       "name": "Frame",
+      "owns_method_table": true,
+      "subject_kind": "DisplayObject",
+      "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::IconButton",
+      "dispatch_family": "method_table",
+      "file_stem": "IconButton",
+      "has_function_exports": false,
+      "name": "IconButton",
       "owns_method_table": true,
       "subject_kind": "DisplayObject",
       "uses_handle": true

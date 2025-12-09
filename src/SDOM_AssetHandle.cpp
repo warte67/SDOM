@@ -61,9 +61,31 @@ namespace SDOM
     IAssetObject* AssetHandle::get() const
     {
         if (!factory_) return nullptr;
-        IAssetObject* res = factory_->getAssetObjectPtr(name_);
-        if (!res) return nullptr;
-        return res;    
+
+        if (id_ != 0) {
+            AssetHandle resolved = factory_->resolveAssetHandleById(id_);
+            if (resolved.getId() != 0) {
+                if (name_.empty()) {
+                    const_cast<AssetHandle*>(this)->name_ = resolved.getName();
+                }
+                if (type_.empty()) {
+                    const_cast<AssetHandle*>(this)->type_ = resolved.getType();
+                }
+                if (filename_.empty()) {
+                    const_cast<AssetHandle*>(this)->filename_ = resolved.getFilename();
+                }
+                const_cast<AssetHandle*>(this)->id_ = resolved.getId();
+                if (auto* ptr = factory_->getAssetObjectPtr(resolved.getName())) {
+                    return ptr;
+                }
+            }
+        }
+
+        if (!name_.empty()) {
+            return factory_->getAssetObjectPtr(name_);
+        }
+
+        return nullptr;    
     }
 
 
@@ -85,46 +107,6 @@ namespace SDOM
         typeInfo.has_handle_override = false;
         typeInfo.dispatch_family_override = "method_table";
 
-        const std::string exportName = "SDOM_AssetHandle";
-        if (!lookup(exportName)) {
-            SDOM::TypeInfo ti;
-            ti.name        = exportName;
-            ti.kind        = SDOM::EntryKind::Struct;
-            ti.cpp_type_id = "SDOM::AssetHandle";
-            ti.file_stem   = "Handles";
-            ti.export_name = exportName;
-            ti.category    = "Handles";
-            ti.doc         = "Opaque ABI struct describing an SDOM asset handle.";
-
-            auto addField = [&](const std::string& fieldName,
-                                const std::string& cppType,
-                                const std::string& doc) {
-                SDOM::PropertyInfo p;
-                p.name      = fieldName;
-                p.cpp_type  = cppType;
-                p.read_only = false;
-                p.doc       = doc;
-                ti.properties.push_back(std::move(p));
-            };
-
-            addField("object_id", "uint64_t", "Factory-assigned identifier (0 == invalid). ");
-            addField("name", "const char*", "Stable asset name token.");
-            addField("type", "const char*", "Asset type string (Texture, Font, …). ");
-
-            registry().registerType(ti);
-        }
-
-        registerMethod(
-            typeName,
-            "isValid",
-            "bool AssetHandle::isValid() const",
-            "bool",
-            "SDOM_AssetHandle_IsValid",
-            "bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)",
-            "Returns true if the referenced asset is still registered and resolves to a live instance.",
-            [](const AssetHandle* handle) -> bool {
-                return handle && handle->isValid();
-            });
     }    
 
 } // namespace SDOM

@@ -45,6 +45,7 @@
 // #include <sstream>
 // #include <SDOM/SDOM.hpp>
 #include <SDOM/SDOM_IDataObject.hpp>
+#include <cstdint>
 
 // NOTE: this ~= "DisplayHandle(getName(), getType())"
 
@@ -61,9 +62,10 @@ namespace SDOM
     public:
 
         DisplayHandle();
-        DisplayHandle(const std::string& name, const std::string& type) : name_(name), type_(type) {}
+        DisplayHandle(const std::string& name, const std::string& type, uint64_t id = 0)
+            : name_(name), type_(type), id_(id) {}
         DisplayHandle(const DisplayHandle& other)
-            : name_(other.name_), type_(other.type_) {}
+            : name_(other.name_), type_(other.type_), id_(other.id_) {}
 
         // Provide explicit copy-assignment to avoid implicitly-declared
         // deprecated assignment operator warnings when a user-provided
@@ -72,6 +74,7 @@ namespace SDOM
             if (this != &other) {
                 name_ = other.name_;
                 type_ = other.type_;
+                id_   = other.id_;
             }
             return *this;
         }
@@ -81,6 +84,7 @@ namespace SDOM
             if (this != &other) {
                 name_ = std::move(other.name_);
                 type_ = std::move(other.type_);
+                id_   = other.id_;
             }
             return *this;
         }
@@ -124,12 +128,15 @@ namespace SDOM
             // Example:
             // ptr_ = nullptr;
             name_.clear();
+            id_ = 0;
             // ...other members...
         }
         std::string getName() const { return name_; }
         std::string getType() const { return type_; }
         void setName(const std::string& newName) { name_ = newName; }
         void setType(const std::string& newType) { type_ = newType; }
+        uint64_t getId() const { return id_; }
+        void setId(uint64_t newId) { id_ = newId; }
 
         std::string str() const {
             std::ostringstream oss;
@@ -156,6 +163,7 @@ namespace SDOM
 
         std::string name_;
         std::string type_;
+        uint64_t id_ = 0;
 
         mutable std::string formatted_; // to keep the formatted string alive for c_str()
 

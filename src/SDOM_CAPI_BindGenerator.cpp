@@ -707,7 +707,7 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
     };
 
     addInclude("#include <stdbool.h>");
-    if (moduleNeedsCstdint(module)) {
+    if (moduleNeedsCstdint(module) || module.file_stem == "Handles") {
         addInclude("#include <stdint.h>");
     }
     if (module.file_stem == "Core") {
@@ -716,9 +716,22 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
     if (module.file_stem == "Event") {
         addInclude("#include <SDOM/CAPI/SDOM_CAPI_Variant.h>");
     }
+    if (module.file_stem == "Variant") {
+        addInclude("#include <SDOM/CAPI/SDOM_CAPI_Handles.h>");
+    }
 
     const auto dependencyIncludes = collectDependencyIncludes(module);
     for (const auto& include_line : dependencyIncludes) {
+        if (module.file_stem == "Handles") {
+            // Avoid recursive self-include and keep the header lightweight to
+            // prevent circular dependence with Variant.
+            if (include_line.find("SDOM_CAPI_Handles.h") != std::string::npos) {
+                continue;
+            }
+            if (include_line.find("SDOM_CAPI_Variant.h") != std::string::npos) {
+                continue;
+            }
+        }
         addInclude(include_line);
     }
 
@@ -741,7 +754,10 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << "    SDOM_VARIANT_TYPE_STRING = 4,\n";
         out << "    SDOM_VARIANT_TYPE_ARRAY  = 5,\n";
         out << "    SDOM_VARIANT_TYPE_OBJECT = 6,\n";
-        out << "    SDOM_VARIANT_TYPE_DYNAMIC= 7\n";
+        out << "    SDOM_VARIANT_TYPE_DYNAMIC= 7,\n";
+        out << "    SDOM_VARIANT_TYPE_DISPLAY_HANDLE = 8,\n";
+        out << "    SDOM_VARIANT_TYPE_ASSET_HANDLE   = 9,\n";
+        out << "    SDOM_VARIANT_TYPE_EVENT          = 10\n";
         out << "} SDOM_VariantType;\n\n";
     }
 
@@ -778,6 +794,29 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << "#endif\n\n";
     }
 
+    if (module.file_stem == "Handles") {
+        out << "typedef struct SDOM_DisplayHandle {\n";
+        out << "    uint64_t object_id;\n";
+        out << "    const char* name;\n";
+        out << "    const char* type;\n";
+        out << "} SDOM_DisplayHandle;\n\n";
+
+        out << "typedef struct SDOM_AssetHandle {\n";
+        out << "    uint64_t object_id;\n";
+        out << "    const char* name;\n";
+        out << "    const char* type;\n";
+        out << "} SDOM_AssetHandle;\n\n";
+
+        out << "typedef struct SDOM_Variant SDOM_Variant;\n";
+        out << "typedef SDOM_Variant SDOM_Handle_Variant;\n\n";
+
+        out << "SDOM_Variant SDOM_MakeDisplayHandle(const SDOM_DisplayHandle* handle);\n";
+        out << "SDOM_Variant SDOM_MakeAssetHandle(const SDOM_AssetHandle* handle);\n";
+        out << "bool SDOM_Handle_IsValid(const SDOM_Handle_Variant* handle);\n";
+        out << "bool SDOM_Handle_IsDisplay(const SDOM_Handle_Variant* handle);\n";
+        out << "bool SDOM_Handle_IsAsset(const SDOM_Handle_Variant* handle);\n\n";
+    }
+
     emitStructs(out, module);
 
     if (moduleHasFunctions(module)) {
@@ -808,6 +847,9 @@ void CAPI_BindGenerator::generateSource(const BindModule& module)
 
     out << "#include <SDOM/CAPI/SDOM_CAPI_" << module.file_stem << ".h>\n";
     out << "#include <SDOM/CAPI/SDOM_CAPI_Core.h>\n";
+    if (module.file_stem == "Handles") {
+        out << "#include <SDOM/CAPI/SDOM_CAPI_Variant.h>\n";
+    }
     out << "#include <SDOM/SDOM_DataRegistry.hpp>\n";
     out << "#include <string>\n";
     out << "#include <vector>\n\n";

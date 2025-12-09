@@ -3,49 +3,77 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// Opaque ABI struct describing an SDOM asset handle.
+typedef struct SDOM_DisplayHandle {
+    uint64_t object_id;
+    const char* name;
+    const char* type;
+} SDOM_DisplayHandle;
+
 typedef struct SDOM_AssetHandle {
-    uint64_t object_id;     ///< Factory-assigned identifier (0 == invalid). 
-    const char* name;       ///< Stable asset name token.
-    const char* type;       ///< Asset type string (Texture, Font, …). 
+    uint64_t object_id;
+    const char* name;
+    const char* type;
 } SDOM_AssetHandle;
 
-// Opaque ABI struct describing an SDOM display handle.
-typedef struct SDOM_DisplayHandle {
-    uint64_t object_id;     ///< Factory-assigned identifier (0 == invalid). 
-    const char* name;       ///< Stable display object name token.
-    const char* type;       ///< Display object type string (Button, Label, …). 
-} SDOM_DisplayHandle;
+typedef struct SDOM_Variant SDOM_Variant;
+typedef SDOM_Variant SDOM_Handle_Variant;
+
+SDOM_Variant SDOM_MakeDisplayHandle(const SDOM_DisplayHandle* handle);
+SDOM_Variant SDOM_MakeAssetHandle(const SDOM_AssetHandle* handle);
+bool SDOM_Handle_IsValid(const SDOM_Handle_Variant* handle);
+bool SDOM_Handle_IsDisplay(const SDOM_Handle_Variant* handle);
+bool SDOM_Handle_IsAsset(const SDOM_Handle_Variant* handle);
 
 // Callable bindings
 
 /**
- * @brief Returns true if the referenced asset is still registered and resolves to a live instance.
+ * @brief Returns true when the variant tags a display handle.
  *
- * C++:   bool AssetHandle::isValid() const
- * C API: bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle)
+ * C++:   
+ * C API: bool SDOM_Handle_IsDisplay(const SDOM_Variant* handle)
  *
  * @param handle Pointer parameter.
  * @return bool; check SDOM_GetError() for details on failure.
  */
-bool SDOM_AssetHandle_IsValid(const SDOM_AssetHandle* handle);
+bool SDOM_Handle_IsDisplay(const SDOM_Variant* handle);
 
 /**
- * @brief Returns true if the referenced display object currently resolves to a live instance.
+ * @brief Returns true when the variant tags an asset handle.
  *
- * C++:   bool DisplayHandle::isValid() const
- * C API: bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle)
+ * C++:   
+ * C API: bool SDOM_Handle_IsAsset(const SDOM_Variant* handle)
  *
  * @param handle Pointer parameter.
  * @return bool; check SDOM_GetError() for details on failure.
  */
-bool SDOM_DisplayHandle_IsValid(const SDOM_DisplayHandle* handle);
+bool SDOM_Handle_IsAsset(const SDOM_Variant* handle);
+
+/**
+ * @brief Resolves the tagged handle and reports whether it maps to a live object.
+ *
+ * C++:   
+ * C API: bool SDOM_Handle_IsValid(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_Handle_IsValid(const SDOM_Variant* handle);
+
+/**
+ * @brief Returns the underlying object identifier for display or asset handles; returns 0 otherwise.
+ *
+ * C++:   
+ * C API: uint64_t SDOM_Handle_ObjectId(const SDOM_Variant* handle)
+ *
+ * @param handle Pointer parameter.
+ * @return uint64_t; check SDOM_GetError() for details on failure.
+ */
+uint64_t SDOM_Handle_ObjectId(const SDOM_Variant* handle);
 
 #ifdef __cplusplus
 } // extern "C"

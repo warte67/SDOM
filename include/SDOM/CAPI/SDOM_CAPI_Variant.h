@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 #include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 
 typedef enum SDOM_VariantType {
@@ -13,7 +14,10 @@ typedef enum SDOM_VariantType {
     SDOM_VARIANT_TYPE_STRING = 4,
     SDOM_VARIANT_TYPE_ARRAY  = 5,
     SDOM_VARIANT_TYPE_OBJECT = 6,
-    SDOM_VARIANT_TYPE_DYNAMIC= 7
+    SDOM_VARIANT_TYPE_DYNAMIC= 7,
+    SDOM_VARIANT_TYPE_DISPLAY_HANDLE = 8,
+    SDOM_VARIANT_TYPE_ASSET_HANDLE   = 9,
+    SDOM_VARIANT_TYPE_EVENT          = 10
 } SDOM_VariantType;
 
 #ifdef __cplusplus
@@ -95,6 +99,28 @@ bool SDOM_IsFloat(const SDOM_Variant* v);
  * @return bool; check SDOM_GetError() for details on failure.
  */
 bool SDOM_IsString(const SDOM_Variant* v);
+
+/**
+ * @brief 
+ *
+ * C++:   
+ * C API: bool SDOM_IsDisplayHandle(const SDOM_Variant* v)
+ *
+ * @param v Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_IsDisplayHandle(const SDOM_Variant* v);
+
+/**
+ * @brief 
+ *
+ * C++:   
+ * C API: bool SDOM_IsAssetHandle(const SDOM_Variant* v)
+ *
+ * @param v Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_IsAssetHandle(const SDOM_Variant* v);
 
 /**
  * @brief 
