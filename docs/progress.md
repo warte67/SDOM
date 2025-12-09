@@ -1197,38 +1197,60 @@ Builds are clean again and Variant path helpers now return deterministic errors 
 <a id="december-9-2025"></a>
 <a id="latest-update"></a>
 
-## 🗓️ December 9, 2025 — SpriteSheet Guards & Quiet Logs
+## 🗓️ December 9, 2025 — Variants Grow Up 🧬
 
-> 💬 *“Guard the pixels first; the tests will thank you.”*
+> 💬 *“One type to bind them all, and in CAPI unify them.”*
 
-### 🧩 Rendering & SpriteSheet Safety
-- Added null/size guards in both `drawSprite` overloads to bail out cleanly when a texture is missing or `SDL_GetTextureSize` fails, restoring the render target before returning.
-- Eliminated the intermittent “Failed to get texture size: Parameter 'texture' is invalid” error observed during sprite draws.
+### 🧩 Variant Identity Integration (the big one!)
+- `SDOM_Variant` now supports **DisplayHandle**, **AssetHandle**, and **Event** identity types.
+- Core C API fully understands variant-based handles:  
+  **create → get → focus/hover → destroy** all work using variants.
+- Robust type guards in place:
+  - `SDOM_Handle_IsDisplay`, `SDOM_Handle_IsAsset`, `SDOM_Event_IsEvent`
+  - Clear errors on mismatched/invalid variant tags.
+- Struct↔Variant conversion centralized with **non-owning semantics preserved**.
+- All existing POD forms remain valid — dual path active and stable for migration.
 
-### 🧩 Variant & Handle Support
-- Added Variant type support for `DisplayHandle`, `AssetHandle`, and `Event` objects to enable handle-aware payloads and C API interop.
-- Updated Variant converters so handle types round-trip cleanly through the C API and test harness.
+### 🧩 Core System Awareness
+- Root node, keyboard focus, mouse hover, and asset lookups now variant-capable.
+- Cross-API parity ensured through round-trip and behavior comparison tests.
+- Handles continue to reference **Factory-owned objects** with preserved lifetime guarantees.
 
-### 🧪 Validation
-- Rebuilt and ran the full suite (`./prog --stop-after-tests`): 88/88 passing with the new SpriteSheet guard in place.
-- ASan/Debug/Release builds remain clean after the guard change.
-- Added and refreshed unit tests to cover the new Variant handle/event paths alongside the SpriteSheet guard scenarios.
+### 🧩 Expanded Unit Coverage
+- Added round-trip tests for handle/event variants:
+  - POD → Variant → POD identity preserved
+  - Variant API parity with legacy POD API verified
+- New scaffolded tests for event tag validation and error path integrity.
+- Entire regression suite updated to exercise variant paths.
 
-### 🌟 **Summary:**
-SpriteSheet rendering now fails safely when fed bad textures, Variant gains handle/event support, new tests cover the changes, and all regression tests are green across build configs.
+### 🧩 SpriteSheet Guards (the cameo)
+- Added null + texture-size guards in `drawSprite` to prevent SDL misuse on bad textures.
+- Eliminated intermittent “Parameter 'texture' is invalid” renderer errors.
 
-**🚧 ToDo Today**
-- ☐ Add targeted logging for SpriteSheet failures to capture source texture names/paths.
-- ☐ Extend SpriteSheet unit coverage for missing-texture and size-query error cases.
+---
 
-**Carryover — Active Work (from Dec 8)**
-- ☐ Complete SDOM_Variant JSON refactor (native JSON storage for Array/Object; finalize container semantics for handles/events; safe up/down-casting rules; expanded ABI once stable).
-- ☐ Expand Variant C API surface (object/array creation helpers; additional path helpers; consistent error-flag semantics).
-- ☐ Unit testing improvements (scalar key success, container key mismatch error, intentional null payload, scalar traversal guard, PathExists side-effect neutrality).
-- ☐ Runtime editor groundwork (Variant metadata exposure; JSON⇆Variant round-trip stability).
+### 🌟 Summary
+SDOM now supports **typed identity Variants** across Core APIs —  
+a massive step toward **variant-first CAPI**.  
+SpriteSheet rendering is safer, and every existing test passes cleanly.  
+The framework today is **more consistent, more scalable, and more future-proof**.
 
-#### 🤔 *End of Day Reflection*
-> *“A silent log is earned, not assumed.”*
+---
+
+### 🚧 ToDo — Next
+- ☐ Diagnostic logging for SpriteSheet failure cases (texture names/types).
+- ☐ SpriteSheet negative-path unit tests.
+
+### 🔄 Carryover — Active Work
+- ☐ Complete native JSON storage for Variant (container semantics & safe casting rules).
+- ☐ Expand Variant C API surface (object/array creation helpers; stricter error semantics).
+- ☐ Additional core Variant testing (scalar traversal guard, `PathExists` neutrality).
+- ☐ Runtime editor groundwork (metadata and JSON⇆Variant stability).
+
+---
+
+#### 🤔 *Reflection*
+> *“When the types align, the APIs shine.”* ✨
 
 ---
 
