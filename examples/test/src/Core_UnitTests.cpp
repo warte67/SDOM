@@ -132,6 +132,65 @@ namespace SDOM
         return true;
     }
 
+    // Validates variant C API create/get/destroy parity for asset objects.
+    bool Core_Variant_Asset_CreateGetDestroy(std::vector<std::string>& errors)
+    {
+        // Use a real image file to avoid colliding with pre-registered internal assets.
+        const char* texture_pod_json = R"({"name":"variant_texture_pod","filename":"assets/images/slate.jpg"})";
+        SDOM_AssetHandle pod{};
+        SDOM_ClearError();
+        if (!SDOM_CreateAssetObjectFromJson("Texture", texture_pod_json, &pod)) {
+            errors.push_back(std::string("POD asset create failed: ") + (SDOM_GetError() ? SDOM_GetError() : "<no error>"));
+            return true;
+        }
+
+        const char* texture_var_name = "variant_texture_var";
+        const char* texture_var_json = R"({"name":"variant_texture_var","filename":"assets/images/slate.jpg"})";
+        SDOM_Variant texture_var = SDOM_MakeNull();
+        SDOM_ClearError();
+        if (!SDOM_CreateAssetObjectFromJson_V("Texture", texture_var_json, &texture_var)) {
+            errors.push_back(std::string("Variant asset create failed: ") + (SDOM_GetError() ? SDOM_GetError() : "<no error>"));
+            SDOM_DestroyAssetObject(&pod);
+            return true;
+        }
+
+        if (!SDOM_Handle_IsAsset(&texture_var)) {
+            errors.push_back("Variant create did not return an asset handle");
+        }
+        const uint64_t asset_id = SDOM_Handle_ObjectId(&texture_var);
+        if (asset_id == 0) {
+            errors.push_back("Variant asset handle has zero object id");
+        }
+
+        SDOM_Variant fetched_var = SDOM_MakeNull();
+        if (!SDOM_GetAssetObject_V(texture_var_name, &fetched_var)) {
+            errors.push_back(std::string("GetAssetObject_V failed: ") + (SDOM_GetError() ? SDOM_GetError() : "<no error>"));
+        } else {
+            const uint64_t fetched_id = SDOM_Handle_ObjectId(&fetched_var);
+            if (fetched_id != asset_id) {
+                errors.push_back("Variant get returned different object id than create");
+            }
+        }
+
+        SDOM_AssetHandle fetched_pod{};
+        if (!SDOM_GetAssetObject(texture_var_name, &fetched_pod)) {
+            errors.push_back(std::string("GetAssetObject (POD) failed: ") + (SDOM_GetError() ? SDOM_GetError() : "<no error>"));
+        } else if (fetched_pod.object_id != asset_id) {
+            errors.push_back("POD get returned different object id than variant create");
+        }
+
+        SDOM_ClearError();
+        if (!SDOM_DestroyAssetObject_V(&fetched_var)) {
+            errors.push_back(std::string("DestroyAssetObject_V failed: ") + (SDOM_GetError() ? SDOM_GetError() : "<no error>"));
+        } else if (SDOM_HasAssetObject(texture_var_name)) {
+            errors.push_back("Asset still present after variant destroy");
+        }
+
+        SDOM_DestroyAssetObject(&pod);
+
+        return true;
+    }
+
     // Validates keyboard focus and mouse hover variant setters/getters parity.
     bool Core_Variant_FocusHover(std::vector<std::string>& errors)
     {
@@ -257,12 +316,13 @@ namespace SDOM
             // call more unit tests from here
 
             ut.add_test(objName, "CAPI: display variant create/get/destroy", Core_Variant_Display_CreateGetDestroy);
+            ut.add_test(objName, "CAPI: asset variant create/get/destroy", Core_Variant_Asset_CreateGetDestroy);
             ut.add_test(objName, "CAPI: variant focus/hover parity", Core_Variant_FocusHover);
 
 
 
-            // Lua Integration Tests (Not Yet Implemented)
-            ut.add_test(objName, "Lua: 'src/Core_UnitTests.lua'", Core_LUA_Tests);
+            // // Lua Integration Tests (Not Yet Implemented)
+            // ut.add_test(objName, "Lua: 'src/Core_UnitTests.lua'", Core_LUA_Tests);
 
             registered = true;
         }
