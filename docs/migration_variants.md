@@ -57,15 +57,15 @@ Goal: move C API consumers from POD handles/events to `SDOM_Variant` while keepi
 - ✅ Keep Handles header lightweight (no Variant include) and avoid Variant self-include; include hygiene is clean after regen.
 - ✅ Ensure generator emits handle/event POD structs plus their variant helpers (Make*, Is*, tag checks) — event helpers now generated.
 - ✅ Add an option to emit variant-sibling C API signatures (e.g., _V or overloads) for Core/Event when enabled (toggle via `SDOM_CAPI_EMIT_VARIANT_SIBLINGS`, default on).
-2. ☐ Core C API variant siblings:
-- ☐ Add variant-taking forms for create/get/destroy display/asset, stage/root/mouse/keyboard focus. Keep POD versions. (Display + focus/hover done; asset path pending.)
-- ☐ Marshal in one place: incoming variant → checked tag → POD struct → C++ handle; outgoing POD → variant via SDOM_Make*.
-- ☐ Clear errors on tag mismatch/null.
-3. ☐ Event C API variant support:
-- ☐ Add helpers for Event ↔ Variant.
-- ☐ Add variant forms for get/set target/current/related targets; guard tags and nulls.
-4. ☐ Tests:
-- ☐ Round-trip per type: POD → variant → POD and compare id/name/type.
+2. ✅ Core C API variant siblings:
+- ✅ Add variant-taking forms for create/get/destroy display/asset, stage/root/mouse/keyboard focus. Keep POD versions.
+- ✅ Marshal in one place: incoming variant → checked tag → POD struct → C++ handle; outgoing POD → variant via SDOM_Make*.
+- ✅ Clear errors on tag mismatch/null.
+3. ✅ Event C API variant support:
+- ✅ Add helpers for Event ↔ Variant.
+- ✅ Add variant forms for get/set target/current/related targets; guard tags and nulls.
+4. ✅ Tests:
+- ✅ Round-trip per type: POD → variant → POD and compare id/name/type.
 - ✅ Parity tests: variant API result matches POD API result for core lookups/destroys/events.
 - ✅ Include-cycle check: generated headers remain acyclic (Handles vs Variant).
 5. ☐ Bindings (deferred):
@@ -73,3 +73,44 @@ Goal: move C API consumers from POD handles/events to `SDOM_Variant` while keepi
 - ☐ Update future bindings to prefer variant forms; keep POD wrappers temporarily.
 - ☐ Deprecation:
 - ☐ Doc-only deprecate POD forms once variant paths are proven; remove only when downstreams are off them.
+
+
+5. Bindings & Deprecation (future phase)
+
+Status: Deferred. Variant-first C API is now stable; bindings can be updated later in a controlled pass.
+
+5.1 Binding Strategy (Lua and future languages)
+
+- Rule: all high-level bindings should prefer `_V` (Variant) forms internally.
+- POD handle/event structs are considered low-level C-only artifacts.
+- Lua-visible APIs should:
+  - Consume and return SDOM_Variant handles.
+  - Only use POD handle structs inside thin C shims, if needed.
+
+Planned steps:
+- Add a small Lua-facing helper module:
+  - `SDOM.MakeDisplayHandle(...)`
+  - `SDOM.MakeAssetHandle(...)`
+  - `SDOM.IsDisplayHandle(...)`, `SDOM.IsAssetHandle(...)`
+- Update existing Lua bindings:
+  - Replace calls to POD-based functions with `_V` siblings where available.
+  - Keep old entry points as thin adapters (POD → Variant) for a while.
+- Add Lua tests that:
+  - Create/display objects via Lua using variants.
+  - Use focus/hover and verify behavior.
+  - Exercise event targets via Variant paths where exposed.
+
+5.2 Deprecation Plan (POD forms)
+
+We will NOT remove POD forms yet, but we will:
+
+- Mark functions that take `SDOM_DisplayHandle` / `SDOM_AssetHandle` / `SDOM_Event` PODs as **legacy** in the C API docs.
+- Document that `_V` forms are the preferred interface going forward.
+- Add a deprecation checklist:
+
+  - [ ] All internal bindings (Lua, etc.) updated to `_V`.
+  - [ ] No in-tree code calls the POD versions except compatibility wrappers.
+  - [ ] A full CI cycle verifies Variant-only bindings.
+  - [ ] A release notes entry announces a future removal window.
+
+Only after those conditions are met will POD-only forms be candidates for removal in a future major revision.
