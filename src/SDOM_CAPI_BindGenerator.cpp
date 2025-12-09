@@ -732,6 +732,20 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
                 continue;
             }
         }
+
+        if (module.file_stem == "Variant") {
+            // Prevent self-include; only Handles should be pulled in here.
+            if (include_line.find("SDOM_CAPI_Variant.h") != std::string::npos) {
+                continue;
+            }
+        }
+
+        if (module.file_stem == "Event") {
+            // Prevent recursive self-include when the module references SDOM_Event tokens.
+            if (include_line.find("SDOM_CAPI_Event.h") != std::string::npos) {
+                continue;
+            }
+        }
         addInclude(include_line);
     }
 

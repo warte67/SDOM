@@ -979,6 +979,62 @@ bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code) {
     return callResult.v.b;
 }
 
+bool SDOM_MakeEvent(const SDOM_Event* evt, SDOM_Variant* out_value) {
+    // Dispatch family: singleton (Core)
+    if (!evt) {
+        SDOM_SetError("SDOM_MakeEvent: subject 'evt' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(evt))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_value)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_MakeEvent", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Event_IsEvent(const SDOM_Variant* value) {
+    // Dispatch family: singleton (Core)
+    if (!value) {
+        SDOM_SetError("SDOM_Event_IsEvent: subject 'value' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(1);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(value))));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Event_IsEvent", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
+bool SDOM_Event_FromVariant(const SDOM_Variant* value, SDOM_Event* out_evt) {
+    // Dispatch family: singleton (Core)
+    if (!value) {
+        SDOM_SetError("SDOM_Event_FromVariant: subject 'value' is null");
+        return false;
+    }
+
+    std::vector<SDOM::CAPI::CallArg> args;
+    args.reserve(2);
+    args.push_back(SDOM::CAPI::CallArg::makePtr(const_cast<void*>(static_cast<const void*>(value))));
+    args.push_back(SDOM::CAPI::CallArg::makePtr(reinterpret_cast<void*>(out_evt)));
+
+    const auto callResult = SDOM::CAPI::invokeCallable("SDOM_Event_FromVariant", args);
+    if (callResult.kind != SDOM::CAPI::CallArg::Kind::Bool) {
+        return false;
+    }
+    return callResult.v.b;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

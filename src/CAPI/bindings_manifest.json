@@ -673,6 +673,30 @@
       "subject_kind": "Variant"
     },
     {
+      "c_name": "SDOM_MakeEvent",
+      "c_signature": "bool SDOM_MakeEvent(const SDOM_Event* evt, SDOM_Variant* out_value)",
+      "dispatch_family": "singleton",
+      "name": "SDOM_MakeEvent",
+      "owner_type": "EventVariantHelpers",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Event_IsEvent",
+      "c_signature": "bool SDOM_Event_IsEvent(const SDOM_Variant* value)",
+      "dispatch_family": "singleton",
+      "name": "SDOM_Event_IsEvent",
+      "owner_type": "EventVariantHelpers",
+      "subject_kind": "Core"
+    },
+    {
+      "c_name": "SDOM_Event_FromVariant",
+      "c_signature": "bool SDOM_Event_FromVariant(const SDOM_Variant* value, SDOM_Event* out_evt)",
+      "dispatch_family": "singleton",
+      "name": "SDOM_Event_FromVariant",
+      "owner_type": "EventVariantHelpers",
+      "subject_kind": "Core"
+    },
+    {
       "c_name": "SDOM_GetError",
       "c_signature": "const char* SDOM_GetError(void)",
       "dispatch_family": "singleton",
@@ -1942,6 +1966,16 @@
       "owns_method_table": true,
       "subject_kind": "DisplayObject",
       "uses_handle": true
+    },
+    {
+      "cpp_type_id": "SDOM::Event",
+      "dispatch_family": "singleton",
+      "file_stem": "Event",
+      "has_function_exports": true,
+      "name": "EventVariantHelpers",
+      "owns_method_table": true,
+      "subject_kind": "Core",
+      "uses_handle": false
     },
     {
       "cpp_type_id": "SDOM::Core",

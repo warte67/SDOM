@@ -41,6 +41,8 @@ struct AssetHandleScratch {
     std::string type;
 };
 
+// Non-owning event pointer carrier for Variant; no scratch buffer needed.
+
 thread_local DisplayHandleScratch s_variantDisplayHandleScratch;
 thread_local AssetHandleScratch s_variantAssetHandleScratch;
 thread_local SDOM_DisplayHandle s_variantDisplayHandleOut;
@@ -192,6 +194,11 @@ bool importVariantFromC(const SDOM_Variant* in, SDOM::Variant& out)
             out = SDOM::Variant(std::move(h));
             return true;
         }
+        case SDOM_VARIANT_TYPE_EVENT: {
+            const auto ptr = reinterpret_cast<SDOM::Event*>(static_cast<std::uintptr_t>(in->data));
+            out = SDOM::Variant(ptr);
+            return true;
+        }
         case SDOM_VARIANT_TYPE_ARRAY:
         case SDOM_VARIANT_TYPE_OBJECT:
         case SDOM_VARIANT_TYPE_DYNAMIC: {
@@ -256,6 +263,11 @@ bool importVariantFromCNoError(const SDOM_Variant* in, SDOM::Variant& out)
             out = SDOM::Variant(std::move(h));
             return true;
         }
+        case SDOM_VARIANT_TYPE_EVENT: {
+            const auto ptr = reinterpret_cast<SDOM::Event*>(static_cast<std::uintptr_t>(in->data));
+            out = SDOM::Variant(ptr);
+            return true;
+        }
         case SDOM_VARIANT_TYPE_ARRAY:
         case SDOM_VARIANT_TYPE_OBJECT:
         case SDOM_VARIANT_TYPE_DYNAMIC: {
@@ -303,6 +315,12 @@ SDOM_Variant exportVariantToC(const SDOM::Variant& v)
             out.type = SDOM_VARIANT_TYPE_ASSET_HANDLE;
             const auto* ah = v.assetHandle();
             out.data = ah ? ah->getId() : 0;
+            break;
+        }
+        case SDOM::VariantType::Event: {
+            out.type = SDOM_VARIANT_TYPE_EVENT;
+            const auto* ev = v.event();
+            out.data = reinterpret_cast<std::uint64_t>(ev);
             break;
         }
         case SDOM::VariantType::Array:
@@ -744,6 +762,11 @@ Variant::Variant(AssetHandle&& handle)
     storage_->data = std::move(handle);
 }
 
+Variant::Variant(Event* evt)
+: storage_(std::make_shared<VariantStorage>()) {
+    storage_->data = evt;
+}
+
 // (templated dynamic constructor is defined in the header)
 
 // Factories
@@ -782,7 +805,8 @@ VariantType Variant::type() const noexcept {
     if (std::holds_alternative<VariantStorage::Object>(d))         return VariantType::Object;
     if (std::holds_alternative<DisplayHandle>(d))                  return VariantType::DisplayHandle;
     if (std::holds_alternative<AssetHandle>(d))                    return VariantType::AssetHandle;
-    if (std::holds_alternative<VariantStorage::DynamicValue>(d))     return VariantType::Dynamic;
+    if (std::holds_alternative<Event*>(d))                          return VariantType::Event;
+    if (std::holds_alternative<VariantStorage::DynamicValue>(d))    return VariantType::Dynamic;
     return VariantType::Error;
 }
 
@@ -838,6 +862,7 @@ std::string Variant::toString(std::string def) const noexcept {
         return s;
     }
     if (std::holds_alternative<std::monostate>(d)) return "null";
+    if (std::holds_alternative<Event*>(d)) return "<event>";
     return def;
 }
 
@@ -849,6 +874,16 @@ DisplayHandle Variant::toDisplayHandle(DisplayHandle def) const noexcept {
 AssetHandle Variant::toAssetHandle(AssetHandle def) const noexcept {
     if (auto p = std::get_if<AssetHandle>(&storage_->data)) return *p;
     return def;
+}
+
+const Event* Variant::event() const noexcept {
+    if (auto p = std::get_if<Event*>(&storage_->data)) return *p;
+    return nullptr;
+}
+
+Event* Variant::event() noexcept {
+    if (auto p = std::get_if<Event*>(&storage_->data)) return *p;
+    return nullptr;
 }
 
 // Array/Object helpers
@@ -1229,6 +1264,10 @@ std::string Variant::toDebugString(int depth) const {
                 return s;
             }
             return "<asset-handle-null>";
+        }
+        case VariantType::Event: {
+            const auto* e = event();
+            return e ? "<event>" : "<event-null>";
         }
         case VariantType::Dynamic: return "<dynamic>";
         default: return "<error>";

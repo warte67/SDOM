@@ -17,6 +17,9 @@
 #include <SDOM/SDOM_DisplayHandle.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
 
+// Forward declaration to avoid a heavy include; Variant stores non-owning Event pointers.
+namespace SDOM { class Event; }
+
 // SDOM bundles nlohmann/json; Variant integrates directly
 #include <json.hpp>
 #include <mutex>
@@ -72,6 +75,7 @@ enum class VariantType : uint8_t {
     Dynamic,    // std::shared_ptr<void> (extensible user type)
     DisplayHandle,
     AssetHandle,
+    Event,
     Error
 };
 
@@ -109,6 +113,7 @@ struct VariantStorage {
             Object,
             DisplayHandle,
             AssetHandle,
+            Event*,
             DynamicValue
         >;
 
@@ -138,6 +143,7 @@ public:
     explicit Variant(DisplayHandle&& handle);
     explicit Variant(const AssetHandle& handle);
     explicit Variant(AssetHandle&& handle);
+    explicit Variant(Event* evt);                  // Non-owning event pointer
 
     // Explicitly opt into move semantics to document intent and allow
     // noexcept move operations for container optimizations.
@@ -194,6 +200,10 @@ public:
     DisplayHandle*                displayHandle() noexcept;
     const AssetHandle*            assetHandle() const noexcept;
     AssetHandle*                  assetHandle() noexcept;
+
+    // Event helpers (non-owning)
+    const Event*                  event() const noexcept;
+    Event*                        event() noexcept;
 
     // Dynamic helpers
     template<typename T>

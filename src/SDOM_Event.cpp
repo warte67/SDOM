@@ -78,6 +78,55 @@ namespace SDOM
             return out;
         }
 
+        static bool SDOM_MakeEvent_Impl(const SDOM_Event* evt, SDOM_Variant* out_value)
+        {
+            if (!out_value) {
+                SDOM::CoreAPI::setErrorMessage("SDOM_MakeEvent: subject 'out_value' is null");
+                return false;
+            }
+
+            *out_value = SDOM_Variant{ SDOM_VARIANT_TYPE_EVENT, {0,0,0}, 0, 0 };
+
+            if (!evt || !evt->impl) {
+                SDOM::CoreAPI::setErrorMessage("SDOM_MakeEvent: subject 'evt' is null");
+                return false;
+            }
+
+            out_value->data = reinterpret_cast<std::uint64_t>(evt->impl);
+            return true;
+        }
+
+        static bool SDOM_Event_IsEvent_Impl(const SDOM_Variant* value)
+        {
+            return value && static_cast<SDOM_VariantType>(value->type) == SDOM_VARIANT_TYPE_EVENT;
+        }
+
+        static bool SDOM_Event_FromVariant_Impl(const SDOM_Variant* value, SDOM_Event* out_evt)
+        {
+            if (!value) {
+                SDOM::CoreAPI::setErrorMessage("SDOM_Event_FromVariant: subject 'value' is null");
+                return false;
+            }
+
+            if (!out_evt) {
+                SDOM::CoreAPI::setErrorMessage("SDOM_Event_FromVariant: subject 'out_evt' is null");
+                return false;
+            }
+
+            if (!SDOM_Event_IsEvent_Impl(value)) {
+                SDOM::CoreAPI::setErrorMessage("SDOM_Event_FromVariant: variant is not an event");
+                return false;
+            }
+
+            out_evt->impl = reinterpret_cast<void*>(static_cast<std::uintptr_t>(value->data));
+            if (!out_evt->impl) {
+                SDOM::CoreAPI::setErrorMessage("SDOM_Event_FromVariant: variant carries a null event handle");
+                return false;
+            }
+
+            return true;
+        }
+
         inline std::uint64_t doubleToBits(double d)
         {
             std::uint64_t out{};
@@ -587,6 +636,61 @@ namespace SDOM
                             "SDOM_Event",
                             "Event",
                             "Opaque C handle for SDOM::Event.");
+
+
+        // -------------------------------------------------------------------------
+        // Event ↔ Variant helpers
+        // -------------------------------------------------------------------------
+        const std::string helperTypeName = "EventVariantHelpers";
+        if (!lookup(helperTypeName)) {
+            SDOM::TypeInfo ti;
+            ti.name         = helperTypeName;
+            ti.kind         = SDOM::EntryKind::Function;
+            ti.cpp_type_id  = "SDOM::Event";
+            ti.file_stem    = "Event"; // emit into the Event CAPI module
+            ti.export_name  = "";
+            ti.category     = "Event";
+            ti.subject_kind = "Core"; // singleton dispatch; no event handle wrapping
+            ti.subject_uses_handle = false;
+            ti.has_handle_override = true;
+            registry().registerType(ti);
+        }
+
+        auto registerEventVariantHelper = [&](const char* name,
+                                              const char* ret,
+                                              const char* sig,
+                                              const char* doc,
+                                              auto* fnPtr) {
+            SDOM::FunctionInfo fi;
+            fi.name         = name;
+            fi.c_name       = name;
+            fi.c_signature  = sig;
+            fi.return_type  = ret;
+            fi.exported     = true;
+            fi.doc          = doc;
+            registry().registerFunction(helperTypeName, fi, fnPtr);
+        };
+
+        registerEventVariantHelper(
+            "SDOM_MakeEvent",
+            "bool",
+            "bool SDOM_MakeEvent(const SDOM_Event* evt, SDOM_Variant* out_value)",
+            "Wraps an SDOM_Event handle into an SDOM_Variant tagged as EVENT.",
+            &SDOM_MakeEvent_Impl);
+
+        registerEventVariantHelper(
+            "SDOM_Event_IsEvent",
+            "bool",
+            "bool SDOM_Event_IsEvent(const SDOM_Variant* value)",
+            "Returns true when the variant tags an event handle.",
+            &SDOM_Event_IsEvent_Impl);
+
+        registerEventVariantHelper(
+            "SDOM_Event_FromVariant",
+            "bool",
+            "bool SDOM_Event_FromVariant(const SDOM_Variant* value, SDOM_Event* out_evt)",
+            "Extracts the SDOM_Event handle from an event-tagged variant.",
+            &SDOM_Event_FromVariant_Impl);
 
 
         // -------------------------------------------------------------------------

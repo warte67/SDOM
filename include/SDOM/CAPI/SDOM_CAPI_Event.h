@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <SDOM/CAPI/SDOM_CAPI_Variant.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
-#include <SDOM/CAPI/SDOM_CAPI_Event.h>
 
 typedef enum SDOM_EventPhase {
     /* Event Phase events */
@@ -628,6 +627,41 @@ int SDOM_GetEventAsciiCode(const SDOM_Event* evt);
  * @return bool; check SDOM_GetError() for details on failure.
  */
 bool SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code);
+
+/**
+ * @brief Wraps an SDOM_Event handle into an SDOM_Variant tagged as EVENT.
+ *
+ * C++:   
+ * C API: bool SDOM_MakeEvent(const SDOM_Event* evt, SDOM_Variant* out_value)
+ *
+ * @param evt Pointer parameter.
+ * @param out_value Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_MakeEvent(const SDOM_Event* evt, SDOM_Variant* out_value);
+
+/**
+ * @brief Returns true when the variant tags an event handle.
+ *
+ * C++:   
+ * C API: bool SDOM_Event_IsEvent(const SDOM_Variant* value)
+ *
+ * @param value Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_Event_IsEvent(const SDOM_Variant* value);
+
+/**
+ * @brief Extracts the SDOM_Event handle from an event-tagged variant.
+ *
+ * C++:   
+ * C API: bool SDOM_Event_FromVariant(const SDOM_Variant* value, SDOM_Event* out_evt)
+ *
+ * @param value Pointer parameter.
+ * @param out_evt Pointer parameter.
+ * @return bool; check SDOM_GetError() for details on failure.
+ */
+bool SDOM_Event_FromVariant(const SDOM_Variant* value, SDOM_Event* out_evt);
 
 #ifdef __cplusplus
 } // extern "C"

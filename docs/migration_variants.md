@@ -54,10 +54,11 @@ Goal: move C API consumers from POD handles/events to `SDOM_Variant` while keepi
 ## Here’s a practical implementation plan to move toward variant-first without breaking things:
 
 1. ✅ Generator updates (if not already):
-- ☐ Ensure it always emits handle/event POD structs plus the variant helpers (Make*, Is*, tag checks) and keeps Handles/Variant includes uncoupled.
+- ✅ Keep Handles header lightweight (no Variant include) and avoid Variant self-include; include hygiene is clean after regen.
+- ✅ Ensure generator emits handle/event POD structs plus their variant helpers (Make*, Is*, tag checks) — event helpers now generated.
 - ✅ Add an option to emit variant-sibling C API signatures (e.g., _V or overloads) for Core/Event when enabled (toggle via `SDOM_CAPI_EMIT_VARIANT_SIBLINGS`, default on).
 2. ☐ Core C API variant siblings:
-- ☐ Add variant-taking forms for create/get/destroy display/asset, stage/root/mouse/keyboard focus. Keep POD versions.
+- ☐ Add variant-taking forms for create/get/destroy display/asset, stage/root/mouse/keyboard focus. Keep POD versions. (Display + focus/hover done; asset path pending.)
 - ☐ Marshal in one place: incoming variant → checked tag → POD struct → C++ handle; outgoing POD → variant via SDOM_Make*.
 - ☐ Clear errors on tag mismatch/null.
 3. ☐ Event C API variant support:
@@ -65,9 +66,10 @@ Goal: move C API consumers from POD handles/events to `SDOM_Variant` while keepi
 - ☐ Add variant forms for get/set target/current/related targets; guard tags and nulls.
 4. ☐ Tests:
 - ☐ Round-trip per type: POD → variant → POD and compare id/name/type.
-- ☐ Parity tests: variant API result matches POD API result for core lookups/destroys/events.
-- ☐ Include-cycle check: generated headers remain acyclic (Handles vs Variant).
-5. ☐ Bindings:
-- ☐ Update Lua (and future bindings) to prefer variant forms; keep POD wrappers temporarily.
+- ✅ Parity tests: variant API result matches POD API result for core lookups/destroys/events.
+- ✅ Include-cycle check: generated headers remain acyclic (Handles vs Variant).
+5. ☐ Bindings (deferred):
+- (Lua bindings not started; skip for now)
+- ☐ Update future bindings to prefer variant forms; keep POD wrappers temporarily.
 - ☐ Deprecation:
 - ☐ Doc-only deprecate POD forms once variant paths are proven; remove only when downstreams are off them.
