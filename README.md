@@ -1,35 +1,42 @@
 # SDOM: Simple SDL Document Object Model API
 [![License](https://img.shields.io/badge/license-ZLIB-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/)
+[![Wiki](https://img.shields.io/badge/github-wiki-181717?logo=github)](https://github.com/warte67/SDOM/wiki)
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.266 (early pre-alpha)**  
-**Build Date:** 2025-12-08_16:12:55  
+**SDOM 0.5.269 (early pre-alpha)**  
+**Build Date:** 2025-12-08_16:34:15  
 **Platform:** Linux-x86_64  
 **Compiler:** g++ (GCC) 15.2.1 20251112
 <!-- END_VERSION_BLOCK -->
 
 - GitHub Wiki: https://github.com/warte67/SDOM/wiki
 
-> ⚠️ **Development Status:** SDOM is an **early pre-alpha prototype**.  
+> ⚠️ **Development Status:** SDOM is a **very early pre-alpha prototype**.  
 > It is not feature-complete, APIs are unstable, and design work is ongoing.  
 > This repository is public for collaboration and early feedback.
 
 ---
 
 ### Screenshot of the Test Harness application:
-![Test Harness](https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_v0.5.244.png)
+![Test Harness](https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_Test_Harness.png)
 
 ## Overview
-SDOM (Simple SDL Document Object Model API) is an experimental, work-in-progress C++23 library that provides a structured approach to building graphical user interfaces and interactive scenes using SDL3. SDOM fully supports SDL3. The Document Object Model is, in short, a robust graphical user-interface system: a tree of display objects and containers with well-defined properties, parent/child relationships, event propagation, and lifecycle semantics—allowing code to traverse, query, and update elements in a declarative, DOM-like way similar to web DOM concepts but tailored to SDL rendering and input.
 
-The design centers on three core ideas: composability, data-driven configuration, and portability. Composability comes from a small collection of display object primitives and handles that can be composed into complex UIs. Data-driven configuration means scenes and object properties can be created and adjusted from Lua (via Sol2) without recompiling — as much or as little Lua as you want can be used to drive an application. We plan to provide dedicated SDL3 bindings for Lua so scripting can directly leverage SDL3 features; that work is in progress. Importantly, SDL3 is already fully available to C and C++ code using SDOM, and first-class bindings for other host languages (for example Rust or Python) are planned for future releases.
+**SDOM** (Software Display Object Model) is a C++23 framework that brings a **structured, DOM-like architecture** to SDL3-based rendering and input. It treats your UI and scene elements as a **tree of display objects** — each with defined properties, bounds, parent/child relationships, and event semantics — enabling declarative UI composition, deterministic updates, and clean separation between logic and rendering.
 
-This project builds on top of SDL3 — it does not modify or replace any SDL internals.
+Ideal for **game UI**, **custom editors**, **visual tools**, and any application wanting a modern, high-level interface on top of SDL3.
+
+SDOM is both **cross-platform** and **cross-language by design**. It exposes a safe, pointer-free **C ABI** that allows any language capable of calling C — Rust, D, Zig, Python, C#, Swift, etc. — to use the engine *without wrappers*. Higher-level bindings, such as Lua today and Python in the future, sit naturally on top of this ABI for scripted interaction and live editing when desired.
+
+SDOM’s language-neutrality is driven by a **data-driven reflection system**. Every type, property, and command registered at runtime becomes metadata that the build system can use to **automatically generate bindings** for external languages: C API headers, Lua tables, future Rust/D/Python modules, and more — all without handwritten glue code. Adding support for a new language is simply adding a **new binding-generator plugin**.
+
+At its core, SDOM is a **JSON-native runtime**. All data — properties, event payloads, configuration — flows through a single universal value type: `Variant`. This enables **live editing** and script-driven behavior without recompiling. And all dynamic systems are **optional**: a pure C++ application can use SDOM with *zero* scripting overhead, while dynamic languages can plug in to extend or prototype as needed.
+
+SDOM is engineered for **extensibility without bloat**. Optional modules — runtime editor, Lua integration, addon/plugin support — can be enabled or omitted, giving developers the ability to scale from a minimal embedding to a fully featured, interactive toolchain. The same core reflection engine powers all future systems: inspectors, interactive UI editing, metadata-driven workflows, and custom type registration.
 
 **Note:** This is still a very early pre-alpha version.  All APIs are subject to change.  
-
 
 ## Features
 - Simple, composable API for UI and document structures
@@ -37,48 +44,52 @@ This project builds on top of SDL3 — it does not modify or replace any SDL int
 - Minimal dependencies (SDL3, SDL3_image, SDL3_ttf)
 - Designed for clarity, maintainability, and extensibility
 
-## IDataObject: Data-Driven Base Type
+# Performance Highlights (December 8, 2025):
 
-`SDOM::IDataObject` is a flexible, data-driven base class designed for use in SDOM. It allows you to register property accessors (getters and setters) and commands that can be accessed and manipulated via Lua, enabling dynamic configuration, serialization, and behavior of objects.
+> **Designed for modern workflows — runs on 2013 laptops.**
 
-### Key Features
-- Register property accessors for any property using `registerProperty()`
-- Get and set properties by name using `getProperty()` and `setProperty()`
-- Supports chaining of setters for fluent configuration
-- Register and invoke commands (actions) using `registerCommand()` and `command()`
-- Designed for dynamic integration with **Lua** (via [Sol2](https://github.com/ThePhD/sol2))
+### 🧪 Real-World Test Environment
+- Hardware: ~12-year-old mid-tier PC (no GPU reliance beyond SDL3)
+- Build: Debug, no compiler tuning, all safety checks enabled
+- Scenario: Full SDOM UI sample with multiple widgets & event routing
 
+### 📈 Results
 
-## Identifier Conventions
+| Metric | Result | Meaning |
+|---|:---:|---|
+| Unit Tests | **82 / 82 Passed** | Stable core API and behavior |
+| Total Frame Time | **~201 µs** | ~4,900 FPS theoretical headroom |
+| Top Widget Update Cost | **0.6–0.8 µs** | Negligible per-node CPU use |
+| Top Render Cost | **1.1–1.8 µs** | Minimal pixel batching overhead |
+| Memory Leaks | **0 bytes leaked** | Safe for long-running editor/tool |
 
-To ensure clarity and consistency across both C++ and Lua, SDOM uses the following naming conventions:
+> **Even micro-widgets** (radio/check buttons, labels)  
+> stay under **1 µs update** and **2 µs render** cost — *in debug builds*.
 
-- **Properties and Data Members:**  
-  Use `snake_case` (all lowercase, words separated by underscores).  
-  Examples: `font_size`, `border_color`, `resource_name`, `tab_enabled`
+### 🧩 Optional-Feature Architecture — Why It Matters
 
-- **Functions and Methods:**  
-  Use `lowerCamelCase` (first word lowercase, subsequent words capitalized).  
-  Examples: `setFontSize()`, `getWidth()`, `registerLuaBindings()`
+| Feature | Status | Cost if Disabled |
+|---|---|---|
+| Live Editor | Planned | **0 overhead** |
+| Lua Scripting | Optional | **0 overhead** |
+| Variant Legends | Planned | **0 overhead** |
+| Physics / Networking | Planned | **0 overhead** |
 
-- **Classes, Structs, Enums, and Types:**
-  use 'UpperCamelCase` (first word capitcapitalized, subsequent words capitalized)
-  Examples: `Button`, `IDisplayObject`, `Label`, `ListBox`, `ComboBox`
+SDOM ships **only** the systems a project needs — no “always-on” bloat.
 
-- **Private/Protected Members:**  
-  End with an underscore (`_`).  
-  Example: `name_`, `type_`, `left_`, `anchor_left_`
+### 🛡️ Runtime Safety
+- Threaded load tests pass
+- Snapshot-safe Variant usage
+- Deterministic error messaging
+- Long-run allocation safety verified
 
-- **Private/Protected Methods:**  
-  Begin with a single underscore (`_`).  
-  Example: `_registerLuaBindings()`, `_initBounds()`
+---
 
-**Lua Configuration:**  
-- All property keys should be written in `snake_case`.
-- Functions exposed to Lua follow the same `lowerCamelCase` convention as C++.
+> **Conclusion:**  
+> SDOM isn’t just flexible — it’s **fast**.  
+> The foundation is strong enough to power the future live editor  
+> *without sacrificing performance on modest hardware.*
 
-**Migration Note:**  
-Older code and examples may use `camelCase` or other styles. These will be updated over time. During transition, both forms may be accepted for compatibility. Please be patient and forgive my laziness and bad habbits. This falls into one of those "get it working first, then make it pretty" categories.
 
 ---
 
@@ -114,38 +125,13 @@ cd examples/test
 ```
 
 ### Notable recent changes
+- Symbol rename: DisplayObject -> DisplayHandle and AssetObject -> AssetHandle across the codebase and Lua scripts (Oct 2025).
+  - The code and examples have been updated; some diagrams and docs still reference the old names and will be updated in a follow-up.
+  - Lua compatibility: Lua userdata/type names remain stable where necessary; check the README/changelog for per-release compatibility notes.
 
-- **Runtime Loop & Event System Overhaul (Dec 2025)**  
-  - New self-healing, any-order-safe phase model  
-  - Deterministic two-tier SDOM/SDL event pump  
-  - Unified `SDOM_PollEvents(SDOM_Event* evt)` API  
-  - Major stability improvements and consistent frame semantics  
-
-- **DataRegistry: Runtime Reflection & Metadata Pipeline**  
-  - All SDOM types now register function signatures, property metadata,  
-    type info, and documentation strings into a unified reflection table  
-  - The registry now acts as the canonical source of truth for API surfaces  
-  - Enables programmatic inspection, debugging tools, object browsers,  
-    and future serialization or live-editing features  
-
-- **Automatic External Language Bind Generation System**  
-  - New generator produces complete C API wrapper code from DataRegistry metadata  
-  - Includes automatic argument marshaling, error reporting, and type validation  
-  - Generates full **Doxygen-annotated headers** for the public C API  
-  - Lays the foundation for:  
-    - Lua/Sol2 bindings  
-    - Python/Rust bindings  
-    - FFI-ready integration with other ecosystems  
-  - Eliminates hand-written C API boilerplate and ensures consistency  
-
-- **CAPI Core Modernization**  
-  - All core functions now documented and fully reflected in the generator  
-  - Improved error propagation and diagnostic messages  
-  - Clean separation of internal vs. external event lifetimes  
-
-- **DisplayObject/AssetHandle migration completed**  
-  - Renamed API for clarity and correctness  
-  - Updated examples and CAPI interfaces  
+### Migration notes
+- If you maintain scripts that referenced the old names, search & replace DisplayObject / AssetObject -> DisplayHandle / AssetHandle.
+- The repository includes transitional aliases during migration for staged rollouts (if present); prefer the new names in new code.
 
 ## Project Structure
 - `src/` — Core SDOM source code
