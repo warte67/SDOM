@@ -156,6 +156,9 @@ namespace SDOM
         // Accessor for the underlying texture asset
         AssetHandle getTextureAsset() const { return textureAsset; }
 
+        // Context string for error logging
+        std::string debugTextureContext(SDL_Texture* texture) const;
+
         int spriteWidth_ = 8;   // Default sprite width
         int spriteHeight_ = 8;  // Default sprite height
 
@@ -169,5 +172,8 @@ namespace SDOM
 
 
     }; // END class SpriteSheet
+
+    // Test-only hook to force SDL_GetTextureSize failure paths
+    void SpriteSheet_ForceSizeQueryFailureForTests(bool enable);
 
 } // namespace SDOM

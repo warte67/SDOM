@@ -7,11 +7,24 @@
 #include <SDOM/SDOM_SpriteSheet.hpp>
 #include <SDOM/SDOM_Texture.hpp>
 #include <SDOM/SDOM_AssetHandle.hpp>
+#include <atomic>
+#include <sstream>
 
 namespace SDOM
 {
 
     namespace {
+        std::atomic<bool> g_forceSizeQueryFailure{false};
+
+        inline bool queryTextureSize(SDL_Texture* texture, float* outW, float* outH)
+        {
+            if (g_forceSizeQueryFailure.load(std::memory_order_relaxed)) {
+                SDL_SetError("SpriteSheet test hook: forced size query failure");
+                return false;
+            }
+            return SDL_GetTextureSize(texture, outW, outH);
+        }
+
         template <typename F>
         inline void ss_set_if_absent(sol::table& t, const char* name, F&& fn)
         {
@@ -41,6 +54,24 @@ namespace SDOM
         filename_ = init.filename;
         spriteWidth_ = init.spriteWidth;
         spriteHeight_ = init.spriteHeight;
+    }
+
+
+    std::string SpriteSheet::debugTextureContext(SDL_Texture* texture) const
+    {
+        std::ostringstream oss;
+        oss << "[sheet=" << getName();
+        oss << " filename=" << getFilename();
+        oss << " sprite=" << spriteWidth_ << "x" << spriteHeight_;
+        const bool hasAsset = textureAsset.isValid();
+        oss << " textureAsset.valid=" << (hasAsset ? "true" : "false");
+        if (hasAsset) {
+            try { oss << " texName=" << textureAsset.getName(); } catch(...) {}
+            try { oss << " texFile=" << textureAsset.getFilename(); } catch(...) {}
+            try { oss << " texType=" << textureAsset.getType(); } catch(...) {}
+        }
+        oss << " texturePtr=" << (texture ? "set" : "null") << "]";
+        return oss.str();
     }
 
 
@@ -342,25 +373,33 @@ namespace SDOM
             }
             texture_ = getTexture();
         }
-        if (!texture_)
-            ERROR("SpriteSheet::texture_ not loaded");
+        if (!texture_) {
+            ERROR("SpriteSheet::getSpriteCount: texture not loaded " + debugTextureContext(texture_));
+            return 0;
+        }
 
         int spritesPerRow = 0;
         int spritesPerColumn = 0;
         float texW = 0.0f;
         float texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH))
-            ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
+        if (!queryTextureSize(texture_, &texW, &texH)) {
+            ERROR("SpriteSheet::getSpriteCount: Failed to get texture size: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
+            return 0;
+        }
 
         if (spriteWidth_ > 0)
             spritesPerRow = static_cast<int>(texW / spriteWidth_);
-        else
-            ERROR("SpriteSheet: spriteWidth_ is zero, cannot compute spritesPerRow.");
+        else {
+            ERROR("SpriteSheet: spriteWidth_ is zero, cannot compute spritesPerRow. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         if (spriteHeight_ > 0)
             spritesPerColumn = static_cast<int>(texH / spriteHeight_);
-        else
-            ERROR("SpriteSheet: spriteHeight_ is zero, cannot compute spritesPerColumn.");
+        else {
+            ERROR("SpriteSheet: spriteHeight_ is zero, cannot compute spritesPerColumn. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         return spritesPerRow * spritesPerColumn;
     }
@@ -377,20 +416,33 @@ namespace SDOM
             }
             texture_ = getTexture();
         }
-        if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
+        if (!texture_) {
+            ERROR("SpriteSheet::getSpriteX: texture not loaded " + debugTextureContext(texture_));
+            return 0;
+        }
 
         float texW = 0.0f, texH = 0.0f;
-    if (!SDL_GetTextureSize(texture_, &texW, &texH))
-            ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
+        if (!queryTextureSize(texture_, &texW, &texH)) {
+            ERROR("SpriteSheet::getSpriteX: Failed to get texture size: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
+            return 0;
+        }
 
-        if (spriteWidth_ <= 0) ERROR("SpriteSheet: spriteWidth_ is zero or negative.");
+        if (spriteWidth_ <= 0) {
+            ERROR("SpriteSheet::getSpriteX: spriteWidth_ is zero or negative. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         int spritesPerRow = static_cast<int>(texW / spriteWidth_);
-        if (spritesPerRow <= 0) ERROR("SpriteSheet: spritesPerRow computed as zero.");
+        if (spritesPerRow <= 0) {
+            ERROR("SpriteSheet::getSpriteX: spritesPerRow computed as zero. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
-        if (spriteIndex < 0 || spriteIndex >= total)
-            ERROR("SpriteSheet::getSpriteX: spriteIndex out of range.");
+        if (spriteIndex < 0 || spriteIndex >= total) {
+            ERROR("SpriteSheet::getSpriteX: spriteIndex out of range. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         return (spriteIndex % spritesPerRow) * spriteWidth_;
     }
@@ -408,20 +460,33 @@ namespace SDOM
             }
             texture_ = getTexture();
         }
-        if (!texture_) ERROR("SpriteSheet::texture_ not loaded");
+        if (!texture_) {
+            ERROR("SpriteSheet::getSpriteY: texture not loaded " + debugTextureContext(texture_));
+            return 0;
+        }
 
         float texW = 0.0f, texH = 0.0f;
-    if (!SDL_GetTextureSize(texture_, &texW, &texH))
-            ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
+        if (!queryTextureSize(texture_, &texW, &texH)) {
+            ERROR("SpriteSheet::getSpriteY: Failed to get texture size: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
+            return 0;
+        }
 
-        if (spriteWidth_ <= 0) ERROR("SpriteSheet: spriteWidth_ is zero or negative.");
+        if (spriteWidth_ <= 0) {
+            ERROR("SpriteSheet::getSpriteY: spriteWidth_ is zero or negative. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         int spritesPerRow = static_cast<int>(texW / spriteWidth_);
-        if (spritesPerRow <= 0) ERROR("SpriteSheet: spritesPerRow computed as zero.");
+        if (spritesPerRow <= 0) {
+            ERROR("SpriteSheet::getSpriteY: spritesPerRow computed as zero. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
-        if (spriteIndex < 0 || spriteIndex >= total)
-            ERROR("SpriteSheet::getSpriteY: spriteIndex out of range.");
+        if (spriteIndex < 0 || spriteIndex >= total) {
+            ERROR("SpriteSheet::getSpriteY: spriteIndex out of range. " + debugTextureContext(texture_));
+            return 0;
+        }
 
         return (spriteIndex / spritesPerRow) * spriteHeight_;
     }
@@ -451,38 +516,53 @@ namespace SDOM
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) {
-            ERROR("No texture loaded in SpriteSheet to draw sprite.");
+            ERROR("No texture loaded in SpriteSheet to draw sprite. " + debugTextureContext(texture_));
             return;
         }
 
         SDL_Renderer* renderer = getRenderer();
         SDL_Texture* prevTarget = nullptr;
         bool switched = false;
+        auto restoreTarget = [&]() {
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        };
         if (targetTexture) {
             prevTarget = SDL_GetRenderTarget(renderer);
             if (!SDL_SetRenderTarget(renderer, targetTexture)) {
-                ERROR("SpriteSheet::drawSprite(x,y): Unable to set render target: " + std::string(SDL_GetError()));
+                ERROR("SpriteSheet::drawSprite(x,y): Unable to set render target: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
                 return;
             }
             switched = true;
         }
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH)) {
-            ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        if (!queryTextureSize(texture_, &texW, &texH)) {
+            ERROR("SpriteSheet::drawSprite(x,y): Failed to get texture size: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
+            restoreTarget();
             return;
         }
 
-        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
+        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) {
+            ERROR("SpriteSheet::drawSprite(x,y): Invalid sprite dimensions. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         int spritesPerRow = static_cast<int>(texW / spriteWidth_);
         if (spritesPerRow <= 0) 
-            ERROR("Invalid sprite dimensions or texture size.");
+        {
+            ERROR("SpriteSheet::drawSprite(x,y): Invalid sprite dimensions or texture size. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
         if (spriteIndex < 0 || spriteIndex >= total) 
-            ERROR("SpriteSheet::drawSprite: spriteIndex out of range.");
+        {
+            ERROR("SpriteSheet::drawSprite: spriteIndex out of range. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         // Calculate the source rectangle (sprite position in the texture)
         SDL_FRect srcRect;
@@ -514,7 +594,7 @@ namespace SDOM
         if (!renderer)
         {
             ERROR("No valid SDL_Renderer available in Core instance.");
-            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+            restoreTarget();
             return;
         }
         SDL_SetTextureColorMod(texture_, color.r, color.g, color.b);
@@ -522,7 +602,7 @@ namespace SDOM
         SDL_SetTextureScaleMode(texture_, scaleMode); 
         SDL_RenderTexture(renderer, texture_, &srcRect, &destRect);
 
-        if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        restoreTarget();
     }
 
     void SpriteSheet::drawSprite(int spriteIndex, SDL_FRect& destRect, SDL_Color color, SDL_ScaleMode scaleMode, SDL_Texture* targetTexture)
@@ -530,38 +610,53 @@ namespace SDOM
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
         if (!texture_) {
-            ERROR("No texture loaded in SpriteSheet to draw sprite.");
+            ERROR("No texture loaded in SpriteSheet to draw sprite. " + debugTextureContext(texture_));
             return;
         }
 
         SDL_Renderer* renderer = getRenderer();
         SDL_Texture* prevTarget = nullptr;
         bool switched = false;
+        auto restoreTarget = [&]() {
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        };
         if (targetTexture) {
             prevTarget = SDL_GetRenderTarget(renderer);
             if (!SDL_SetRenderTarget(renderer, targetTexture)) {
-                ERROR("SpriteSheet::drawSprite(dst): Unable to set render target: " + std::string(SDL_GetError()));
+                ERROR("SpriteSheet::drawSprite(dst): Unable to set render target: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
                 return;
             }
             switched = true;
         }
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH)) {
-            ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
-            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        if (!queryTextureSize(texture_, &texW, &texH)) {
+            ERROR("SpriteSheet::drawSprite(dst): Failed to get texture size: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
+            restoreTarget();
             return;
         }
 
-        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
+        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) {
+            ERROR("SpriteSheet::drawSprite(dst): Invalid sprite dimensions. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         int spritesPerRow = static_cast<int>(texW / spriteWidth_);
         if (spritesPerRow <= 0) 
-            ERROR("Invalid sprite dimensions or texture size.");
+        {
+            ERROR("SpriteSheet::drawSprite(dst): Invalid sprite dimensions or texture size. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
         if (spriteIndex < 0 || spriteIndex >= total) 
-            ERROR("SpriteSheet::drawSprite: spriteIndex out of range.");
+        {
+            ERROR("SpriteSheet::drawSprite: spriteIndex out of range. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         // Calculate the source rectangle (sprite position in the texture)
         SDL_FRect srcRect;
@@ -586,7 +681,7 @@ namespace SDOM
         if (!renderer)
         {
             ERROR("No valid SDL_Renderer available in Core instance.");
-            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+            restoreTarget();
             return;
         }
         SDL_SetTextureColorMod(texture_, color.r, color.g, color.b);
@@ -594,7 +689,7 @@ namespace SDOM
         SDL_SetTextureScaleMode(texture_, scaleMode); 
         SDL_RenderTexture(renderer, texture_, &srcRect, &destRect);
 
-        if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        restoreTarget();
     }
 
 
@@ -603,33 +698,51 @@ namespace SDOM
     {
         SDL_Texture* texture_ = getTexture();
         if (!texture_) onLoad();
-        if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite."); }
+        if (!texture_) { ERROR("No texture loaded in SpriteSheet to draw sprite. " + debugTextureContext(texture_)); return; }
 
         SDL_Renderer* renderer = getRenderer();
         SDL_Texture* prevTarget = nullptr;
         bool switched = false;
+        auto restoreTarget = [&]() {
+            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        };
         if (targetTexture) {
             prevTarget = SDL_GetRenderTarget(renderer);
             if (!SDL_SetRenderTarget(renderer, targetTexture)) {
-                ERROR("SpriteSheet::drawSprite(src,dst): Unable to set render target: " + std::string(SDL_GetError()));
+                ERROR("SpriteSheet::drawSprite(src,dst): Unable to set render target: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
                 return;
             }
             switched = true;
         }
 
         float texW = 0.0f, texH = 0.0f;
-        if (!SDL_GetTextureSize(texture_, &texW, &texH))
-            ERROR("Failed to get texture size: " + std::string(SDL_GetError()));
+        if (!queryTextureSize(texture_, &texW, &texH)) {
+            ERROR("SpriteSheet::drawSprite(src,dst): Failed to get texture size: " + std::string(SDL_GetError()) + " " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
-        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) ERROR("Invalid sprite dimensions.");
+        if (spriteWidth_ <= 0 || spriteHeight_ <= 0) {
+            ERROR("SpriteSheet::drawSprite(src,dst): Invalid sprite dimensions. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         int spritesPerRow = static_cast<int>(texW / spriteWidth_);
         if (spritesPerRow <= 0) 
-            ERROR("Invalid sprite dimensions or texture size.");
+        {
+            ERROR("SpriteSheet::drawSprite(src,dst): Invalid sprite dimensions or texture size. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         int total = static_cast<int>(texW / spriteWidth_) * static_cast<int>(texH / spriteHeight_);
         if (spriteIndex < 0 || spriteIndex >= total) 
-            ERROR("SpriteSheet::drawSprite: spriteIndex out of range.");
+        {
+            ERROR("SpriteSheet::drawSprite: spriteIndex out of range. " + debugTextureContext(texture_));
+            restoreTarget();
+            return;
+        }
 
         // Calculate the source rectangle (sprite position in the texture)
         SDL_FRect sRect;
@@ -675,7 +788,7 @@ namespace SDOM
         if (!renderer)
         {
             ERROR("No valid SDL_Renderer available in Core instance.");
-            if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+            restoreTarget();
             return;
         }
         SDL_SetTextureColorMod(texture_, color.r, color.g, color.b);
@@ -683,29 +796,29 @@ namespace SDOM
         SDL_SetTextureScaleMode(texture_, scaleMode);
         SDL_RenderTexture(renderer, texture_, &sRect, &dstRect);
 
-        if (switched) SDL_SetRenderTarget(renderer, prevTarget);
+        restoreTarget();
     }   
 
 
     void SpriteSheet::drawNineQuad(int baseIndex, SDL_Texture* targetTexture, SDL_Color color, SDL_ScaleMode scaleMode)
     {
-        if (!targetTexture) { ERROR("SpriteSheet::drawNineQuad: targetTexture is null"); return; }
+        if (!targetTexture) { ERROR("SpriteSheet::drawNineQuad: targetTexture is null " + debugTextureContext(getTexture())); return; }
 
         SDL_Renderer* renderer = getRenderer();
-        if (!renderer) { ERROR("SpriteSheet::drawNineQuad: renderer is null"); return; }
+        if (!renderer) { ERROR("SpriteSheet::drawNineQuad: renderer is null " + debugTextureContext(getTexture())); return; }
 
         // Switch to the target texture, clear it, draw, then restore
         SDL_Texture* prevTarget = SDL_GetRenderTarget(renderer);
         if (!SDL_SetRenderTarget(renderer, targetTexture))
         {
-            ERROR("SpriteSheet::drawNineQuad: Unable to set render target: " + std::string(SDL_GetError()));
+            ERROR("SpriteSheet::drawNineQuad: Unable to set render target: " + std::string(SDL_GetError()) + " " + debugTextureContext(getTexture()));
             return;
         }
 
         float w = 0.0f, h = 0.0f;
-        if (!SDL_GetTextureSize(targetTexture, &w, &h))
+        if (!queryTextureSize(targetTexture, &w, &h))
         {
-            ERROR("SpriteSheet::drawNineQuad: Failed to query target texture size: " + std::string(SDL_GetError()));
+            ERROR("SpriteSheet::drawNineQuad: Failed to query target texture size: " + std::string(SDL_GetError()) + " " + debugTextureContext(getTexture()));
             SDL_SetRenderTarget(renderer, prevTarget);
             return;
         }
@@ -792,6 +905,12 @@ namespace SDOM
         BIND_INFO(typeName, "SpriteSheet");
         // addFunction(typeName, "doStuff", [this]() { return this->doStuff(); });
     }    
+
+
+    void SpriteSheet_ForceSizeQueryFailureForTests(bool enable)
+    {
+        g_forceSizeQueryFailure.store(enable, std::memory_order_relaxed);
+    }
 
 
 } // namespace SDOM_

@@ -1250,27 +1250,31 @@ The framework today is **more consistent, more scalable, and more future-proof**
 <a id="december-11-2025"></a>
 <a id="latest-update"></a>
 
-## 🗓️ December 11, 2025 — Plans: SpriteSheet Diagnostics & Variant JSON
+# 🗓️ **December 11, 2025 — Plans: SpriteSheet Diagnostics & Variant JSON**
 
-> 💬 *“Plan first, then ship clean.”*
+> 💬 *“Blueprints before backflips — elegance starts with intention.”*
 
-### 🧩 Focus for Today
-- Add targeted SpriteSheet failure logging (texture names/paths/types) and negative-path unit tests for missing texture and size-query failures.
-- Resume Variant work: design native JSON storage semantics (Array/Object), expand C API helpers (object/array creation + path helpers), and tighten error semantics.
+### 🧩 **Focus for Today**
+- Add targeted SpriteSheet failure logging (texture names/paths/types) and negative-path unit tests for missing texture and size-query failures.  
+- Resume Variant work: design native JSON storage semantics (Array/Object), expand C API helpers (object/array creation + path helpers), and tighten error semantics.  
 - Broaden Variant unit coverage (scalar traversal guard, PathExists neutrality, handle/event round-trips) and queue end-of-day test + valgrind pass.
 
-### 🌟 **Summary:**
-Planning day to harden SpriteSheet diagnostics and push Variant JSON/C API/coverage work; execution to follow today.
+### 🌟 **Summary**
+A planning-heavy morning to sharpen SpriteSheet diagnostics and push forward the Variant JSON/C API/coverage layers. Execution rolls out today—with clarity as the multiplier.
 
-#### 🤔 *End of Day Reflection*
-> *“A good plan is a promise to your future self.”*
+---
 
-### 🚧 ToDo — Next
-- ☐ Add SpriteSheet failure logging (texture names/paths/types).
-- ☐ Add SpriteSheet negative-path tests (missing texture, size-query failures).
-- ☐ Design native Variant JSON storage (container semantics, safe casting).
-- ☐ Expand Variant C API helpers (object/array creation, path helpers, consistent errors).
-- ☐ Augment Variant unit coverage (scalar traversal guard, PathExists neutrality, handle/event round-trips).
+### 🤔 **End of Day Reflection**
+> *“Reflection isn’t just a system feature; it’s how today informs the next build.”*
+
+---
+
+### 🚧 **ToDo — Next**
+- ✅ Add SpriteSheet failure logging (texture names/paths/types).  
+- ✅ Add SpriteSheet negative-path tests (missing texture, size-query failures).  
+- ☐ Design native Variant JSON storage — formalize Array/Object ownership rules, casting safety, and conversion hooks between JSON and in-engine Variant layouts (goal: zero lossy round-trips).  
+- ☐ Expand Variant C API helpers — add explicit object/array construction APIs, path helper parity with C++, and consistent error reporting/clearing semantics to keep scripting clients deterministic.  
+- ☐ Augment Variant unit coverage — add negative-path tests for scalar traversal guards, PathExists non-mutating queries, and round-trip identity checks for handle/event Variants to lock behavior.
 - ☐ End-of-day: rerun full test suite + valgrind.
 
 ---

@@ -30,6 +30,7 @@ namespace SDOM
     bool EventType_CAPI_UnitTests();    
     bool Variant_CAPI_UnitTests();
     bool Variant_UnitTests();
+    bool SpriteSheet_UnitTests();
 
     bool FrontEnd_UnitTests();
     bool Version_UnitTests();
