@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['object_20model_20api_0',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
-  ['of_20the_20test_20harness_20application_3a_1',['Screenshot of the Test Harness application:',['../md_README.html#autotoc_md42',1,'']]],
-  ['option_201_3a_2',['Option 1:',['../md_README.html#autotoc_md69',1,'']]],
-  ['option_202_3a_20msys2_20mingw_20ucrt64_3',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md70',1,'']]],
-  ['option_203_3a_20vcpkg_20visual_20studio_20cmake_20integration_4',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md71',1,'']]],
-  ['overview_5',['Overview',['../md_README.html#autotoc_md43',1,'']]]
+  ['notable_20recent_20changes_0',['Notable recent changes',['../md_README.html#autotoc_md74',1,'']]],
+  ['note_20on_20c_20and_20rust_1',['A Note on C++ and Rust',['../md_README.html#autotoc_md65',1,'']]],
+  ['notes_2',['Notes',['../classSDOM_1_1ArrowButton.html#ArrowButton_Notes',1,'Notes'],['../classSDOM_1_1AssetHandle.html#AssetHandle_Notes',1,'Notes'],['../classSDOM_1_1Button.html#Button_Notes',1,'Notes'],['../classSDOM_1_1IButtonObject.html#IButtonObject_Notes',1,'Notes'],['../classSDOM_1_1TristateButton.html#TristateButton_Notes',1,'Notes']]],
+  ['notes_3',['Migration notes',['../md_README.html#autotoc_md75',1,'']]]
 ];

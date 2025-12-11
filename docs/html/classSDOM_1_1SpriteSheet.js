@@ -14,6 +14,7 @@ var classSDOM_1_1SpriteSheet =
     [ "BIND_INFO", "classSDOM_1_1SpriteSheet.html#acbee734b61e90b834672ce530f1415aa", null ],
     [ "CreateFromInitStruct", "classSDOM_1_1SpriteSheet.html#a3173103dc5bb308cf7b7aaaf08b2c6db", null ],
     [ "CreateFromJson", "classSDOM_1_1SpriteSheet.html#ad3ec46ef1962800640c4dc96b9638ea3", null ],
+    [ "debugTextureContext", "classSDOM_1_1SpriteSheet.html#a1112236c08cca78c9b49d783d1dc359a", null ],
     [ "drawNineQuad", "classSDOM_1_1SpriteSheet.html#a1ce223b1ebae2c571c27eb588b8af71b", null ],
     [ "drawSprite", "classSDOM_1_1SpriteSheet.html#a8de612287c4930188feb8e11b22b4101", null ],
     [ "drawSprite", "classSDOM_1_1SpriteSheet.html#aec22baa7cef752d93fa3e21363a19ff6", null ],

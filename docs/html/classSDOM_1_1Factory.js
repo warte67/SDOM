@@ -51,6 +51,8 @@ var classSDOM_1_1Factory =
     [ "report_render_stats", "classSDOM_1_1Factory.html#a0c83b642f00401a026f9f0359226d010", null ],
     [ "report_update_stats", "classSDOM_1_1Factory.html#af1437019547d7f65b0044b9a41b83537", null ],
     [ "reset_performance_stats", "classSDOM_1_1Factory.html#ab979a1c520bb6b6026d88f809bb9a030", null ],
+    [ "resolveAssetHandleById", "classSDOM_1_1Factory.html#a0139912d62bb3943b3a4913779f6eafa", null ],
+    [ "resolveDisplayHandleById", "classSDOM_1_1Factory.html#a2ae7dcc161e834478821d75d3a366fcf", null ],
     [ "shutdown", "classSDOM_1_1Factory.html#ae8aa62c765fcd7a0d44d56b72910db09", null ],
     [ "start_render_time", "classSDOM_1_1Factory.html#aa7237765ca48b13dce55438a98526b66", null ],
     [ "start_update_timer", "classSDOM_1_1Factory.html#a713fe69e21d206b31b6c11b334a5895d", null ],

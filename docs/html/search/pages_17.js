@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['why_20lua_0',['Why Lua?',['../md_README.html#autotoc_md59',1,'']]],
-  ['windows_1',['🪟 Windows',['../md_README.html#autotoc_md68',1,'']]]
+  ['vcpkg_20visual_20studio_20cmake_20integration_0',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md91',1,'']]],
+  ['visual_20studio_20cmake_20integration_1',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md91',1,'']]]
 ];

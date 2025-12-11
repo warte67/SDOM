@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['—_20when_20in_20doubt_3a_0',['— When in Doubt:',['../md_docs_2custom__object__lifecycle.html#autotoc_md68',1,'Practical Tip — When in Doubt:'],['../md_docs_2extensible__factory.html#autotoc_md218',1,'Practical Tip — When in Doubt:']]]
+  ['🐧_20arch_20linux_0',['🐧 Arch Linux',['../md_README.html#autotoc_md85',1,'']]],
+  ['🐧_20debian_20ubuntu_1',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md84',1,'']]],
+  ['🐧_20fedora_20rhel_20alma_20rocky_2',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md86',1,'']]]
 ];

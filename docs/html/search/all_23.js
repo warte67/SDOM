@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧩_20key_20features_0',['🧩 Key Features',['../classSDOM_1_1DisplayHandle.html#autotoc_md23',1,'']]]
+  ['🌐_20sdom_20design_20philosophy_3a_20unification_20over_20division_0',['🌐 SDOM Design Philosophy: Unification Over Division',['../md_README.html#autotoc_md46',1,'']]]
 ];

@@ -6,6 +6,9 @@ var searchData=
   ['sdom_5fevent_3',['SDOM_Event',['../SDOM__CAPI__Event_8h.html#a8589ebadd340f188999e16007a7f453f',1,'SDOM_CAPI_Event.h']]],
   ['sdom_5feventphase_4',['SDOM_EventPhase',['../SDOM__CAPI__Event_8h.html#acdabb7c0c6b1661771a4370f58795db3',1,'SDOM_CAPI_Event.h']]],
   ['sdom_5feventtype_5',['SDOM_EventType',['../SDOM__CAPI__Event_8h.html#adb9759a19991f42eb69deb537c837cd3',1,'SDOM_CAPI_Event.h']]],
-  ['sdom_5fversion_6',['SDOM_Version',['../SDOM__CAPI__Version_8h.html#adb22cf850a32e537cd2db0aa58ac7a05',1,'SDOM_CAPI_Version.h']]],
-  ['super_7',['SUPER',['../classSDOM.html#a30b2979959418fcc8421582cd6cb7c08',1,'SDOM::SUPER'],['../classSDOM.html#a30b2979959418fcc8421582cd6cb7c08',1,'SDOM::SUPER']]]
+  ['sdom_5fhandle_5fvariant_6',['SDOM_Handle_Variant',['../SDOM__CAPI__Handles_8h.html#af0c497c148d30850c10a41ee83d918bc',1,'SDOM_CAPI_Handles.h']]],
+  ['sdom_5fvariant_7',['SDOM_Variant',['../SDOM__CAPI__Handles_8h.html#ad360217da6e8e5b460788f8141036e5e',1,'SDOM_Variant:&#160;SDOM_CAPI_Handles.h'],['../SDOM__CAPI__Variant_8h.html#ad360217da6e8e5b460788f8141036e5e',1,'SDOM_Variant:&#160;SDOM_CAPI_Variant.h']]],
+  ['sdom_5fvarianttype_8',['SDOM_VariantType',['../SDOM__CAPI__Variant_8h.html#a35e7216a8c4f063ecbb8ab44e4526b26',1,'SDOM_CAPI_Variant.h']]],
+  ['sdom_5fversion_9',['SDOM_Version',['../SDOM__CAPI__Version_8h.html#adb22cf850a32e537cd2db0aa58ac7a05',1,'SDOM_CAPI_Version.h']]],
+  ['super_10',['SUPER',['../classSDOM.html#a30b2979959418fcc8421582cd6cb7c08',1,'SDOM::SUPER'],['../classSDOM.html#a30b2979959418fcc8421582cd6cb7c08',1,'SDOM::SUPER']]]
 ];

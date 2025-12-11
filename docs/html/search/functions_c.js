@@ -12,6 +12,5 @@ var searchData=
   ['lookupcallable_9',['lookupCallable',['../namespaceSDOM_1_1CAPI.html#a31693ced154d66361ff757a930bc0491',1,'SDOM::CAPI']]],
   ['lookupsubjectkinddescriptor_10',['lookupSubjectKindDescriptor',['../namespaceSDOM.html#a6aa1a205b94b72d947311646c623c295',1,'SDOM']]],
   ['lookuptype_11',['lookupType',['../classSDOM_1_1DataRegistry.html#a351e4fb1851500ef070ed605a65e270a',1,'SDOM::DataRegistry']]],
-  ['luapaths_12',['luaPaths',['../classSDOM_1_1PathRegistry.html#a30a5856232ec3b76522a561fb346b8cb',1,'SDOM::PathRegistry']]],
-  ['luarefvalue_13',['LuaRefValue',['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#a293828363e7d1e072c1bff02aa34afaf',1,'SDOM::VariantStorage::LuaRefValue::LuaRefValue()=default'],['../structSDOM_1_1VariantStorage_1_1LuaRefValue.html#a0b3c2430263d1367cfc896e03cfdf9a0',1,'SDOM::VariantStorage::LuaRefValue::LuaRefValue(const sol::object &amp;o)']]]
+  ['luapaths_12',['luaPaths',['../classSDOM_1_1PathRegistry.html#a30a5856232ec3b76522a561fb346b8cb',1,'SDOM::PathRegistry']]]
 ];

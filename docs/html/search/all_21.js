@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['🐧_20arch_20linux_0',['🐧 Arch Linux',['../md_README.html#autotoc_md65',1,'']]],
-  ['🐧_20debian_20ubuntu_1',['🐧 Debian / Ubuntu',['../md_README.html#autotoc_md64',1,'']]],
-  ['🐧_20fedora_20rhel_20alma_20rocky_2',['🐧 Fedora / RHEL / Alma / Rocky',['../md_README.html#autotoc_md66',1,'']]]
+  ['✔_20a_20unified_20abi_0',['✔ A unified ABI',['../md_README.html#autotoc_md49',1,'']]],
+  ['✔_20a_20unified_20data_20representation_1',['✔ A unified data representation',['../md_README.html#autotoc_md48',1,'']]],
+  ['✔_20a_20unified_20editor_20and_20runtime_2',['✔ A unified editor and runtime',['../md_README.html#autotoc_md50',1,'']]],
+  ['✔_20a_20unified_20type_20system_3',['✔ A unified type system',['../md_README.html#autotoc_md47',1,'']]]
 ];

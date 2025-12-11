@@ -26,45 +26,60 @@ var NAVTREE =
 [
   [ "SDOM - Simple SDL Document Object Model", "index.html", [
     [ "SDOM Documentation", "index.html", null ],
-    [ "SDOM: Simple SDL Document Object Model API", "md_README.html", [
-      [ "Overview", "md_README.html#autotoc_md43", null ],
-      [ "Features", "md_README.html#autotoc_md44", null ],
-      [ "IDataObject: Data-Driven Base Type", "md_README.html#autotoc_md45", [
-        [ "Screenshot of the Test Harness application:", "md_README.html#autotoc_md42", null ],
-        [ "Key Features", "md_README.html#autotoc_md46", null ]
+    [ "README", "md_README.html", [
+      [ "SDOM: Simple SDL Document Object Model API", "md_README.html#autotoc_md40", [
+        [ "Overview", "md_README.html#autotoc_md43", null ],
+        [ "Features", "md_README.html#autotoc_md44", null ]
       ] ],
-      [ "Identifier Conventions", "md_README.html#autotoc_md47", null ],
-      [ "Getting Started", "md_README.html#autotoc_md49", [
-        [ "Prerequisites", "md_README.html#autotoc_md50", null ],
-        [ "⚠️ Before You Build", "md_README.html#autotoc_md51", null ],
-        [ "Building the SDOM Library", "md_README.html#autotoc_md52", null ],
-        [ "Running the Example", "md_README.html#autotoc_md53", null ],
-        [ "Notable recent changes", "md_README.html#autotoc_md54", null ],
-        [ "Migration notes", "md_README.html#autotoc_md55", null ]
-      ] ],
-      [ "Project Structure", "md_README.html#autotoc_md56", null ],
-      [ "Lua Integration and Requirements", "md_README.html#autotoc_md58", null ],
-      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md62", [
-        [ "🐧 Arch Linux", "md_README.html#autotoc_md65", null ],
-        [ "🐧 Fedora / RHEL / Alma / Rocky", "md_README.html#autotoc_md66", null ],
-        [ "🍎 macOS", "md_README.html#autotoc_md67", null ],
-        [ "🪟 Windows", "md_README.html#autotoc_md68", [
-          [ "🐧 Debian / Ubuntu", "md_README.html#autotoc_md64", null ],
-          [ "Option 1:", "md_README.html#autotoc_md69", null ],
-          [ "Option 2: MSYS2 (MinGW / UCRT64)", "md_README.html#autotoc_md70", null ],
-          [ "Option 3: vcpkg (Visual Studio / CMake Integration)", "md_README.html#autotoc_md71", null ]
+      [ "🌐 SDOM Design Philosophy: Unification Over Division", "md_README.html#autotoc_md46", [
+        [ "Resulting Properties", "md_README.html#autotoc_md52", null ],
+        [ "✨ The Result", "md_README.html#autotoc_md54", [
+          [ "✔ A unified type system", "md_README.html#autotoc_md47", null ],
+          [ "✔ A unified data representation", "md_README.html#autotoc_md48", null ],
+          [ "✔ A unified ABI", "md_README.html#autotoc_md49", null ],
+          [ "✔ A unified editor and runtime", "md_README.html#autotoc_md50", null ],
+          [ "<b>It is a shared language for data across the entire development ecosystem.</b>", "md_README.html#autotoc_md55", null ]
         ] ]
       ] ],
-      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md73", [
-        [ "Build per SDL3:", "md_README.html#autotoc_md74", null ],
-        [ "Build and install SDL3 libraries", "md_README.html#autotoc_md75", null ],
-        [ "Sol2 (recommended)", "md_README.html#autotoc_md76", null ],
-        [ "Documentation", "md_README.html#autotoc_md77", [
-          [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md78", null ]
+      [ "🏛 Guiding Principle", "md_README.html#autotoc_md57", null ],
+      [ "Performance Highlights (December 11, 2025):", "md_README.html#autotoc_md59", [
+        [ "Project Status", "md_README.html#autotoc_md67", null ],
+        [ "Getting Started", "md_README.html#autotoc_md69", [
+          [ "🧪 Real-World Test Environment", "md_README.html#autotoc_md60", null ],
+          [ "📈 Results (Sample Release Build)", "md_README.html#autotoc_md61", null ],
+          [ "🧩 Optional-Feature Architecture - Why It Matters", "md_README.html#autotoc_md62", null ],
+          [ "🛡️ Runtime Safety", "md_README.html#autotoc_md63", null ],
+          [ "A Note on C++ and Rust", "md_README.html#autotoc_md65", null ],
+          [ "Prerequisites", "md_README.html#autotoc_md70", null ],
+          [ "⚠️ Before You Build", "md_README.html#autotoc_md71", null ],
+          [ "Building the SDOM Library", "md_README.html#autotoc_md72", null ],
+          [ "Running the Example", "md_README.html#autotoc_md73", null ],
+          [ "Notable recent changes", "md_README.html#autotoc_md74", null ],
+          [ "Migration notes", "md_README.html#autotoc_md75", null ]
         ] ],
-        [ "Acknowledgments", "md_README.html#autotoc_md80", null ],
-        [ "License", "md_README.html#autotoc_md82", null ],
-        [ "Author", "md_README.html#autotoc_md83", null ]
+        [ "Project Structure", "md_README.html#autotoc_md76", null ]
+      ] ],
+      [ "Lua Integration and Requirements", "md_README.html#autotoc_md78", null ],
+      [ "SDL3 Build Dependencies", "md_README.html#autotoc_md82", [
+        [ "🐧 Arch Linux", "md_README.html#autotoc_md85", null ],
+        [ "🐧 Fedora / RHEL / Alma / Rocky", "md_README.html#autotoc_md86", null ],
+        [ "🍎 macOS", "md_README.html#autotoc_md87", null ],
+        [ "🪟 Windows", "md_README.html#autotoc_md88", [
+          [ "🐧 Debian / Ubuntu", "md_README.html#autotoc_md84", null ],
+          [ "Option 1:", "md_README.html#autotoc_md89", null ],
+          [ "Option 2: MSYS2 (MinGW / UCRT64)", "md_README.html#autotoc_md90", null ],
+          [ "Option 3: vcpkg (Visual Studio / CMake Integration)", "md_README.html#autotoc_md91", null ]
+        ] ]
+      ] ],
+      [ "Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf", "md_README.html#autotoc_md93", [
+        [ "Build and install SDL3 libraries", "md_README.html#autotoc_md94", null ],
+        [ "Sol2 (recommended)", "md_README.html#autotoc_md95", null ],
+        [ "Documentation", "md_README.html#autotoc_md96", [
+          [ "Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)", "md_README.html#autotoc_md97", null ]
+        ] ],
+        [ "Acknowledgments", "md_README.html#autotoc_md99", null ],
+        [ "License", "md_README.html#autotoc_md101", null ],
+        [ "Author", "md_README.html#autotoc_md102", null ]
       ] ]
     ] ],
     [ "Namespaces", "namespaces.html", [
@@ -107,64 +122,65 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "SDOM_8cpp.html",
-"SDOM__CAPI__Core_8h.html#ad4eed37dd83d400d70e53973499f5d64",
-"SDOM__Core_8hpp.html",
-"classCLR.html#a58801944e6eba7afbdce0383856e8abd",
-"classSDOM.html#aee303a5ea55cf095657cc513fa582406a5e4efaead69f4bc7bd19509e25fc3f15",
-"classSDOM_1_1ArrowButton.html#a6c70809c3faa0b5a17e36140a07ec9a1",
-"classSDOM_1_1ArrowButton.html#afa37c4995ca399ecb45fa588c0df0b2e",
-"classSDOM_1_1BitmapFont.html#ab996c8629d01a716654e3125b4b0a589",
-"classSDOM_1_1Button.html#a60d1c916d6cadc5c8edd47cb12af7f06",
-"classSDOM_1_1Button.html#ae3d0f33be77fd218d52d75316045f663",
-"classSDOM_1_1CheckButton.html#a523b18e70cc99fdb48154bb2c4720db0",
-"classSDOM_1_1CheckButton.html#acf1819de3013c87212efa5c370cde38a",
-"classSDOM_1_1Core.html#a5f0e8b7506a8fd7f8143cbfb80531e9b",
-"classSDOM_1_1Core.html#ad0c9ecbc06697eee1954dcd377ff3e07",
-"classSDOM_1_1Event.html#a10f1935e309d9477e23cecb7e7ab4a45",
-"classSDOM_1_1EventType.html#a123a20da9d1b9a0d8323d6a99a9b40f3",
-"classSDOM_1_1Factory.html#a7c9bd4705f8a020c7d3581c5ed3ff1e9",
-"classSDOM_1_1Frame.html#a68f4feb1225ef803feb4d7689d7f1d27",
-"classSDOM_1_1Frame.html#af0dbd5b2d68b64152081ddad87f5fb1f",
-"classSDOM_1_1Group.html#a6afd00e9f5372ececdb22bf929726fd6",
-"classSDOM_1_1Group.html#aeff0a0985efe5dae1e6aa10e5b206396",
-"classSDOM_1_1IDisplayObject.html#a06b31bef3a5e23e20039341de1aa8a1a",
-"classSDOM_1_1IDisplayObject.html#a97989a603bc4065e283ae7b32fe57c61",
-"classSDOM_1_1IFontObject.html#a99ae73f910e13a89de5c91e264ba50fb",
-"classSDOM_1_1IPanelObject.html#a6afd00e9f5372ececdb22bf929726fd6",
-"classSDOM_1_1IPanelObject.html#af5dc4d16a973c58cfc06fe93c9984230",
-"classSDOM_1_1IRangeControl.html#a765c1a5a98db78263e66fa63a95711c0",
-"classSDOM_1_1IRangeControl.html#affc34595a0f3e17e51801c130caa30ab",
-"classSDOM_1_1IRangeControl__scaffold.html#a84e85b7cf28a2cbceb286efd82a0aa92",
-"classSDOM_1_1IconButton.html#a178db1bc8bbde20ebaa79044ae9af38e",
-"classSDOM_1_1IconButton.html#a97989a603bc4065e283ae7b32fe57c61",
-"classSDOM_1_1Label.html#a25a93877ea483bc06e556ad9135eaac4",
-"classSDOM_1_1Label.html#a83f54c1f027dad7c7cf98cad72ee9955",
-"classSDOM_1_1Label.html#ae920ed0fcfbda8daf9093aecb9d042a8",
-"classSDOM_1_1ProgressBar.html#a58ecc3a1c9806ba9741b205229601fec",
-"classSDOM_1_1ProgressBar.html#ade26370ac6b0bc3785016ef7cec0507d",
-"classSDOM_1_1RadioButton.html#a5ada6dbc0bac9f59ea2988498008f049",
-"classSDOM_1_1RadioButton.html#ada402f39ee80b3e071ac74920340f7a5",
-"classSDOM_1_1ScrollBar.html#a4d4f5976d3d6b3d6a90bc4e5496ce306",
-"classSDOM_1_1ScrollBar.html#ac3cae51199e67fe7375d5c8c019b2574",
-"classSDOM_1_1Slider.html#a523b18e70cc99fdb48154bb2c4720db0",
-"classSDOM_1_1Slider.html#acd625b31a2f66caeabb6848bb26065e1",
-"classSDOM_1_1Stage.html#a16ba4ae0d20d77dd70942a66c6f5a964",
-"classSDOM_1_1Stage.html#a94547f9b6ac923ac1dbfdd83db1ddced",
-"classSDOM_1_1TTFAsset.html#acf24a17e1284129dbef77cfc229bba05",
-"classSDOM_1_1TristateButton.html#a3eee98020b7f0ce46d9fafe34908992c",
-"classSDOM_1_1TristateButton.html#ab78aac3a9b8c14589ba2bf9d0344140f",
-"classSDOM_1_1TruetypeFont.html#ab032137d655d4bc811f5bb65e5acbfc8",
-"classSDOM_1_1Variant.html#ac49f4880f3c16ff1efad33b52a8137a4",
-"md_README.html#autotoc_md51",
-"structSDOM_1_1ArrowButton_1_1InitStruct.html#ac3ecdea943f2635afac7ee1dd693dcc7",
-"structSDOM_1_1CheckButton_1_1InitStruct.html#a02f1e96ea310910b6da10aff3a706b2a",
-"structSDOM_1_1Frame_1_1InitStruct.html#a784a22f4ce8342d6276d9d61205ae242",
-"structSDOM_1_1IDisplayObject_1_1InitStruct.html#a977cddd128d6c0bd245c2c3afdb4fe35",
-"structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ad247c22c826eb4b80ff9081dc27dd745",
-"structSDOM_1_1ProgressBar_1_1InitStruct.html#aa7f22f4d11ee48d30d70273fa16806bb",
-"structSDOM_1_1Slider_1_1InitStruct.html#aa60435655d9a0dfffdc2b3ddd0861034",
-"structSDOM_1_1TristateButton_1_1InitStruct.html#af55270f9276d8363c67bf9f7d414b75f",
-"structSDOM_1_1detail_1_1ResultEncoder_3_01T_00_01std_1_1enable__if__t_3_01std_1_1is__integral__va4355f646d7e7c7f6e747454a087e832.html#acb160b5b360f80d751e4f820d70b2c74"
+"SDOM__CAPI__Core_8h.html#aa14b9ce04d923efe56cc43b488bb5f1c",
+"SDOM__CAPI__ScrollBar_8h_source.html",
+"SDOM__Variant_8cpp.html#add6678e353a849c981d4ef68b1c93ffe",
+"classSDOM.html#a331c4869c78a7b937303fadb0de2cdfba85a065792c512733be61732d541402f4",
+"classSDOM_1_1ArrowButton.html#a290db93bef651c53f48ec32156a8753c",
+"classSDOM_1_1ArrowButton.html#a9ed2761595e2f29ab0c0d42c85438dabaf2a737651c80010466e0e701b2a55591",
+"classSDOM_1_1AssetHandle.html#ad462ecf818b7112fb9ac815ede1d1ca5",
+"classSDOM_1_1Button.html#a21222639af777acf9f3e95bca0cf9050",
+"classSDOM_1_1Button.html#a90e2d7c4dd39c97d030aa80aabf7e048",
+"classSDOM_1_1CheckButton.html#a0acfe38923fa152340b9733da753545f",
+"classSDOM_1_1CheckButton.html#a8468537ed2a4e40c33821f5ea66771ed",
+"classSDOM_1_1Core.html#a05d171df3c7048f4ffdd0719cc5008f9",
+"classSDOM_1_1Core.html#a8ae6a7a1fb166dfbc74a36d9bc87b9df",
+"classSDOM_1_1DataRegistry.html#a18833baf0e6c45439de9b8205eec1637",
+"classSDOM_1_1Event.html#a92d28af7d29da7428df282c1f492aca0",
+"classSDOM_1_1EventType.html#a8cee5264f898df6983c063ab27d3985b",
+"classSDOM_1_1Frame.html#a136ca0539718297607401e27053cf555",
+"classSDOM_1_1Frame.html#a9110787e36dd32665bd498991bc78705",
+"classSDOM_1_1Group.html#a21222639af777acf9f3e95bca0cf9050",
+"classSDOM_1_1Group.html#a96287ccfc89145858a48ee2e4176b046",
+"classSDOM_1_1IAssetObject.html#a8ae6a7a1fb166dfbc74a36d9bc87b9df",
+"classSDOM_1_1IDisplayObject.html#a451932c42a292a8c19f84a10e2db94f4",
+"classSDOM_1_1IDisplayObject.html#ad1493d31db7c354aeb0d609279adaf2e",
+"classSDOM_1_1IPanelObject.html#a13939815ecd50fb944421a318cf9af20",
+"classSDOM_1_1IPanelObject.html#a9728356c70a650faae51d6bfd6dac213",
+"classSDOM_1_1IRangeControl.html#a24e2a7dbba269ed1af0947cb4276cb74",
+"classSDOM_1_1IRangeControl.html#a9ed2761595e2f29ab0c0d42c85438dab",
+"classSDOM_1_1IRangeControl__scaffold.html#a38dabb38cffbd41a61b7e80aa88fe5c5",
+"classSDOM_1_1IRangeControl__scaffold.html#ab3985031f0fbac4d1eee9c8bee5681c9",
+"classSDOM_1_1IconButton.html#a4d4f5976d3d6b3d6a90bc4e5496ce306",
+"classSDOM_1_1IconButton.html#ad222efbf8082d85c7fb136c28ea12ada",
+"classSDOM_1_1Label.html#a4c8e110e7fa3f32f4df4b3c7d1132f65",
+"classSDOM_1_1Label.html#a9ed2761595e2f29ab0c0d42c85438daba9d04f11fc27ec988820b001b1661cf72",
+"classSDOM_1_1PathRegistry.html#aca4b0b7a20084ab6398ffbb43dbda7b5",
+"classSDOM_1_1ProgressBar.html#a7f5754bdccbd440ab6083fead1daa7cf",
+"classSDOM_1_1RadioButton.html#a0663374567b9882b112e879ec72318ea",
+"classSDOM_1_1RadioButton.html#a82ec9aa6b4ce34ec03e01f9cd002a1be",
+"classSDOM_1_1RadioButton.html#affc34595a0f3e17e51801c130caa30ab",
+"classSDOM_1_1ScrollBar.html#a74c51c95a6f62dcd194940e68f8fcb8e",
+"classSDOM_1_1ScrollBar.html#af4b648a1608f7a4dfed63eafd339fefd",
+"classSDOM_1_1Slider.html#a7768fe37e2b7903addd9e995d4400b24",
+"classSDOM_1_1Slider.html#aff25b187c79d6b229d57fba2ae34a3d3",
+"classSDOM_1_1Stage.html#a429303d04136c25a55faee3b1694ddaf",
+"classSDOM_1_1Stage.html#ac857138350fbf670143a8fe5ff0dd9d8",
+"classSDOM_1_1Texture.html#a734c4805baad8737b3508009713027b6",
+"classSDOM_1_1TristateButton.html#a5ada6dbc0bac9f59ea2988498008f049",
+"classSDOM_1_1TristateButton.html#ad7a4c040633972537c500a6d8b0766f1",
+"classSDOM_1_1UnitTests.html#a15b4ca21a39eea01dd2b0dd6c52571b3",
+"classSDOM_1_1Variant_1_1VariantView.html#a1545061aafa5a7774573e8f17e20a4d2",
+"md_README.html#autotoc_md94",
+"structSDOM_1_1ArrowButton_1_1InitStruct.html#ac558ebd91361e66a4d8f78fea6dd1085",
+"structSDOM_1_1CheckButton_1_1InitStruct.html#a06c70b4bcb7a118b76a3dc56d5c04cc1",
+"structSDOM_1_1Frame_1_1InitStruct.html#a92373452be5adab3989429b268481a81",
+"structSDOM_1_1IDisplayObject_1_1InitStruct.html#a9c0113e1eeb1828ff104380028d615fa",
+"structSDOM_1_1IRangeControl__scaffold_1_1InitStruct.html#ae874560eec66d299017bf5041a9b00a2",
+"structSDOM_1_1ProgressBar_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a",
+"structSDOM_1_1Slider_1_1InitStruct.html#a2b34d8ebda689c368f1005b9b4eef78a",
+"structSDOM_1_1TristateButton_1_1InitStruct.html#aa7b08df49f2ccce84e3ea1b1c5e7221e",
+"structSDOM_1_1detail_1_1ResultEncoder.html#a14132a9ee75432714d96927786a5abff"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -8,7 +8,7 @@ var searchData=
   ['hasborder_5',['hasBorder',['../classSDOM_1_1IDisplayObject.html#a8461dfd00c65f3d57478ea97d386f26d',1,'SDOM::IDisplayObject']]],
   ['haschild_6',['hasChild',['../classSDOM_1_1IDisplayObject.html#a32955242db86e6a8ec1277dd895560c5',1,'SDOM::IDisplayObject']]],
   ['hasdisplayobject_7',['hasDisplayObject',['../classSDOM_1_1Core.html#a1bcc1a94d235f83308a6204d4ff56215',1,'SDOM::Core::hasDisplayObject()'],['../namespaceSDOM_1_1CoreAPI.html#aa5d3a70a340b93c69fc2cd1fc54fe22e',1,'SDOM::CoreAPI::hasDisplayObject()']]],
-  ['haserror_8',['hasError',['../classSDOM_1_1Variant.html#a336a69cb28bfacf42cfe36db70940658',1,'SDOM::Variant']]],
+  ['haserror_8',['hasError',['../classSDOM_1_1Variant.html#a336a69cb28bfacf42cfe36db70940658',1,'SDOM::Variant::hasError()'],['../namespaceSDOM_1_1CoreAPI.html#a2710e8f66e3ad40c237526dc7211360e',1,'SDOM::CoreAPI::hasError()']]],
   ['haseventlistener_9',['hasEventListener',['../classSDOM_1_1IDisplayObject.html#a6f89958b62e24b213d56787871d4c53c',1,'SDOM::IDisplayObject']]],
   ['haslisteners_10',['hasListeners',['../classSDOM_1_1EventManager.html#a91dd5ef12c7fa10dc9405dadc74d4d0b',1,'SDOM::EventManager']]],
   ['hasluasupport_11',['hasLuaSupport',['../namespaceSDOM_1_1CoreAPI.html#ae190d5cc1c28e23cf4c4d8fcf2eb7f53',1,'SDOM::CoreAPI']]],

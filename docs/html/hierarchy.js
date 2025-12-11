@@ -122,10 +122,13 @@ var hierarchy =
         [ "SDOM::Version", "classSDOM_1_1Version.html", null ]
       ] ]
     ] ],
+    [ "SDOM::JsonConversionOptions", "structSDOM_1_1JsonConversionOptions.html", null ],
     [ "SDOM::Label::LabelToken", "structSDOM_1_1Label_1_1LabelToken.html", null ],
     [ "SDOM::IDisplayObject::ListenerEntry", "structSDOM_1_1IDisplayObject_1_1ListenerEntry.html", null ],
-    [ "SDOM::VariantStorage::LuaRefValue", "structSDOM_1_1VariantStorage_1_1LuaRefValue.html", null ],
+    [ "SDOM::PathElement", "structSDOM_1_1PathElement.html", null ],
+    [ "SDOM::PathOptions", "structSDOM_1_1PathOptions.html", null ],
     [ "SDOM::PathRegistry", "classSDOM_1_1PathRegistry.html", null ],
+    [ "SDOM::PathView", "classSDOM_1_1PathView.html", null ],
     [ "SDOM::Factory::PerfStats", "structSDOM_1_1Factory_1_1PerfStats.html", null ],
     [ "SDOM::Core::PhaseOutcome", "structSDOM_1_1Core_1_1PhaseOutcome.html", null ],
     [ "SDOM::Label::PhraseToken", "structSDOM_1_1Label_1_1PhraseToken.html", null ],
@@ -148,6 +151,7 @@ var hierarchy =
     [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", null ],
     [ "SDOM_DisplayHandle", "structSDOM__DisplayHandle.html", null ],
     [ "SDOM_Event", "structSDOM__Event.html", null ],
+    [ "SDOM_Variant", "structSDOM__Variant.html", null ],
     [ "SDOM_Version", "structSDOM__Version.html", null ],
     [ "SDOM::SubjectKindDescriptor", "structSDOM_1_1SubjectKindDescriptor.html", null ],
     [ "SDOM::SubjectTypeDescriptor", "structSDOM_1_1SubjectTypeDescriptor.html", null ],

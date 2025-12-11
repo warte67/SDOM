@@ -24,11 +24,12 @@ var searchData=
   ['pixelformat_21',['pixelFormat',['../structSDOM__CoreConfig.html#a27e5802c925490dc9028253cb51d8ffb',1,'SDOM_CoreConfig::pixelFormat'],['../structSDOM_1_1Core_1_1CoreConfig.html#a92fd774fe2171ffa4944d173ebb8be25',1,'SDOM::Core::CoreConfig::pixelFormat']]],
   ['pixelheight_22',['pixelHeight',['../structSDOM__CoreConfig.html#ad834fbccc1b90747d4109e32dd1ea3e4',1,'SDOM_CoreConfig::pixelHeight'],['../structSDOM_1_1Core_1_1CoreConfig.html#ae090ffc2d568c3d2fcec1f3d795ad24f',1,'SDOM::Core::CoreConfig::pixelHeight']]],
   ['pixelwidth_23',['pixelWidth',['../structSDOM__CoreConfig.html#ab9d4c4a485059408e72c06a2bc4e6fc2',1,'SDOM_CoreConfig::pixelWidth'],['../structSDOM_1_1Core_1_1CoreConfig.html#a09b588317336130b9251836887b90c03',1,'SDOM::Core::CoreConfig::pixelWidth']]],
-  ['preserveaspectratio_24',['preserveAspectRatio',['../structSDOM__CoreConfig.html#a9ce810710911b2ff22c526a3b4d8348c',1,'SDOM_CoreConfig::preserveAspectRatio'],['../structSDOM_1_1Core_1_1CoreConfig.html#a49c119fc86320fa648c4f54c6a4ded8c',1,'SDOM::Core::CoreConfig::preserveAspectRatio']]],
-  ['priority_25',['priority',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939',1,'SDOM::IDisplayObject::InitStruct::priority'],['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ae5443a7162a458e6421ba26c3723aacf',1,'SDOM::IDisplayObject::ListenerEntry::priority']]],
-  ['priority_5f_26',['priority_',['../classSDOM_1_1IDisplayObject.html#aa018f216f79dcdfebf0b0b3487cec40f',1,'SDOM::IDisplayObject']]],
-  ['propagation_5fstopped_27',['propagation_stopped',['../classSDOM_1_1Event.html#a2e4c16b3748fa7ef76c3853cfd5bc236',1,'SDOM::Event']]],
-  ['properties_28',['properties',['../structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203',1,'SDOM::TypeInfo']]],
-  ['ptr_29',['ptr',['../structSDOM_1_1VariantStorage_1_1DynamicValue.html#a169284899e68f5398198efa30241b20c',1,'SDOM::VariantStorage::DynamicValue']]],
-  ['purple_30',['PURPLE',['../classCLR.html#aa4cc393e127a4f0b06e598beafa4cb3a',1,'CLR']]]
+  ['preserve_5flarge_5funsigned_24',['preserve_large_unsigned',['../structSDOM_1_1JsonConversionOptions.html#ac07338afdefbd9c0713f964e7b308535',1,'SDOM::JsonConversionOptions']]],
+  ['preserveaspectratio_25',['preserveAspectRatio',['../structSDOM__CoreConfig.html#a9ce810710911b2ff22c526a3b4d8348c',1,'SDOM_CoreConfig::preserveAspectRatio'],['../structSDOM_1_1Core_1_1CoreConfig.html#a49c119fc86320fa648c4f54c6a4ded8c',1,'SDOM::Core::CoreConfig::preserveAspectRatio']]],
+  ['priority_26',['priority',['../structSDOM_1_1IDisplayObject_1_1InitStruct.html#ab31fccff8e9aea60d3855090227b0939',1,'SDOM::IDisplayObject::InitStruct::priority'],['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#ae5443a7162a458e6421ba26c3723aacf',1,'SDOM::IDisplayObject::ListenerEntry::priority']]],
+  ['priority_5f_27',['priority_',['../classSDOM_1_1IDisplayObject.html#aa018f216f79dcdfebf0b0b3487cec40f',1,'SDOM::IDisplayObject']]],
+  ['propagation_5fstopped_28',['propagation_stopped',['../classSDOM_1_1Event.html#a2e4c16b3748fa7ef76c3853cfd5bc236',1,'SDOM::Event']]],
+  ['properties_29',['properties',['../structSDOM_1_1TypeInfo.html#a14248af57c4a8816c02c783009568203',1,'SDOM::TypeInfo']]],
+  ['ptr_30',['ptr',['../structSDOM_1_1VariantStorage_1_1DynamicValue.html#a169284899e68f5398198efa30241b20c',1,'SDOM::VariantStorage::DynamicValue']]],
+  ['purple_31',['PURPLE',['../classCLR.html#aa4cc393e127a4f0b06e598beafa4cb3a',1,'CLR']]]
 ];

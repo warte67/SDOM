@@ -41,7 +41,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_ScrollBar.cpp", "SDOM__ScrollBar_8cpp.html", null ],
     [ "SDOM_SDL_Utils.cpp", "SDOM__SDL__Utils_8cpp.html", "SDOM__SDL__Utils_8cpp" ],
     [ "SDOM_Slider.cpp", "SDOM__Slider_8cpp.html", null ],
-    [ "SDOM_SpriteSheet.cpp", "SDOM__SpriteSheet_8cpp.html", null ],
+    [ "SDOM_SpriteSheet.cpp", "SDOM__SpriteSheet_8cpp.html", "SDOM__SpriteSheet_8cpp" ],
     [ "SDOM_Stage.cpp", "SDOM__Stage_8cpp.html", null ],
     [ "SDOM_SubjectBinding.cpp", "SDOM__SubjectBinding_8cpp.html", "SDOM__SubjectBinding_8cpp" ],
     [ "SDOM_Texture.cpp", "SDOM__Texture_8cpp.html", null ],
@@ -50,5 +50,5 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "SDOM_TTFAsset.cpp", "SDOM__TTFAsset_8cpp.html", null ],
     [ "SDOM_UnitTests.cpp", "SDOM__UnitTests_8cpp.html", null ],
     [ "SDOM_Utils.cpp", "SDOM__Utils_8cpp.html", "SDOM__Utils_8cpp" ],
-    [ "SDOM_Variant.cpp", "SDOM__Variant_8cpp.html", null ]
+    [ "SDOM_Variant.cpp", "SDOM__Variant_8cpp.html", "SDOM__Variant_8cpp" ]
 ];

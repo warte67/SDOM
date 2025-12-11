@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['⚠️_20before_20you_20build_0',['⚠️ Before You Build',['../md_README.html#autotoc_md51',1,'']]]
+  ['zlib_20license_0',['ZLIB License',['../namespaceSDOM.html#License',1,'']]]
 ];

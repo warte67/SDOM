@@ -92,7 +92,8 @@ $(function(){initNavTree('SDOM__Variant_8hpp.html','',''); });
   <div class="headertitle"><div class="title">SDOM_Variant.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;cstdint&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
+<code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;string_view&gt;</code><br />
 <code>#include &lt;variant&gt;</code><br />
@@ -101,7 +102,9 @@ $(function(){initNavTree('SDOM__Variant_8hpp.html','',''); });
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;typeindex&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
-<code>#include &lt;sol/sol.hpp&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__DisplayHandle_8hpp_source.html">SDOM/SDOM_DisplayHandle.hpp</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__AssetHandle_8hpp_source.html">SDOM/SDOM_AssetHandle.hpp</a>&gt;</code><br />
+<code>#include &lt;json.hpp&gt;</code><br />
 <code>#include &lt;mutex&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 </div>
@@ -109,9 +112,12 @@ $(function(){initNavTree('SDOM__Variant_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:SDOM_3A_3APathElement" id="r_SDOM_3A_3APathElement"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1PathElement.html">SDOM::PathElement</a></td></tr>
+<tr class="memitem:SDOM_3A_3APathOptions" id="r_SDOM_3A_3APathOptions"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1PathOptions.html">SDOM::PathOptions</a></td></tr>
+<tr class="memitem:SDOM_3A_3APathView" id="r_SDOM_3A_3APathView"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1PathView.html">SDOM::PathView</a></td></tr>
+<tr class="memitem:SDOM_3A_3AJsonConversionOptions" id="r_SDOM_3A_3AJsonConversionOptions"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1JsonConversionOptions.html">SDOM::JsonConversionOptions</a></td></tr>
 <tr class="memitem:SDOM_3A_3AVariantStorage" id="r_SDOM_3A_3AVariantStorage"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1VariantStorage.html">SDOM::VariantStorage</a></td></tr>
 <tr class="memitem:SDOM_3A_3AVariantStorage_3A_3ADynamicValue" id="r_SDOM_3A_3AVariantStorage_3A_3ADynamicValue"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">SDOM::VariantStorage::DynamicValue</a></td></tr>
-<tr class="memitem:SDOM_3A_3AVariantStorage_3A_3ALuaRefValue" id="r_SDOM_3A_3AVariantStorage_3A_3ALuaRefValue"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1VariantStorage_1_1LuaRefValue.html">SDOM::VariantStorage::LuaRefValue</a></td></tr>
 <tr class="memitem:SDOM_3A_3AVariant" id="r_SDOM_3A_3AVariant"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1Variant.html">SDOM::Variant</a></td></tr>
 <tr class="memitem:SDOM_3A_3AVariant_3A_3AConverterEntry" id="r_SDOM_3A_3AVariant_3A_3AConverterEntry"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1Variant_1_1ConverterEntry.html">SDOM::Variant::ConverterEntry</a></td></tr>
 <tr class="memitem:SDOM_3A_3AVariant_3A_3AVariantRegistry" id="r_SDOM_3A_3AVariant_3A_3AVariantRegistry"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSDOM_1_1Variant_1_1VariantRegistry.html">SDOM::Variant::VariantRegistry</a></td></tr>
@@ -126,6 +132,10 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a7b56b4cb6b314fac92d3921887a3cd80" id="r_a7b56b4cb6b314fac92d3921887a3cd80"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b56b4cb6b314fac92d3921887a3cd80">SDOM_VARIANT_HPP</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab3d714b7fb3da7ec0ca4245a73f664f8" id="r_ab3d714b7fb3da7ec0ca4245a73f664f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1PathView.html">PathView</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSDOM.html#ab3d714b7fb3da7ec0ca4245a73f664f8">SDOM::parsePath</a> (std::string_view path, std::string *outErrorMessage=nullptr)</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a7b56b4cb6b314fac92d3921887a3cd80" name="a7b56b4cb6b314fac92d3921887a3cd80"></a>

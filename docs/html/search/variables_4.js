@@ -15,5 +15,6 @@ var searchData=
   ['eventspolled_12',['eventsPolled',['../structSDOM_1_1Core_1_1FramePhaseState.html#a542edc7eebe9c08205242413cade056d',1,'SDOM::Core::FramePhaseState']]],
   ['eventtype_13',['eventType',['../structSDOM_1_1IDisplayObject_1_1ListenerEntry.html#aad298a4bb1afa3392c303c7c84ce8740',1,'SDOM::IDisplayObject::ListenerEntry']]],
   ['export_5fname_14',['export_name',['../structSDOM_1_1TypeInfo.html#aef5112a7e37a43580259d6007ec1811e',1,'SDOM::TypeInfo']]],
-  ['exported_15',['exported',['../structSDOM_1_1FunctionInfo.html#aa8c184560b31d6f724f4cdb50114ce64',1,'SDOM::FunctionInfo']]]
+  ['exported_15',['exported',['../structSDOM_1_1FunctionInfo.html#aa8c184560b31d6f724f4cdb50114ce64',1,'SDOM::FunctionInfo']]],
+  ['extend_5farrays_5fwith_5fnull_16',['extend_arrays_with_null',['../structSDOM_1_1PathOptions.html#a24be680110280850f1fe1c4d335797c7',1,'SDOM::PathOptions']]]
 ];

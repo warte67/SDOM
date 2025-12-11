@@ -103,10 +103,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a6b332f7c56f99f71979b74792f0fcbda" id="r_a6b332f7c56f99f71979b74792f0fcbda"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a> : uint8_t { <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea">Copy</a> = 0
-, <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbdaa31387975f345e1e5f0d11f2976b71fd0">KeepLuaRef</a>
- }</td></tr>
-<tr class="memitem:a630de3d7769b74587aa2c3d834359734" id="r_a630de3d7769b74587aa2c3d834359734"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a630de3d7769b74587aa2c3d834359734">DynamicToLuaFn</a> = std::function&lt;sol::object(const <a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">VariantStorage::DynamicValue</a>&amp;, sol::state_view)&gt;</td></tr>
+<tr class="memitem:ac728f3e6a6b96bbf9291be854ef1cbe4" id="r_ac728f3e6a6b96bbf9291be854ef1cbe4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac728f3e6a6b96bbf9291be854ef1cbe4">DynamicToJsonFn</a> = std::function&lt;nlohmann::json(const <a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">VariantStorage::DynamicValue</a>&amp;)&gt;</td></tr>
 <tr class="memitem:a0a5a723ed4ac2b16489588e7a565fb5e" id="r_a0a5a723ed4ac2b16489588e7a565fb5e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a5a723ed4ac2b16489588e7a565fb5e">VariantToDynamicFn</a> = std::function&lt;std::shared_ptr&lt;void&gt;(const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&amp;)&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -122,7 +119,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa08cace19bae431b721c55167631efdc" id="r_aa08cace19bae431b721c55167631efdc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa08cace19bae431b721c55167631efdc">Variant</a> (std::vector&lt; Variant &gt; &amp;&amp;arr)</td></tr>
 <tr class="memitem:a1b5f194b15a5d4c5f70dcea7245014f6" id="r_a1b5f194b15a5d4c5f70dcea7245014f6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b5f194b15a5d4c5f70dcea7245014f6">Variant</a> (const std::unordered_map&lt; std::string, Variant &gt; &amp;obj)</td></tr>
 <tr class="memitem:a5de3b83bea657b7c48b98bd214185b18" id="r_a5de3b83bea657b7c48b98bd214185b18"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5de3b83bea657b7c48b98bd214185b18">Variant</a> (std::unordered_map&lt; std::string, Variant &gt; &amp;&amp;obj)</td></tr>
-<tr class="memitem:a4368c739007fdd846e099977f17ff38a" id="r_a4368c739007fdd846e099977f17ff38a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4368c739007fdd846e099977f17ff38a">Variant</a> (const sol::object &amp;o)</td></tr>
+<tr class="memitem:a2eca30c3d0d09d0181bec71f3aa600cb" id="r_a2eca30c3d0d09d0181bec71f3aa600cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2eca30c3d0d09d0181bec71f3aa600cb">Variant</a> (const nlohmann::json &amp;j)</td></tr>
+<tr class="memitem:abdc47152c6db6b51edc98d2956ae23da" id="r_abdc47152c6db6b51edc98d2956ae23da"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abdc47152c6db6b51edc98d2956ae23da">Variant</a> (const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;handle)</td></tr>
+<tr class="memitem:a76f2872f0928e3e5a9c94472c3a366f3" id="r_a76f2872f0928e3e5a9c94472c3a366f3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76f2872f0928e3e5a9c94472c3a366f3">Variant</a> (<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;&amp;handle)</td></tr>
+<tr class="memitem:aba67e8399fe71bd96677f8aede5048b2" id="r_aba67e8399fe71bd96677f8aede5048b2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba67e8399fe71bd96677f8aede5048b2">Variant</a> (const <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> &amp;handle)</td></tr>
+<tr class="memitem:a86e44c765792d05298782de994ed6d70" id="r_a86e44c765792d05298782de994ed6d70"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86e44c765792d05298782de994ed6d70">Variant</a> (<a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> &amp;&amp;handle)</td></tr>
+<tr class="memitem:ad92b2d08a68ff21dd91b61df3f4eaf43" id="r_ad92b2d08a68ff21dd91b61df3f4eaf43"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad92b2d08a68ff21dd91b61df3f4eaf43">Variant</a> (<a class="el" href="classSDOM_1_1Event.html">Event</a> *evt)</td></tr>
 <tr class="memitem:a16a83f3b8b979b376e019dc6382404de" id="r_a16a83f3b8b979b376e019dc6382404de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16a83f3b8b979b376e019dc6382404de">Variant</a> (Variant &amp;&amp;) noexcept=default</td></tr>
 <tr class="memitem:a4da224e7b1f47ebea31c25be309657da" id="r_a4da224e7b1f47ebea31c25be309657da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4da224e7b1f47ebea31c25be309657da">operator=</a> (<a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="memitem:a4733367978511d5ea03e38e365b39fba" id="r_a4733367978511d5ea03e38e365b39fba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4733367978511d5ea03e38e365b39fba">Variant</a> (const Variant &amp;)=default</td></tr>
@@ -130,6 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a336a69cb28bfacf42cfe36db70940658" id="r_a336a69cb28bfacf42cfe36db70940658"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a336a69cb28bfacf42cfe36db70940658">hasError</a> () const noexcept</td></tr>
 <tr class="memitem:a7a149b3f5715902b139f09933ef3e81e" id="r_a7a149b3f5715902b139f09933ef3e81e"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a149b3f5715902b139f09933ef3e81e">errorMessage</a> () const noexcept</td></tr>
 <tr class="memitem:ad1454b84462817b16dc434b90e3150af" id="r_ad1454b84462817b16dc434b90e3150af"><td class="memItemLeft" align="right" valign="top">VariantType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1454b84462817b16dc434b90e3150af">type</a> () const noexcept</td></tr>
+<tr class="memitem:ac23b14de6ff8ddd55aadb681bf92dcdf" id="r_ac23b14de6ff8ddd55aadb681bf92dcdf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac23b14de6ff8ddd55aadb681bf92dcdf">isContainer</a> () const noexcept</td></tr>
 <tr class="memitem:ac27fd6975aa83287a1d103bc9890b0a0" id="r_ac27fd6975aa83287a1d103bc9890b0a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac27fd6975aa83287a1d103bc9890b0a0">isNull</a> () const noexcept</td></tr>
 <tr class="memitem:a82038a4a0bc0b4718f4bd787ca88cf6d" id="r_a82038a4a0bc0b4718f4bd787ca88cf6d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82038a4a0bc0b4718f4bd787ca88cf6d">isBool</a> () const noexcept</td></tr>
 <tr class="memitem:af41847ee3c68e67e83f296c4fcefcda0" id="r_af41847ee3c68e67e83f296c4fcefcda0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af41847ee3c68e67e83f296c4fcefcda0">isInt</a> () const noexcept</td></tr>
@@ -137,16 +140,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afe6e8d3cf7babc53da0216bd55e075c7" id="r_afe6e8d3cf7babc53da0216bd55e075c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe6e8d3cf7babc53da0216bd55e075c7">isString</a> () const noexcept</td></tr>
 <tr class="memitem:abaa04f9b8a12b2859b76659e83df83af" id="r_abaa04f9b8a12b2859b76659e83df83af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abaa04f9b8a12b2859b76659e83df83af">isArray</a> () const noexcept</td></tr>
 <tr class="memitem:a60d2e261abb1c937e99d707be6deade5" id="r_a60d2e261abb1c937e99d707be6deade5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60d2e261abb1c937e99d707be6deade5">isObject</a> () const noexcept</td></tr>
-<tr class="memitem:a9915fc56a6801b175ae8400dc2e85873" id="r_a9915fc56a6801b175ae8400dc2e85873"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9915fc56a6801b175ae8400dc2e85873">isLuaRef</a> () const noexcept</td></tr>
 <tr class="memitem:a0da9a172d898bda26b3b355a5bcd5087" id="r_a0da9a172d898bda26b3b355a5bcd5087"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0da9a172d898bda26b3b355a5bcd5087">isDynamic</a> () const noexcept</td></tr>
+<tr class="memitem:adc908f50338b8859f65210359db20920" id="r_adc908f50338b8859f65210359db20920"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc908f50338b8859f65210359db20920">isDisplayHandle</a> () const noexcept</td></tr>
+<tr class="memitem:ac49f20437a2abf82177baf97972f2d4b" id="r_ac49f20437a2abf82177baf97972f2d4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac49f20437a2abf82177baf97972f2d4b">isAssetHandle</a> () const noexcept</td></tr>
 <tr class="memitem:a7e02fbcd17e88d09474f69132e36f297" id="r_a7e02fbcd17e88d09474f69132e36f297"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e02fbcd17e88d09474f69132e36f297">toBool</a> (bool def=false) const noexcept</td></tr>
 <tr class="memitem:ade52ccc07862baeea2bdfa9beff5e14a" id="r_ade52ccc07862baeea2bdfa9beff5e14a"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade52ccc07862baeea2bdfa9beff5e14a">toInt64</a> (int64_t def=0) const noexcept</td></tr>
 <tr class="memitem:a8936fe3b55eda636d75c2f1bc761b384" id="r_a8936fe3b55eda636d75c2f1bc761b384"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8936fe3b55eda636d75c2f1bc761b384">toDouble</a> (double def=0.0) const noexcept</td></tr>
 <tr class="memitem:ac1bd43038af37a7498619b64931bfdfa" id="r_ac1bd43038af37a7498619b64931bfdfa"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1bd43038af37a7498619b64931bfdfa">toString</a> (std::string def={}) const noexcept</td></tr>
+<tr class="memitem:a17b1e791ee7801820903516bb18656c7" id="r_a17b1e791ee7801820903516bb18656c7"><td class="memItemLeft" align="right" valign="top">std::optional&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17b1e791ee7801820903516bb18656c7">tryBool</a> () const noexcept</td></tr>
+<tr class="memitem:a8869bc55075ed1e46b5f577e69e4f5d8" id="r_a8869bc55075ed1e46b5f577e69e4f5d8"><td class="memItemLeft" align="right" valign="top">std::optional&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8869bc55075ed1e46b5f577e69e4f5d8">tryInt64</a> () const noexcept</td></tr>
+<tr class="memitem:a25f2148001ae94c30f945f15bee9a0ce" id="r_a25f2148001ae94c30f945f15bee9a0ce"><td class="memItemLeft" align="right" valign="top">std::optional&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25f2148001ae94c30f945f15bee9a0ce">tryDouble</a> () const noexcept</td></tr>
+<tr class="memitem:ab6d861186a1dfd24d12b64aef71d9375" id="r_ab6d861186a1dfd24d12b64aef71d9375"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6d861186a1dfd24d12b64aef71d9375">tryString</a> () const noexcept</td></tr>
+<tr class="memitem:af9f2abf021db95e7a28cdf4ccd16e98c" id="r_af9f2abf021db95e7a28cdf4ccd16e98c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9f2abf021db95e7a28cdf4ccd16e98c">toDisplayHandle</a> (<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> def=<a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>{}) const noexcept</td></tr>
+<tr class="memitem:aaa87d750f4b5b7ef679ce7de4fd83e11" id="r_aaa87d750f4b5b7ef679ce7de4fd83e11"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa87d750f4b5b7ef679ce7de4fd83e11">toAssetHandle</a> (<a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> def=<a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>{}) const noexcept</td></tr>
 <tr class="memitem:a6312aa65ec2202842a60ac07604499da" id="r_a6312aa65ec2202842a60ac07604499da"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structSDOM_1_1VariantStorage.html#af0cb0136cc1208c29ab085b8bdcfa80a">VariantStorage::Array</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6312aa65ec2202842a60ac07604499da">array</a> () const noexcept</td></tr>
 <tr class="memitem:a0ee1362b41e24ecf614b4d3d7c4860fe" id="r_a0ee1362b41e24ecf614b4d3d7c4860fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSDOM_1_1VariantStorage.html#af0cb0136cc1208c29ab085b8bdcfa80a">VariantStorage::Array</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ee1362b41e24ecf614b4d3d7c4860fe">array</a> () noexcept</td></tr>
 <tr class="memitem:a9121c91e8072decb5d999276ffec18d8" id="r_a9121c91e8072decb5d999276ffec18d8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structSDOM_1_1VariantStorage.html#aa1900b30e13c7f1b22d1eeb7d7380b51">VariantStorage::Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9121c91e8072decb5d999276ffec18d8">object</a> () const noexcept</td></tr>
 <tr class="memitem:a8c519c63bad5dfae706c950b2447b476" id="r_a8c519c63bad5dfae706c950b2447b476"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structSDOM_1_1VariantStorage.html#aa1900b30e13c7f1b22d1eeb7d7380b51">VariantStorage::Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c519c63bad5dfae706c950b2447b476">object</a> () noexcept</td></tr>
+<tr class="memitem:ad222d56f2b952ce96fbee9f2f8c6edbc" id="r_ad222d56f2b952ce96fbee9f2f8c6edbc"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad222d56f2b952ce96fbee9f2f8c6edbc">displayHandle</a> () const noexcept</td></tr>
+<tr class="memitem:ae79de97f028d788855f1b31718118aa8" id="r_ae79de97f028d788855f1b31718118aa8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae79de97f028d788855f1b31718118aa8">displayHandle</a> () noexcept</td></tr>
+<tr class="memitem:af2886f85f57bb273311da065367d4180" id="r_af2886f85f57bb273311da065367d4180"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2886f85f57bb273311da065367d4180">assetHandle</a> () const noexcept</td></tr>
+<tr class="memitem:af82d0ae4b43108037c686d417ab05abd" id="r_af82d0ae4b43108037c686d417ab05abd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af82d0ae4b43108037c686d417ab05abd">assetHandle</a> () noexcept</td></tr>
+<tr class="memitem:a26e30b62d62b093e0f9c693e5252a115" id="r_a26e30b62d62b093e0f9c693e5252a115"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classSDOM_1_1Event.html">Event</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26e30b62d62b093e0f9c693e5252a115">event</a> () const noexcept</td></tr>
+<tr class="memitem:abbc063d86830d678b36ab70c8b397d3e" id="r_abbc063d86830d678b36ab70c8b397d3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1Event.html">Event</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbc063d86830d678b36ab70c8b397d3e">event</a> () noexcept</td></tr>
 <tr class="memitem:a447e275cdd36805aa222f5d2cfc2c09f" id="r_a447e275cdd36805aa222f5d2cfc2c09f"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a447e275cdd36805aa222f5d2cfc2c09f template"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a447e275cdd36805aa222f5d2cfc2c09f">Variant</a> (std::shared_ptr&lt; T &gt; p)</td></tr>
 <tr class="memitem:a2ee863f0718d4f2717ae263b0e5e4e73" id="r_a2ee863f0718d4f2717ae263b0e5e4e73"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -160,9 +176,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9f7d02d1d469237c58048bc9cae2021a" id="r_a9f7d02d1d469237c58048bc9cae2021a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f7d02d1d469237c58048bc9cae2021a">set</a> (const std::string &amp;key, <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> v)</td></tr>
 <tr class="memitem:adc23b94a4813c494af558a2d3e9f3e39" id="r_adc23b94a4813c494af558a2d3e9f3e39"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc23b94a4813c494af558a2d3e9f3e39">get</a> (const std::string &amp;key) const noexcept</td></tr>
 <tr class="memitem:a9dcb8c39fd07c6934e25e3081990e87e" id="r_a9dcb8c39fd07c6934e25e3081990e87e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9dcb8c39fd07c6934e25e3081990e87e">get</a> (const std::string &amp;key) noexcept</td></tr>
-<tr class="memitem:ac1858b595f7277917fdadcf683c63a06" id="r_ac1858b595f7277917fdadcf683c63a06"><td class="memItemLeft" align="right" valign="top">sol::object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1858b595f7277917fdadcf683c63a06">toLua</a> (sol::state_view L) const</td></tr>
-<tr class="memitem:a6ccbcae7a2d3c09bebb4fb3c418fb091" id="r_a6ccbcae7a2d3c09bebb4fb3c418fb091"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ccbcae7a2d3c09bebb4fb3c418fb091">snapshot</a> () const</td></tr>
-<tr class="memitem:adb4e4ec049cb476a2ea98fb7cb67814e" id="r_adb4e4ec049cb476a2ea98fb7cb67814e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb4e4ec049cb476a2ea98fb7cb67814e">snapshot</a> (sol::state_view L) const</td></tr>
+<tr class="memitem:aed5a3d69d7ce7652d33837fe73defb68" id="r_aed5a3d69d7ce7652d33837fe73defb68"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed5a3d69d7ce7652d33837fe73defb68">getPath</a> (const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;path, <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;out) const</td></tr>
+<tr class="memitem:a464fd675a8e29d3e91db5b49f95336e0" id="r_a464fd675a8e29d3e91db5b49f95336e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a464fd675a8e29d3e91db5b49f95336e0">getPath</a> (const std::string &amp;path, <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;out) const</td></tr>
+<tr class="memitem:a44e1987a8936c50b223a0129c62039fd" id="r_a44e1987a8936c50b223a0129c62039fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44e1987a8936c50b223a0129c62039fd">getPathOr</a> (const std::string &amp;path, const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;fallback=<a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>{}) const</td></tr>
+<tr class="memitem:aa37ac0d686c8ab490149d08e04563805" id="r_aa37ac0d686c8ab490149d08e04563805"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa37ac0d686c8ab490149d08e04563805">pathExists</a> (const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;path) const</td></tr>
+<tr class="memitem:a70fb6d1628ef48ad0338f4af1c39e93d" id="r_a70fb6d1628ef48ad0338f4af1c39e93d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70fb6d1628ef48ad0338f4af1c39e93d">pathExists</a> (const std::string &amp;path) const</td></tr>
+<tr class="memitem:a0fb2c05806874ab883a1d3e39ff8a4d3" id="r_a0fb2c05806874ab883a1d3e39ff8a4d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fb2c05806874ab883a1d3e39ff8a4d3">setPath</a> (const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;path, const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;value, const <a class="el" href="structSDOM_1_1PathOptions.html">PathOptions</a> &amp;opts={})</td></tr>
+<tr class="memitem:af9618ee3639d5dcd4f959a15f84f553f" id="r_af9618ee3639d5dcd4f959a15f84f553f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9618ee3639d5dcd4f959a15f84f553f">setPath</a> (const std::string &amp;path, const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;value, const <a class="el" href="structSDOM_1_1PathOptions.html">PathOptions</a> &amp;opts={})</td></tr>
+<tr class="memitem:a558542ed3efc2d2499947518b4b8c38c" id="r_a558542ed3efc2d2499947518b4b8c38c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a558542ed3efc2d2499947518b4b8c38c">erasePath</a> (const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;path)</td></tr>
+<tr class="memitem:a023da84d47105e8c6d33fdffd5f405f3" id="r_a023da84d47105e8c6d33fdffd5f405f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a023da84d47105e8c6d33fdffd5f405f3">erasePath</a> (const std::string &amp;path)</td></tr>
+<tr class="memitem:a520eb487444b04a1ba351cb5ba2e2a4e" id="r_a520eb487444b04a1ba351cb5ba2e2a4e"><td class="memItemLeft" align="right" valign="top">nlohmann::json&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a520eb487444b04a1ba351cb5ba2e2a4e">toJson</a> () const</td></tr>
+<tr class="memitem:a690e68614f4c23241cbf9ad8ea41ba13" id="r_a690e68614f4c23241cbf9ad8ea41ba13"><td class="memItemLeft" align="right" valign="top">nlohmann::json&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a690e68614f4c23241cbf9ad8ea41ba13">toJson</a> (const <a class="el" href="structSDOM_1_1JsonConversionOptions.html">JsonConversionOptions</a> &amp;opts) const</td></tr>
 <tr class="memitem:a3a1b2f04bca8c05e7048d6e27023cd3d" id="r_a3a1b2f04bca8c05e7048d6e27023cd3d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a1b2f04bca8c05e7048d6e27023cd3d">toDebugString</a> (int depth=1) const</td></tr>
 <tr class="memitem:a6111b4988e7250b4004a5b34ef1b04af" id="r_a6111b4988e7250b4004a5b34ef1b04af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6111b4988e7250b4004a5b34ef1b04af">operator==</a> (const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;rhs) const</td></tr>
 <tr class="memitem:ac03e85d36c0300c911bddacae5ada155" id="r_ac03e85d36c0300c911bddacae5ada155"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac03e85d36c0300c911bddacae5ada155">operator!=</a> (const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;rhs) const</td></tr>
@@ -171,6 +195,7 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a16ac8054fc86447b95da247f0e96b435" id="r_a16ac8054fc86447b95da247f0e96b435"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16ac8054fc86447b95da247f0e96b435">makeArray</a> ()</td></tr>
 <tr class="memitem:af250756cdceaeb75608c1af5342b36b9" id="r_af250756cdceaeb75608c1af5342b36b9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af250756cdceaeb75608c1af5342b36b9">makeObject</a> ()</td></tr>
+<tr class="memitem:aa61ddc6bb75bc45b1398831897744c48" id="r_aa61ddc6bb75bc45b1398831897744c48"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa61ddc6bb75bc45b1398831897744c48">registerBindings</a> (<a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;registry)</td></tr>
 <tr class="memitem:aa9d8c4f232bf42574f7661ea1301d5eb" id="r_aa9d8c4f232bf42574f7661ea1301d5eb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9d8c4f232bf42574f7661ea1301d5eb">makeError</a> (const std::string &amp;msg)</td></tr>
 <tr class="memitem:a2d76ea08ea8f31ab1fd417c053813a87" id="r_a2d76ea08ea8f31ab1fd417c053813a87"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a2d76ea08ea8f31ab1fd417c053813a87 template"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">VariantStorage::DynamicValue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d76ea08ea8f31ab1fd417c053813a87">makeDynamicValue</a> (std::shared_ptr&lt; T &gt; p)</td></tr>
@@ -183,27 +208,22 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a5e80c3fd4472bee99423be05d771ee7e" id="r_a5e80c3fd4472bee99423be05d771ee7e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structSDOM_1_1Variant_1_1ConverterEntry.html">ConverterEntry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e80c3fd4472bee99423be05d771ee7e">getConverter</a> (std::type_index t)</td></tr>
 <tr class="memitem:a51e76742580a0fb91d474b3065783694" id="r_a51e76742580a0fb91d474b3065783694"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structSDOM_1_1Variant_1_1ConverterEntry.html">ConverterEntry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51e76742580a0fb91d474b3065783694">getConverterByName</a> (const std::string &amp;name)</td></tr>
 <tr class="memitem:a6084fa6fc636fbde20ef162a59fc890f" id="r_a6084fa6fc636fbde20ef162a59fc890f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6084fa6fc636fbde20ef162a59fc890f">registerConverterByName</a> (const std::string &amp;name, <a class="el" href="structSDOM_1_1Variant_1_1ConverterEntry.html">ConverterEntry</a> entry)</td></tr>
-<tr class="memitem:a7ad1456cd88aad821556882156ba924d" id="r_a7ad1456cd88aad821556882156ba924d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ad1456cd88aad821556882156ba924d">setTableStorageMode</a> (<a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a> m)</td></tr>
-<tr class="memitem:a829efa396d5871f596b62b96e3e8daaf" id="r_a829efa396d5871f596b62b96e3e8daaf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a829efa396d5871f596b62b96e3e8daaf">getTableStorageMode</a> ()</td></tr>
-<tr class="memitem:aed37a1b861ecaf5633a625941a87254f" id="r_aed37a1b861ecaf5633a625941a87254f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed37a1b861ecaf5633a625941a87254f">fromLuaObject</a> (const sol::object &amp;o)</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a314259de2c9d70d73df95107cbbca2db" id="r_a314259de2c9d70d73df95107cbbca2db"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a314259de2c9d70d73df95107cbbca2db">tableStorageMode</a> = <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea">TableStorageMode::Copy</a></td></tr>
+<tr class="memitem:aa6fdae1b9b1e1e8f8c4b497d187ac0d8" id="r_aa6fdae1b9b1e1e8f8c4b497d187ac0d8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6fdae1b9b1e1e8f8c4b497d187ac0d8">fromJson</a> (const nlohmann::json &amp;j)</td></tr>
+<tr class="memitem:a60bb1a3a012a6ea06e5e18d9fdd999fd" id="r_a60bb1a3a012a6ea06e5e18d9fdd999fd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60bb1a3a012a6ea06e5e18d9fdd999fd">fromJson</a> (const nlohmann::json &amp;j, const <a class="el" href="structSDOM_1_1JsonConversionOptions.html">JsonConversionOptions</a> &amp;opts, std::string *err=nullptr)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:a6c270ae3675c2ab191e67d5ffd0dbb88" id="r_a6c270ae3675c2ab191e67d5ffd0dbb88"><td class="memItemLeft" align="right" valign="top">struct&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c270ae3675c2ab191e67d5ffd0dbb88">VariantHash</a></td></tr>
 </table>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
-<a id="a630de3d7769b74587aa2c3d834359734" name="a630de3d7769b74587aa2c3d834359734"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a630de3d7769b74587aa2c3d834359734">&#9670;&#160;</a></span>DynamicToLuaFn</h2>
+<a id="ac728f3e6a6b96bbf9291be854ef1cbe4" name="ac728f3e6a6b96bbf9291be854ef1cbe4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac728f3e6a6b96bbf9291be854ef1cbe4">&#9670;&#160;</a></span>DynamicToJsonFn</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#a630de3d7769b74587aa2c3d834359734">SDOM::Variant::DynamicToLuaFn</a> = std::function&lt;sol::object(const <a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">VariantStorage::DynamicValue</a>&amp;, sol::state_view)&gt;</td>
+          <td class="memname">using <a class="el" href="#ac728f3e6a6b96bbf9291be854ef1cbe4">SDOM::Variant::DynamicToJsonFn</a> = std::function&lt;nlohmann::json(const <a class="el" href="structSDOM_1_1VariantStorage_1_1DynamicValue.html">VariantStorage::DynamicValue</a>&amp;)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -224,36 +244,9 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a6b332f7c56f99f71979b74792f0fcbda" name="a6b332f7c56f99f71979b74792f0fcbda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b332f7c56f99f71979b74792f0fcbda">&#9670;&#160;</a></span>TableStorageMode</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">SDOM::Variant::TableStorageMode</a> : uint8_t</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea" name="a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea"></a>Copy&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a6b332f7c56f99f71979b74792f0fcbdaa31387975f345e1e5f0d11f2976b71fd0" name="a6b332f7c56f99f71979b74792f0fcbdaa31387975f345e1e5f0d11f2976b71fd0"></a>KeepLuaRef&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9a02c687a17443c3d5b62aba8d0bc6cf" name="a9a02c687a17443c3d5b62aba8d0bc6cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a02c687a17443c3d5b62aba8d0bc6cf">&#9670;&#160;</a></span>Variant() <span class="overload">[1/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a02c687a17443c3d5b62aba8d0bc6cf">&#9670;&#160;</a></span>Variant() <span class="overload">[1/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,7 +263,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a7e62613587bae54d83fc38e9bdb8dc76" name="a7e62613587bae54d83fc38e9bdb8dc76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e62613587bae54d83fc38e9bdb8dc76">&#9670;&#160;</a></span>Variant() <span class="overload">[2/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e62613587bae54d83fc38e9bdb8dc76">&#9670;&#160;</a></span>Variant() <span class="overload">[2/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -295,7 +288,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a69ab60faae5f2f899b731175ede8eada" name="a69ab60faae5f2f899b731175ede8eada"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69ab60faae5f2f899b731175ede8eada">&#9670;&#160;</a></span>Variant() <span class="overload">[3/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a69ab60faae5f2f899b731175ede8eada">&#9670;&#160;</a></span>Variant() <span class="overload">[3/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -320,7 +313,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a335282d825c3aa49c62fc3f417aa937d" name="a335282d825c3aa49c62fc3f417aa937d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a335282d825c3aa49c62fc3f417aa937d">&#9670;&#160;</a></span>Variant() <span class="overload">[4/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a335282d825c3aa49c62fc3f417aa937d">&#9670;&#160;</a></span>Variant() <span class="overload">[4/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -345,7 +338,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a7f82fe77f6fac6d0b9ab0d61089e0117" name="a7f82fe77f6fac6d0b9ab0d61089e0117"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f82fe77f6fac6d0b9ab0d61089e0117">&#9670;&#160;</a></span>Variant() <span class="overload">[5/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f82fe77f6fac6d0b9ab0d61089e0117">&#9670;&#160;</a></span>Variant() <span class="overload">[5/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -370,7 +363,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a4183b2e687ad2cec4e4a0213dc1976d9" name="a4183b2e687ad2cec4e4a0213dc1976d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4183b2e687ad2cec4e4a0213dc1976d9">&#9670;&#160;</a></span>Variant() <span class="overload">[6/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4183b2e687ad2cec4e4a0213dc1976d9">&#9670;&#160;</a></span>Variant() <span class="overload">[6/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -395,7 +388,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="aa65f4d4ef1f2a0cfc30f2211559f9e1b" name="aa65f4d4ef1f2a0cfc30f2211559f9e1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa65f4d4ef1f2a0cfc30f2211559f9e1b">&#9670;&#160;</a></span>Variant() <span class="overload">[7/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa65f4d4ef1f2a0cfc30f2211559f9e1b">&#9670;&#160;</a></span>Variant() <span class="overload">[7/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,7 +413,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="aa6f0c294d285414f623af5cbe1d3f995" name="aa6f0c294d285414f623af5cbe1d3f995"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6f0c294d285414f623af5cbe1d3f995">&#9670;&#160;</a></span>Variant() <span class="overload">[8/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6f0c294d285414f623af5cbe1d3f995">&#9670;&#160;</a></span>Variant() <span class="overload">[8/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -445,7 +438,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="aa08cace19bae431b721c55167631efdc" name="aa08cace19bae431b721c55167631efdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa08cace19bae431b721c55167631efdc">&#9670;&#160;</a></span>Variant() <span class="overload">[9/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa08cace19bae431b721c55167631efdc">&#9670;&#160;</a></span>Variant() <span class="overload">[9/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -470,7 +463,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a1b5f194b15a5d4c5f70dcea7245014f6" name="a1b5f194b15a5d4c5f70dcea7245014f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b5f194b15a5d4c5f70dcea7245014f6">&#9670;&#160;</a></span>Variant() <span class="overload">[10/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b5f194b15a5d4c5f70dcea7245014f6">&#9670;&#160;</a></span>Variant() <span class="overload">[10/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -495,7 +488,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a5de3b83bea657b7c48b98bd214185b18" name="a5de3b83bea657b7c48b98bd214185b18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5de3b83bea657b7c48b98bd214185b18">&#9670;&#160;</a></span>Variant() <span class="overload">[11/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5de3b83bea657b7c48b98bd214185b18">&#9670;&#160;</a></span>Variant() <span class="overload">[11/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -519,8 +512,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a4368c739007fdd846e099977f17ff38a" name="a4368c739007fdd846e099977f17ff38a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4368c739007fdd846e099977f17ff38a">&#9670;&#160;</a></span>Variant() <span class="overload">[12/15]</span></h2>
+<a id="a2eca30c3d0d09d0181bec71f3aa600cb" name="a2eca30c3d0d09d0181bec71f3aa600cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2eca30c3d0d09d0181bec71f3aa600cb">&#9670;&#160;</a></span>Variant() <span class="overload">[12/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -531,7 +524,132 @@ Friends</h2></td></tr>
         <tr>
           <td class="memname">SDOM::Variant::Variant </td>
           <td>(</td>
-          <td class="paramtype">const sol::object &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>j</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abdc47152c6db6b51edc98d2956ae23da" name="abdc47152c6db6b51edc98d2956ae23da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdc47152c6db6b51edc98d2956ae23da">&#9670;&#160;</a></span>Variant() <span class="overload">[13/20]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::Variant::Variant </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a76f2872f0928e3e5a9c94472c3a366f3" name="a76f2872f0928e3e5a9c94472c3a366f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76f2872f0928e3e5a9c94472c3a366f3">&#9670;&#160;</a></span>Variant() <span class="overload">[14/20]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::Variant::Variant </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aba67e8399fe71bd96677f8aede5048b2" name="aba67e8399fe71bd96677f8aede5048b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba67e8399fe71bd96677f8aede5048b2">&#9670;&#160;</a></span>Variant() <span class="overload">[15/20]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::Variant::Variant </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a86e44c765792d05298782de994ed6d70" name="a86e44c765792d05298782de994ed6d70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86e44c765792d05298782de994ed6d70">&#9670;&#160;</a></span>Variant() <span class="overload">[16/20]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::Variant::Variant </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad92b2d08a68ff21dd91b61df3f4eaf43" name="ad92b2d08a68ff21dd91b61df3f4eaf43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad92b2d08a68ff21dd91b61df3f4eaf43">&#9670;&#160;</a></span>Variant() <span class="overload">[17/20]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDOM::Variant::Variant </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1Event.html">Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -545,7 +663,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a16a83f3b8b979b376e019dc6382404de" name="a16a83f3b8b979b376e019dc6382404de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16a83f3b8b979b376e019dc6382404de">&#9670;&#160;</a></span>Variant() <span class="overload">[13/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a16a83f3b8b979b376e019dc6382404de">&#9670;&#160;</a></span>Variant() <span class="overload">[18/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -570,7 +688,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a4733367978511d5ea03e38e365b39fba" name="a4733367978511d5ea03e38e365b39fba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4733367978511d5ea03e38e365b39fba">&#9670;&#160;</a></span>Variant() <span class="overload">[14/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4733367978511d5ea03e38e365b39fba">&#9670;&#160;</a></span>Variant() <span class="overload">[19/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -595,7 +713,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a447e275cdd36805aa222f5d2cfc2c09f" name="a447e275cdd36805aa222f5d2cfc2c09f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a447e275cdd36805aa222f5d2cfc2c09f">&#9670;&#160;</a></span>Variant() <span class="overload">[15/15]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a447e275cdd36805aa222f5d2cfc2c09f">&#9670;&#160;</a></span>Variant() <span class="overload">[20/20]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -699,6 +817,56 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="af2886f85f57bb273311da065367d4180" name="af2886f85f57bb273311da065367d4180"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2886f85f57bb273311da065367d4180">&#9670;&#160;</a></span>assetHandle() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> * SDOM::Variant::assetHandle </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af82d0ae4b43108037c686d417ab05abd" name="af82d0ae4b43108037c686d417ab05abd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af82d0ae4b43108037c686d417ab05abd">&#9670;&#160;</a></span>assetHandle() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> * SDOM::Variant::assetHandle </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af9a37d93c73a55b774cb7523d2b8d90e" name="af9a37d93c73a55b774cb7523d2b8d90e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af9a37d93c73a55b774cb7523d2b8d90e">&#9670;&#160;</a></span>at() <span class="overload">[1/2]</span></h2>
 
@@ -737,6 +905,56 @@ template&lt;typename T&gt; </div>
           <td class="memname"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> * SDOM::Variant::at </td>
           <td>(</td>
           <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>i</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad222d56f2b952ce96fbee9f2f8c6edbc" name="ad222d56f2b952ce96fbee9f2f8c6edbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad222d56f2b952ce96fbee9f2f8c6edbc">&#9670;&#160;</a></span>displayHandle() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> * SDOM::Variant::displayHandle </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae79de97f028d788855f1b31718118aa8" name="ae79de97f028d788855f1b31718118aa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae79de97f028d788855f1b31718118aa8">&#9670;&#160;</a></span>displayHandle() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> * SDOM::Variant::displayHandle </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -799,6 +1017,40 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="a558542ed3efc2d2499947518b4b8c38c" name="a558542ed3efc2d2499947518b4b8c38c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a558542ed3efc2d2499947518b4b8c38c">&#9670;&#160;</a></span>erasePath() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::erasePath </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a023da84d47105e8c6d33fdffd5f405f3" name="a023da84d47105e8c6d33fdffd5f405f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a023da84d47105e8c6d33fdffd5f405f3">&#9670;&#160;</a></span>erasePath() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::erasePath </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7a149b3f5715902b139f09933ef3e81e" name="a7a149b3f5715902b139f09933ef3e81e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a149b3f5715902b139f09933ef3e81e">&#9670;&#160;</a></span>errorMessage()</h2>
 
@@ -824,8 +1076,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="aed37a1b861ecaf5633a625941a87254f" name="aed37a1b861ecaf5633a625941a87254f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed37a1b861ecaf5633a625941a87254f">&#9670;&#160;</a></span>fromLuaObject()</h2>
+<a id="a26e30b62d62b093e0f9c693e5252a115" name="a26e30b62d62b093e0f9c693e5252a115"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26e30b62d62b093e0f9c693e5252a115">&#9670;&#160;</a></span>event() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -834,10 +1086,94 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> SDOM::Variant::fromLuaObject </td>
+          <td class="memname">const <a class="el" href="classSDOM_1_1Event.html">Event</a> * SDOM::Variant::event </td>
           <td>(</td>
-          <td class="paramtype">const sol::object &amp;</td>          <td class="paramname"><span class="paramname"><em>o</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abbc063d86830d678b36ab70c8b397d3e" name="abbc063d86830d678b36ab70c8b397d3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbc063d86830d678b36ab70c8b397d3e">&#9670;&#160;</a></span>event() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1Event.html">Event</a> * SDOM::Variant::event </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa6fdae1b9b1e1e8f8c4b497d187ac0d8" name="aa6fdae1b9b1e1e8f8c4b497d187ac0d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6fdae1b9b1e1e8f8c4b497d187ac0d8">&#9670;&#160;</a></span>fromJson() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> SDOM::Variant::fromJson </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>j</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a60bb1a3a012a6ea06e5e18d9fdd999fd" name="a60bb1a3a012a6ea06e5e18d9fdd999fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60bb1a3a012a6ea06e5e18d9fdd999fd">&#9670;&#160;</a></span>fromJson() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> SDOM::Variant::fromJson </td>
+          <td>(</td>
+          <td class="paramtype">const nlohmann::json &amp;</td>          <td class="paramname"><span class="paramname"><em>j</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1JsonConversionOptions.html">JsonConversionOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>opts</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string *</td>          <td class="paramname"><span class="paramname"><em>err</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -949,27 +1285,65 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a829efa396d5871f596b62b96e3e8daaf" name="a829efa396d5871f596b62b96e3e8daaf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a829efa396d5871f596b62b96e3e8daaf">&#9670;&#160;</a></span>getTableStorageMode()</h2>
+<a id="aed5a3d69d7ce7652d33837fe73defb68" name="aed5a3d69d7ce7652d33837fe73defb68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed5a3d69d7ce7652d33837fe73defb68">&#9670;&#160;</a></span>getPath() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a> SDOM::Variant::getTableStorageMode </td>
+          <td class="memname">bool SDOM::Variant::getPath </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>&#160;) const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a464fd675a8e29d3e91db5b49f95336e0" name="a464fd675a8e29d3e91db5b49f95336e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a464fd675a8e29d3e91db5b49f95336e0">&#9670;&#160;</a></span>getPath() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::getPath </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>out</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a44e1987a8936c50b223a0129c62039fd" name="a44e1987a8936c50b223a0129c62039fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44e1987a8936c50b223a0129c62039fd">&#9670;&#160;</a></span>getPathOr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> SDOM::Variant::getPathOr </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fallback</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a>{}</span>&#160;) const</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -1024,6 +1398,31 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="ac49f20437a2abf82177baf97972f2d4b" name="ac49f20437a2abf82177baf97972f2d4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac49f20437a2abf82177baf97972f2d4b">&#9670;&#160;</a></span>isAssetHandle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::isAssetHandle </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a82038a4a0bc0b4718f4bd787ca88cf6d" name="a82038a4a0bc0b4718f4bd787ca88cf6d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82038a4a0bc0b4718f4bd787ca88cf6d">&#9670;&#160;</a></span>isBool()</h2>
 
@@ -1035,6 +1434,56 @@ template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool SDOM::Variant::isBool </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac23b14de6ff8ddd55aadb681bf92dcdf" name="ac23b14de6ff8ddd55aadb681bf92dcdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac23b14de6ff8ddd55aadb681bf92dcdf">&#9670;&#160;</a></span>isContainer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::isContainer </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc908f50338b8859f65210359db20920" name="adc908f50338b8859f65210359db20920"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc908f50338b8859f65210359db20920">&#9670;&#160;</a></span>isDisplayHandle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::isDisplayHandle </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -1085,31 +1534,6 @@ template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool SDOM::Variant::isInt </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9915fc56a6801b175ae8400dc2e85873" name="a9915fc56a6801b175ae8400dc2e85873"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9915fc56a6801b175ae8400dc2e85873">&#9670;&#160;</a></span>isLuaRef()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SDOM::Variant::isLuaRef </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -1522,6 +1946,40 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="aa37ac0d686c8ab490149d08e04563805" name="aa37ac0d686c8ab490149d08e04563805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa37ac0d686c8ab490149d08e04563805">&#9670;&#160;</a></span>pathExists() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::pathExists </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a70fb6d1628ef48ad0338f4af1c39e93d" name="a70fb6d1628ef48ad0338f4af1c39e93d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70fb6d1628ef48ad0338f4af1c39e93d">&#9670;&#160;</a></span>pathExists() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::pathExists </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a0a5c8acfbcdc93622dae47eb2655dd4a" name="a0a5c8acfbcdc93622dae47eb2655dd4a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0a5c8acfbcdc93622dae47eb2655dd4a">&#9670;&#160;</a></span>push()</h2>
 
@@ -1535,6 +1993,31 @@ template&lt;typename T&gt; </div>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa61ddc6bb75bc45b1398831897744c48" name="aa61ddc6bb75bc45b1398831897744c48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa61ddc6bb75bc45b1398831897744c48">&#9670;&#160;</a></span>registerBindings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::Variant::registerBindings </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1DataRegistry.html">DataRegistry</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>registry</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1620,27 +2103,54 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a7ad1456cd88aad821556882156ba924d" name="a7ad1456cd88aad821556882156ba924d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ad1456cd88aad821556882156ba924d">&#9670;&#160;</a></span>setTableStorageMode()</h2>
+<a id="a0fb2c05806874ab883a1d3e39ff8a4d3" name="a0fb2c05806874ab883a1d3e39ff8a4d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fb2c05806874ab883a1d3e39ff8a4d3">&#9670;&#160;</a></span>setPath() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void SDOM::Variant::setTableStorageMode </td>
+          <td class="memname">bool SDOM::Variant::setPath </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a></td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1PathView.html">PathView</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1PathOptions.html">PathOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>opts</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af9618ee3639d5dcd4f959a15f84f553f" name="af9618ee3639d5dcd4f959a15f84f553f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9618ee3639d5dcd4f959a15f84f553f">&#9670;&#160;</a></span>setPath() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Variant::setPath </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1PathOptions.html">PathOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>opts</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -1670,36 +2180,27 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a6ccbcae7a2d3c09bebb4fb3c418fb091" name="a6ccbcae7a2d3c09bebb4fb3c418fb091"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ccbcae7a2d3c09bebb4fb3c418fb091">&#9670;&#160;</a></span>snapshot() <span class="overload">[1/2]</span></h2>
+<a id="aaa87d750f4b5b7ef679ce7de4fd83e11" name="aaa87d750f4b5b7ef679ce7de4fd83e11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa87d750f4b5b7ef679ce7de4fd83e11">&#9670;&#160;</a></span>toAssetHandle()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> SDOM::Variant::snapshot </td>
+          <td class="memname"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a> SDOM::Variant::toAssetHandle </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a></td>          <td class="paramname"><span class="paramname"><em>def</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="classSDOM_1_1AssetHandle.html">AssetHandle</a>{}</span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="adb4e4ec049cb476a2ea98fb7cb67814e" name="adb4e4ec049cb476a2ea98fb7cb67814e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb4e4ec049cb476a2ea98fb7cb67814e">&#9670;&#160;</a></span>snapshot() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a9a02c687a17443c3d5b62aba8d0bc6cf">Variant</a> SDOM::Variant::snapshot </td>
-          <td>(</td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>L</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1742,6 +2243,31 @@ template&lt;typename T&gt; </div>
           <td> const</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af9f2abf021db95e7a28cdf4ccd16e98c" name="af9f2abf021db95e7a28cdf4ccd16e98c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9f2abf021db95e7a28cdf4ccd16e98c">&#9670;&#160;</a></span>toDisplayHandle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a> SDOM::Variant::toDisplayHandle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a></td>          <td class="paramname"><span class="paramname"><em>def</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="classSDOM_1_1DisplayHandle.html">DisplayHandle</a>{}</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1796,16 +2322,33 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="ac1858b595f7277917fdadcf683c63a06" name="ac1858b595f7277917fdadcf683c63a06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1858b595f7277917fdadcf683c63a06">&#9670;&#160;</a></span>toLua()</h2>
+<a id="a520eb487444b04a1ba351cb5ba2e2a4e" name="a520eb487444b04a1ba351cb5ba2e2a4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a520eb487444b04a1ba351cb5ba2e2a4e">&#9670;&#160;</a></span>toJson() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">sol::object SDOM::Variant::toLua </td>
+          <td class="memname">nlohmann::json SDOM::Variant::toJson </td>
           <td>(</td>
-          <td class="paramtype">sol::state_view</td>          <td class="paramname"><span class="paramname"><em>L</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a690e68614f4c23241cbf9ad8ea41ba13" name="a690e68614f4c23241cbf9ad8ea41ba13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a690e68614f4c23241cbf9ad8ea41ba13">&#9670;&#160;</a></span>toJson() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nlohmann::json SDOM::Variant::toJson </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM_1_1JsonConversionOptions.html">JsonConversionOptions</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>opts</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1826,6 +2369,106 @@ template&lt;typename T&gt; </div>
           <td class="memname">std::string SDOM::Variant::toString </td>
           <td>(</td>
           <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>def</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a17b1e791ee7801820903516bb18656c7" name="a17b1e791ee7801820903516bb18656c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17b1e791ee7801820903516bb18656c7">&#9670;&#160;</a></span>tryBool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; bool &gt; SDOM::Variant::tryBool </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a25f2148001ae94c30f945f15bee9a0ce" name="a25f2148001ae94c30f945f15bee9a0ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25f2148001ae94c30f945f15bee9a0ce">&#9670;&#160;</a></span>tryDouble()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; double &gt; SDOM::Variant::tryDouble </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8869bc55075ed1e46b5f577e69e4f5d8" name="a8869bc55075ed1e46b5f577e69e4f5d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8869bc55075ed1e46b5f577e69e4f5d8">&#9670;&#160;</a></span>tryInt64()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; int64_t &gt; SDOM::Variant::tryInt64 </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6d861186a1dfd24d12b64aef71d9375" name="ab6d861186a1dfd24d12b64aef71d9375"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6d861186a1dfd24d12b64aef71d9375">&#9670;&#160;</a></span>tryString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::string &gt; SDOM::Variant::tryString </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1880,29 +2523,6 @@ template&lt;typename T&gt; </div>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a314259de2c9d70d73df95107cbbca2db" name="a314259de2c9d70d73df95107cbbca2db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a314259de2c9d70d73df95107cbbca2db">&#9670;&#160;</a></span>tableStorageMode</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#a6b332f7c56f99f71979b74792f0fcbda">TableStorageMode</a> SDOM::Variant::tableStorageMode = <a class="el" href="#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea">TableStorageMode::Copy</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

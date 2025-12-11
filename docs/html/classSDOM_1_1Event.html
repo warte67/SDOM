@@ -145,6 +145,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a471798a39788a9c33677f007c8dc00c9" id="r_a471798a39788a9c33677f007c8dc00c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a471798a39788a9c33677f007c8dc00c9">setPayload</a> (const nlohmann::json &amp;j)</td></tr>
 <tr class="memitem:ad471be369769db35b00e06178976618e" id="r_ad471be369769db35b00e06178976618e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad471be369769db35b00e06178976618e">setPayloadString</a> (const std::string &amp;jsonStr)</td></tr>
 <tr class="memitem:a1ff06223dae5d61bf75357e29d12a112" id="r_a1ff06223dae5d61bf75357e29d12a112"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ff06223dae5d61bf75357e29d12a112">getPayloadString</a> () const</td></tr>
+<tr class="memitem:a549d57d8d60459877c45695d97852fd7" id="r_a549d57d8d60459877c45695d97852fd7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a549d57d8d60459877c45695d97852fd7">payloadKeyExists</a> (const std::string &amp;key) const</td></tr>
+<tr class="memitem:ab5b9255b1428fd59900525442ac7934a" id="r_ab5b9255b1428fd59900525442ac7934a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSDOM_1_1Variant.html">Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5b9255b1428fd59900525442ac7934a">getPayloadValueVariant</a> (const std::string &amp;key) const</td></tr>
+<tr class="memitem:a30287b8e2f60bc59f0e167df36aa69ee" id="r_a30287b8e2f60bc59f0e167df36aa69ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30287b8e2f60bc59f0e167df36aa69ee">setPayloadValueVariant</a> (const std::string &amp;key, const <a class="el" href="classSDOM_1_1Variant.html">Variant</a> &amp;value)</td></tr>
 <tr class="memitem:a5c6f69c3f9794faae39affca664ec9dd" id="r_a5c6f69c3f9794faae39affca664ec9dd"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a5c6f69c3f9794faae39affca664ec9dd template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c6f69c3f9794faae39affca664ec9dd">setPayloadValue</a> (const std::string &amp;key, const T &amp;value)</td></tr>
 <tr class="memitem:a10f1935e309d9477e23cecb7e7ab4a45" id="r_a10f1935e309d9477e23cecb7e7ab4a45"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
@@ -926,6 +929,23 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="ab5b9255b1428fd59900525442ac7934a" name="ab5b9255b1428fd59900525442ac7934a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5b9255b1428fd59900525442ac7934a">&#9670;&#160;</a></span>getPayloadValueVariant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSDOM_1_1Variant.html">Variant</a> SDOM::Event::getPayloadValueVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac39e53e59e1340f0f6fd3e5fc052c73d" name="ac39e53e59e1340f0f6fd3e5fc052c73d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac39e53e59e1340f0f6fd3e5fc052c73d">&#9670;&#160;</a></span>getPhase()</h2>
 
@@ -1296,6 +1316,23 @@ template&lt;typename T&gt; </div>
 <span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a549d57d8d60459877c45695d97852fd7" name="a549d57d8d60459877c45695d97852fd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a549d57d8d60459877c45695d97852fd7">&#9670;&#160;</a></span>payloadKeyExists()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM::Event::payloadKeyExists </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -1853,6 +1890,27 @@ template&lt;typename T&gt; </div>
 <span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30287b8e2f60bc59f0e167df36aa69ee" name="a30287b8e2f60bc59f0e167df36aa69ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30287b8e2f60bc59f0e167df36aa69ee">&#9670;&#160;</a></span>setPayloadValueVariant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aca6359d847a47928e544aac6503834c4">Event</a> &amp; SDOM::Event::setPayloadValueVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSDOM_1_1Variant.html">Variant</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

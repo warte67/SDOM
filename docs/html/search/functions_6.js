@@ -16,7 +16,7 @@ var searchData=
   ['fromdouble_13',['FromDouble',['../structSDOM_1_1CAPI_1_1CallResult.html#ab1623460484e964b6e22ee3d1c868d09',1,'SDOM::CAPI::CallResult']]],
   ['fromid_14',['fromId',['../classSDOM_1_1EventType.html#ae9e8eef24eb43f232293486b410c36e3',1,'SDOM::EventType']]],
   ['fromint_15',['FromInt',['../structSDOM_1_1CAPI_1_1CallResult.html#a61ba63485ca93023d2837ffdf0636211',1,'SDOM::CAPI::CallResult']]],
-  ['fromluaobject_16',['fromLuaObject',['../classSDOM_1_1Variant.html#aed37a1b861ecaf5633a625941a87254f',1,'SDOM::Variant']]],
+  ['fromjson_16',['fromJson',['../classSDOM_1_1Variant.html#aa6fdae1b9b1e1e8f8c4b497d187ac0d8',1,'SDOM::Variant::fromJson(const nlohmann::json &amp;j)'],['../classSDOM_1_1Variant.html#a60bb1a3a012a6ea06e5e18d9fdd999fd',1,'SDOM::Variant::fromJson(const nlohmann::json &amp;j, const JsonConversionOptions &amp;opts, std::string *err=nullptr)']]],
   ['fromname_17',['fromName',['../classSDOM_1_1EventType.html#a423891e428ee6565047e562b3c381845',1,'SDOM::EventType']]],
   ['fromptr_18',['FromPtr',['../structSDOM_1_1CAPI_1_1CallResult.html#a80ba1cc02d7a391173e929f7be319dd0',1,'SDOM::CAPI::CallResult']]],
   ['fromstring_19',['FromString',['../structSDOM_1_1CAPI_1_1CallResult.html#adcb3da5f842ec08db2f011a2229354ce',1,'SDOM::CAPI::CallResult']]],

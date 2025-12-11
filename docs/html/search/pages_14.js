@@ -1,9 +1,25 @@
 var searchData=
 [
-  ['test_20harness_20application_3a_0',['Screenshot of the Test Harness application:',['../md_README.html#autotoc_md42',1,'']]],
-  ['the_20example_1',['Running the Example',['../md_README.html#autotoc_md53',1,'']]],
-  ['the_20sdom_20library_2',['Building the SDOM Library',['../md_README.html#autotoc_md52',1,'']]],
-  ['the_20test_20harness_20application_3a_3',['Screenshot of the Test Harness application:',['../md_README.html#autotoc_md42',1,'']]],
-  ['to_20png_20svg_20for_20doxygen_4',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md78',1,'']]],
-  ['type_5',['IDataObject: Data-Driven Base Type',['../md_README.html#autotoc_md45',1,'']]]
+  ['safety_0',['🛡️ Runtime Safety',['../md_README.html#autotoc_md63',1,'']]],
+  ['sample_20release_20build_1',['📈 Results (Sample Release Build)',['../md_README.html#autotoc_md61',1,'']]],
+  ['screenshot_20of_20the_20test_20harness_20application_3a_2',['Screenshot of the Test Harness application:',['../md_README.html#autotoc_md42',1,'']]],
+  ['sdl_20document_20object_20model_20api_3',['SDOM: Simple SDL Document Object Model API',['../md_README.html#autotoc_md40',1,'']]],
+  ['sdl3_20build_20dependencies_4',['SDL3 Build Dependencies',['../md_README.html#autotoc_md82',1,'']]],
+  ['sdl3_20libraries_5',['Build and install SDL3 libraries',['../md_README.html#autotoc_md94',1,'']]],
+  ['sdl3_5fimage_20and_20sdl_5fttf_6',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md93',1,'']]],
+  ['sdl3_5fmixer_20sdl3_5fimage_20and_20sdl_5fttf_7',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md93',1,'']]],
+  ['sdl_5fttf_8',['Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf',['../md_README.html#autotoc_md93',1,'']]],
+  ['sdom_20design_20philosophy_3a_20unification_20over_20division_9',['🌐 SDOM Design Philosophy: Unification Over Division',['../md_README.html#autotoc_md46',1,'']]],
+  ['sdom_20documentation_10',['SDOM Documentation',['../index.html',1,'']]],
+  ['sdom_20library_11',['Building the SDOM Library',['../md_README.html#autotoc_md72',1,'']]],
+  ['sdom_3a_20simple_20sdl_20document_20object_20model_20api_12',['SDOM: Simple SDL Document Object Model API',['../md_README.html#autotoc_md40',1,'']]],
+  ['shared_20language_20for_20data_20across_20the_20entire_20development_20ecosystem_13',['&lt;b&gt;It is a shared language for data across the entire development ecosystem.&lt;/b&gt;',['../md_README.html#autotoc_md55',1,'']]],
+  ['simple_20sdl_20document_20object_20model_20api_14',['SDOM: Simple SDL Document Object Model API',['../md_README.html#autotoc_md40',1,'']]],
+  ['sol2_20recommended_15',['Sol2 (recommended)',['../md_README.html#autotoc_md95',1,'']]],
+  ['started_16',['Getting Started',['../md_README.html#autotoc_md69',1,'']]],
+  ['status_17',['Project Status',['../md_README.html#autotoc_md67',1,'']]],
+  ['structure_18',['Project Structure',['../md_README.html#autotoc_md76',1,'']]],
+  ['studio_20cmake_20integration_19',['Option 3: vcpkg (Visual Studio / CMake Integration)',['../md_README.html#autotoc_md91',1,'']]],
+  ['svg_20for_20doxygen_20',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md97',1,'']]],
+  ['system_21',['✔ A unified type system',['../md_README.html#autotoc_md47',1,'']]]
 ];

@@ -20,9 +20,8 @@ var searchData=
   ['checked_17',['Checked',['../classSDOM.html#af652715c3e637c795824fa0afedda425a2627637e263ef687fa978b576580b8b1',1,'SDOM']]],
   ['clear_18',['Clear',['../classSDOM.html#af652715c3e637c795824fa0afedda425adc30bc0c7914db5918da4263fce93ad2',1,'SDOM']]],
   ['collectgarbage_19',['CollectGarbage',['../classSDOM_1_1Core.html#a8a880d7fcb0f2950db2b24c2e410678ba98e21769bfe671afc300e049f71bb034',1,'SDOM::Core']]],
-  ['copy_20',['Copy',['../classSDOM_1_1Variant.html#a6b332f7c56f99f71979b74792f0fcbdaa5fb63579fc981698f97d55bfecb213ea',1,'SDOM::Variant']]],
-  ['count_21',['Count',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ae93f994f01c537c4e2f7d8528c3eb5e9',1,'SDOM::EventType']]],
-  ['cppcallable_22',['CppCallable',['../structSDOM_1_1FunctionInfo.html#a1837c7443e3de62d1abe1ac7581a2425a2bd811caa0c1cfc62ceb50f742bc0409',1,'SDOM::FunctionInfo']]],
-  ['cstring_23',['CString',['../structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afaa87842d43de0d6fb7d0aef9c7801982c',1,'SDOM::CAPI::CallArg']]],
-  ['custom_24',['Custom',['../classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da90589c47f06eb971d548591f23c285af',1,'SDOM']]]
+  ['count_20',['Count',['../classSDOM_1_1EventType.html#a040bd14a3e4d1bd72274da493b475c30ae93f994f01c537c4e2f7d8528c3eb5e9',1,'SDOM::EventType']]],
+  ['cppcallable_21',['CppCallable',['../structSDOM_1_1FunctionInfo.html#a1837c7443e3de62d1abe1ac7581a2425a2bd811caa0c1cfc62ceb50f742bc0409',1,'SDOM::FunctionInfo']]],
+  ['cstring_22',['CString',['../structSDOM_1_1CAPI_1_1CallArg.html#a2910807aea395e364af7f789bf6364afaa87842d43de0d6fb7d0aef9c7801982c',1,'SDOM::CAPI::CallArg']]],
+  ['custom_23',['Custom',['../classSDOM.html#a25d005f86d3a9c8856e47a0e538d529da90589c47f06eb971d548591f23c285af',1,'SDOM']]]
 ];

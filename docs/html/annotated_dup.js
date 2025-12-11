@@ -92,6 +92,10 @@ var annotated_dup =
       [ "TruetypeFont", "classSDOM_1_1TruetypeFont.html", "classSDOM_1_1TruetypeFont" ],
       [ "TTFAsset", "classSDOM_1_1TTFAsset.html", "classSDOM_1_1TTFAsset" ],
       [ "UnitTests", "classSDOM_1_1UnitTests.html", "classSDOM_1_1UnitTests" ],
+      [ "PathElement", "structSDOM_1_1PathElement.html", "structSDOM_1_1PathElement" ],
+      [ "PathOptions", "structSDOM_1_1PathOptions.html", "structSDOM_1_1PathOptions" ],
+      [ "PathView", "classSDOM_1_1PathView.html", "classSDOM_1_1PathView" ],
+      [ "JsonConversionOptions", "structSDOM_1_1JsonConversionOptions.html", "structSDOM_1_1JsonConversionOptions" ],
       [ "VariantStorage", "structSDOM_1_1VariantStorage.html", "structSDOM_1_1VariantStorage" ],
       [ "Variant", "classSDOM_1_1Variant.html", "classSDOM_1_1Variant" ],
       [ "VariantHash", "structSDOM_1_1VariantHash.html", "structSDOM_1_1VariantHash" ],
@@ -103,5 +107,6 @@ var annotated_dup =
     [ "SDOM_CoreConfig", "structSDOM__CoreConfig.html", "structSDOM__CoreConfig" ],
     [ "SDOM_DisplayHandle", "structSDOM__DisplayHandle.html", "structSDOM__DisplayHandle" ],
     [ "SDOM_Event", "structSDOM__Event.html", "structSDOM__Event" ],
+    [ "SDOM_Variant", "structSDOM__Variant.html", "structSDOM__Variant" ],
     [ "SDOM_Version", "structSDOM__Version.html", "structSDOM__Version" ]
 ];

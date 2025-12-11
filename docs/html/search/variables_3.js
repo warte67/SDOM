@@ -2,7 +2,7 @@ var searchData=
 [
   ['d_0',['d',['../structSDOM_1_1CAPI_1_1CallArg.html#afe13cd6ce19776830da9cb04b55b458b',1,'SDOM::CAPI::CallArg::d'],['../structSDOM_1_1CAPI_1_1CallResult.html#a05f539adba413f2ef9038f48a2ae825e',1,'SDOM::CAPI::CallResult::d']]],
   ['dark_1',['DARK',['../classCLR.html#ae551fce83721f6a2f5627dd88524ef3b',1,'CLR']]],
-  ['data_2',['data',['../structSDOM_1_1VariantStorage.html#a472a7df601a64d74c60c8ef68ee97044',1,'SDOM::VariantStorage']]],
+  ['data_2',['data',['../structSDOM__Variant.html#a29e56330227d485a6bbef6c59740ed93',1,'SDOM_Variant::data'],['../structSDOM_1_1VariantStorage.html#a472a7df601a64d74c60c8ef68ee97044',1,'SDOM::VariantStorage::data']]],
   ['default_5fvalue_3',['default_value',['../structSDOM_1_1PropertyInfo.html#a0fca8865409aa865c46825646b3cf583',1,'SDOM::PropertyInfo']]],
   ['defaultstyle_5f_4',['defaultStyle_',['../classSDOM_1_1Label.html#a8a469d0d7b83e0d76439e53d6cdd3f3b',1,'SDOM::Label']]],
   ['dim_5',['DIM',['../classCLR.html#ae6bf249365e22dd06075824ed57ddfea',1,'CLR']]],

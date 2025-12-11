@@ -1,6 +1,8 @@
 var SDOM__CAPI__Event_8cpp =
 [
     [ "eventImplPtr", "SDOM__CAPI__Event_8cpp.html#a341dd70f5076446d6e801662f32b9e51", null ],
+    [ "SDOM_Event_FromVariant", "SDOM__CAPI__Event_8cpp.html#aac197b9833ad9d3cbb5b4c227e240d00", null ],
+    [ "SDOM_Event_IsEvent", "SDOM__CAPI__Event_8cpp.html#a39c4f9551f595914bd7ecdd2b4cebfd4", null ],
     [ "SDOM_GetEventAsciiCode", "SDOM__CAPI__Event_8cpp.html#a92e0dabf27044d346a8198bf196a61fd", null ],
     [ "SDOM_GetEventButton", "SDOM__CAPI__Event_8cpp.html#ad7eb35e5b9f43547fa935fa501d88b90", null ],
     [ "SDOM_GetEventClickCount", "SDOM__CAPI__Event_8cpp.html#abe669fdebfd2074423a59294d1c8b1c4", null ],
@@ -12,6 +14,7 @@ var SDOM__CAPI__Event_8cpp =
     [ "SDOM_GetEventKeymod", "SDOM__CAPI__Event_8cpp.html#ace863d2c7e3f7a339de22ab3f4be33d6", null ],
     [ "SDOM_GetEventMouseX", "SDOM__CAPI__Event_8cpp.html#ad11da0b41f35370fd538596bfd2500a1", null ],
     [ "SDOM_GetEventMouseY", "SDOM__CAPI__Event_8cpp.html#ab1f7255be1beaf9561d2eaf6d53f912c", null ],
+    [ "SDOM_GetEventPayloadValue", "SDOM__CAPI__Event_8cpp.html#ac879e245d594c99918df97d1d6761b30", null ],
     [ "SDOM_GetEventPhase", "SDOM__CAPI__Event_8cpp.html#a25fa431f2646594203c2e19cb5058ba6", null ],
     [ "SDOM_GetEventPhaseString", "SDOM__CAPI__Event_8cpp.html#a0450534e561f83a987b2ea102c3ea076", null ],
     [ "SDOM_GetEventRelatedTarget", "SDOM__CAPI__Event_8cpp.html#ae76b57f7fc15323e1fda29b1c542c6fc", null ],
@@ -25,6 +28,7 @@ var SDOM__CAPI__Event_8cpp =
     [ "SDOM_GetEventWheelY", "SDOM__CAPI__Event_8cpp.html#a1115ad5e45a3dee2566437ba26caf406", null ],
     [ "SDOM_IsEventDefaultBehaviorDisabled", "SDOM__CAPI__Event_8cpp.html#ab142bd36bdf8a47f243d987e35a78268", null ],
     [ "SDOM_IsEventPropagationStopped", "SDOM__CAPI__Event_8cpp.html#ab6ff2cfd472381df1b9842d56832b31c", null ],
+    [ "SDOM_MakeEvent", "SDOM__CAPI__Event_8cpp.html#ad50be9192e1e9de00405b3008963250c", null ],
     [ "SDOM_SetEventAsciiCode", "SDOM__CAPI__Event_8cpp.html#a5ecf3b914c94ae0bdf35c7b3bd7a8125", null ],
     [ "SDOM_SetEventButton", "SDOM__CAPI__Event_8cpp.html#aa019d4c52d85387dbf0a7302abb4811a", null ],
     [ "SDOM_SetEventClickCount", "SDOM__CAPI__Event_8cpp.html#aea215d27bf8b51bdb0d4d1dafbf6c9e7", null ],
@@ -37,6 +41,7 @@ var SDOM__CAPI__Event_8cpp =
     [ "SDOM_SetEventKeymod", "SDOM__CAPI__Event_8cpp.html#af7d7106a5b0739bb4f2c44d6bcc4513d", null ],
     [ "SDOM_SetEventMouseX", "SDOM__CAPI__Event_8cpp.html#ab6d0447c1734fad76daa4bb0e1f856c1", null ],
     [ "SDOM_SetEventMouseY", "SDOM__CAPI__Event_8cpp.html#a104a8cf61236da695befe74de3370a72", null ],
+    [ "SDOM_SetEventPayloadValue", "SDOM__CAPI__Event_8cpp.html#a9cb09245a0d7b8acf06137a4478fb5c0", null ],
     [ "SDOM_SetEventPhase", "SDOM__CAPI__Event_8cpp.html#aaa2df11469e75841338f627e794e201c", null ],
     [ "SDOM_SetEventRelatedTarget", "SDOM__CAPI__Event_8cpp.html#af8686c0117ca11b76e50bfce80e7a182", null ],
     [ "SDOM_SetEventScanCode", "SDOM__CAPI__Event_8cpp.html#a55b65abc1610790305d68d0722cf96e7", null ],

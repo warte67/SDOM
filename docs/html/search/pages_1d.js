@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🧠_20lifetime_20model_0',['🧠 Lifetime Model',['../classSDOM_1_1DisplayHandle.html#autotoc_md25',1,'']]]
+  ['✨_20the_20result_0',['✨ The Result',['../md_README.html#autotoc_md54',1,'']]]
 ];

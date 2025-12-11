@@ -94,47 +94,132 @@ $(function(){initNavTree('SDOM__CAPI__Handles_8cpp.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="SDOM__CAPI__Handles_8h_source.html">SDOM/CAPI/SDOM_CAPI_Handles.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__CAPI__Core_8h_source.html">SDOM/CAPI/SDOM_CAPI_Core.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__CAPI__Variant_8h_source.html">SDOM/CAPI/SDOM_CAPI_Variant.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__DataRegistry_8hpp_source.html">SDOM/SDOM_DataRegistry.hpp</a>&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad5afd093266d6d973eafaba7ffead870" id="r_ad5afd093266d6d973eafaba7ffead870"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5afd093266d6d973eafaba7ffead870">SDOM_AssetHandle_IsValid</a> (const <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *handle)</td></tr>
-<tr class="memitem:a61f4953da69f0732fe1908d1b8a42041" id="r_a61f4953da69f0732fe1908d1b8a42041"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61f4953da69f0732fe1908d1b8a42041">SDOM_DisplayHandle_IsValid</a> (const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *handle)</td></tr>
+<tr class="memitem:abba4770229fc1e40e6fe4b2fc80de6fd" id="r_abba4770229fc1e40e6fe4b2fc80de6fd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abba4770229fc1e40e6fe4b2fc80de6fd">SDOM_Handle_IsDisplay</a> (const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *handle)</td></tr>
+<tr class="memdesc:abba4770229fc1e40e6fe4b2fc80de6fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when the variant tags a display handle.  <br /></td></tr>
+<tr class="memitem:a2adb6d26d4f706df9da12a4a292ea3f4" id="r_a2adb6d26d4f706df9da12a4a292ea3f4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2adb6d26d4f706df9da12a4a292ea3f4">SDOM_Handle_IsAsset</a> (const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *handle)</td></tr>
+<tr class="memdesc:a2adb6d26d4f706df9da12a4a292ea3f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when the variant tags an asset handle.  <br /></td></tr>
+<tr class="memitem:a2275f571804e08cbe31e2cc0874f71ad" id="r_a2275f571804e08cbe31e2cc0874f71ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2275f571804e08cbe31e2cc0874f71ad">SDOM_Handle_IsValid</a> (const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *handle)</td></tr>
+<tr class="memdesc:a2275f571804e08cbe31e2cc0874f71ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves the tagged handle and reports whether it maps to a live object.  <br /></td></tr>
+<tr class="memitem:ad40d2ed7c92cdc78e718bb12dea00adb" id="r_ad40d2ed7c92cdc78e718bb12dea00adb"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad40d2ed7c92cdc78e718bb12dea00adb">SDOM_Handle_ObjectId</a> (const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *handle)</td></tr>
+<tr class="memdesc:ad40d2ed7c92cdc78e718bb12dea00adb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the underlying object identifier for display or asset handles; returns 0 otherwise.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="ad5afd093266d6d973eafaba7ffead870" name="ad5afd093266d6d973eafaba7ffead870"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5afd093266d6d973eafaba7ffead870">&#9670;&#160;</a></span>SDOM_AssetHandle_IsValid()</h2>
+<a id="a2adb6d26d4f706df9da12a4a292ea3f4" name="a2adb6d26d4f706df9da12a4a292ea3f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2adb6d26d4f706df9da12a4a292ea3f4">&#9670;&#160;</a></span>SDOM_Handle_IsAsset()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SDOM_AssetHandle_IsValid </td>
+          <td class="memname">bool SDOM_Handle_IsAsset </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structSDOM__AssetHandle.html">SDOM_AssetHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true when the variant tags an asset handle. </p>
+<p>C++: <br  />
+ C API: bool <a class="el" href="SDOM__CAPI__Handles_8h.html#a2adb6d26d4f706df9da12a4a292ea3f4" title="Returns true when the variant tags an asset handle.">SDOM_Handle_IsAsset(const SDOM_Variant* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
-<a id="a61f4953da69f0732fe1908d1b8a42041" name="a61f4953da69f0732fe1908d1b8a42041"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61f4953da69f0732fe1908d1b8a42041">&#9670;&#160;</a></span>SDOM_DisplayHandle_IsValid()</h2>
+<a id="abba4770229fc1e40e6fe4b2fc80de6fd" name="abba4770229fc1e40e6fe4b2fc80de6fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abba4770229fc1e40e6fe4b2fc80de6fd">&#9670;&#160;</a></span>SDOM_Handle_IsDisplay()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SDOM_DisplayHandle_IsValid </td>
+          <td class="memname">bool SDOM_Handle_IsDisplay </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true when the variant tags a display handle. </p>
+<p>C++: <br  />
+ C API: bool <a class="el" href="SDOM__CAPI__Handles_8h.html#abba4770229fc1e40e6fe4b2fc80de6fd" title="Returns true when the variant tags a display handle.">SDOM_Handle_IsDisplay(const SDOM_Variant* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
+</div>
+</div>
+<a id="a2275f571804e08cbe31e2cc0874f71ad" name="a2275f571804e08cbe31e2cc0874f71ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2275f571804e08cbe31e2cc0874f71ad">&#9670;&#160;</a></span>SDOM_Handle_IsValid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Handle_IsValid </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resolves the tagged handle and reports whether it maps to a live object. </p>
+<p>C++: <br  />
+ C API: bool <a class="el" href="SDOM__CAPI__Handles_8h.html#a2275f571804e08cbe31e2cc0874f71ad" title="Resolves the tagged handle and reports whether it maps to a live object.">SDOM_Handle_IsValid(const SDOM_Variant* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
+</div>
+</div>
+<a id="ad40d2ed7c92cdc78e718bb12dea00adb" name="ad40d2ed7c92cdc78e718bb12dea00adb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad40d2ed7c92cdc78e718bb12dea00adb">&#9670;&#160;</a></span>SDOM_Handle_ObjectId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t SDOM_Handle_ObjectId </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>handle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the underlying object identifier for display or asset handles; returns 0 otherwise. </p>
+<p>C++: <br  />
+ C API: uint64_t <a class="el" href="SDOM__CAPI__Handles_8h.html#ad40d2ed7c92cdc78e718bb12dea00adb" title="Returns the underlying object identifier for display or asset handles; returns 0 otherwise.">SDOM_Handle_ObjectId(const SDOM_Variant* handle)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">handle</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>uint64_t; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>

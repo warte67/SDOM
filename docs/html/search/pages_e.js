@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['macos_0',['🍎 macOS',['../md_README.html#autotoc_md67',1,'']]],
-  ['mermaid_20diagrams_20to_20png_20svg_20for_20doxygen_1',['Exporting Mermaid Diagrams to PNG/SVG (for Doxygen)',['../md_README.html#autotoc_md78',1,'']]],
-  ['migration_20notes_2',['Migration notes',['../md_README.html#autotoc_md55',1,'']]],
-  ['mingw_20ucrt64_3',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md70',1,'']]],
-  ['model_4',['🧠 Lifetime Model',['../classSDOM_1_1DisplayHandle.html#autotoc_md25',1,'']]],
-  ['model_20api_5',['SDOM: Simple SDL Document Object Model API',['../md_README.html',1,'']]],
-  ['msys2_20mingw_20ucrt64_6',['Option 2: MSYS2 (MinGW / UCRT64)',['../md_README.html#autotoc_md70',1,'']]]
+  ['language_20for_20data_20across_20the_20entire_20development_20ecosystem_0',['&lt;b&gt;It is a shared language for data across the entire development ecosystem.&lt;/b&gt;',['../md_README.html#autotoc_md55',1,'']]],
+  ['libraries_1',['Build and install SDL3 libraries',['../md_README.html#autotoc_md94',1,'']]],
+  ['library_2',['Building the SDOM Library',['../md_README.html#autotoc_md72',1,'']]],
+  ['license_3',['License',['../md_README.html#autotoc_md101',1,'License'],['../namespaceSDOM.html#License',1,'ZLIB License']]],
+  ['lifetime_20model_4',['🧠 Lifetime Model',['../classSDOM_1_1DisplayHandle.html#autotoc_md25',1,'']]],
+  ['linux_5',['🐧 Arch Linux',['../md_README.html#autotoc_md85',1,'']]],
+  ['lua_6',['Why Lua?',['../md_README.html#autotoc_md79',1,'']]],
+  ['lua_20installation_7',['Lua Installation',['../md_README.html#autotoc_md80',1,'']]],
+  ['lua_20integration_20and_20requirements_8',['Lua Integration and Requirements',['../md_README.html#autotoc_md78',1,'']]]
 ];

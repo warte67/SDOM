@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['yet_0',['Yet',['../md_docs_2custom__object__lifecycle.html#autotoc_md56',1,'&lt;span class=&quot;tt&quot;&gt;onInit()&lt;/span&gt;: Setup, Don’t Draw Yet'],['../md_docs_2extensible__factory.html#autotoc_md206',1,'&lt;span class=&quot;tt&quot;&gt;onInit()&lt;/span&gt;: Setup, Don’t Draw Yet']]],
-  ['your_20display_20object_1',['Adding Custom Properties to Your Display Object',['../md_docs_2extensible__factory.html#autotoc_md189',1,'']]],
-  ['your_20logic_3a_20rendering_20layout_20updates_20and_20input_2',['Your Logic: Rendering Layout Updates and Input',['../md_docs_2custom__object__lifecycle.html',1,'Where to Put Your Logic: Rendering, Layout, Updates, and Input'],['../md_docs_2extensible__factory.html#autotoc_md204',1,'Where to Put Your Logic: Rendering, Layout, Updates, and Input']]]
+  ['📈_20results_20sample_20release_20build_0',['📈 Results (Sample Release Build)',['../md_README.html#autotoc_md61',1,'']]]
 ];

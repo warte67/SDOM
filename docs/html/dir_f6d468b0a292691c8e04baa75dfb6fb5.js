@@ -19,5 +19,6 @@ var dir_f6d468b0a292691c8e04baa75dfb6fb5 =
     [ "SDOM_CAPI_Stage.h", "SDOM__CAPI__Stage_8h.html", null ],
     [ "SDOM_CAPI_Texture.h", "SDOM__CAPI__Texture_8h.html", null ],
     [ "SDOM_CAPI_TristateButton.h", "SDOM__CAPI__TristateButton_8h.html", null ],
+    [ "SDOM_CAPI_Variant.h", "SDOM__CAPI__Variant_8h.html", "SDOM__CAPI__Variant_8h" ],
     [ "SDOM_CAPI_Version.h", "SDOM__CAPI__Version_8h.html", "SDOM__CAPI__Version_8h" ]
 ];

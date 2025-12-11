@@ -335,7 +335,9 @@ Public Types</h2></td></tr>
 , <a class="el" href="#adb3cee76d315de64056545773bf0d30ca497031794414a552435f90151ac3b54b">Object</a>
 , <a class="el" href="#adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c">Dynamic</a>
 , <br />
-&#160;&#160;<a class="el" href="#adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958">LuaRef</a>
+&#160;&#160;<a class="el" href="#adb3cee76d315de64056545773bf0d30ca87c135223e752a11ba92d0b72147a5e8">DisplayHandle</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30ca9223f2d534cba65fd8b6a335aecde0cd">AssetHandle</a>
+, <a class="el" href="#adb3cee76d315de64056545773bf0d30caa4ecfc70574394990cf17bd83df499f7">Event</a>
 , <a class="el" href="#adb3cee76d315de64056545773bf0d30ca902b0d55fddef6f8d651fe1035b7d4bd">Error</a>
 <br />
  }</td></tr>
@@ -403,6 +405,7 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:aa9f803db72791406760d7dcc237dca0a" id="r_aa9f803db72791406760d7dcc237dca0a"><td class="memItemLeft" align="right" valign="top">DisplayHandleScratch&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9f803db72791406760d7dcc237dca0a">s_eventTargetScratch</a></td></tr>
 <tr class="memitem:a774347c80a4bc2fe06d5f37f11ccb1ae" id="r_a774347c80a4bc2fe06d5f37f11ccb1ae"><td class="memItemLeft" align="right" valign="top">DisplayHandleScratch&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a774347c80a4bc2fe06d5f37f11ccb1ae">s_eventCurrentTargetScratch</a></td></tr>
 <tr class="memitem:ac935f073f2127ad70532fb3bff5da8b7" id="r_ac935f073f2127ad70532fb3bff5da8b7"><td class="memItemLeft" align="right" valign="top">DisplayHandleScratch&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac935f073f2127ad70532fb3bff5da8b7">s_eventRelatedTargetScratch</a></td></tr>
+<tr class="memitem:a356bb27332d04879e547905ad60c7bd4" id="r_a356bb27332d04879e547905ad60c7bd4"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a356bb27332d04879e547905ad60c7bd4">s_variantStringScratch</a></td></tr>
 <tr class="memitem:af584a39d2e3cf67afac515bca37e91ba" id="r_af584a39d2e3cf67afac515bca37e91ba"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af584a39d2e3cf67afac515bca37e91ba">s_eventtype_id_mutex</a></td></tr>
 <tr class="memitem:aa8b138842446cb2d2cf817552647fe50" id="r_aa8b138842446cb2d2cf817552647fe50"><td class="memItemLeft" align="right" valign="top">static constexpr unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a> = 8</td></tr>
 <tr class="memitem:a46aa961c7fe1079dba58a18e485073df" id="r_a46aa961c7fe1079dba58a18e485073df"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46aa961c7fe1079dba58a18e485073df">SDOM_EVENT_BLOCK_SIZE</a> = (1u &lt;&lt; <a class="el" href="#aa8b138842446cb2d2cf817552647fe50">SDOM_EVENT_ID_SHIFT</a>)</td></tr>
@@ -410,6 +413,7 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a7bc17722e6237e4d6aee1c9a75ea9e4b" id="r_a7bc17722e6237e4d6aee1c9a75ea9e4b"><td class="memItemLeft" align="right" valign="top">static std::unordered_map&lt; std::string, unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bc17722e6237e4d6aee1c9a75ea9e4b">s_category_index</a></td></tr>
 <tr class="memitem:af3e84acc3785e2c0cb1d92b63593330e" id="r_af3e84acc3785e2c0cb1d92b63593330e"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; std::unique_ptr&lt; std::atomic&lt; uint32_t &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3e84acc3785e2c0cb1d92b63593330e">s_next_local_id</a></td></tr>
 <tr class="memitem:a4d02abee5b090d2eaa9e365016465d7b" id="r_a4d02abee5b090d2eaa9e365016465d7b"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d02abee5b090d2eaa9e365016465d7b">s_eventtype_policies_initialized</a> = init_eventtype_policies()</td></tr>
+<tr class="memitem:a0f6ac35ff0a5805922b7ba4ef87b35f1" id="r_a0f6ac35ff0a5805922b7ba4ef87b35f1"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f6ac35ff0a5805922b7ba4ef87b35f1">g_forceSizeQueryFailure</a> {false}</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>[Short one-line summary of class purpose] </p>
@@ -993,7 +997,9 @@ Static Public Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca4410ec34d9e6c1a68100ca0ce033fb17" name="adb3cee76d315de64056545773bf0d30ca4410ec34d9e6c1a68100ca0ce033fb17"></a>Array&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca497031794414a552435f90151ac3b54b" name="adb3cee76d315de64056545773bf0d30ca497031794414a552435f90151ac3b54b"></a>Object&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c" name="adb3cee76d315de64056545773bf0d30ca971fd8cc345d8bd9f92e9f7d88fdf20c"></a>Dynamic&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958" name="adb3cee76d315de64056545773bf0d30ca536b11af87c649dc45cd120041d3d958"></a>LuaRef&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca87c135223e752a11ba92d0b72147a5e8" name="adb3cee76d315de64056545773bf0d30ca87c135223e752a11ba92d0b72147a5e8"></a>DisplayHandle&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca9223f2d534cba65fd8b6a335aecde0cd" name="adb3cee76d315de64056545773bf0d30ca9223f2d534cba65fd8b6a335aecde0cd"></a>AssetHandle&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30caa4ecfc70574394990cf17bd83df499f7" name="adb3cee76d315de64056545773bf0d30caa4ecfc70574394990cf17bd83df499f7"></a>Event&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="adb3cee76d315de64056545773bf0d30ca902b0d55fddef6f8d651fe1035b7d4bd" name="adb3cee76d315de64056545773bf0d30ca902b0d55fddef6f8d651fe1035b7d4bd"></a>Error&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
@@ -1140,6 +1146,28 @@ Static Public Attributes</h2></td></tr>
           <td class="memname"><a class="el" href="classSDOM_1_1Core.html">Core</a>* SDOM::g_core</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0f6ac35ff0a5805922b7ba4ef87b35f1" name="a0f6ac35ff0a5805922b7ba4ef87b35f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f6ac35ff0a5805922b7ba4ef87b35f1">&#9670;&#160;</a></span>g_forceSizeQueryFailure</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic&lt;bool&gt; SDOM::g_forceSizeQueryFailure {false}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1804,6 +1832,28 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a356bb27332d04879e547905ad60c7bd4" name="a356bb27332d04879e547905ad60c7bd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a356bb27332d04879e547905ad60c7bd4">&#9670;&#160;</a></span>s_variantStringScratch</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string SDOM::s_variantStringScratch</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel thread_local">thread_local</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a46aa961c7fe1079dba58a18e485073df" name="a46aa961c7fe1079dba58a18e485073df"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a46aa961c7fe1079dba58a18e485073df">&#9670;&#160;</a></span>SDOM_EVENT_BLOCK_SIZE</h2>
 
@@ -2219,6 +2269,7 @@ SDOM_TestOutputConfig</h1>
 <li>src/<a class="el" href="SDOM__internal__icon__16x16_8cpp.html">SDOM_internal_icon_16x16.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__icon__8x8_8cpp.html">SDOM_internal_icon_8x8.cpp</a></li>
 <li>src/<a class="el" href="SDOM__internal__ttf_8cpp.html">SDOM_internal_ttf.cpp</a></li>
+<li>src/<a class="el" href="SDOM__SpriteSheet_8cpp.html">SDOM_SpriteSheet.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

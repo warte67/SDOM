@@ -111,7 +111,7 @@ Inheritance diagram for SDOM::DisplayHandle:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9f9ea31866be03d2204362d812dbdf79" id="r_a9f9ea31866be03d2204362d812dbdf79"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f9ea31866be03d2204362d812dbdf79">DisplayHandle</a> ()</td></tr>
-<tr class="memitem:ab01642db972798acfc94c77f1b8a8b66" id="r_ab01642db972798acfc94c77f1b8a8b66"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab01642db972798acfc94c77f1b8a8b66">DisplayHandle</a> (const std::string &amp;name, const std::string &amp;type)</td></tr>
+<tr class="memitem:a406b3199b78d5a836727bcb646111ff2" id="r_a406b3199b78d5a836727bcb646111ff2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a406b3199b78d5a836727bcb646111ff2">DisplayHandle</a> (const std::string &amp;name, const std::string &amp;type, uint64_t id=0)</td></tr>
 <tr class="memitem:a49e07bd61d68267865d89e291c0cad51" id="r_a49e07bd61d68267865d89e291c0cad51"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49e07bd61d68267865d89e291c0cad51">DisplayHandle</a> (const DisplayHandle &amp;other)</td></tr>
 <tr class="memitem:a048ead1200d0d865bd4d7400ce5f6953" id="r_a048ead1200d0d865bd4d7400ce5f6953"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9f9ea31866be03d2204362d812dbdf79">DisplayHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a048ead1200d0d865bd4d7400ce5f6953">operator=</a> (const <a class="el" href="#a9f9ea31866be03d2204362d812dbdf79">DisplayHandle</a> &amp;other)</td></tr>
 <tr class="memitem:a5872f5ed807c96e0cdfae8c4d62eaa66" id="r_a5872f5ed807c96e0cdfae8c4d62eaa66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9f9ea31866be03d2204362d812dbdf79">DisplayHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5872f5ed807c96e0cdfae8c4d62eaa66">operator=</a> (<a class="el" href="#a9f9ea31866be03d2204362d812dbdf79">DisplayHandle</a> &amp;&amp;other) noexcept</td></tr>
@@ -136,6 +136,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aead851e82ce4bce3164ffcdc27ce8e72" id="r_aead851e82ce4bce3164ffcdc27ce8e72"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aead851e82ce4bce3164ffcdc27ce8e72">getType</a> () const</td></tr>
 <tr class="memitem:a7ab7df0fe31a8f66b1f20bb2d07c40c3" id="r_a7ab7df0fe31a8f66b1f20bb2d07c40c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ab7df0fe31a8f66b1f20bb2d07c40c3">setName</a> (const std::string &amp;newName)</td></tr>
 <tr class="memitem:aa5431aa2ae62561212d2129cd4c86ddb" id="r_aa5431aa2ae62561212d2129cd4c86ddb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5431aa2ae62561212d2129cd4c86ddb">setType</a> (const std::string &amp;newType)</td></tr>
+<tr class="memitem:a2bf8b8ac36f231d9f228816419965cf2" id="r_a2bf8b8ac36f231d9f228816419965cf2"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bf8b8ac36f231d9f228816419965cf2">getId</a> () const</td></tr>
+<tr class="memitem:a7e4445f95452be63f2c1f8dbb0fb0c43" id="r_a7e4445f95452be63f2c1f8dbb0fb0c43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e4445f95452be63f2c1f8dbb0fb0c43">setId</a> (uint64_t newId)</td></tr>
 <tr class="memitem:ab8fbb280de5de823ca666d8d50fe3395" id="r_ab8fbb280de5de823ca666d8d50fe3395"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8fbb280de5de823ca666d8d50fe3395">str</a> () const</td></tr>
 <tr class="memitem:a2dc4f0f7f6af8b9e6ed74edb234bb511" id="r_a2dc4f0f7f6af8b9e6ed74edb234bb511"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2dc4f0f7f6af8b9e6ed74edb234bb511">c_str</a> () const</td></tr>
 <tr class="memitem:a8cfd62e992f72ef158b3fcd25e0ba3b7" id="r_a8cfd62e992f72ef158b3fcd25e0ba3b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cfd62e992f72ef158b3fcd25e0ba3b7">isValid</a> () const</td></tr>
@@ -236,8 +238,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab01642db972798acfc94c77f1b8a8b66" name="ab01642db972798acfc94c77f1b8a8b66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab01642db972798acfc94c77f1b8a8b66">&#9670;&#160;</a></span>DisplayHandle() <span class="overload">[2/4]</span></h2>
+<a id="a406b3199b78d5a836727bcb646111ff2" name="a406b3199b78d5a836727bcb646111ff2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a406b3199b78d5a836727bcb646111ff2">&#9670;&#160;</a></span>DisplayHandle() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -253,7 +255,12 @@ Static Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t</td>          <td class="paramname"><span class="paramname"><em>id</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -714,6 +721,31 @@ template&lt;typename T&gt; </div>
           <td> const</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2bf8b8ac36f231d9f228816419965cf2" name="a2bf8b8ac36f231d9f228816419965cf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bf8b8ac36f231d9f228816419965cf2">&#9670;&#160;</a></span>getId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t SDOM::DisplayHandle::getId </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1403,6 +1435,31 @@ template&lt;typename Fn&gt; </div>
           <td class="memname">void SDOM::DisplayHandle::reset </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7e4445f95452be63f2c1f8dbb0fb0c43" name="a7e4445f95452be63f2c1f8dbb0fb0c43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e4445f95452be63f2c1f8dbb0fb0c43">&#9670;&#160;</a></span>setId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::DisplayHandle::setId </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t</td>          <td class="paramname"><span class="paramname"><em>newId</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

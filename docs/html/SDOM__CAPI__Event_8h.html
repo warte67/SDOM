@@ -93,8 +93,8 @@ $(function(){initNavTree('SDOM__CAPI__Event_8h.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="SDOM__CAPI__Variant_8h_source.html">SDOM/CAPI/SDOM_CAPI_Variant.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="SDOM__CAPI__Handles_8h_source.html">SDOM/CAPI/SDOM_CAPI_Handles.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="SDOM__CAPI__Event_8h_source.html">SDOM/CAPI/SDOM_CAPI_Event.h</a>&gt;</code><br />
 </div>
 <p><a href="SDOM__CAPI__Event_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -188,50 +188,105 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ae3083bf6700741ca2e26a3bd767d6792" id="r_ae3083bf6700741ca2e26a3bd767d6792"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3083bf6700741ca2e26a3bd767d6792">SDOM_GetEventType</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="#aa0508dec540cd5cee7ffb5fa16cd2d94">SDOM_EventType</a> *out_type)</td></tr>
+<tr class="memdesc:ae3083bf6700741ca2e26a3bd767d6792"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the numeric <a class="el" href="#aa0508dec540cd5cee7ffb5fa16cd2d94">SDOM_EventType</a> id for this event.  <br /></td></tr>
 <tr class="memitem:a4f6ebaccf913b0d2b33d0d175804cd88" id="r_a4f6ebaccf913b0d2b33d0d175804cd88"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f6ebaccf913b0d2b33d0d175804cd88">SDOM_GetEventTypeName</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a4f6ebaccf913b0d2b33d0d175804cd88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the EventType name associated with this event.  <br /></td></tr>
 <tr class="memitem:a25fa431f2646594203c2e19cb5058ba6" id="r_a25fa431f2646594203c2e19cb5058ba6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#afdbccfd0be6549d89bbaaa2c409694f2">SDOM_EventPhase</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25fa431f2646594203c2e19cb5058ba6">SDOM_GetEventPhase</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a25fa431f2646594203c2e19cb5058ba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current propagation phase for this event.  <br /></td></tr>
 <tr class="memitem:aaa2df11469e75841338f627e794e201c" id="r_aaa2df11469e75841338f627e794e201c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa2df11469e75841338f627e794e201c">SDOM_SetEventPhase</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="#afdbccfd0be6549d89bbaaa2c409694f2">SDOM_EventPhase</a> phase)</td></tr>
+<tr class="memdesc:aaa2df11469e75841338f627e794e201c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the propagation phase for this event.  <br /></td></tr>
 <tr class="memitem:a0450534e561f83a987b2ea102c3ea076" id="r_a0450534e561f83a987b2ea102c3ea076"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0450534e561f83a987b2ea102c3ea076">SDOM_GetEventPhaseString</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a0450534e561f83a987b2ea102c3ea076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the textual description of the current dispatch phase.  <br /></td></tr>
 <tr class="memitem:a8267c7e12fe589d5ddfe0dadadc8d3ee" id="r_a8267c7e12fe589d5ddfe0dadadc8d3ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8267c7e12fe589d5ddfe0dadadc8d3ee">SDOM_GetEventTarget</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_target)</td></tr>
+<tr class="memdesc:a8267c7e12fe589d5ddfe0dadadc8d3ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the event's target DisplayHandle into an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot.  <br /></td></tr>
 <tr class="memitem:a07a22081be95381a332a2c5d689e7e1b" id="r_a07a22081be95381a332a2c5d689e7e1b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07a22081be95381a332a2c5d689e7e1b">SDOM_SetEventTarget</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *new_target)</td></tr>
+<tr class="memdesc:a07a22081be95381a332a2c5d689e7e1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns a new DisplayHandle target snapshot to the event.  <br /></td></tr>
 <tr class="memitem:ad19331a1b584170cb44a2430c7c16a2a" id="r_ad19331a1b584170cb44a2430c7c16a2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad19331a1b584170cb44a2430c7c16a2a">SDOM_GetEventCurrentTarget</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_target)</td></tr>
+<tr class="memdesc:ad19331a1b584170cb44a2430c7c16a2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the current dispatch target DisplayHandle into an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot.  <br /></td></tr>
 <tr class="memitem:a81c511c705d94f5788f1fa0e3cc70b8f" id="r_a81c511c705d94f5788f1fa0e3cc70b8f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81c511c705d94f5788f1fa0e3cc70b8f">SDOM_SetEventCurrentTarget</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *new_target)</td></tr>
+<tr class="memdesc:a81c511c705d94f5788f1fa0e3cc70b8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns a new current dispatch target via an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot.  <br /></td></tr>
 <tr class="memitem:ae76b57f7fc15323e1fda29b1c542c6fc" id="r_ae76b57f7fc15323e1fda29b1c542c6fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae76b57f7fc15323e1fda29b1c542c6fc">SDOM_GetEventRelatedTarget</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *out_target)</td></tr>
+<tr class="memdesc:ae76b57f7fc15323e1fda29b1c542c6fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the related target DisplayHandle (if any) into an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot.  <br /></td></tr>
 <tr class="memitem:af8686c0117ca11b76e50bfce80e7a182" id="r_af8686c0117ca11b76e50bfce80e7a182"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8686c0117ca11b76e50bfce80e7a182">SDOM_SetEventRelatedTarget</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> *new_target)</td></tr>
+<tr class="memdesc:af8686c0117ca11b76e50bfce80e7a182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns a new related target DisplayHandle snapshot on the event.  <br /></td></tr>
 <tr class="memitem:a3635e9c4bfee94479fdc7ba1265b4d58" id="r_a3635e9c4bfee94479fdc7ba1265b4d58"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3635e9c4bfee94479fdc7ba1265b4d58">SDOM_GetEventSDLJson</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a3635e9c4bfee94479fdc7ba1265b4d58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes the embedded SDL_Event into a JSON snapshot for interop.  <br /></td></tr>
 <tr class="memitem:a3913dab2345d762025ef15570da264d3" id="r_a3913dab2345d762025ef15570da264d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3913dab2345d762025ef15570da264d3">SDOM_SetEventSDLJson</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const char *json)</td></tr>
+<tr class="memdesc:a3913dab2345d762025ef15570da264d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructs the embedded SDL_Event from a JSON snapshot.  <br /></td></tr>
+<tr class="memitem:ac879e245d594c99918df97d1d6761b30" id="r_ac879e245d594c99918df97d1d6761b30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac879e245d594c99918df97d1d6761b30">SDOM_GetEventPayloadValue</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const char *key, <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *out_value)</td></tr>
+<tr class="memdesc:ac879e245d594c99918df97d1d6761b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a payload entry as an <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> (null/bool/int/float/string).  <br /></td></tr>
+<tr class="memitem:a9cb09245a0d7b8acf06137a4478fb5c0" id="r_a9cb09245a0d7b8acf06137a4478fb5c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cb09245a0d7b8acf06137a4478fb5c0">SDOM_SetEventPayloadValue</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, const char *key, const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *value)</td></tr>
+<tr class="memdesc:a9cb09245a0d7b8acf06137a4478fb5c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a payload entry from an <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> (null/bool/int/float/string).  <br /></td></tr>
 <tr class="memitem:ab6ff2cfd472381df1b9842d56832b31c" id="r_ab6ff2cfd472381df1b9842d56832b31c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6ff2cfd472381df1b9842d56832b31c">SDOM_IsEventPropagationStopped</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ab6ff2cfd472381df1b9842d56832b31c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if propagation has been stopped for this event.  <br /></td></tr>
 <tr class="memitem:ae9028ae7103e5461854d0568d79cbb56" id="r_ae9028ae7103e5461854d0568d79cbb56"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9028ae7103e5461854d0568d79cbb56">SDOM_StopEventPropagation</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ae9028ae7103e5461854d0568d79cbb56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops event propagation (capture/bubble) for this event instance.  <br /></td></tr>
 <tr class="memitem:ab142bd36bdf8a47f243d987e35a78268" id="r_ab142bd36bdf8a47f243d987e35a78268"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab142bd36bdf8a47f243d987e35a78268">SDOM_IsEventDefaultBehaviorDisabled</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ab142bd36bdf8a47f243d987e35a78268"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the event's default behavior has been disabled.  <br /></td></tr>
 <tr class="memitem:a7c655665a9e099e812756bc78d5af52d" id="r_a7c655665a9e099e812756bc78d5af52d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c655665a9e099e812756bc78d5af52d">SDOM_SetEventDisableDefaultBehavior</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, bool disable)</td></tr>
+<tr class="memdesc:a7c655665a9e099e812756bc78d5af52d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables the event's default behavior.  <br /></td></tr>
 <tr class="memitem:aa5a14f9605c86665311e49f621e9e5ab" id="r_aa5a14f9605c86665311e49f621e9e5ab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5a14f9605c86665311e49f621e9e5ab">SDOM_GetEventUseCapture</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:aa5a14f9605c86665311e49f621e9e5ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether this event is currently using capture semantics.  <br /></td></tr>
 <tr class="memitem:ad4a1bbea2452731cd96aa7cf8c668de7" id="r_ad4a1bbea2452731cd96aa7cf8c668de7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4a1bbea2452731cd96aa7cf8c668de7">SDOM_SetEventUseCapture</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, bool use_capture)</td></tr>
+<tr class="memdesc:ad4a1bbea2452731cd96aa7cf8c668de7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether this event should use capture semantics during dispatch.  <br /></td></tr>
 <tr class="memitem:a476d335d58d99fee28af851ff3015e06" id="r_a476d335d58d99fee28af851ff3015e06"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a476d335d58d99fee28af851ff3015e06">SDOM_GetEventElapsedTime</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a476d335d58d99fee28af851ff3015e06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the elapsed time associated with this event in seconds.  <br /></td></tr>
 <tr class="memitem:ae54219ba9ca3964585cabc7604e7c991" id="r_ae54219ba9ca3964585cabc7604e7c991"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae54219ba9ca3964585cabc7604e7c991">SDOM_SetEventElapsedTime</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float elapsed_time)</td></tr>
+<tr class="memdesc:ae54219ba9ca3964585cabc7604e7c991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the elapsed time (in seconds) for this event instance.  <br /></td></tr>
 <tr class="memitem:ad11da0b41f35370fd538596bfd2500a1" id="r_ad11da0b41f35370fd538596bfd2500a1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad11da0b41f35370fd538596bfd2500a1">SDOM_GetEventMouseX</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ad11da0b41f35370fd538596bfd2500a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the cached mouse X coordinate for the event.  <br /></td></tr>
 <tr class="memitem:ab6d0447c1734fad76daa4bb0e1f856c1" id="r_ab6d0447c1734fad76daa4bb0e1f856c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6d0447c1734fad76daa4bb0e1f856c1">SDOM_SetEventMouseX</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float x)</td></tr>
+<tr class="memdesc:ab6d0447c1734fad76daa4bb0e1f856c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the mouse X coordinate for the event payload.  <br /></td></tr>
 <tr class="memitem:ab1f7255be1beaf9561d2eaf6d53f912c" id="r_ab1f7255be1beaf9561d2eaf6d53f912c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1f7255be1beaf9561d2eaf6d53f912c">SDOM_GetEventMouseY</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ab1f7255be1beaf9561d2eaf6d53f912c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the cached mouse Y coordinate for the event.  <br /></td></tr>
 <tr class="memitem:a104a8cf61236da695befe74de3370a72" id="r_a104a8cf61236da695befe74de3370a72"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a104a8cf61236da695befe74de3370a72">SDOM_SetEventMouseY</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float y)</td></tr>
+<tr class="memdesc:a104a8cf61236da695befe74de3370a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the mouse Y coordinate for the event payload.  <br /></td></tr>
 <tr class="memitem:ae321417a6fcac11f4d0bd4b4458bf2a2" id="r_ae321417a6fcac11f4d0bd4b4458bf2a2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae321417a6fcac11f4d0bd4b4458bf2a2">SDOM_GetEventWheelX</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ae321417a6fcac11f4d0bd4b4458bf2a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the horizontal wheel delta collected for the event.  <br /></td></tr>
 <tr class="memitem:a9eac4f302817d0dff7afb9089de763ef" id="r_a9eac4f302817d0dff7afb9089de763ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9eac4f302817d0dff7afb9089de763ef">SDOM_SetEventWheelX</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float x)</td></tr>
+<tr class="memdesc:a9eac4f302817d0dff7afb9089de763ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the horizontal wheel delta in the payload.  <br /></td></tr>
 <tr class="memitem:a1115ad5e45a3dee2566437ba26caf406" id="r_a1115ad5e45a3dee2566437ba26caf406"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1115ad5e45a3dee2566437ba26caf406">SDOM_GetEventWheelY</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a1115ad5e45a3dee2566437ba26caf406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the vertical wheel delta collected for the event.  <br /></td></tr>
 <tr class="memitem:ac05a7deb669ddeca3c4059dabfdebb6b" id="r_ac05a7deb669ddeca3c4059dabfdebb6b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac05a7deb669ddeca3c4059dabfdebb6b">SDOM_SetEventWheelY</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float y)</td></tr>
+<tr class="memdesc:ac05a7deb669ddeca3c4059dabfdebb6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the vertical wheel delta in the payload.  <br /></td></tr>
 <tr class="memitem:adcb034628d5ed3e59eca310db89bca18" id="r_adcb034628d5ed3e59eca310db89bca18"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcb034628d5ed3e59eca310db89bca18">SDOM_GetEventDragOffsetX</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:adcb034628d5ed3e59eca310db89bca18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the drag offset (X axis) for drag events.  <br /></td></tr>
 <tr class="memitem:ad85d93f0b27aea48d3c0f76e67e59603" id="r_ad85d93f0b27aea48d3c0f76e67e59603"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad85d93f0b27aea48d3c0f76e67e59603">SDOM_SetEventDragOffsetX</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float offset_x)</td></tr>
+<tr class="memdesc:ad85d93f0b27aea48d3c0f76e67e59603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the drag offset (X axis) into the event payload.  <br /></td></tr>
 <tr class="memitem:abf11ab0f9092dc9d59dbcde9c151f756" id="r_abf11ab0f9092dc9d59dbcde9c151f756"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf11ab0f9092dc9d59dbcde9c151f756">SDOM_GetEventDragOffsetY</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:abf11ab0f9092dc9d59dbcde9c151f756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides the drag offset (Y axis) for drag events.  <br /></td></tr>
 <tr class="memitem:a242bca7cce883b07ed23b4f520d0deeb" id="r_a242bca7cce883b07ed23b4f520d0deeb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a242bca7cce883b07ed23b4f520d0deeb">SDOM_SetEventDragOffsetY</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, float offset_y)</td></tr>
+<tr class="memdesc:a242bca7cce883b07ed23b4f520d0deeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the drag offset (Y axis) into the event payload.  <br /></td></tr>
 <tr class="memitem:abe669fdebfd2074423a59294d1c8b1c4" id="r_abe669fdebfd2074423a59294d1c8b1c4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe669fdebfd2074423a59294d1c8b1c4">SDOM_GetEventClickCount</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:abe669fdebfd2074423a59294d1c8b1c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the click count (single/double/etc.) stored in the event.  <br /></td></tr>
 <tr class="memitem:aea215d27bf8b51bdb0d4d1dafbf6c9e7" id="r_aea215d27bf8b51bdb0d4d1dafbf6c9e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea215d27bf8b51bdb0d4d1dafbf6c9e7">SDOM_SetEventClickCount</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int count)</td></tr>
+<tr class="memdesc:aea215d27bf8b51bdb0d4d1dafbf6c9e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the click count metadata for the event payload.  <br /></td></tr>
 <tr class="memitem:ad7eb35e5b9f43547fa935fa501d88b90" id="r_ad7eb35e5b9f43547fa935fa501d88b90"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7eb35e5b9f43547fa935fa501d88b90">SDOM_GetEventButton</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ad7eb35e5b9f43547fa935fa501d88b90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the mouse button identifier that triggered the event.  <br /></td></tr>
 <tr class="memitem:aa019d4c52d85387dbf0a7302abb4811a" id="r_aa019d4c52d85387dbf0a7302abb4811a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa019d4c52d85387dbf0a7302abb4811a">SDOM_SetEventButton</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, uint8_t button)</td></tr>
+<tr class="memdesc:aa019d4c52d85387dbf0a7302abb4811a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the mouse button identifier for this event payload.  <br /></td></tr>
 <tr class="memitem:ab0c6e7e7c7d73a132b24a4b9747a00cf" id="r_ab0c6e7e7c7d73a132b24a4b9747a00cf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0c6e7e7c7d73a132b24a4b9747a00cf">SDOM_GetEventScanCode</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ab0c6e7e7c7d73a132b24a4b9747a00cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the SDL scancode associated with the keyboard event.  <br /></td></tr>
 <tr class="memitem:a55b65abc1610790305d68d0722cf96e7" id="r_a55b65abc1610790305d68d0722cf96e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55b65abc1610790305d68d0722cf96e7">SDOM_SetEventScanCode</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int scancode)</td></tr>
+<tr class="memdesc:a55b65abc1610790305d68d0722cf96e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the SDL scancode metadata for the keyboard event.  <br /></td></tr>
 <tr class="memitem:a77b455f90698f5d5ab914a6d7af234ec" id="r_a77b455f90698f5d5ab914a6d7af234ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77b455f90698f5d5ab914a6d7af234ec">SDOM_GetEventKeycode</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a77b455f90698f5d5ab914a6d7af234ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the SDL keycode value stored on the event.  <br /></td></tr>
 <tr class="memitem:af12d4cf5eb6c0f6f5be582ca1dcaa03d" id="r_af12d4cf5eb6c0f6f5be582ca1dcaa03d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af12d4cf5eb6c0f6f5be582ca1dcaa03d">SDOM_SetEventKeycode</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int keycode)</td></tr>
+<tr class="memdesc:af12d4cf5eb6c0f6f5be582ca1dcaa03d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the SDL keycode value for the event payload.  <br /></td></tr>
 <tr class="memitem:ace863d2c7e3f7a339de22ab3f4be33d6" id="r_ace863d2c7e3f7a339de22ab3f4be33d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace863d2c7e3f7a339de22ab3f4be33d6">SDOM_GetEventKeymod</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:ace863d2c7e3f7a339de22ab3f4be33d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the SDL key modifier mask stored on the event.  <br /></td></tr>
 <tr class="memitem:af7d7106a5b0739bb4f2c44d6bcc4513d" id="r_af7d7106a5b0739bb4f2c44d6bcc4513d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7d7106a5b0739bb4f2c44d6bcc4513d">SDOM_SetEventKeymod</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int keymod)</td></tr>
+<tr class="memdesc:af7d7106a5b0739bb4f2c44d6bcc4513d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the key modifier mask for the keyboard event.  <br /></td></tr>
 <tr class="memitem:a92e0dabf27044d346a8198bf196a61fd" id="r_a92e0dabf27044d346a8198bf196a61fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92e0dabf27044d346a8198bf196a61fd">SDOM_GetEventAsciiCode</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt)</td></tr>
+<tr class="memdesc:a92e0dabf27044d346a8198bf196a61fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the translated ASCII code (if available) for the keypress.  <br /></td></tr>
 <tr class="memitem:a5ecf3b914c94ae0bdf35c7b3bd7a8125" id="r_a5ecf3b914c94ae0bdf35c7b3bd7a8125"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ecf3b914c94ae0bdf35c7b3bd7a8125">SDOM_SetEventAsciiCode</a> (<a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, int ascii_code)</td></tr>
+<tr class="memdesc:a5ecf3b914c94ae0bdf35c7b3bd7a8125"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the translated ASCII code for the keyboard event payload.  <br /></td></tr>
+<tr class="memitem:ad50be9192e1e9de00405b3008963250c" id="r_ad50be9192e1e9de00405b3008963250c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad50be9192e1e9de00405b3008963250c">SDOM_MakeEvent</a> (const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *evt, <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *out_value)</td></tr>
+<tr class="memdesc:ad50be9192e1e9de00405b3008963250c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wraps an <a class="el" href="structSDOM__Event.html">SDOM_Event</a> handle into an <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> tagged as EVENT.  <br /></td></tr>
+<tr class="memitem:a39c4f9551f595914bd7ecdd2b4cebfd4" id="r_a39c4f9551f595914bd7ecdd2b4cebfd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39c4f9551f595914bd7ecdd2b4cebfd4">SDOM_Event_IsEvent</a> (const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *value)</td></tr>
+<tr class="memdesc:a39c4f9551f595914bd7ecdd2b4cebfd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true when the variant tags an event handle.  <br /></td></tr>
+<tr class="memitem:aac197b9833ad9d3cbb5b4c227e240d00" id="r_aac197b9833ad9d3cbb5b4c227e240d00"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac197b9833ad9d3cbb5b4c227e240d00">SDOM_Event_FromVariant</a> (const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *value, <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *out_evt)</td></tr>
+<tr class="memdesc:aac197b9833ad9d3cbb5b4c227e240d00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the <a class="el" href="structSDOM__Event.html">SDOM_Event</a> handle from an event-tagged variant.  <br /></td></tr>
 </table>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
 <a id="a8589ebadd340f188999e16007a7f453f" name="a8589ebadd340f188999e16007a7f453f"></a>
@@ -424,6 +479,67 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="aac197b9833ad9d3cbb5b4c227e240d00" name="aac197b9833ad9d3cbb5b4c227e240d00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac197b9833ad9d3cbb5b4c227e240d00">&#9670;&#160;</a></span>SDOM_Event_FromVariant()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Event_FromVariant </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>out_evt</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Extracts the <a class="el" href="structSDOM__Event.html">SDOM_Event</a> handle from an event-tagged variant. </p>
+<p>C++: <br  />
+ C API: bool <a class="el" href="#aac197b9833ad9d3cbb5b4c227e240d00" title="Extracts the SDOM_Event handle from an event-tagged variant.">SDOM_Event_FromVariant(const SDOM_Variant* value, SDOM_Event* out_evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
+</div>
+</div>
+<a id="a39c4f9551f595914bd7ecdd2b4cebfd4" name="a39c4f9551f595914bd7ecdd2b4cebfd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39c4f9551f595914bd7ecdd2b4cebfd4">&#9670;&#160;</a></span>SDOM_Event_IsEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_Event_IsEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true when the variant tags an event handle. </p>
+<p>C++: <br  />
+ C API: bool <a class="el" href="#a39c4f9551f595914bd7ecdd2b4cebfd4" title="Returns true when the variant tags an event handle.">SDOM_Event_IsEvent(const SDOM_Variant* value)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
+</div>
+</div>
 <a id="a92e0dabf27044d346a8198bf196a61fd" name="a92e0dabf27044d346a8198bf196a61fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92e0dabf27044d346a8198bf196a61fd">&#9670;&#160;</a></span>SDOM_GetEventAsciiCode()</h2>
 
@@ -438,6 +554,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the translated ASCII code (if available) for the keypress. </p>
+<p>C++: int Event::getAsciiCode() const C API: int <a class="el" href="#a92e0dabf27044d346a8198bf196a61fd" title="Returns the translated ASCII code (if available) for the keypress.">SDOM_GetEventAsciiCode(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -456,6 +582,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the mouse button identifier that triggered the event. </p>
+<p>C++: uint8_t Event::getButton() const C API: uint8_t <a class="el" href="#ad7eb35e5b9f43547fa935fa501d88b90" title="Returns the mouse button identifier that triggered the event.">SDOM_GetEventButton(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="abe669fdebfd2074423a59294d1c8b1c4" name="abe669fdebfd2074423a59294d1c8b1c4"></a>
@@ -472,6 +608,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the click count (single/double/etc.) stored in the event. </p>
+<p>C++: int Event::getClickCount() const C API: int <a class="el" href="#abe669fdebfd2074423a59294d1c8b1c4" title="Returns the click count (single/double/etc.) stored in the event.">SDOM_GetEventClickCount(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -494,6 +640,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Copies the current dispatch target DisplayHandle into an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot. </p>
+<p>C++: DisplayHandle Event::getCurrentTarget() const C API: bool <a class="el" href="#ad19331a1b584170cb44a2430c7c16a2a" title="Copies the current dispatch target DisplayHandle into an SDOM_DisplayHandle snapshot.">SDOM_GetEventCurrentTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_target</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="adcb034628d5ed3e59eca310db89bca18" name="adcb034628d5ed3e59eca310db89bca18"></a>
@@ -510,6 +667,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Provides the drag offset (X axis) for drag events. </p>
+<p>C++: float Event::getDragOffsetX() const C API: float <a class="el" href="#adcb034628d5ed3e59eca310db89bca18" title="Provides the drag offset (X axis) for drag events.">SDOM_GetEventDragOffsetX(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -528,6 +695,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Provides the drag offset (Y axis) for drag events. </p>
+<p>C++: float Event::getDragOffsetY() const C API: float <a class="el" href="#abf11ab0f9092dc9d59dbcde9c151f756" title="Provides the drag offset (Y axis) for drag events.">SDOM_GetEventDragOffsetY(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a476d335d58d99fee28af851ff3015e06" name="a476d335d58d99fee28af851ff3015e06"></a>
@@ -544,6 +721,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves the elapsed time associated with this event in seconds. </p>
+<p>C++: float Event::getElapsedTime() const C API: float <a class="el" href="#a476d335d58d99fee28af851ff3015e06" title="Retrieves the elapsed time associated with this event in seconds.">SDOM_GetEventElapsedTime(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -562,6 +749,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Retrieves the SDL keycode value stored on the event. </p>
+<p>C++: SDL_Keycode Event::getKeycode() const C API: int <a class="el" href="#a77b455f90698f5d5ab914a6d7af234ec" title="Retrieves the SDL keycode value stored on the event.">SDOM_GetEventKeycode(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ace863d2c7e3f7a339de22ab3f4be33d6" name="ace863d2c7e3f7a339de22ab3f4be33d6"></a>
@@ -578,6 +775,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the SDL key modifier mask stored on the event. </p>
+<p>C++: Uint16 Event::getKeymod() const C API: int <a class="el" href="#ace863d2c7e3f7a339de22ab3f4be33d6" title="Returns the SDL key modifier mask stored on the event.">SDOM_GetEventKeymod(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -596,6 +803,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Retrieves the cached mouse X coordinate for the event. </p>
+<p>C++: float Event::getMouseX() const C API: float <a class="el" href="#ad11da0b41f35370fd538596bfd2500a1" title="Retrieves the cached mouse X coordinate for the event.">SDOM_GetEventMouseX(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab1f7255be1beaf9561d2eaf6d53f912c" name="ab1f7255be1beaf9561d2eaf6d53f912c"></a>
@@ -612,6 +829,54 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves the cached mouse Y coordinate for the event. </p>
+<p>C++: float Event::getMouseY() const C API: float <a class="el" href="#ab1f7255be1beaf9561d2eaf6d53f912c" title="Retrieves the cached mouse Y coordinate for the event.">SDOM_GetEventMouseY(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
+</div>
+</div>
+<a id="ac879e245d594c99918df97d1d6761b30" name="ac879e245d594c99918df97d1d6761b30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac879e245d594c99918df97d1d6761b30">&#9670;&#160;</a></span>SDOM_GetEventPayloadValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_GetEventPayloadValue </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>out_value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves a payload entry as an <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> (null/bool/int/float/string). </p>
+<p>C++: Variant Event::getPayloadValueVariant(const std::string&amp; key) const C API: bool <a class="el" href="#ac879e245d594c99918df97d1d6761b30" title="Retrieves a payload entry as an SDOM_Variant (null/bool/int/float/string).">SDOM_GetEventPayloadValue(const SDOM_Event* evt, const char* key, SDOM_Variant* out_value)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">key</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_value</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -630,6 +895,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the current propagation phase for this event. </p>
+<p>C++: Event::Phase Event::getPhase() const C API: <a class="el" href="#afdbccfd0be6549d89bbaaa2c409694f2">SDOM_EventPhase</a> <a class="el" href="#a25fa431f2646594203c2e19cb5058ba6" title="Returns the current propagation phase for this event.">SDOM_GetEventPhase(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="#afdbccfd0be6549d89bbaaa2c409694f2">SDOM_EventPhase</a>; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a0450534e561f83a987b2ea102c3ea076" name="a0450534e561f83a987b2ea102c3ea076"></a>
@@ -646,6 +921,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves the textual description of the current dispatch phase. </p>
+<p>C++: std::string Event::getPhaseString() const C API: const char* <a class="el" href="#a0450534e561f83a987b2ea102c3ea076" title="Retrieves the textual description of the current dispatch phase.">SDOM_GetEventPhaseString(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -668,6 +953,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Copies the related target DisplayHandle (if any) into an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot. </p>
+<p>C++: DisplayHandle Event::getRelatedTarget() const C API: bool <a class="el" href="#ae76b57f7fc15323e1fda29b1c542c6fc" title="Copies the related target DisplayHandle (if any) into an SDOM_DisplayHandle snapshot.">SDOM_GetEventRelatedTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_target</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab0c6e7e7c7d73a132b24a4b9747a00cf" name="ab0c6e7e7c7d73a132b24a4b9747a00cf"></a>
@@ -685,6 +981,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Retrieves the SDL scancode associated with the keyboard event. </p>
+<p>C++: SDL_Scancode Event::getScanCode() const C API: int <a class="el" href="#ab0c6e7e7c7d73a132b24a4b9747a00cf" title="Retrieves the SDL scancode associated with the keyboard event.">SDOM_GetEventScanCode(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>int; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a3635e9c4bfee94479fdc7ba1265b4d58" name="a3635e9c4bfee94479fdc7ba1265b4d58"></a>
@@ -701,6 +1007,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Serializes the embedded SDL_Event into a JSON snapshot for interop. </p>
+<p>C++: std::string Event::getSDL_EventJson() const C API: const char* <a class="el" href="#a3635e9c4bfee94479fdc7ba1265b4d58" title="Serializes the embedded SDL_Event into a JSON snapshot for interop.">SDOM_GetEventSDLJson(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -723,6 +1039,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Copies the event's target DisplayHandle into an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot. </p>
+<p>C++: DisplayHandle Event::getTarget() const C API: bool <a class="el" href="#a8267c7e12fe589d5ddfe0dadadc8d3ee" title="Copies the event&#39;s target DisplayHandle into an SDOM_DisplayHandle snapshot.">SDOM_GetEventTarget(const SDOM_Event* evt, SDOM_DisplayHandle* out_target)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_target</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ae3083bf6700741ca2e26a3bd767d6792" name="ae3083bf6700741ca2e26a3bd767d6792"></a>
@@ -744,6 +1071,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Retrieves the numeric <a class="el" href="#aa0508dec540cd5cee7ffb5fa16cd2d94">SDOM_EventType</a> id for this event. </p>
+<p>C++: EventType Event::getType() const C API: bool <a class="el" href="#ae3083bf6700741ca2e26a3bd767d6792" title="Retrieves the numeric SDOM_EventType id for this event.">SDOM_GetEventType(const SDOM_Event* evt, SDOM_EventType* out_type)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_type</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>EventType; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a4f6ebaccf913b0d2b33d0d175804cd88" name="a4f6ebaccf913b0d2b33d0d175804cd88"></a>
@@ -760,6 +1098,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Retrieves the EventType name associated with this event. </p>
+<p>C++: std::string Event::getTypeName() const C API: const char* <a class="el" href="#a4f6ebaccf913b0d2b33d0d175804cd88" title="Retrieves the EventType name associated with this event.">SDOM_GetEventTypeName(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>const char*; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -778,6 +1126,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns whether this event is currently using capture semantics. </p>
+<p>C++: bool Event::getUseCapture() const C API: bool <a class="el" href="#aa5a14f9605c86665311e49f621e9e5ab" title="Returns whether this event is currently using capture semantics.">SDOM_GetEventUseCapture(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ae321417a6fcac11f4d0bd4b4458bf2a2" name="ae321417a6fcac11f4d0bd4b4458bf2a2"></a>
@@ -794,6 +1152,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the horizontal wheel delta collected for the event. </p>
+<p>C++: float Event::getWheelX() const C API: float <a class="el" href="#ae321417a6fcac11f4d0bd4b4458bf2a2" title="Returns the horizontal wheel delta collected for the event.">SDOM_GetEventWheelX(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -812,6 +1180,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the vertical wheel delta collected for the event. </p>
+<p>C++: float Event::getWheelY() const C API: float <a class="el" href="#a1115ad5e45a3dee2566437ba26caf406" title="Returns the vertical wheel delta collected for the event.">SDOM_GetEventWheelY(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>float; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab142bd36bdf8a47f243d987e35a78268" name="ab142bd36bdf8a47f243d987e35a78268"></a>
@@ -829,6 +1207,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if the event's default behavior has been disabled. </p>
+<p>C++: bool Event::isDefaultBehaviorDisabled() const C API: bool <a class="el" href="#ab142bd36bdf8a47f243d987e35a78268" title="Returns true if the event&#39;s default behavior has been disabled.">SDOM_IsEventDefaultBehaviorDisabled(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ab6ff2cfd472381df1b9842d56832b31c" name="ab6ff2cfd472381df1b9842d56832b31c"></a>
@@ -845,6 +1233,49 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns true if propagation has been stopped for this event. </p>
+<p>C++: bool Event::isPropagationStopped() const C API: bool <a class="el" href="#ab6ff2cfd472381df1b9842d56832b31c" title="Returns true if propagation has been stopped for this event.">SDOM_IsEventPropagationStopped(const SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
+</div>
+</div>
+<a id="ad50be9192e1e9de00405b3008963250c" name="ad50be9192e1e9de00405b3008963250c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad50be9192e1e9de00405b3008963250c">&#9670;&#160;</a></span>SDOM_MakeEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_MakeEvent </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>out_value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Wraps an <a class="el" href="structSDOM__Event.html">SDOM_Event</a> handle into an <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> tagged as EVENT. </p>
+<p>C++: <br  />
+ C API: bool <a class="el" href="#ad50be9192e1e9de00405b3008963250c" title="Wraps an SDOM_Event handle into an SDOM_Variant tagged as EVENT.">SDOM_MakeEvent(const SDOM_Event* evt, SDOM_Variant* out_value)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">out_value</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -867,6 +1298,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the translated ASCII code for the keyboard event payload. </p>
+<p>C++: Event&amp; Event::setAsciiCode(int asciiCode) C API: bool <a class="el" href="#a5ecf3b914c94ae0bdf35c7b3bd7a8125" title="Sets the translated ASCII code for the keyboard event payload.">SDOM_SetEventAsciiCode(SDOM_Event* evt, int ascii_code)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="aa019d4c52d85387dbf0a7302abb4811a" name="aa019d4c52d85387dbf0a7302abb4811a"></a>
@@ -887,6 +1328,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the mouse button identifier for this event payload. </p>
+<p>C++: Event&amp; Event::setButton(uint8_t btn) C API: bool <a class="el" href="#aa019d4c52d85387dbf0a7302abb4811a" title="Sets the mouse button identifier for this event payload.">SDOM_SetEventButton(SDOM_Event* evt, uint8_t button)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -909,6 +1360,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the click count metadata for the event payload. </p>
+<p>C++: Event&amp; Event::setClickCount(int count) C API: bool <a class="el" href="#aea215d27bf8b51bdb0d4d1dafbf6c9e7" title="Sets the click count metadata for the event payload.">SDOM_SetEventClickCount(SDOM_Event* evt, int count)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a81c511c705d94f5788f1fa0e3cc70b8f" name="a81c511c705d94f5788f1fa0e3cc70b8f"></a>
@@ -929,6 +1390,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Assigns a new current dispatch target via an <a class="el" href="structSDOM__DisplayHandle.html">SDOM_DisplayHandle</a> snapshot. </p>
+<p>C++: Event&amp; Event::setCurrentTarget(DisplayHandle newCurrentTarget) C API: bool <a class="el" href="#a81c511c705d94f5788f1fa0e3cc70b8f" title="Assigns a new current dispatch target via an SDOM_DisplayHandle snapshot.">SDOM_SetEventCurrentTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">new_target</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -951,6 +1423,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Enables or disables the event's default behavior. </p>
+<p>C++: Event&amp; Event::setDisableDefaultBehavior(bool disable) C API: bool <a class="el" href="#a7c655665a9e099e812756bc78d5af52d" title="Enables or disables the event&#39;s default behavior.">SDOM_SetEventDisableDefaultBehavior(SDOM_Event* evt, bool disable)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ad85d93f0b27aea48d3c0f76e67e59603" name="ad85d93f0b27aea48d3c0f76e67e59603"></a>
@@ -971,6 +1453,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Stores the drag offset (X axis) into the event payload. </p>
+<p>C++: Event&amp; Event::setDragOffsetX(float offsetX) C API: bool <a class="el" href="#ad85d93f0b27aea48d3c0f76e67e59603" title="Stores the drag offset (X axis) into the event payload.">SDOM_SetEventDragOffsetX(SDOM_Event* evt, float offset_x)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -993,6 +1485,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Stores the drag offset (Y axis) into the event payload. </p>
+<p>C++: Event&amp; Event::setDragOffsetY(float offsetY) C API: bool <a class="el" href="#a242bca7cce883b07ed23b4f520d0deeb" title="Stores the drag offset (Y axis) into the event payload.">SDOM_SetEventDragOffsetY(SDOM_Event* evt, float offset_y)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ae54219ba9ca3964585cabc7604e7c991" name="ae54219ba9ca3964585cabc7604e7c991"></a>
@@ -1013,6 +1515,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the elapsed time (in seconds) for this event instance. </p>
+<p>C++: Event&amp; Event::setElapsedTime(float elapsedTime) C API: bool <a class="el" href="#ae54219ba9ca3964585cabc7604e7c991" title="Sets the elapsed time (in seconds) for this event instance.">SDOM_SetEventElapsedTime(SDOM_Event* evt, float elapsed_time)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1035,6 +1547,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the SDL keycode value for the event payload. </p>
+<p>C++: Event&amp; Event::setKeycode(SDL_Keycode keycode) C API: bool <a class="el" href="#af12d4cf5eb6c0f6f5be582ca1dcaa03d" title="Sets the SDL keycode value for the event payload.">SDOM_SetEventKeycode(SDOM_Event* evt, int keycode)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="af7d7106a5b0739bb4f2c44d6bcc4513d" name="af7d7106a5b0739bb4f2c44d6bcc4513d"></a>
@@ -1055,6 +1577,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the key modifier mask for the keyboard event. </p>
+<p>C++: Event&amp; Event::setKeymod(Uint16 keymod) C API: bool <a class="el" href="#af7d7106a5b0739bb4f2c44d6bcc4513d" title="Sets the key modifier mask for the keyboard event.">SDOM_SetEventKeymod(SDOM_Event* evt, int keymod)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1077,6 +1609,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the mouse X coordinate for the event payload. </p>
+<p>C++: Event&amp; Event::setMouseX(float x) C API: bool <a class="el" href="#ab6d0447c1734fad76daa4bb0e1f856c1" title="Sets the mouse X coordinate for the event payload.">SDOM_SetEventMouseX(SDOM_Event* evt, float x)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a104a8cf61236da695befe74de3370a72" name="a104a8cf61236da695befe74de3370a72"></a>
@@ -1097,6 +1639,54 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the mouse Y coordinate for the event payload. </p>
+<p>C++: Event&amp; Event::setMouseY(float y) C API: bool <a class="el" href="#a104a8cf61236da695befe74de3370a72" title="Sets the mouse Y coordinate for the event payload.">SDOM_SetEventMouseY(SDOM_Event* evt, float y)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
+</div>
+</div>
+<a id="a9cb09245a0d7b8acf06137a4478fb5c0" name="a9cb09245a0d7b8acf06137a4478fb5c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cb09245a0d7b8acf06137a4478fb5c0">&#9670;&#160;</a></span>SDOM_SetEventPayloadValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SDOM_SetEventPayloadValue </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structSDOM__Event.html">SDOM_Event</a> *</td>          <td class="paramname"><span class="paramname"><em>evt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> *</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets a payload entry from an <a class="el" href="structSDOM__Variant.html">SDOM_Variant</a> (null/bool/int/float/string). </p>
+<p>C++: Event&amp; Event::setPayloadValueVariant(const std::string&amp; key, const Variant&amp; value) C API: bool <a class="el" href="#a9cb09245a0d7b8acf06137a4478fb5c0" title="Sets a payload entry from an SDOM_Variant (null/bool/int/float/string).">SDOM_SetEventPayloadValue(SDOM_Event* evt, const char* key, const SDOM_Variant* value)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">key</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">value</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1119,6 +1709,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the propagation phase for this event. </p>
+<p>C++: Event&amp; Event::setPhase(Event::Phase phase) C API: bool <a class="el" href="#aaa2df11469e75841338f627e794e201c" title="Sets the propagation phase for this event.">SDOM_SetEventPhase(SDOM_Event* evt, SDOM_EventPhase phase)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="af8686c0117ca11b76e50bfce80e7a182" name="af8686c0117ca11b76e50bfce80e7a182"></a>
@@ -1139,6 +1739,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Assigns a new related target DisplayHandle snapshot on the event. </p>
+<p>C++: Event&amp; Event::setRelatedTarget(DisplayHandle newRelatedTarget) C API: bool <a class="el" href="#af8686c0117ca11b76e50bfce80e7a182" title="Assigns a new related target DisplayHandle snapshot on the event.">SDOM_SetEventRelatedTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">new_target</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1161,6 +1772,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the SDL scancode metadata for the keyboard event. </p>
+<p>C++: Event&amp; Event::setScanCode(SDL_Scancode scancode) C API: bool <a class="el" href="#a55b65abc1610790305d68d0722cf96e7" title="Sets the SDL scancode metadata for the keyboard event.">SDOM_SetEventScanCode(SDOM_Event* evt, int scancode)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="a3913dab2345d762025ef15570da264d3" name="a3913dab2345d762025ef15570da264d3"></a>
@@ -1181,6 +1802,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Reconstructs the embedded SDL_Event from a JSON snapshot. </p>
+<p>C++: Event&amp; Event::setSDL_EventJson(const std::string&amp; json) C API: bool <a class="el" href="#a3913dab2345d762025ef15570da264d3" title="Reconstructs the embedded SDL_Event from a JSON snapshot.">SDOM_SetEventSDLJson(SDOM_Event* evt, const char* json)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">json</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1203,6 +1835,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Assigns a new DisplayHandle target snapshot to the event. </p>
+<p>C++: Event&amp; Event::setTarget(DisplayHandle newTarget) C API: bool <a class="el" href="#a07a22081be95381a332a2c5d689e7e1b" title="Assigns a new DisplayHandle target snapshot to the event.">SDOM_SetEventTarget(SDOM_Event* evt, const SDOM_DisplayHandle* new_target)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+    <tr><td class="paramname">new_target</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ad4a1bbea2452731cd96aa7cf8c668de7" name="ad4a1bbea2452731cd96aa7cf8c668de7"></a>
@@ -1223,6 +1866,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets whether this event should use capture semantics during dispatch. </p>
+<p>C++: Event&amp; Event::setUseCapture(bool useCapture) C API: bool <a class="el" href="#ad4a1bbea2452731cd96aa7cf8c668de7" title="Sets whether this event should use capture semantics during dispatch.">SDOM_SetEventUseCapture(SDOM_Event* evt, bool use_capture)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>
@@ -1245,6 +1898,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the horizontal wheel delta in the payload. </p>
+<p>C++: Event&amp; Event::setWheelX(float x) C API: bool <a class="el" href="#a9eac4f302817d0dff7afb9089de763ef" title="Sets the horizontal wheel delta in the payload.">SDOM_SetEventWheelX(SDOM_Event* evt, float x)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ac05a7deb669ddeca3c4059dabfdebb6b" name="ac05a7deb669ddeca3c4059dabfdebb6b"></a>
@@ -1266,6 +1929,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the vertical wheel delta in the payload. </p>
+<p>C++: Event&amp; Event::setWheelY(float y) C API: bool <a class="el" href="#ac05a7deb669ddeca3c4059dabfdebb6b" title="Sets the vertical wheel delta in the payload.">SDOM_SetEventWheelY(SDOM_Event* evt, float y)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
+
 </div>
 </div>
 <a id="ae9028ae7103e5461854d0568d79cbb56" name="ae9028ae7103e5461854d0568d79cbb56"></a>
@@ -1282,6 +1955,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Stops event propagation (capture/bubble) for this event instance. </p>
+<p>C++: Event&amp; Event::stopPropagation() C API: bool <a class="el" href="#ae9028ae7103e5461854d0568d79cbb56" title="Stops event propagation (capture/bubble) for this event instance.">SDOM_StopEventPropagation(SDOM_Event* evt)</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">evt</td><td>Pointer parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool; check <a class="el" href="bak_2SDOM__CAPI__Core_8h.html#ace710e7380be895820f89c5d7d9655ca">SDOM_GetError()</a> for details on failure. </dd></dl>
 
 </div>
 </div>

@@ -1,7 +1,7 @@
 var classSDOM_1_1DisplayHandle =
 [
     [ "DisplayHandle", "classSDOM_1_1DisplayHandle.html#a9f9ea31866be03d2204362d812dbdf79", null ],
-    [ "DisplayHandle", "classSDOM_1_1DisplayHandle.html#ab01642db972798acfc94c77f1b8a8b66", null ],
+    [ "DisplayHandle", "classSDOM_1_1DisplayHandle.html#a406b3199b78d5a836727bcb646111ff2", null ],
     [ "DisplayHandle", "classSDOM_1_1DisplayHandle.html#a49e07bd61d68267865d89e291c0cad51", null ],
     [ "DisplayHandle", "classSDOM_1_1DisplayHandle.html#abcce5ed84568b633b12ef8c5bdf06cd6", null ],
     [ "~DisplayHandle", "classSDOM_1_1DisplayHandle.html#a89ad82cc86ec382ae034d8ba4c5f3f4b", null ],
@@ -16,6 +16,7 @@ var classSDOM_1_1DisplayHandle =
     [ "c_str", "classSDOM_1_1DisplayHandle.html#a2dc4f0f7f6af8b9e6ed74edb234bb511", null ],
     [ "ensureType", "classSDOM_1_1DisplayHandle.html#ad222efbf8082d85c7fb136c28ea12ada", null ],
     [ "get", "classSDOM_1_1DisplayHandle.html#a34b67c1cbabe355296209b79e5e5b949", null ],
+    [ "getId", "classSDOM_1_1DisplayHandle.html#a2bf8b8ac36f231d9f228816419965cf2", null ],
     [ "getName", "classSDOM_1_1DisplayHandle.html#ae7a0b51a3e8ea3e93bac11b276f3e09d", null ],
     [ "getType", "classSDOM_1_1DisplayHandle.html#aead851e82ce4bce3164ffcdc27ce8e72", null ],
     [ "isValid", "classSDOM_1_1DisplayHandle.html#a8cfd62e992f72ef158b3fcd25e0ba3b7", null ],
@@ -40,6 +41,7 @@ var classSDOM_1_1DisplayHandle =
     [ "registerOpaqueHandle", "classSDOM_1_1DisplayHandle.html#a83f774ae4f2529a8c427c0cdce495098", null ],
     [ "registry", "classSDOM_1_1DisplayHandle.html#adb96fab263c40f6294461886cc8c2f20", null ],
     [ "reset", "classSDOM_1_1DisplayHandle.html#a63394b0a525ce4c587a5fb64b4b447f6", null ],
+    [ "setId", "classSDOM_1_1DisplayHandle.html#a7e4445f95452be63f2c1f8dbb0fb0c43", null ],
     [ "setName", "classSDOM_1_1DisplayHandle.html#a7ab7df0fe31a8f66b1f20bb2d07c40c3", null ],
     [ "setType", "classSDOM_1_1DisplayHandle.html#aa5431aa2ae62561212d2129cd4c86ddb", null ],
     [ "str", "classSDOM_1_1DisplayHandle.html#ab8fbb280de5de823ca666d8d50fe3395", null ],

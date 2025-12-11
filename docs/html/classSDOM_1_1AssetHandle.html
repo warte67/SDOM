@@ -111,7 +111,7 @@ Inheritance diagram for SDOM::AssetHandle:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a17041383c6b01b4870f4a498e8cdaf8f" id="r_a17041383c6b01b4870f4a498e8cdaf8f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17041383c6b01b4870f4a498e8cdaf8f">AssetHandle</a> ()</td></tr>
-<tr class="memitem:ad457def750751b5c9a3aa6521378c290" id="r_ad457def750751b5c9a3aa6521378c290"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad457def750751b5c9a3aa6521378c290">AssetHandle</a> (const std::string &amp;name, const std::string &amp;type, const std::string &amp;filename)</td></tr>
+<tr class="memitem:a9998b20db714de913411a550f40a4ea8" id="r_a9998b20db714de913411a550f40a4ea8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9998b20db714de913411a550f40a4ea8">AssetHandle</a> (const std::string &amp;name, const std::string &amp;type, const std::string &amp;filename, uint64_t id=0)</td></tr>
 <tr class="memitem:a4d9e359856ddae1d1ca33415378794e5" id="r_a4d9e359856ddae1d1ca33415378794e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d9e359856ddae1d1ca33415378794e5">AssetHandle</a> (const AssetHandle &amp;other)</td></tr>
 <tr class="memitem:a5787c0a2b6ee9d85fae35e182949c8d3" id="r_a5787c0a2b6ee9d85fae35e182949c8d3"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5787c0a2b6ee9d85fae35e182949c8d3">~AssetHandle</a> ()</td></tr>
 <tr class="memitem:ad462ecf818b7112fb9ac815ede1d1ca5" id="r_ad462ecf818b7112fb9ac815ede1d1ca5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad462ecf818b7112fb9ac815ede1d1ca5">onInit</a> () override</td></tr>
@@ -136,6 +136,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a557ea5acd9acba85724584453bf4d2a4" id="r_a557ea5acd9acba85724584453bf4d2a4"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a557ea5acd9acba85724584453bf4d2a4">getName</a> () const</td></tr>
 <tr class="memitem:a4befa6c4e36835e2fa6913d026432e25" id="r_a4befa6c4e36835e2fa6913d026432e25"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4befa6c4e36835e2fa6913d026432e25">getType</a> () const</td></tr>
 <tr class="memitem:a4aae9acbea6ad50dc366f437ecf6091f" id="r_a4aae9acbea6ad50dc366f437ecf6091f"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4aae9acbea6ad50dc366f437ecf6091f">getFilename</a> () const</td></tr>
+<tr class="memitem:aa1e04600d16c8601c6f28a36376fa431" id="r_aa1e04600d16c8601c6f28a36376fa431"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1e04600d16c8601c6f28a36376fa431">getId</a> () const</td></tr>
+<tr class="memitem:ac09898d1cfb1b5863d3e832179c9ad79" id="r_ac09898d1cfb1b5863d3e832179c9ad79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac09898d1cfb1b5863d3e832179c9ad79">setId</a> (uint64_t id)</td></tr>
 <tr class="memitem:a1de666cd76bf2ef5c77d3b0380db55fa" id="r_a1de666cd76bf2ef5c77d3b0380db55fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#a1de666cd76bf2ef5c77d3b0380db55fa">setName</a> (const std::string &amp;newName)</td></tr>
 <tr class="memitem:aff602d0cbfeead1a6ddd49c8d4df9360" id="r_aff602d0cbfeead1a6ddd49c8d4df9360"><td class="memTemplParams" colspan="2">template&lt;typename Fn&gt; </td></tr>
 <tr class="memitem:aff602d0cbfeead1a6ddd49c8d4df9360 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSDOM_1_1IDataObject.html#aff602d0cbfeead1a6ddd49c8d4df9360">addFunction</a> (const std::string &amp;typeName, const std::string &amp;name, Fn &amp;&amp;fn)</td></tr>
@@ -181,6 +183,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a9c9c067f3ab9a046a6bc6c7525735a17" id="r_a9c9c067f3ab9a046a6bc6c7525735a17"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c9c067f3ab9a046a6bc6c7525735a17">name_</a></td></tr>
 <tr class="memitem:aa3650543b6d546e11118c71f1c4dc1a3" id="r_aa3650543b6d546e11118c71f1c4dc1a3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3650543b6d546e11118c71f1c4dc1a3">type_</a></td></tr>
 <tr class="memitem:a75387364182cd6804ae611b72ea04758" id="r_a75387364182cd6804ae611b72ea04758"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75387364182cd6804ae611b72ea04758">filename_</a></td></tr>
+<tr class="memitem:a9b8daf0576259049ffc84f31fe4590ef" id="r_a9b8daf0576259049ffc84f31fe4590ef"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b8daf0576259049ffc84f31fe4590ef">id_</a> = 0</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-static-attribs" class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
@@ -280,8 +283,8 @@ ZLIB License</h1>
 
 </div>
 </div>
-<a id="ad457def750751b5c9a3aa6521378c290" name="ad457def750751b5c9a3aa6521378c290"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad457def750751b5c9a3aa6521378c290">&#9670;&#160;</a></span>AssetHandle() <span class="overload">[2/4]</span></h2>
+<a id="a9998b20db714de913411a550f40a4ea8" name="a9998b20db714de913411a550f40a4ea8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9998b20db714de913411a550f40a4ea8">&#9670;&#160;</a></span>AssetHandle() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,7 +305,12 @@ ZLIB License</h1>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span>&#160;)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t</td>          <td class="paramname"><span class="paramname"><em>id</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -753,6 +761,31 @@ template&lt;typename T&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">const std::string &amp; SDOM::AssetHandle::getFilename </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1e04600d16c8601c6f28a36376fa431" name="aa1e04600d16c8601c6f28a36376fa431"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1e04600d16c8601c6f28a36376fa431">&#9670;&#160;</a></span>getId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t SDOM::AssetHandle::getId </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -1464,6 +1497,31 @@ template&lt;typename Fn&gt; </div>
 
 </div>
 </div>
+<a id="ac09898d1cfb1b5863d3e832179c9ad79" name="ac09898d1cfb1b5863d3e832179c9ad79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac09898d1cfb1b5863d3e832179c9ad79">&#9670;&#160;</a></span>setId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SDOM::AssetHandle::setId </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t</td>          <td class="paramname"><span class="paramname"><em>id</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1de666cd76bf2ef5c77d3b0380db55fa" name="a1de666cd76bf2ef5c77d3b0380db55fa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1de666cd76bf2ef5c77d3b0380db55fa">&#9670;&#160;</a></span>setName()</h2>
 
@@ -1589,6 +1647,28 @@ template&lt;typename Fn&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">std::string SDOM::AssetHandle::filename_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b8daf0576259049ffc84f31fe4590ef" name="a9b8daf0576259049ffc84f31fe4590ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b8daf0576259049ffc84f31fe4590ef">&#9670;&#160;</a></span>id_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t SDOM::AssetHandle::id_ = 0</td>
         </tr>
       </table>
   </td>
