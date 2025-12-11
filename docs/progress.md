@@ -1194,8 +1194,8 @@ Builds are clean again and Variant path helpers now return deterministic errors 
 ---
 
 
-<a id="december-9-2025"></a>
-<a id="latest-update"></a>
+
+
 
 ## 🗓️ December 9, 2025 — Variants Grow Up 🧬
 
@@ -1237,23 +1237,43 @@ The framework today is **more consistent, more scalable, and more future-proof**
 
 ---
 
-### 🚧 ToDo — Next
-- ☐ Diagnostic logging for SpriteSheet failure cases (texture names/types).
-- ☐ SpriteSheet negative-path unit tests.
-
-### 🔄 Carryover — Active Work
-- ☐ Complete native JSON storage for Variant (container semantics & safe casting rules).
-- ☐ Expand Variant C API surface (object/array creation helpers; stricter error semantics).
-- ☐ Additional core Variant testing (scalar traversal guard, `PathExists` neutrality).
-- ☐ Runtime editor groundwork (metadata and JSON⇆Variant stability).
-
----
-
 #### 🤔 *Reflection*
 > *“When the types align, the APIs shine.”* ✨
 
 ---
 
+
+[⬆️ Back to Progress Updates](../progress.md#progress-updates)
+
+---
+
+<a id="december-11-2025"></a>
+<a id="latest-update"></a>
+
+## 🗓️ December 11, 2025 — Plans: SpriteSheet Diagnostics & Variant JSON
+
+> 💬 *“Plan first, then ship clean.”*
+
+### 🧩 Focus for Today
+- Add targeted SpriteSheet failure logging (texture names/paths/types) and negative-path unit tests for missing texture and size-query failures.
+- Resume Variant work: design native JSON storage semantics (Array/Object), expand C API helpers (object/array creation + path helpers), and tighten error semantics.
+- Broaden Variant unit coverage (scalar traversal guard, PathExists neutrality, handle/event round-trips) and queue end-of-day test + valgrind pass.
+
+### 🌟 **Summary:**
+Planning day to harden SpriteSheet diagnostics and push Variant JSON/C API/coverage work; execution to follow today.
+
+#### 🤔 *End of Day Reflection*
+> *“A good plan is a promise to your future self.”*
+
+### 🚧 ToDo — Next
+- ☐ Add SpriteSheet failure logging (texture names/paths/types).
+- ☐ Add SpriteSheet negative-path tests (missing texture, size-query failures).
+- ☐ Design native Variant JSON storage (container semantics, safe casting).
+- ☐ Expand Variant C API helpers (object/array creation, path helpers, consistent errors).
+- ☐ Augment Variant unit coverage (scalar traversal guard, PathExists neutrality, handle/event round-trips).
+- ☐ End-of-day: rerun full test suite + valgrind.
+
+---
 
 [⬆️ Back to Progress Updates](../progress.md#progress-updates)
 #### end-of-day
