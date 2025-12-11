@@ -785,6 +785,7 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << "    float pixelHeight;\n";
         out << "    int preserveAspectRatio;\n";
         out << "    int allowTextureResize;\n";
+        out << "    int rendererVSync;\n";
         out << "    SDL_RendererLogicalPresentation rendererLogicalPresentation;\n";
         out << "    SDL_WindowFlags windowFlags;\n";
         out << "    SDL_PixelFormat pixelFormat;\n";
@@ -794,6 +795,7 @@ void CAPI_BindGenerator::generateHeader(const BindModule& module)
         out << "    800.0f, 600.0f, \\\n";
         out << "    2.0f, 2.0f, \\\n";
         out << "    1, 0, \\\n";
+        out << "    SDL_RENDERER_VSYNC_DISABLED, \\\n";
         out << "    SDL_LOGICAL_PRESENTATION_LETTERBOX, \\\n";
         out << "    SDL_WINDOW_RESIZABLE, \\\n";
         out << "    SDL_PIXELFORMAT_RGBA8888, \\\n";

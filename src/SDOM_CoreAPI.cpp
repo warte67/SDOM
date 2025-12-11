@@ -60,6 +60,7 @@ SDOM::Core::CoreConfig toCoreConfig(const SDOM_CoreConfig* cfg)
     out.pixelHeight = cfg->pixelHeight;
     out.preserveAspectRatio = cfg->preserveAspectRatio != 0;
     out.allowTextureResize = cfg->allowTextureResize != 0;
+    out.rendererVSync = cfg->rendererVSync;
     out.rendererLogicalPresentation = cfg->rendererLogicalPresentation;
     out.windowFlags = cfg->windowFlags;
     out.pixelFormat = cfg->pixelFormat;
@@ -75,6 +76,7 @@ void copyCoreConfig(const SDOM::Core::CoreConfig& src, SDOM_CoreConfig& dst)
     dst.pixelHeight = src.pixelHeight;
     dst.preserveAspectRatio = src.preserveAspectRatio ? 1 : 0;
     dst.allowTextureResize = src.allowTextureResize ? 1 : 0;
+    dst.rendererVSync = src.rendererVSync;
     dst.rendererLogicalPresentation = src.rendererLogicalPresentation;
     dst.windowFlags = src.windowFlags;
     dst.pixelFormat = src.pixelFormat;

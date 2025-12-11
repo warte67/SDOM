@@ -1,8 +1,10 @@
 // SDOM_Core.cpp
 #include <SDL3_ttf/SDL_ttf.h>
 #include <algorithm>
+#include <cctype>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <unordered_map>
 #include <vector>
 
@@ -182,6 +184,39 @@ namespace SDOM
             set_float("pixelHeight", cfg.pixelHeight);
             set_bool("allowTextureResize", cfg.allowTextureResize);
             set_bool("preserveAspectRatio", cfg.preserveAspectRatio);
+
+            if (doc.contains("rendererVSync"))
+            {
+                if (doc.at("rendererVSync").is_number_integer())
+                {
+                    cfg.rendererVSync = doc.at("rendererVSync").get<int>();
+                }
+                else if (doc.at("rendererVSync").is_string())
+                {
+                    std::string vsyncStr = doc.at("rendererVSync").get<std::string>();
+                    std::string lower;
+                    lower.reserve(vsyncStr.size());
+                    std::transform(vsyncStr.begin(), vsyncStr.end(), std::back_inserter(lower), [](unsigned char ch) {
+                        return static_cast<char>(std::tolower(ch));
+                    });
+
+                    if (lower == "adaptive") cfg.rendererVSync = SDL_RENDERER_VSYNC_ADAPTIVE;
+                    else if (lower == "on" || lower == "enabled" || lower == "vsync") cfg.rendererVSync = 1; // standard vsync
+                    else if (lower == "off" || lower == "disabled") cfg.rendererVSync = SDL_RENDERER_VSYNC_DISABLED;
+                    else
+                    {
+                        try {
+                            cfg.rendererVSync = std::stoi(lower);
+                        } catch (...) {
+                            // Intentionally ignore unknown rendererVSync entries to avoid noisy warnings
+                        }
+                    }
+                }
+                else
+                {
+                    // Silently ignore non-int/string rendererVSync entries
+                }
+            }
 
             if (doc.contains("rendererLogicalPresentation"))
             {
@@ -453,6 +488,7 @@ namespace SDOM
         bool windowWidth_changed = (previousConfig.windowWidth != config.windowWidth);
         bool windowHeight_changed = (previousConfig.windowHeight != config.windowHeight);
         bool windowFlags_changed = (previousConfig.windowFlags != config.windowFlags);
+        bool rendererVSync_changed = (previousConfig.rendererVSync != config.rendererVSync);
         bool rendererLogicalPresentation_changed = (previousConfig.rendererLogicalPresentation != config.rendererLogicalPresentation);
         bool pixelWidth_changed = (previousConfig.pixelWidth != config.pixelWidth);
         bool pixelHeight_changed = (previousConfig.pixelHeight != config.pixelHeight);
@@ -559,6 +595,13 @@ namespace SDOM
                 std::string errorMsg = "SDL_CreateRenderer() Error: " + std::string (SDL_GetError());
                 ERROR(errorMsg);
             }
+            if (!SDL_SetRenderVSync(renderer_, config_.rendererVSync))
+            {
+                ERROR("Unable to set VSync mode: " + std::string(SDL_GetError()));
+            }
+        }
+        else if (!recreate_renderer && renderer_ && rendererVSync_changed)
+        {
             if (!SDL_SetRenderVSync(renderer_, config_.rendererVSync))
             {
                 ERROR("Unable to set VSync mode: " + std::string(SDL_GetError()));

@@ -15,6 +15,7 @@ typedef struct SDOM_CoreConfig {
     float pixelHeight;
     int preserveAspectRatio;
     int allowTextureResize;
+    int rendererVSync;
     SDL_RendererLogicalPresentation rendererLogicalPresentation;
     SDL_WindowFlags windowFlags;
     SDL_PixelFormat pixelFormat;
@@ -25,6 +26,7 @@ typedef struct SDOM_CoreConfig {
     800.0f, 600.0f, \
     2.0f, 2.0f, \
     1, 0, \
+    SDL_RENDERER_VSYNC_DISABLED, \
     SDL_LOGICAL_PRESENTATION_LETTERBOX, \
     SDL_WINDOW_RESIZABLE, \
     SDL_PIXELFORMAT_RGBA8888, \

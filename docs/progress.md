@@ -1258,6 +1258,7 @@ The framework today is **more consistent, more scalable, and more future-proof**
 - Add targeted SpriteSheet failure logging (texture names/paths/types) and negative-path unit tests for missing texture and size-query failures.  
 - Resume Variant work: design native JSON storage semantics (Array/Object), expand C API helpers (object/array creation + path helpers), and tighten error semantics.  
 - Broaden Variant unit coverage (scalar traversal guard, PathExists neutrality, handle/event round-trips) and queue end-of-day test + valgrind pass.
+- Added a state of being documentation to the `docs/extensible_variant.md` document.
 
 ### 🌟 **Summary**
 A planning-heavy morning to sharpen SpriteSheet diagnostics and push forward the Variant JSON/C API/coverage layers. Execution rolls out today—with clarity as the multiplier.
@@ -1272,9 +1273,9 @@ A planning-heavy morning to sharpen SpriteSheet diagnostics and push forward the
 ### 🚧 **ToDo — Next**
 - ✅ Add SpriteSheet failure logging (texture names/paths/types).  
 - ✅ Add SpriteSheet negative-path tests (missing texture, size-query failures).  
-- ☐ Design native Variant JSON storage — formalize Array/Object ownership rules, casting safety, and conversion hooks between JSON and in-engine Variant layouts (goal: zero lossy round-trips).  
+- ✅ Design native Variant JSON storage — formalize Array/Object ownership rules, casting safety, and conversion hooks between JSON and in-engine Variant layouts (goal: zero lossy round-trips).  
 - ☐ Expand Variant C API helpers — add explicit object/array construction APIs, path helper parity with C++, and consistent error reporting/clearing semantics to keep scripting clients deterministic.  
-- ☐ Augment Variant unit coverage — add negative-path tests for scalar traversal guards, PathExists non-mutating queries, and round-trip identity checks for handle/event Variants to lock behavior.
+- ✅ Augment Variant unit coverage — add negative-path tests for scalar traversal guards, PathExists non-mutating queries, and round-trip identity checks for handle/event Variants to lock behavior.
 - ☐ End-of-day: rerun full test suite + valgrind.
 
 ---

@@ -1,12 +1,14 @@
+<a name="top"></a>
+
 # SDOM: Simple SDL Document Object Model API
 [![License](https://img.shields.io/badge/license-ZLIB-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://warte67.github.io/SDOM/)
 [![Wiki](https://img.shields.io/badge/github-wiki-181717?logo=github)](https://github.com/warte67/SDOM/wiki)
-[![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
+[![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)](#project-status)
 
 <!-- BEGIN_VERSION_BLOCK -->
-**SDOM 0.5.275 (early pre-alpha)**  
-**Build Date:** 2025-12-11_11:01:25  
+**SDOM 0.5.278 (early pre-alpha)**  
+**Build Date:** 2025-12-11_14:54:32  
 **Platform:** Linux-x86_64  
 **Compiler:** g++ (GCC) 15.2.1 20251112
 <!-- END_VERSION_BLOCK -->
@@ -24,19 +26,20 @@
 
 ## Overview
 
-**SDOM** (Software Display Object Model) is a C++23 framework that brings a **structured, DOM-like architecture** to SDL3-based rendering and input. It treats your UI and scene elements as a **tree of display objects** — each with defined properties, bounds, parent/child relationships, and event semantics — enabling declarative UI composition, deterministic updates, and clean separation between logic and rendering.
+**SDOM** (Software Display Object Model) is a C++23 framework that applies a **structured, DOM-like architecture** to SDL3-based rendering and input. It models UI and scene elements as a **hierarchical tree of display objects**—each with explicit properties, bounds, parent/child relationships, and event behavior. This provides a predictable update model, clean composition, and a clear separation between application logic and rendering.
 
-Ideal for **game UI**, **custom editors**, **visual tools**, and any application wanting a modern, high-level interface on top of SDL3.
+SDOM is suitable for **game UI**, **custom tools**, **editors**, and applications that want a higher-level interface on top of SDL3 while retaining the ability to drop to low-level control when needed.
 
-SDOM is both **cross-platform** and **cross-language by design**. It exposes a safe, pointer-free **C ABI** that allows any language capable of calling C — Rust, D, Zig, Python, C#, Swift, etc. — to use the engine *without wrappers*. Higher-level bindings, such as Lua today and Python in the future, sit naturally on top of this ABI for scripted interaction and live editing when desired.
+The system is both **cross-platform** and **cross-language**. SDOM exposes a stable, pointer-free **C ABI** that allows languages such as Rust, D, Zig, Python, C#, Swift, and others to call into the engine directly. Higher-level integrations—Lua today, and Python and others in the future—build on this ABI to support scripting, rapid prototyping, and live editing when desired, but remain optional for projects that prefer a pure C++ workflow.
 
-SDOM’s language-neutrality is driven by a **data-driven reflection system**. Every type, property, and command registered at runtime becomes metadata that the build system can use to **automatically generate bindings** for external languages: C API headers, Lua tables, future Rust/D/Python modules, and more — all without handwritten glue code. Adding support for a new language is simply adding a **new binding-generator plugin**.
+A central design goal of SDOM is **data-driven interoperability**. A unified reflection system records types, properties, and commands at runtime. The build system uses this metadata to **automatically generate bindings** for external languages: C API headers, Lua interfaces, and (eventually) Rust/D/Python modules—without handwritten glue code. Supporting a new language becomes a matter of writing a small **binding-generator backend**.
 
-At its core, SDOM is a **JSON-native runtime**. All data — properties, event payloads, configuration — flows through a single universal value type: `Variant`. This enables **live editing** and script-driven behavior without recompiling. And all dynamic systems are **optional**: a pure C++ application can use SDOM with *zero* scripting overhead, while dynamic languages can plug in to extend or prototype as needed.
+SDOM’s runtime is **JSON-native** via a single universal value type, `Variant`. Configuration, properties, and event payloads all use the same representation, enabling live inspection and modification. Applications that do not require dynamic behavior can use SDOM entirely from C++ with no scripting dependency, while dynamic languages can layer on top for interactivity.
 
-SDOM is engineered for **extensibility without bloat**. Optional modules — runtime editor, Lua integration, addon/plugin support — can be enabled or omitted, giving developers the ability to scale from a minimal embedding to a fully featured, interactive toolchain. The same core reflection engine powers all future systems: inspectors, interactive UI editing, metadata-driven workflows, and custom type registration.
+The framework is built to be **modular and extensible**. Optional components—including Lua integration, a runtime editor, and plugin support—can be enabled or left out depending on project needs. Future systems such as inspectors, UI editors, and metadata-driven tools will rely on the same core reflection and data model already in place.
 
-**Note:** This is still a very early pre-alpha version.  All APIs are subject to change.  
+**Note:** SDOM is currently in **early pre-alpha**. APIs may change as the system evolves.
+
 
 ## Features
 - Simple, composable API for UI and document structures
@@ -44,38 +47,135 @@ SDOM is engineered for **extensibility without bloat**. Optional modules — run
 - Minimal dependencies (SDL3, SDL3_image, SDL3_ttf)
 - Designed for clarity, maintainability, and extensibility
 
-# Performance Highlights (December 8, 2025):
+For a deep dive into SDOM's data model, see [docs/Variant.md](docs/Variant.md).
 
-> **Designed for modern workflows — runs on 2013 laptops.**
+---
+
+# 🌐 SDOM Design Philosophy: Unification Over Division
+
+SDOM’s architecture is built around a practical goal:
+
+> **Keep data consistent and usable across languages, tools, and runtime environments.**
+
+Traditional game/tool frameworks often fragment functionality across multiple APIs or languages.  
+SDOM approaches the problem differently: it organizes the engine around a **shared runtime type system** rather than around any single host language. SDOM is not designed to replace any language’s philosophy—it simply creates a shared space where different philosophies can work together.
+
+### ✔ A unified type system
+All engine-defined, user-defined, and runtime-generated types are recorded in the **DataRegistry**, providing a single source of truth for structure and metadata. Any language that can call the C ABI can interact with these types in a consistent way. SDOM is not intended as an *abstraction layer*—it acts as a **unification layer**, keeping data coherent across all integrations.
+
+### ✔ A unified data representation
+`Variant` provides a structural, language-agnostic value type for:
+
+- primitives  
+- arrays and objects  
+- engine handles  
+- event payloads  
+- custom or dynamically defined types  
+
+This allows data to flow cleanly between C++, C, Lua, Rust, Python, and future integrations without requiring separate hand-maintained representations.
+
+### ✔ A unified ABI
+The C ABI provides a stable interface that higher-level bindings can build on.  
+Generated bindings stay synchronized with the registry, reducing duplication and avoiding divergence between languages.
+
+Supported (current or planned):
+
+- C++  
+- C  
+- Rust  
+- D  
+- Zig  
+- Lua  
+- Python  
+- WASM  
+- others via binding generation
+
+### ✔ A unified editor and runtime
+Future tooling (live editor, inspectors, debuggers) will rely on the same underlying metadata.  
+Configuration, scripted behavior, and runtime editing all use the same reflected type system, helping keep engine, tools, and content consistent.
+
+---
+
+## Resulting Properties
+
+The unification approach gives SDOM:
+
+- a single data model shared across languages  
+- consistent behavior for serialization and reflection  
+- reduced maintenance cost when evolving types  
+- predictable cross-language semantics  
+- support for runtime-defined types without engine changes  
+
+This philosophy aims to make SDOM flexible without becoming complex, and dynamic without compromising determinism.
+
+---
+
+## ✨ The Result
+
+SDOM becomes more than an engine API:
+
+### **It is a shared language for data across the entire development ecosystem.**
+
+- C++ can use dynamic, editor-defined structs  
+- Lua and Python can manipulate typed engine objects safely  
+- Rust and Zig can write high-performance modules without losing type information  
+- The runtime and editor become peers, not competitors  
+- All layers talk through one unified model
+
+No duplication.  
+No divergence.  
+No "C++ types vs scripting types."  
+Just **one type system**, available everywhere.
+
+---
+
+# 🏛 Guiding Principle
+
+> **Unification over Division.  
+> Data over Language.  
+> SDOM over Boundaries.**
+
+---
+
+# Performance Highlights (December 11, 2025):
+
+> **Designed for modern workflows—runs on 2013 laptops.**
 
 ### 🧪 Real-World Test Environment
 - Hardware: ~12-year-old mid-tier PC (no GPU reliance beyond SDL3)
-- Build: Debug, no compiler tuning, all safety checks enabled
+- Build: **Release**, standard compiler optimizations enabled
 - Scenario: Full SDOM UI sample with multiple widgets & event routing
 
-### 📈 Results
+### 📈 Results (Sample Release Build)
 
-| Metric | Result | Meaning |
-|---|:---:|---|
-| Unit Tests | **82 / 82 Passed** | Stable core API and behavior |
-| Total Frame Time | **~201 µs** | ~4,900 FPS theoretical headroom |
-| Top Widget Update Cost | **0.6–0.8 µs** | Negligible per-node CPU use |
-| Top Render Cost | **1.1–1.8 µs** | Minimal pixel batching overhead |
-| Memory Leaks | **0 bytes leaked** | Safe for long-running editor/tool |
+These numbers are from a representative **optimized release build** of the sample UI scene (≈40–50 active DisplayObjects) on the author’s development machine. They are intended as an order-of-magnitude reference, not a formal benchmark.
 
+| Metric               | Result                 | Meaning                                  |
+|----------------------|:----------------------:|------------------------------------------|
+| Unit Tests           | **95 / 95 Passed**     | Stable core API and behavior             |
+| Total Frame Time     | **~183 µs**            | ~5,000+ FPS theoretical headroom         |
+| Top Widget Update    | **0.6–0.8 µs**         | Small per-node CPU cost                  |
+| Top Widget Render    | **1.1–1.8 µs**         | Lightweight draw overhead per widget     |
+| Memory Leaks         | **0 bytes leaked**     | Valgrind-clean for long-running tools    |
+
+> These measurements reflect an **optimized release configuration**  
+> with standard compiler optimizations enabled.  
 > **Even micro-widgets** (radio/check buttons, labels)  
-> stay under **1 µs update** and **2 µs render** cost — *in debug builds*.
+> stay under **1 µs update** and **2 µs render** cost in this configuration.
 
-### 🧩 Optional-Feature Architecture — Why It Matters
+> Note: Exact performance depends on hardware, compiler, and configuration;  
+> these figures are illustrative rather than a published benchmark.
+
+### 🧩 Optional-Feature Architecture - Why It Matters
 
 | Feature | Status | Cost if Disabled |
 |---|---|---|
 | Live Editor | Planned | **0 overhead** |
 | Lua Scripting | Optional | **0 overhead** |
-| Variant Legends | Planned | **0 overhead** |
+| In-engine diagnostics | Planned | **0 overhead** |
 | Physics / Networking | Planned | **0 overhead** |
 
-SDOM ships **only** the systems a project needs — no “always-on” bloat.
+SDOM ships **only** the systems a project needs—no “always-on” bloat.
 
 ### 🛡️ Runtime Safety
 - Threaded load tests pass
@@ -86,9 +186,54 @@ SDOM ships **only** the systems a project needs — no “always-on” bloat.
 ---
 
 > **Conclusion:**  
-> SDOM isn’t just flexible — it’s **fast**.  
+> SDOM isn’t just flexible—it’s **fast**.  
 > The foundation is strong enough to power the future live editor  
 > *without sacrificing performance on modest hardware.*
+
+### A Note on C++ and Rust
+
+SDOM is not built around the idea that a project must “choose” between C++ or Rust.  Both languages bring valuable strengths, and both have communities focused on correctness, performance, and long-term maintainability. Rather than treating them as opposing approaches, SDOM treats them as **peers** that can collaborate effectively.
+
+- C++ offers mature tooling, predictable performance, and direct access to SDL3 and system APIs.
+- Rust offers strong compile-time guarantees and a safety model that many developers rely on.
+
+SDOM’s own architecture makes these differences complementary instead of conflicting:
+
+- The framework enforces **clear ownership and lifetime rules** internally, removing the need for callers to manage safety-critical details.
+- The **data-driven Variant system** eliminates the need for either language to interact directly with complex object graphs.
+- The **C ABI** exposes SDOM in a stable, pointer-free form that Rust can use naturally without `unsafe` for ordinary API calls.
+- C++ maintains its flexibility and expressiveness, while Rust receives a predictable, borrow-checker-friendly boundary.
+
+The result is not “C++ vs Rust,” but **C++ and Rust working comfortably together**.
+
+SDOM aims to be a *unifying layer*, not an abstraction layer—a way for different languages and ecosystems to share the same data model, the same type system, and the same runtime without friction or philosophical tension.
+
+---
+
+## Project Status
+
+SDOM is currently in **early pre-alpha**.  
+APIs are stabilizing, the Variant system is undergoing major ABI refinement,  
+and the C ABI + language bindings infrastructure is actively evolving.
+
+What *is* stable:
+- Core rendering pipeline  
+- DisplayObject tree model  
+- Event routing  
+- JSON-driven configuration  
+- Variant core semantics (C++ side)  
+- Unit test coverage (95/95 passing)
+
+What *is still in flux*:
+- C ABI Variant ownership/creation model  
+- Lua/Python bindings  
+- Runtime type editor & metadata tools  
+- Autogenerated API codepaths  
+- Documentation restructuring
+
+This section will expand over time as subsystems lock into place.
+
+[Back to top ↑](#top)
 
 
 ---
@@ -135,10 +280,10 @@ cd examples/test
 - Binding changes must go through data registration and the generator; do not hand-edit generated C API outputs.
 
 ## Project Structure
-- `src/` — Core SDOM source code
-- `include/SDOM/` — Public headers
-- `examples/` — Example applications
-- `docs/` — Documentation
+- `src/` - Core SDOM source code
+- `include/SDOM/` - Public headers
+- `examples/` - Example applications
+- `docs/` - Documentation
 
 ---
 # Lua Integration and Requirements
@@ -146,7 +291,7 @@ cd examples/test
 SDOM is designed to be **data-driven** and includes built-in support for scripting and configuration through **Lua (via Sol2)**.
 
 ### Why Lua?
-Lua enables dynamic creation, modification, and serialization of DOM objects at runtime — letting you define UI layouts, animation sequences, and event behavior without recompiling. Lua scripts can access most of SDOM’s API, and future releases will expand this integration even further.
+Lua enables dynamic creation, modification, and serialization of DOM objects at runtime—letting you define UI layouts, animation sequences, and event behavior without recompiling. Lua scripts can access most of SDOM’s API, and future releases will expand this integration even further.
 
 ### Lua Installation
 
@@ -211,7 +356,7 @@ brew install sdl3 sdl3_image sdl3_ttf sdl3_mixer cmake ninja freetype
 
 ## 🪟 Windows
 ### Option 1:
-Download and install the latest SDL3 development libraries from [SDL.org](https://www.libsdl.org/download-2.0.php).
+Follow the official SDL3 build instructions from the [SDL wiki](https://github.com/libsdl-org/SDL/wiki/Installation) or use the release artifacts from the [SDL GitHub repository](https://github.com/libsdl-org/SDL/releases) (the legacy `libsdl.org/download-2.0.php` page hosts SDL2, not SDL3).
 ### Option 2: MSYS2 (MinGW / UCRT64)
 ```bash
 pacman -S mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja \
@@ -229,22 +374,12 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmak
 ```
 ---
 # Building and Installing SDL3_mixer, SDL3_image, and SDL_ttf
-Clone the repositories:
+Clone the repositories (run once per library):
 ```
 git clone https://github.com/libsdl-org/SDL.git
 git clone https://github.com/libsdl-org/SDL_mixer.git
 git clone https://github.com/libsdl-org/SDL_image.git
 git clone https://github.com/libsdl-org/SDL_ttf.git
-```
-
-## Build per SDL3:
-```
-git clone https://github.com/libsdl-org/SDL.git
-cd SDL
-mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
-make -j$(nproc)
-make install
 ```
 
 ## Build and install SDL3 libraries
@@ -253,7 +388,7 @@ make install
 cd SDL
 mkdir build && cd build
 cmake ..
-make -j$(nproc) 
+make -j$(nproc)
 sudo make install
 
 # build SDL_mixer
@@ -291,8 +426,8 @@ git clone https://github.com/ThePhD/sol2.git
 Example snippet in CMakeLists.txt:
 ```
 include_directories(${CMAKE_SOURCE_DIR}/third_party/sol2/include)
-include_directories(/usr/include/lua5.3)
-find_library(LUA_LIB lua5.3)
+include_directories(/usr/include/lua5.4)
+find_library(LUA_LIB lua5.4)
 target_link_libraries(your_target PRIVATE ${LUA_LIB})
 ```
 
@@ -328,9 +463,9 @@ Outputs are written to `docs/diagrams/<doc-name>/diagram-XX.png|svg`.
 ## Acknowledgments
 
 SDOM builds upon the excellent foundation provided by the [Simple DirectMedia Layer (SDL)](https://libsdl.org) project.  
-All credit for SDL’s architecture, performance, and portability goes to its maintainers and contributors — especially **Sam Lantinga** and the [SDL team](https://github.com/libsdl-org).
+All credit for SDL’s architecture, performance, and portability goes to its maintainers and contributors—especially **Sam Lantinga** and the [SDL team](https://github.com/libsdl-org).
 
-Special thanks to **JeanHeyd “ThePhD” Meneide**, author of [Sol2](https://github.com/ThePhD/sol2) and the upcoming [Sol3](https://github.com/ThePhD/sol3) —  
+Special thanks to **JeanHeyd “ThePhD” Meneide**, author of [Sol2](https://github.com/ThePhD/sol2) and the upcoming [Sol3](https://github.com/ThePhD/sol3)—  
 whose work has made high-quality Lua integration in C++ both elegant and practical.
 
 SDOM would not be possible without the open-source community’s contributions to  

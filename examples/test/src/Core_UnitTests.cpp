@@ -14,6 +14,7 @@
 #include <SDOM/CAPI/SDOM_CAPI_Core.h>
 #include <SDOM/CAPI/SDOM_CAPI_Handles.h>
 #include <SDOM/CAPI/SDOM_CAPI_Variant.h>
+#include <json.hpp>
 
 #include <string>
 #include <vector>
@@ -297,6 +298,39 @@ namespace SDOM
 
     // --- Lua Integration Tests --- //
 
+    bool Core_RendererVSync_ConfigureFromJson(std::vector<std::string>& errors)
+    {
+        using nlohmann::json;
+        auto& core = getCore();
+        const auto original = core.getConfig();
+
+        auto expect_vsync = [&](const json& doc, int expected, const char* label) {
+            if (!core.configureFromJson(doc)) {
+                errors.push_back(std::string("configureFromJson failed for ") + label);
+                return;
+            }
+            const int actual = core.getConfig().rendererVSync;
+            if (actual != expected) {
+                errors.push_back(std::string("rendererVSync mismatch for ") + label +
+                                 ": expected " + std::to_string(expected) +
+                                 ", got " + std::to_string(actual));
+            }
+        };
+
+        expect_vsync(json::parse(R"({"rendererVSync":"adaptive"})"), SDL_RENDERER_VSYNC_ADAPTIVE, "adaptive string");
+        expect_vsync(json::parse(R"({"rendererVSync":3})"), 3, "integer interval");
+        expect_vsync(json::parse(R"({"rendererVSync":"on"})"), 1, "on string maps to 1");
+
+        // Unknown string should leave the prior value unchanged (currently 1)
+        const int prior = core.getConfig().rendererVSync;
+        expect_vsync(json::parse(R"({"rendererVSync":"nonsense"})"), prior, "unknown string retains prior");
+
+        // Restore original configuration so subsequent tests see the same environment
+        core.configure(original);
+        return true;
+    }
+
+
     bool Core_LUA_Tests(std::vector<std::string>& errors)
     {
         return UnitTests::getInstance().run_lua_tests(errors, "src/Core_UnitTests.lua");
@@ -318,6 +352,7 @@ namespace SDOM
             ut.add_test(objName, "CAPI: display variant create/get/destroy", Core_Variant_Display_CreateGetDestroy);
             ut.add_test(objName, "CAPI: asset variant create/get/destroy", Core_Variant_Asset_CreateGetDestroy);
             ut.add_test(objName, "CAPI: variant focus/hover parity", Core_Variant_FocusHover);
+            ut.add_test(objName, "Config: rendererVSync JSON parsing", Core_RendererVSync_ConfigureFromJson);
 
 
 
