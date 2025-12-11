@@ -22,7 +22,7 @@
 ---
 
 ### Screenshot of the Test Harness application:
-![Test Harness](https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_Test_Harness.png)
+![Test Harness](https://raw.githubusercontent.com/warte67/SDOM/refs/heads/master/examples/test/docs/diagrams/SDOM_v0.5.244.png)
 
 ## Overview
 
