@@ -1255,13 +1255,13 @@ The framework today is **more consistent, more scalable, and more future-proof**
 > 💬 *“Blueprints before backflips — elegance starts with intention.”*
 
 ### 🧩 **Focus for Today**
-- Add targeted SpriteSheet failure logging (texture names/paths/types) and negative-path unit tests for missing texture and size-query failures.  
-- Resume Variant work: design native JSON storage semantics (Array/Object), expand C API helpers (object/array creation + path helpers), and tighten error semantics.  
-- Broaden Variant unit coverage (scalar traversal guard, PathExists neutrality, handle/event round-trips) and queue end-of-day test + valgrind pass.
+- Added targeted SpriteSheet failure logging (texture names/paths/types) and negative-path unit tests for missing texture and size-query failures.  
+- Resumed Variant work: designed native JSON storage semantics (Array/Object), expanded C API helpers (object/array creation + path helpers), and tightened error semantics.  
+- Broadened Variant unit coverage (scalar traversal guard, PathExists neutrality, handle/event round-trips) and queued end-of-day test + valgrind pass.
 - Added a state of being documentation to the `docs/extensible_variant.md` document.
 
 ### 🌟 **Summary**
-A planning-heavy morning to sharpen SpriteSheet diagnostics and push forward the Variant JSON/C API/coverage layers. Execution rolls out today—with clarity as the multiplier.
+Today was all about tightening the foundation: clearer SpriteSheet diagnostics, deeper Variant JSON design, and expanded C API + test coverage. Nothing flashy—just focused architectural progress that makes tomorrow’s work faster, safer, and more predictable. Clarity compounds, and today’s decisions strengthen the entire engine.
 
 ---
 
@@ -1274,9 +1274,21 @@ A planning-heavy morning to sharpen SpriteSheet diagnostics and push forward the
 - ✅ Add SpriteSheet failure logging (texture names/paths/types).  
 - ✅ Add SpriteSheet negative-path tests (missing texture, size-query failures).  
 - ✅ Design native Variant JSON storage — formalize Array/Object ownership rules, casting safety, and conversion hooks between JSON and in-engine Variant layouts (goal: zero lossy round-trips).  
-- ☐ Expand Variant C API helpers — add explicit object/array construction APIs, path helper parity with C++, and consistent error reporting/clearing semantics to keep scripting clients deterministic.  
+- 🔄 Expand Variant C API helpers — add explicit object/array construction APIs, path helper parity with C++, and consistent error reporting/clearing semantics to keep scripting clients deterministic.
 - ✅ Augment Variant unit coverage — add negative-path tests for scalar traversal guards, PathExists non-mutating queries, and round-trip identity checks for handle/event Variants to lock behavior.
-- ☐ End-of-day: rerun full test suite + valgrind.
+- ✅ End-of-day: run full test suite + valgrind + ASan in all build configs:
+  - Debug
+  - Debug + ASan
+  - Release
+  - Release + ASan
+  - 2,500 iteration repeated load/unload cycle stress test with valgrind *(result excerpt)*:
+    ```
+    ==58098== LEAK SUMMARY:
+    ==58098==    definitely lost: 0 bytes in 0 blocks
+    ==58098==    indirectly lost: 0 bytes in 0 blocks
+    ==58098==      possibly lost: 0 bytes in 0 blocks
+    ```
+    > This cycle test is designed to flush out leaks in DisplayObject construction/destruction, SpriteSheet lifetime, Variant allocation, event routing, and all SDL-managed resources.
 
 ---
 
