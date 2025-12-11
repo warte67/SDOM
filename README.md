@@ -26,20 +26,19 @@
 
 ## Overview
 
-**SDOM** (Software Display Object Model) is a C++23 framework that applies a **structured, DOM-like architecture** to SDL3-based rendering and input. It models UI and scene elements as a **hierarchical tree of display objects**—each with explicit properties, bounds, parent/child relationships, and event behavior. This provides a predictable update model, clean composition, and a clear separation between application logic and rendering.
+**SDOM** (Software Display Object Model) is a C++23 framework that layers a clean, DOM-like display object hierarchy on top of SDL3, giving UI and scene elements explicit structure, properties, and behavior. While built in C++, SDOM’s architecture is intentionally language-agnostic: every property, event, and object passes through a reflection-driven data model that any language can speak. C++, C, Rust, Python, Lua—and even future declarative front-ends or HTML-like UI languages—can interact with SDL3 through the same unified, predictable interface. **SDOM unifies SDL3 across ecosystems, letting languages cooperate instead of compete by sharing one structural model for interactive applications.**
 
-SDOM is suitable for **game UI**, **custom tools**, **editors**, and applications that want a higher-level interface on top of SDL3 while retaining the ability to drop to low-level control when needed.
-
-The system is both **cross-platform** and **cross-language**. SDOM exposes a stable, pointer-free **C ABI** that allows languages such as Rust, D, Zig, Python, C#, Swift, and others to call into the engine directly. Higher-level integrations—Lua today, and Python and others in the future—build on this ABI to support scripting, rapid prototyping, and live editing when desired, but remain optional for projects that prefer a pure C++ workflow.
+The system is both **cross-platform** and **cross-language**. SDOM exposes a stable, pointer-free **C ABI** that allows languages such as Rust, D, Zig, Python, C#, Swift, and others to call into the engine directly. Higher-level integrations—Lua today, and Python and others in the future—build on this ABI to support scripting, rapid prototyping, and live editing when desired, while remaining optional for projects that prefer a pure C++ workflow.
 
 A central design goal of SDOM is **data-driven interoperability**. A unified reflection system records types, properties, and commands at runtime. The build system uses this metadata to **automatically generate bindings** for external languages: C API headers, Lua interfaces, and (eventually) Rust/D/Python modules—without handwritten glue code. Supporting a new language becomes a matter of writing a small **binding-generator backend**.
 
 SDOM’s runtime is **JSON-native** via a single universal value type, `Variant`. Configuration, properties, and event payloads all use the same representation, enabling live inspection and modification. Applications that do not require dynamic behavior can use SDOM entirely from C++ with no scripting dependency, while dynamic languages can layer on top for interactivity.
 
-The framework is built to be **modular and extensible**. Optional components—including Lua integration, a runtime editor, and plugin support—can be enabled or left out depending on project needs. Future systems such as inspectors, UI editors, and metadata-driven tools will rely on the same core reflection and data model already in place.
+The framework is built to be **modular and extensible**. Optional components—such as Lua integration, a runtime editor, or plugin systems—can be enabled or omitted depending on project needs. SDOM’s core architecture scales naturally across a wide range of applications: **game engines**, **custom UI editors**, **level editors**, **visual tooling**, **data-driven simulation interfaces**, **rapid-iteration prototypes**, and **embedded or scripting-augmented applications**. Future systems such as inspectors, live UI editors, and metadata-driven tools will continue to build on the same reflection and data model already in place. **SDOM’s design allows diverse workflows and languages to collaborate through one unified structural foundation.**
 
 **Note:** SDOM is currently in **early pre-alpha**. APIs may change as the system evolves.
 
+---
 
 ## Features
 - Simple, composable API for UI and document structures
