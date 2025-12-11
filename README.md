@@ -36,7 +36,7 @@ SDOM’s runtime is **JSON-native** via a single universal value type, `Variant`
 
 The framework is built to be **modular and extensible**. Optional components—such as Lua integration, a runtime editor, or plugin systems—can be enabled or omitted depending on project needs. SDOM’s core architecture scales naturally across a wide range of applications: **game engines**, **custom UI editors**, **level editors**, **visual tooling**, **data-driven simulation interfaces**, **rapid-iteration prototypes**, and **embedded or scripting-augmented applications**. Future systems such as inspectors, live UI editors, and metadata-driven tools will continue to build on the same reflection and data model already in place. **SDOM’s design allows diverse workflows and languages to collaborate through one unified structural foundation.**
 
-**Note:** SDOM is currently in **early pre-alpha**. APIs may change as the system evolves.
+**Note:** SDOM is currently in **early pre-alpha**. APIs are likely to change as the system evolves.
 
 ---
 
