@@ -79,18 +79,30 @@ enum class VariantType : uint8_t {
     Error
 };
 
+struct JsonConversionOptions {
+    // Depth guard to prevent runaway recursion when converting nested
+    // structures. Depth counts containers; a depth of 0 serializes as null.
+    std::size_t max_depth = 64;
+
+    // When JSON contains unsigned integers beyond int64_t, optionally
+    // preserve them as strings instead of coercing to double.
+    bool preserve_large_unsigned = true;
+
+    // When emitting JSON, stringify NaN/Inf instead of letting JSON
+    // silently drop them. If false, they serialize to null.
+    bool stringify_non_finite = true;
+};
+
 class Variant;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Internal storage node (shared so copies are cheap)
 // ─────────────────────────────────────────────────────────────────────────────
 struct VariantStorage {
-    // Use indirection for containers so Variant can be forward-declared
-    // without requiring a complete type at the point these aliases are
-    // instantiated. Using shared_ptr keeps ownership semantics simple and
-    // avoids changing external APIs dramatically at the call site; callers
-    // that iterate elements will now receive shared_ptr<Variant> elements
-    // and should dereference them.
+    // Containers share ownership of child Variants via shared_ptr. Copies
+    // are cheap and keep the same node graph; moves transfer that graph
+    // intact. Mutations must go through shared_ptr to avoid raw-pointer
+    // aliasing; const views should remain read-only.
     using Array     = std::vector<std::shared_ptr<Variant>>;
     using Object    = std::unordered_map<std::string, std::shared_ptr<Variant>>;
     struct DynamicValue {
@@ -172,6 +184,7 @@ public:
 
     // Type info
     VariantType type() const noexcept;
+    bool isContainer() const noexcept { return isArray() || isObject(); }
     bool isNull()   const noexcept { return std::holds_alternative<std::monostate>(storage_->data); }
     bool isBool()   const noexcept { return std::holds_alternative<bool>(storage_->data); }
     bool isInt()    const noexcept { return std::holds_alternative<int64_t>(storage_->data); }
@@ -188,6 +201,10 @@ public:
     int64_t             toInt64(int64_t def=0) const noexcept;
     double              toDouble(double def=0.0) const noexcept;
     std::string         toString(std::string def={}) const noexcept;
+    std::optional<bool>    tryBool() const noexcept;
+    std::optional<int64_t> tryInt64() const noexcept;
+    std::optional<double>  tryDouble() const noexcept;
+    std::optional<std::string> tryString() const noexcept;
     DisplayHandle       toDisplayHandle(DisplayHandle def = DisplayHandle{}) const noexcept;
     AssetHandle         toAssetHandle(AssetHandle def = AssetHandle{}) const noexcept;
 
@@ -402,7 +419,9 @@ public:
 
     // JSON integration
     nlohmann::json toJson() const;
+    nlohmann::json toJson(const JsonConversionOptions& opts) const;
     static Variant fromJson(const nlohmann::json& j);
+    static Variant fromJson(const nlohmann::json& j, const JsonConversionOptions& opts, std::string* err = nullptr);
 
     // Non-noexcept structured stringifier for debugging that limits
     // recursion by depth. Depth=0 yields "..." for nested structures.

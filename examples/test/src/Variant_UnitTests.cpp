@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <limits>
 
 namespace SDOM
 {
@@ -182,6 +183,115 @@ namespace SDOM
         }
         auto out2 = v.toJson();
         if (!out2.contains("arr") || out2["arr"].size() != 4) errors.push_back("Variant mutation not reflected in toJson");
+        return true;
+    }
+
+    bool Variant_test_json_depth_guard(std::vector<std::string>& errors)
+    {
+        JsonConversionOptions opts;
+        opts.max_depth = 3; // root=0, inner1=1, inner2=2, inner3=3 -> null
+
+        Variant root = Variant::makeObject();
+        Variant* cur = &root;
+        for (int i = 0; i < 5; ++i) {
+            Variant next = Variant::makeObject();
+            cur->set("inner", next);
+            cur = cur->get("inner");
+        }
+
+        auto j = root.toJson(opts);
+        if (!j.is_object()) {
+            errors.push_back("Depth guard: root not object");
+        } else {
+            if (!j.contains("inner")) errors.push_back("Depth guard: missing inner");
+            auto inner1 = j["inner"];
+            if (!inner1.is_object()) errors.push_back("Depth guard: inner1 not object");
+            auto inner2 = inner1.contains("inner") ? inner1["inner"] : nlohmann::json();
+            if (!inner2.is_object()) errors.push_back("Depth guard: inner2 not object");
+            auto inner3 = inner2.contains("inner") ? inner2["inner"] : nlohmann::json();
+            if (!inner3.is_null()) errors.push_back("Depth guard: inner3 expected null due to max_depth");
+        }
+
+        // fromJson should flag error when exceeding depth
+        nlohmann::json deep = nlohmann::json::object();
+        nlohmann::json* ptr = &deep;
+        for (int i = 0; i < 10; ++i) {
+            (*ptr)["inner"] = nlohmann::json::object();
+            ptr = &((*ptr)["inner"]);
+        }
+
+        std::string err;
+        Variant v = Variant::fromJson(deep, opts, &err);
+        if (!v.hasError()) errors.push_back("Depth guard: expected error Variant on fromJson overflow");
+        if (err.find("max depth") == std::string::npos) errors.push_back("Depth guard: missing max depth message");
+        return true;
+    }
+
+    bool Variant_test_json_large_unsigned_preservation(std::vector<std::string>& errors)
+    {
+        const uint64_t big = std::numeric_limits<uint64_t>::max();
+        nlohmann::json j = big;
+
+        Variant v = Variant::fromJson(j); // default opts preserve as string
+        if (!v.isString() || v.toString() != std::to_string(big)) {
+            errors.push_back("Large unsigned not preserved as string");
+        }
+
+        auto j_out = v.toJson();
+        if (!j_out.is_string() || j_out.get<std::string>() != std::to_string(big)) {
+            errors.push_back("Large unsigned re-emit did not stay string");
+        }
+
+        // Allow opt-out: coerce to double when preserve_large_unsigned is false
+        JsonConversionOptions opts;
+        opts.preserve_large_unsigned = false;
+        std::string err;
+        Variant v2 = Variant::fromJson(j, opts, &err);
+        if (!v2.isReal()) errors.push_back("Large unsigned without preserve should coerce to real");
+        return true;
+    }
+
+    bool Variant_test_json_non_finite_stringification(std::vector<std::string>& errors)
+    {
+        Variant nanv(std::numeric_limits<double>::quiet_NaN());
+        Variant infv(std::numeric_limits<double>::infinity());
+        Variant ninfv(-std::numeric_limits<double>::infinity());
+
+        auto jnan = nanv.toJson();
+        auto jinf = infv.toJson();
+        auto jninf = ninfv.toJson();
+
+        if (!jnan.is_string() || jnan.get<std::string>() != "nan") {
+            errors.push_back("NaN did not stringify to 'nan'");
+        }
+        if (!jinf.is_string() || jinf.get<std::string>() != "inf") {
+            errors.push_back("+inf did not stringify to 'inf'");
+        }
+        if (!jninf.is_string() || jninf.get<std::string>() != "-inf") {
+            errors.push_back("-inf did not stringify to '-inf'");
+        }
+
+        return true;
+    }
+
+    bool Variant_test_try_casts(std::vector<std::string>& errors)
+    {
+        Variant vb(true);
+        Variant vi(int64_t(42));
+        Variant vs(std::string("hi"));
+
+        auto ob = vb.tryBool();
+        if (!ob || !*ob) errors.push_back("tryBool failed on bool");
+        if (vb.tryInt64()) errors.push_back("tryInt64 should be nullopt on bool");
+
+        auto oi = vi.tryInt64();
+        if (!oi || *oi != 42) errors.push_back("tryInt64 failed on int");
+        if (vi.tryString()) errors.push_back("tryString should be nullopt on int");
+
+        auto os = vs.tryString();
+        if (!os || *os != "hi") errors.push_back("tryString failed on string");
+        if (vs.tryDouble()) errors.push_back("tryDouble should be nullopt on string");
+
         return true;
     }
 
@@ -1116,6 +1226,9 @@ namespace SDOM
             ut.add_test(objName, "VariantView basic access", Variant_test_variantview_basic_access);
             ut.add_test(objName, "JSON roundtrip basic", Variant_test_json_roundtrip_basic);
             ut.add_test(objName, "JSON snapshot/value semantics", Variant_test_json_snapshot_value_semantics);
+            ut.add_test(objName, "JSON depth guard", Variant_test_json_depth_guard);
+            ut.add_test(objName, "JSON large unsigned preservation", Variant_test_json_large_unsigned_preservation);
+            ut.add_test(objName, "JSON non-finite stringification", Variant_test_json_non_finite_stringification);
             ut.add_test(objName, "Dynamic metadata accessors", Variant_test_dynamic_metadata_accessors);
             ut.add_test(objName, "Copy/Move semantics and containers", Variant_test_copy_move_and_containers);
             ut.add_test(objName, "toDebugString shallow vs deep", Variant_test_toDebugString);
@@ -1125,6 +1238,7 @@ namespace SDOM
             ut.add_test(objName, "parsePath success cases", Variant_test_parsePath_success);
             ut.add_test(objName, "parsePath failure cases", Variant_test_parsePath_failure);
             ut.add_test(objName, "path API: simple object get", Variant_test_path_simple_object);
+            ut.add_test(objName, "try* casts", Variant_test_try_casts);
             ut.add_test(objName, "path API: object + array chain", Variant_test_path_object_array_chain);
             ut.add_test(objName, "path API: missing key error", Variant_test_path_missing_key);
             ut.add_test(objName, "path API: type mismatch error", Variant_test_path_type_mismatch);

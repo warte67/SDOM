@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <cstring>
 #include <limits>
+#include <functional>
 #include <mutex>
 #include <json.hpp>
 #include <SDOM/SDOM_DataRegistry.hpp>
@@ -866,6 +867,26 @@ std::string Variant::toString(std::string def) const noexcept {
     return def;
 }
 
+std::optional<bool> Variant::tryBool() const noexcept {
+    if (auto p = std::get_if<bool>(&storage_->data)) return *p;
+    return std::nullopt;
+}
+
+std::optional<int64_t> Variant::tryInt64() const noexcept {
+    if (auto p = std::get_if<int64_t>(&storage_->data)) return *p;
+    return std::nullopt;
+}
+
+std::optional<double> Variant::tryDouble() const noexcept {
+    if (auto p = std::get_if<double>(&storage_->data)) return *p;
+    return std::nullopt;
+}
+
+std::optional<std::string> Variant::tryString() const noexcept {
+    if (auto p = std::get_if<std::string>(&storage_->data)) return *p;
+    return std::nullopt;
+}
+
 DisplayHandle Variant::toDisplayHandle(DisplayHandle def) const noexcept {
     if (auto p = std::get_if<DisplayHandle>(&storage_->data)) return *p;
     return def;
@@ -1133,84 +1154,127 @@ bool Variant::erasePath(const std::string& path) {
 
 // JSON integration
 nlohmann::json Variant::toJson() const {
-    const auto& d = storage_->data;
-    if (std::holds_alternative<std::monostate>(d)) return nlohmann::json(nullptr);
-    if (auto p = std::get_if<bool>(&d))            return *p;
-    if (auto p = std::get_if<int64_t>(&d))         return *p;
-    if (auto p = std::get_if<double>(&d))          return *p;
-    if (auto p = std::get_if<std::string>(&d))     return *p;
-    if (auto p = std::get_if<VariantStorage::Array>(&d)) {
-        nlohmann::json arr = nlohmann::json::array();
-        for (const auto& elem : *p) {
-            if (!elem) { arr.push_back(nullptr); continue; }
-            arr.push_back(elem->toJson());
-        }
-        return arr;
-    }
-    if (auto p = std::get_if<VariantStorage::Object>(&d)) {
-        nlohmann::json obj = nlohmann::json::object();
-        for (const auto& [k, v] : *p) {
-            if (!v) { obj[k] = nullptr; continue; }
-            obj[k] = v->toJson();
-        }
-        return obj;
-    }
-    if (auto p = std::get_if<DisplayHandle>(&d)) {
-        nlohmann::json obj = nlohmann::json::object();
-        obj["name"] = p->getName();
-        obj["type"] = p->getType();
-        return obj;
-    }
-    if (auto p = std::get_if<AssetHandle>(&d)) {
-        nlohmann::json obj = nlohmann::json::object();
-        obj["name"] = p->getName();
-        obj["type"] = p->getType();
-        obj["filename"] = p->getFilename();
-        return obj;
-    }
-    if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
-        auto conv = Variant::getConverter(p->type);
-        if (conv && conv->toJson) {
-            try {
-                return conv->toJson(*p);
-            } catch(...) { /* fallthrough to null */ }
-        }
-    }
-    return nlohmann::json(nullptr);
+    static const JsonConversionOptions kDefaultJsonOpts{};
+    return toJson(kDefaultJsonOpts);
+}
+
+nlohmann::json Variant::toJson(const JsonConversionOptions& opts) const {
+    std::function<nlohmann::json(const Variant&, std::size_t)> walk =
+        [&](const Variant& node, std::size_t depth) -> nlohmann::json {
+            if (depth >= opts.max_depth) {
+                return nlohmann::json(nullptr);
+            }
+
+            const auto& d = node.storage_->data;
+            if (std::holds_alternative<std::monostate>(d)) return nlohmann::json(nullptr);
+            if (auto p = std::get_if<bool>(&d))            return *p;
+            if (auto p = std::get_if<int64_t>(&d))        return *p;
+            if (auto p = std::get_if<double>(&d)) {
+                if (!std::isfinite(*p)) {
+                    if (opts.stringify_non_finite) {
+                        if (std::isnan(*p)) return nlohmann::json("nan");
+                        if (std::isinf(*p)) return nlohmann::json(*p > 0 ? "inf" : "-inf");
+                    }
+                    return nlohmann::json(nullptr);
+                }
+                return *p;
+            }
+            if (auto p = std::get_if<std::string>(&d))    return *p;
+            if (auto p = std::get_if<VariantStorage::Array>(&d)) {
+                nlohmann::json arr = nlohmann::json::array();
+                for (const auto& elem : *p) {
+                    arr.push_back(elem ? walk(*elem, depth + 1) : nlohmann::json(nullptr));
+                }
+                return arr;
+            }
+            if (auto p = std::get_if<VariantStorage::Object>(&d)) {
+                nlohmann::json obj = nlohmann::json::object();
+                for (const auto& [k, v] : *p) {
+                    obj[k] = v ? walk(*v, depth + 1) : nlohmann::json(nullptr);
+                }
+                return obj;
+            }
+            if (auto p = std::get_if<DisplayHandle>(&d)) {
+                nlohmann::json obj = nlohmann::json::object();
+                obj["name"] = p->getName();
+                obj["type"] = p->getType();
+                return obj;
+            }
+            if (auto p = std::get_if<AssetHandle>(&d)) {
+                nlohmann::json obj = nlohmann::json::object();
+                obj["name"] = p->getName();
+                obj["type"] = p->getType();
+                obj["filename"] = p->getFilename();
+                return obj;
+            }
+            if (auto p = std::get_if<VariantStorage::DynamicValue>(&d)) {
+                auto conv = Variant::getConverter(p->type);
+                if (conv && conv->toJson) {
+                    try {
+                        return conv->toJson(*p);
+                    } catch(...) { /* fallthrough to null */ }
+                }
+            }
+            return nlohmann::json(nullptr);
+        };
+
+    return walk(*this, 0);
 }
 
 Variant Variant::fromJson(const nlohmann::json& j) {
-    if (j.is_null()) return Variant();
-    if (j.is_boolean()) return Variant(j.get<bool>());
-    if (j.is_number_integer()) return Variant(j.get<int64_t>());
-    if (j.is_number_unsigned()) {
-        auto u = j.get<uint64_t>();
-        if (u <= static_cast<uint64_t>(std::numeric_limits<int64_t>::max())) {
-            return Variant(static_cast<int64_t>(u));
-        }
-        return Variant(static_cast<double>(u));
-    }
-    if (j.is_number_float()) return Variant(j.get<double>());
-    if (j.is_string()) return Variant(j.get<std::string>());
-    if (j.is_array()) {
-        Variant v = Variant::makeArray();
-        auto* arr = v.array();
-        arr->reserve(j.size());
-        for (const auto& elem : j) {
-            arr->push_back(std::make_shared<Variant>(Variant::fromJson(elem)));
-        }
-        return v;
-    }
-    if (j.is_object()) {
-        Variant v = Variant::makeObject();
-        auto* obj = v.object();
-        for (auto it = j.begin(); it != j.end(); ++it) {
-            (*obj)[it.key()] = std::make_shared<Variant>(Variant::fromJson(it.value()));
-        }
-        return v;
-    }
+    static const JsonConversionOptions kDefaultJsonOpts{};
+    return fromJson(j, kDefaultJsonOpts, nullptr);
+}
 
-    return Variant();
+Variant Variant::fromJson(const nlohmann::json& j,
+                          const JsonConversionOptions& opts,
+                          std::string* err) {
+    std::function<Variant(const nlohmann::json&, std::size_t)> walk =
+        [&](const nlohmann::json& node, std::size_t depth) -> Variant {
+            if (depth >= opts.max_depth) {
+                if (err) *err = "JSON max depth exceeded";
+                return Variant::makeError("JSON max depth exceeded");
+            }
+
+            if (node.is_null()) return Variant();
+            if (node.is_boolean()) return Variant(node.get<bool>());
+            if (node.is_number_unsigned()) {
+                auto u = node.get<uint64_t>();
+                if (u <= static_cast<uint64_t>(std::numeric_limits<int64_t>::max())) {
+                    return Variant(static_cast<int64_t>(u));
+                }
+                if (opts.preserve_large_unsigned) return Variant(std::to_string(u));
+                return Variant(static_cast<double>(u));
+            }
+            if (node.is_number_integer()) return Variant(node.get<int64_t>());
+            if (node.is_number_float()) return Variant(node.get<double>());
+            if (node.is_string()) return Variant(node.get<std::string>());
+            if (node.is_array()) {
+                Variant v = Variant::makeArray();
+                auto* arr = v.array();
+                arr->reserve(node.size());
+                for (const auto& elem : node) {
+                    Variant child = walk(elem, depth + 1);
+                    if (child.hasError()) return child;
+                    arr->push_back(std::make_shared<Variant>(std::move(child)));
+                }
+                return v;
+            }
+            if (node.is_object()) {
+                Variant v = Variant::makeObject();
+                auto* obj = v.object();
+                for (auto it = node.begin(); it != node.end(); ++it) {
+                    Variant child = walk(it.value(), depth + 1);
+                    if (child.hasError()) return child;
+                    (*obj)[it.key()] = std::make_shared<Variant>(std::move(child));
+                }
+                return v;
+            }
+
+            return Variant();
+        };
+
+    return walk(j, 0);
 }
 
 
