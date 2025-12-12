@@ -588,6 +588,7 @@ namespace SDOM
             SDL_ShowWindow(window_);     // not needed in SDL3, but included for clarity
             SDL_SyncWindow(window_);
         }
+        
         if (recreate_renderer && !renderer_) 
         {
             renderer_ = SDL_CreateRenderer(window_, nullptr);
@@ -597,14 +598,29 @@ namespace SDOM
             }
             if (!SDL_SetRenderVSync(renderer_, config_.rendererVSync))
             {
-                ERROR("Unable to set VSync mode: " + std::string(SDL_GetError()));
+                const char* sdlErr = SDL_GetError();
+                std::string err = sdlErr ? sdlErr : "<unknown>";
+                // Some compositors (e.g. Hyprland/Wayland setups) do not support
+                // changing the renderer VSync mode via SDL. Treat this as a
+                // non-fatal condition and warn instead of throwing an exception.
+                if (std::getenv("HYPRLAND_INSTANCE_SIGNATURE") || std::getenv("HYPRLAND_INSTANCE")) {
+                    WARNING(std::string("Unable to set VSync mode (Hyprland may not support this): ") + err);
+                } else {
+                    WARNING(std::string("Unable to set VSync mode: ") + err);
+                }
             }
         }
         else if (!recreate_renderer && renderer_ && rendererVSync_changed)
         {
             if (!SDL_SetRenderVSync(renderer_, config_.rendererVSync))
             {
-                ERROR("Unable to set VSync mode: " + std::string(SDL_GetError()));
+                const char* sdlErr = SDL_GetError();
+                std::string err = sdlErr ? sdlErr : "<unknown>";
+                if (std::getenv("HYPRLAND_INSTANCE_SIGNATURE") || std::getenv("HYPRLAND_INSTANCE")) {
+                    WARNING(std::string("Unable to set VSync mode (Hyprland may not support this): ") + err);
+                } else {
+                    WARNING(std::string("Unable to set VSync mode: ") + err);
+                }
             }
         }
         if (recreate_texture && !texture_) 
